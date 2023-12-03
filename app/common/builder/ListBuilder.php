@@ -2,10 +2,30 @@
 
 namespace app\common\builder;
 
-use app\common\builder\components\Button;
-use app\common\builder\components\RealTable;
-use app\common\builder\components\Screen;
-use app\common\builder\components\Table;
+use app\common\builder\table\AttrsTrait;
+use app\common\builder\table\ButtonTrait;
+use app\common\builder\table\CheckboxTrait;
+use app\common\builder\table\ColumnTrait;
+use app\common\builder\table\CustomTrait;
+use app\common\builder\table\EditColumnTrait;
+use app\common\builder\table\ExpandTrait;
+use app\common\builder\table\ExportTrait;
+use app\common\builder\table\FilterTrait;
+use app\common\builder\table\FormTrait;
+use app\common\builder\table\ImportTrait;
+use app\common\builder\table\MenuTrait;
+use app\common\builder\table\PagesTrait;
+use app\common\builder\table\PrintTrait;
+use app\common\builder\table\RadioTrait;
+use app\common\builder\table\RealTableTrait;
+use app\common\builder\table\ResizableTrait;
+use app\common\builder\table\RowTrait;
+use app\common\builder\table\ScreenTrait;
+use app\common\builder\table\SortTrait;
+use app\common\builder\table\TabsTrait;
+use app\common\builder\table\ToolbarTrait;
+use app\common\builder\table\TooltipTrait;
+use app\common\builder\table\TreeTrait;
 
 /**
  * 表格构造器
@@ -16,19 +36,37 @@ use app\common\builder\components\Table;
  */
 class ListBuilder
 {
-    # 表格按钮
-    use Button;
-    # 表格筛选
-    use Screen;
-    # 实时表格
-    use RealTable;
+    // 工具类
+    use AttrsTrait,
+    ButtonTrait,
+    CheckboxTrait,
+    ColumnTrait,
+    CustomTrait,
+    EditColumnTrait,
+    ExpandTrait,
+    ExportTrait,
+    FilterTrait,
+    FormTrait,
+    ImportTrait,
+    MenuTrait,
+    PagesTrait,
+    PrintTrait,
+    RadioTrait,
+    RealTableTrait,
+    ResizableTrait,
+    RowTrait,
+    ScreenTrait,
+    SortTrait,
+    TabsTrait,
+    ToolbarTrait,
+    TooltipTrait,
+    TreeTrait;
 
     // 在每个对象的静态缓存中存储现有属性。
     protected static $cache = [];
 
     /**
      * 初始化表格
-     *
      * @Author 贵州猿创科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-02-28
@@ -39,7 +77,6 @@ class ListBuilder
 
     /**
      * 解析表格规则
-     *
      * @Author 贵州猿创科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-02-27

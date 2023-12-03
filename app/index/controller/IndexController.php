@@ -14,10 +14,6 @@ class IndexController extends BaseController
      */
     public function index()
     {
-        # 检测是否安装
-        if (!file_exists(root_path().'.env')) {
-            return redirect('/install/');
-        }
         # 跳转后台
         return redirect('/admin/');
     }

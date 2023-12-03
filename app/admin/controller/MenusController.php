@@ -3,6 +3,7 @@
 namespace app\admin\controller;
 
 use app\common\BaseController;
+use app\common\trait\MenusTrait;
 
 /**
  * 菜单管理
@@ -11,13 +12,5 @@ use app\common\BaseController;
  */
 class MenusController extends BaseController
 {
-    /**
-     * 渲染后台视图
-     * @return string
-     * @author 楚羽幽
-     */
-    public function index()
-    {
-        return getViewContent('admin');
-    }
+    use MenusTrait;
 }

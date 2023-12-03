@@ -66,11 +66,11 @@ class AuthMiddleware
         $class = app()->getNamespace() . '\\controller\\' . $control . 'Controller';
         $class = new \ReflectionClass($class);
         $properties = $class->getDefaultProperties();
-        $NotLogin = $properties['NotLogin'] ?? [];
-        $NotAuth = $properties['NotAuth'] ?? [];
+        $noLogin = $properties['noLogin'] ?? [];
+        $nopAuth = $properties['nopAuth'] ?? [];
 
         // 不需要登录
-        if (in_array($action, $NotLogin)) {
+        if (in_array($action, $noLogin)) {
             return true;
         }
         // 获取登录信息
@@ -96,7 +96,7 @@ class AuthMiddleware
             throw new Exception('该用户已被禁用，请联系管理员', 12000);
         }
         // 不需要鉴权
-        if (in_array($action, $NotAuth)) {
+        if (in_array($action, $nopAuth)) {
             return true;
         }
         if (empty($user['is_system'])) {

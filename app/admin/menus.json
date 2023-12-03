@@ -423,7 +423,7 @@
             "GET"
         ],
         "show": "20",
-        "sort": 9999,
+        "sort": 8888,
         "icon": "Setting",
         "component": "none/index",
         "auth_params": "",
@@ -463,6 +463,75 @@
                 "is_system": "10",
                 "id": 23,
                 "pid": 21,
+                "is_default": "10",
+                "children": []
+            }
+        ]
+    },
+    {
+        "path": "systemUpdate/group",
+        "title": "服务",
+        "method": [
+            "GET"
+        ],
+        "show": "20",
+        "sort": 9999,
+        "icon": "Setting",
+        "component": "none/index",
+        "auth_params": "",
+        "is_system": "10",
+        "id": 24,
+        "pid": 0,
+        "is_default": "10",
+        "children": [
+            {
+                "path": "SystemUpdate/index",
+                "title": "系统更新",
+                "method": [
+                    "GET"
+                ],
+                "component": "remote/index",
+                "auth_params": "remote/update/index",
+                "show": "20",
+                "sort": 100,
+                "icon": "",
+                "is_system": "10",
+                "id": 25,
+                "pid": 24,
+                "is_default": "10",
+                "children": []
+            },
+            {
+                "path": "SystemUpdate/logs",
+                "title": "更新日志",
+                "method": [
+                    "GET"
+                ],
+                "component": "remote/index",
+                "auth_params": "remote/update/logs",
+                "show": "20",
+                "sort": 100,
+                "icon": "",
+                "is_system": "10",
+                "id": 26,
+                "pid": 24,
+                "is_default": "10",
+                "children": []
+            },
+            {
+                "path": "Settings/upload",
+                "title": "授权管理",
+                "method": [
+                    "GET"
+                ],
+                "component": "remote/index",
+                "auth_params": "remote/update/auth",
+                "show": "20",
+                "sort": 100,
+                "icon": "",
+                "is_system": "10",
+                "id": 27,
+                "pid": 24,
                 "is_default": "10",
                 "children": []
             }

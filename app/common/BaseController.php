@@ -29,6 +29,7 @@ class BaseController extends BaseControl
             header('location:/install/');
         }
         # 设置应用名称
-        request()->module_name = app('http')->getName();
+        $moduleName = app('http')->getName();
+        request()->moduleName = $moduleName;
     }
 }

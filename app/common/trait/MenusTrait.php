@@ -2,6 +2,7 @@
 
 namespace app\common\trait;
 
+use app\common\builder\ListBuilder;
 use think\Request;
 use think\Response;
 
@@ -12,6 +13,14 @@ trait MenusTrait
      * @var int
      */
     protected $saas_appid = null;
+
+    /**
+     * 表格列
+     * @param \think\Request $request
+     * @return mixed
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
     public function indexTable(Request $request)
     {
         $builder = new ListBuilder;
@@ -24,20 +33,20 @@ trait MenusTrait
                 'rowField' => 'id',
             ])
             ->addTopButton('add', '添加', [
-                'api' => $this->pluginPrefix . '/admin/Menus/add',
+                'api' => $request->xBaseName . '/admin/Menus/add',
                 'path' => '/Menus/add'
             ], [], [
                 'type' => 'primary'
             ])
             ->addRightButton('edit', '修改', [
-                'api' => $this->pluginPrefix . '/admin/Menus/edit',
+                'api' => $request->xBaseName . '/admin/Menus/edit',
                 'path' => '/Menus/edit'
             ], [], [
                 'type' => 'primary',
             ])
             ->addRightButton('del', '删除', [
                 'type' => 'confirm',
-                'api' => $this->pluginPrefix . '/admin/Menus/del',
+                'api' => $request->xBaseName . '/admin/Menus/del',
                 'method' => 'delete',
             ], [
                 'type' => 'error',

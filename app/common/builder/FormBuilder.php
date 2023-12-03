@@ -2,22 +2,24 @@
 
 namespace app\common\builder;
 
+use app\common\builder\components\DividerTrait;
+use app\common\builder\components\FormValidateTrait;
+use app\common\builder\components\RowTrait;
 use app\common\builder\form\TabsFormTrait;
 use app\common\Model;
-use FormBuilder\Driver\CustomComponent;
-use FormBuilder\Factory\Elm;
 use FormBuilder\Form;
-use think\Validate;
 
 /**
- * @title 表单构造器
- * @desc 用于表单UI快速生成
- * @author 楚羽幽 <admin@hangpu.net>
+ * 表单构造器
+ * @copyright 贵州小白基地网络科技有限公司
+ * @author 楚羽幽 cy958416459@qq.com
  */
 class FormBuilder extends Form
 {
-    // Tabs表单构造器
-    use TabsFormTrait;
+    use DividerTrait,
+    FormValidateTrait,
+    RowTrait,
+    TabsFormTrait;
     
     /**
      * 表单对象
@@ -72,134 +74,6 @@ class FormBuilder extends Form
             ]
         ];
         $this->extraConfig = $extraConfig;
-    }
-
-    /**
-     * 表单配置
-     * @param string $name
-     * @param array $value
-     * @return FormBuilder
-     * @copyright 贵州猿创科技有限公司
-     * @Email 416716328@qq.com
-     * @DateTime 2023-04-29
-     */
-    public function setConf(string $name, array $value): FormBuilder
-    {
-        $this->extraConfig[$name] = $value;
-        return $this;
-    }
-
-    /**
-     * 添加表单行元素
-     * @param string $field
-     * @param string $type
-     * @param string $title
-     * @param mixed $value
-     * @param array $extra
-     * @return FormBuilder
-     * @copyright 贵州猿创科技有限公司
-     * @Email 416716328@qq.com
-     * @DateTime 2023-05-05
-     */
-    public function addRow(string $field, string $type, string $title, $value = '', array $extra = []): FormBuilder
-    {
-        # 创建组件
-        $component = Elm::$type($field, $title, $value);
-        # 设置字段，默认数据等
-        $component->field($field)->title($title)->value($value);
-        # 设置后缀提示语
-        if (isset($extra['prompt'])) {
-            $promptData = $extra['prompt'];
-            unset($extra['prompt']);
-            $prompt['type'] = 'prompt-tip';
-            # 设置默认提示语
-            if (is_array($promptData) && isset($promptData['text'])) {
-                $prompt['props'] = $promptData;
-                unset($prompt['text']);
-            }
-            # 设置字符提示语
-            if (is_string($promptData) && !empty($promptData)) {
-                $prompt['props']['text'] = $promptData;
-            }
-            # 插入组件
-            $component->appendRule('suffix',$prompt);
-        }
-        # 设置组件属性
-        foreach ($extra as $componentType => $componentValue) {
-            $component->$componentType($componentValue);
-        }
-        # 设置组件
-        $this->builder->append($component);
-        # 返回组件
-        return $this;
-    }
-
-    /**
-     * 添加自定义组件
-     * @param string $field
-     * @param string $type
-     * @param string $title
-     * @param mixed $value
-     * @param array $extra
-     * @return FormBuilder
-     * @copyright 贵州猿创科技有限公司
-     * @Email 416716328@qq.com
-     * @DateTime 2023-05-05
-     */
-    public function addComponent(string $field, string $type, string $title, $value = '', array $extra = []): FormBuilder
-    {
-        # 创建自定义组件
-        $component = new CustomComponent($type);
-        # 设置字段，默认数据等
-        $component->field($field)->title($title)->value($value);
-        # 设置组件属性
-        foreach ($extra as $componentType => $componentValue) {
-            $component->$componentType($componentValue);
-        }
-        # 设置组件
-        $this->builder->append($component);
-        # 返回组件
-        return $this;
-    }
-
-    /**
-     * 创建表单分割线
-     * @param string $title
-     * @param array $extra
-     * @return FormBuilder
-     * @copyright 贵州猿创科技有限公司
-     * @Email 416716328@qq.com
-     * @DateTime 2023-04-29
-     */
-    public function addDivider(string $title, array $extra = []): FormBuilder
-    {
-        # 创建自定义组件
-        $component = new CustomComponent('el-divider');
-        # 设置标题
-        $component->appendChild($title);
-        # 设置组件属性
-        $component->props($extra);
-        $this->builder->append($component);
-        return $this;
-    }
-
-
-    /**
-     * 表单验证
-     * @param mixed $validate
-     * @return FormBuilder
-     * @copyright 贵州猿创科技有限公司
-     * @Email 416716328@qq.com
-     * @DateTime 2023-04-29
-     */
-    public function formValidate($validate): FormBuilder
-    {
-        /**
-         * 实例验证类
-         * @var Validate
-         */
-        $class = new $validate;
-        return $this;
     }
 
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace app\common\builder\components;
+namespace app\common\builder\table;
 
 use app\common\builder\ListBuilder;
 

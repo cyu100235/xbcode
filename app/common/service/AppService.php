@@ -12,7 +12,7 @@ class AppService
      */
     public static function resutl(array $data,)
     {
-        $moduleName = request()->module_name;
+        $moduleName = request()->moduleName;
         // 返回数据
         $data       = [
             'web_name'              => $data['web_name']??'XB-Base',
