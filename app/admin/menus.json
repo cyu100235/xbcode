@@ -51,7 +51,7 @@
                 "children": []
             },
             {
-                "path": "Index/index",
+                "path": "Index/site",
                 "title": "获取应用信息",
                 "method": [
                     "GET"

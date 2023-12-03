@@ -16,7 +16,7 @@ class UsersController extends BaseController
      * 无需登录方法
      * @var array
      */
-    protected $NotLogin = ['login'];
+    protected $noLogin = ['login'];
 
     /**
      * 用户登录

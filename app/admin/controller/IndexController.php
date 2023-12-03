@@ -11,7 +11,7 @@ class IndexController extends BaseController
      * 无需登录方法
      * @var array
      */
-    protected $NotLogin = ['index','site'];
+    protected $noLogin = ['index','site'];
 
     /**
      * 渲染后台视图
