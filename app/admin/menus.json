@@ -1,0 +1,471 @@
+[
+    {
+        "title": "首页",
+        "pid": 0,
+        "component": "none/index",
+        "path": "admin/systemIndex",
+        "show": "20",
+        "sort": "1",
+        "method": [
+            "GET"
+        ],
+        "icon": "HomeOutlined",
+        "id": 1,
+        "auth_params": "",
+        "is_system": "10",
+        "is_default": "10",
+        "children": [
+            {
+                "path": "Index/index",
+                "title": "控 制 台",
+                "method": [
+                    "GET"
+                ],
+                "component": "remote/index",
+                "auth_params": "remote/welcome",
+                "icon": "FolderOpenOutlined",
+                "is_system": "10",
+                "show": "20",
+                "sort": 100,
+                "id": 2,
+                "pid": 1,
+                "is_default": "10",
+                "status": "20",
+                "children": []
+            },
+            {
+                "path": "User/login",
+                "title": "系统登录",
+                "method": [
+                    "POST"
+                ],
+                "is_system": "10",
+                "show": "10",
+                "sort": 100,
+                "icon": "",
+                "component": "none/index",
+                "auth_params": "",
+                "id": 3,
+                "pid": 1,
+                "is_default": "10",
+                "children": []
+            },
+            {
+                "path": "Index/index",
+                "title": "获取应用信息",
+                "method": [
+                    "GET"
+                ],
+                "is_system": "20",
+                "show": "10",
+                "sort": 100,
+                "icon": "",
+                "component": "none/index",
+                "auth_params": "",
+                "id": 4,
+                "pid": 1,
+                "is_default": "10",
+                "status": "20",
+                "children": []
+            },
+            {
+                "path": "User/index",
+                "title": "获取管理员信息",
+                "method": [
+                    "GET"
+                ],
+                "is_system": "20",
+                "show": "10",
+                "sort": 100,
+                "icon": "",
+                "component": "none/index",
+                "auth_params": "",
+                "id": 5,
+                "pid": 1,
+                "is_default": "10",
+                "children": []
+            },
+            {
+                "path": "User/exit",
+                "title": "退出登录",
+                "method": [
+                    "GET"
+                ],
+                "is_system": "20",
+                "show": "10",
+                "sort": 100,
+                "icon": "",
+                "component": "none/index",
+                "auth_params": "",
+                "id": 6,
+                "pid": 1,
+                "is_default": "10",
+                "status": "20",
+                "children": []
+            },
+            {
+                "path": "Index/clear",
+                "title": "清除缓存",
+                "method": [
+                    "GET"
+                ],
+                "is_system": "20",
+                "show": "10",
+                "sort": 100,
+                "icon": "",
+                "component": "none/index",
+                "auth_params": "",
+                "id": 7,
+                "pid": 1,
+                "is_default": "10",
+                "children": []
+            },
+            {
+                "title": "解除锁定",
+                "pid": 1,
+                "component": "none/index",
+                "path": "Index/lock",
+                "show": "10",
+                "sort": 100,
+                "is_default": "10",
+                "method": [
+                    "GET"
+                ],
+                "icon": "",
+                "id": 8,
+                "auth_params": "",
+                "is_system": "10",
+                "children": []
+            }
+        ]
+    },
+    {
+        "path": "Apps/group",
+        "title": "应用",
+        "method": [
+            "GET"
+        ],
+        "icon": "Setting",
+        "show": "20",
+        "sort": 100,
+        "component": "none/index",
+        "auth_params": "",
+        "is_system": "10",
+        "id": 9,
+        "pid": 0,
+        "is_default": "10",
+        "children": [
+            {
+                "path": "Apps/index",
+                "title": "应用市场",
+                "method": [
+                    "GET"
+                ],
+                "show": "20",
+                "sort": 100,
+                "icon": "",
+                "component": "remote/index",
+                "auth_params": "remote/apps/index",
+                "is_system": "10",
+                "id": 10,
+                "pid": 9,
+                "is_default": "10",
+                "children": []
+            }
+        ]
+    },
+    {
+        "path": "systemRules/tabs",
+        "title": "权限",
+        "method": [
+            "GET"
+        ],
+        "show": "20",
+        "sort": 100,
+        "icon": "Setting",
+        "component": "none/index",
+        "auth_params": "",
+        "is_system": "10",
+        "id": 11,
+        "pid": 0,
+        "is_default": "10",
+        "children": [
+            {
+                "path": "Admin/index",
+                "title": "管 理 员",
+                "method": [
+                    "GET"
+                ],
+                "component": "table/index",
+                "show": "20",
+                "sort": 100,
+                "icon": "",
+                "auth_params": "",
+                "is_system": "10",
+                "id": 12,
+                "pid": 11,
+                "is_default": "10",
+                "children": [
+                    {
+                        "path": "Admin/add",
+                        "title": "管理员-添加",
+                        "method": [
+                            "GET"
+                        ],
+                        "component": "form/index",
+                        "show": "10",
+                        "sort": 100,
+                        "icon": "",
+                        "auth_params": "",
+                        "is_system": "10",
+                        "id": 13,
+                        "pid": 12,
+                        "is_default": "10",
+                        "children": []
+                    },
+                    {
+                        "path": "Admin/edit",
+                        "title": "管理员-修改",
+                        "method": [
+                            "GET"
+                        ],
+                        "component": "form/index",
+                        "show": "10",
+                        "sort": 100,
+                        "icon": "",
+                        "auth_params": "",
+                        "is_system": "10",
+                        "id": 14,
+                        "pid": 12,
+                        "is_default": "10",
+                        "children": []
+                    },
+                    {
+                        "path": "Admin/del",
+                        "title": "管理员-删除",
+                        "method": [
+                            "GET"
+                        ],
+                        "show": "10",
+                        "sort": 100,
+                        "icon": "",
+                        "component": "none/index",
+                        "auth_params": "",
+                        "is_system": "10",
+                        "id": 15,
+                        "pid": 12,
+                        "is_default": "10",
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "path": "AdminRole/index",
+                "title": "角色管理",
+                "method": [
+                    "GET"
+                ],
+                "component": "table/index",
+                "show": "20",
+                "sort": 100,
+                "icon": "",
+                "auth_params": "",
+                "is_system": "10",
+                "id": 16,
+                "pid": 11,
+                "is_default": "10",
+                "children": [
+                    {
+                        "path": "AdminRole/add",
+                        "title": "角色管理-添加",
+                        "method": [
+                            "GET"
+                        ],
+                        "component": "form/index",
+                        "show": "10",
+                        "sort": 100,
+                        "icon": "",
+                        "auth_params": "",
+                        "is_system": "10",
+                        "id": 18,
+                        "pid": 12,
+                        "is_default": "10",
+                        "children": []
+                    },
+                    {
+                        "path": "AdminRole/edit",
+                        "title": "角色管理-修改",
+                        "method": [
+                            "GET"
+                        ],
+                        "component": "form/index",
+                        "show": "10",
+                        "sort": 100,
+                        "icon": "",
+                        "auth_params": "",
+                        "is_system": "10",
+                        "id": 19,
+                        "pid": 17,
+                        "is_default": "10",
+                        "children": []
+                    },
+                    {
+                        "path": "AdminRole/del",
+                        "title": "角色管理-删除",
+                        "method": [
+                            "GET"
+                        ],
+                        "show": "10",
+                        "sort": 100,
+                        "icon": "",
+                        "component": "none/index",
+                        "auth_params": "",
+                        "is_system": "10",
+                        "id": 20,
+                        "pid": 17,
+                        "is_default": "10",
+                        "children": []
+                    },
+                    {
+                        "title": "角色管理-授权",
+                        "pid": 17,
+                        "component": "form/index",
+                        "path": "AdminRole/auth",
+                        "show": "10",
+                        "sort": 100,
+                        "method": [
+                            "GET"
+                        ],
+                        "icon": "",
+                        "auth_params": "",
+                        "id": 21,
+                        "is_system": "10",
+                        "is_default": "10",
+                        "children": []
+                    }
+                ]
+            },
+            {
+                "path": "Menus/index",
+                "title": "菜单管理",
+                "method": [
+                    "GET"
+                ],
+                "component": "table/index",
+                "show": "20",
+                "sort": 100,
+                "icon": "",
+                "auth_params": "",
+                "is_system": "10",
+                "id": 17,
+                "pid": 11,
+                "is_default": "10",
+                "children": [
+                    {
+                        "path": "Menus/add",
+                        "title": "菜单管理-添加",
+                        "method": [
+                            "GET"
+                        ],
+                        "component": "form/index",
+                        "show": "10",
+                        "sort": 100,
+                        "icon": "",
+                        "auth_params": "",
+                        "is_system": "10",
+                        "id": 18,
+                        "pid": 17,
+                        "is_default": "10",
+                        "children": []
+                    },
+                    {
+                        "path": "Menus/edit",
+                        "title": "菜单管理-修改",
+                        "method": [
+                            "GET"
+                        ],
+                        "component": "form/index",
+                        "show": "10",
+                        "sort": 100,
+                        "icon": "",
+                        "auth_params": "",
+                        "is_system": "10",
+                        "id": 19,
+                        "pid": 17,
+                        "is_default": "10",
+                        "children": []
+                    },
+                    {
+                        "path": "Menus/del",
+                        "title": "菜单管理-删除",
+                        "method": [
+                            "GET"
+                        ],
+                        "show": "10",
+                        "sort": 100,
+                        "icon": "",
+                        "component": "none/index",
+                        "auth_params": "",
+                        "is_system": "10",
+                        "id": 20,
+                        "pid": 17,
+                        "is_default": "10",
+                        "children": []
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "path": "systemConfig/tabs",
+        "title": "设置",
+        "method": [
+            "GET"
+        ],
+        "show": "20",
+        "sort": 9999,
+        "icon": "Setting",
+        "component": "none/index",
+        "auth_params": "",
+        "is_system": "10",
+        "id": 21,
+        "pid": 0,
+        "is_default": "10",
+        "children": [
+            {
+                "path": "Settings/index",
+                "title": "基本设置",
+                "method": [
+                    "GET"
+                ],
+                "component": "form/index",
+                "auth_params": "group=system",
+                "show": "20",
+                "sort": 100,
+                "icon": "",
+                "is_system": "10",
+                "id": 22,
+                "pid": 21,
+                "is_default": "10",
+                "children": []
+            },
+            {
+                "path": "Settings/upload",
+                "title": "上传设置",
+                "method": [
+                    "GET"
+                ],
+                "component": "form/index",
+                "auth_params": "",
+                "show": "20",
+                "sort": 100,
+                "icon": "",
+                "is_system": "10",
+                "id": 23,
+                "pid": 21,
+                "is_default": "10",
+                "children": []
+            }
+        ]
+    }
+]

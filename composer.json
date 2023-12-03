@@ -1,0 +1,68 @@
+{
+    "name": "topthink/think",
+    "description": "the new thinkphp framework",
+    "type": "project",
+    "keywords": [
+        "framework",
+        "thinkphp",
+        "ORM"
+    ],
+    "homepage": "https://www.thinkphp.cn/",
+    "license": "Apache-2.0",
+    "authors": [
+        {
+            "name": "liu21st",
+            "email": "liu21st@gmail.com"
+        },
+        {
+            "name": "yunwuxin",
+            "email": "448901948@qq.com"
+        }
+    ],
+    "require": {
+        "php": ">=8.0.0",
+        "topthink/framework": "^8.0",
+        "topthink/think-orm": "^3.0",
+        "topthink/think-helper": "^3.1",
+        "topthink/think-api": "^1.0",
+        "topthink/think-view": "^2.0",
+        "topthink/think-multi-app": "^1.0",
+        "topthink/think-annotation": "^2.0",
+        "topthink/think-validate": "^2.0",
+        "topthink/think-cache": "^1.1",
+        "topthink/think-container": "^2.0",
+        "topthink/think-trace": "^1.6",
+        "topthink/think-captcha": "^3.0",
+        "topthink/think-image": "^1.0",
+        "topthink/think-ide-helper": "^1.0",
+        "topthink/think-swoole": "^4.0",
+        "topthink/think-queue": "^3.0",
+        "topthink/think-log": "^2.0",
+        "xaboy/form-builder": "^2.0",
+        "loong/oauth": "^1.0",
+        "pclzip/pclzip": "^2.8",
+        "zjkal/mysql-helper": "^1.0",
+        "yzh52521/think-filesystem": "^3.0"
+    },
+    "require-dev": {
+        "symfony/var-dumper": ">=4.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "app\\": "app",
+            "base\\": "base"
+        },
+        "psr-0": {
+            "": "extend/"
+        }
+    },
+    "config": {
+        "preferred-install": "dist"
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "@php think service:discover",
+            "@php think vendor:publish"
+        ]
+    }
+}
