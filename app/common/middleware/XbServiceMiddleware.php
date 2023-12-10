@@ -7,11 +7,11 @@ use Closure;
 use think\App;
 
 /**
- * 应用服务中间件
+ * 系统服务中间件
  * @copyright 贵州小白基地网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
-class ServiceMiddleware
+class XbServiceMiddleware
 {
     /** @var App */
     protected $app;

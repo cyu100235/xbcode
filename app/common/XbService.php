@@ -40,7 +40,8 @@ class XbService extends Service
                 return \think\App::invokeMethod([$class, $action]);
             })
             ->middleware([
-                \app\common\middleware\ServiceMiddleware::class
+                \app\common\middleware\XbServiceMiddleware::class,
+                \app\common\middleware\AppServiceMiddleware::class
             ]);
         });
     }

@@ -23,11 +23,12 @@ class Model extends BaseModel
      */
     public function scopeAppid($query)
     {
-        dd($query);
-        // $saas_appid = request()->appid;
-        // if ($saas_appid) {
-        //     $query->where('saas_appid', $saas_appid);
-        // }
+        $tableFields = $query->getTableFields();
+        // 判断数据表内是否数据SAAS
+        if (in_array('saas_appid', $tableFields)) {
+            $saas_appid = request()->appid;
+            $query->where('saas_appid', $saas_appid);
+        }
     }
 
     /**
@@ -39,9 +40,12 @@ class Model extends BaseModel
      */
     public static function onBeforeInsert($model)
     {
-        // $saas_appid = request()->appid;
-        // if ($saas_appid) {
-        //     $model->saas_appid = $saas_appid;
-        // }
+        $tableFields = $model->getTableFields();
+        dd($tableFields);
+        // 判断数据表内是否数据SAAS
+        if (in_array('saas_appid', $tableFields)) {
+            $saas_appid = request()->appid;
+            $model->saas_appid = $saas_appid;
+        }
     }
 }
