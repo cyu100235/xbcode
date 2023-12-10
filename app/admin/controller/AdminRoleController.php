@@ -2,6 +2,7 @@
 namespace app\admin\controller;
 
 use app\common\BaseController;
+use app\common\trait\AdminRoleTrait;
 
 /**
  * 角色管理
@@ -10,12 +11,5 @@ use app\common\BaseController;
  */
 class AdminRoleController extends BaseController
 {
-    /**
-     * 渲染后台视图
-     * @return string
-     * @author 楚羽幽
-     */
-    public function index()
-    {
-    }
+    use AdminRoleTrait;
 }

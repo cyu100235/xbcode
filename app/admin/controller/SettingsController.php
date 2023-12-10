@@ -2,6 +2,7 @@
 namespace app\admin\controller;
 
 use app\common\BaseController;
+use app\common\trait\SettingsTrait;
 
 /**
  * 系统设置
@@ -10,13 +11,5 @@ use app\common\BaseController;
  */
 class SettingsController extends BaseController
 {
-    /**
-     * 渲染后台视图
-     * @return string
-     * @author 楚羽幽
-     */
-    public function index()
-    {
-        return getViewContent('admin');
-    }
+    use SettingsTrait;
 }

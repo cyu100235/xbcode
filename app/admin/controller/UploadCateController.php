@@ -2,6 +2,7 @@
 namespace app\admin\controller;
 
 use app\common\BaseController;
+use app\common\trait\UploadCateTrait;
 
 /**
  * 附件库分类
@@ -10,13 +11,5 @@ use app\common\BaseController;
  */
 class UploadCateController extends BaseController
 {
-    /**
-     * 渲染后台视图
-     * @return string
-     * @author 楚羽幽
-     */
-    public function index()
-    {
-        return getViewContent('admin');
-    }
+    use UploadCateTrait;
 }
