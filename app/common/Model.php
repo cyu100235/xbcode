@@ -25,8 +25,8 @@ class Model extends BaseModel
     {
         $tableFields = $query->getTableFields();
         // 判断数据表内是否数据SAAS
-        if (in_array('saas_appid', $tableFields)) {
-            $saas_appid = request()->appid;
+        if (in_array('saas_appid', $tableFields) && request()->saas_appid) {
+            $saas_appid = request()->saas_appid;
             $query->where('saas_appid', $saas_appid);
         }
     }
@@ -43,8 +43,8 @@ class Model extends BaseModel
         $tableFields = $model->getTableFields();
         dd($tableFields);
         // 判断数据表内是否数据SAAS
-        if (in_array('saas_appid', $tableFields)) {
-            $saas_appid = request()->appid;
+        if (in_array('saas_appid', $tableFields) && request()->saas_appid) {
+            $saas_appid = request()->saas_appid;
             $model->saas_appid = $saas_appid;
         }
     }
