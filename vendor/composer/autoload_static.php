@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit614276dd983f9843052e0d3234d62f27
+class ComposerStaticInitd5a2db6d6e54541d9d5e0063c534ba72
 {
     public static $files = array (
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
@@ -40,10 +40,6 @@ class ComposerStaticInit614276dd983f9843052e0d3234d62f27
             'yzh52521\\Flysystem\\Oss\\' => 23,
             'yzh52521\\Flysystem\\Obs\\' => 23,
         ),
-        'x' => 
-        array (
-            'xbase\\' => 6,
-        ),
         'v' => 
         array (
             'voku\\' => 5,
@@ -68,6 +64,10 @@ class ComposerStaticInit614276dd983f9843052e0d3234d62f27
         'l' => 
         array (
             'loong\\oauth\\' => 12,
+        ),
+        'b' => 
+        array (
+            'base\\' => 5,
         ),
         'a' => 
         array (
@@ -172,6 +172,7 @@ class ComposerStaticInit614276dd983f9843052e0d3234d62f27
         ),
         'C' => 
         array (
+            'Carbon\\Doctrine\\' => 16,
             'Carbon\\' => 7,
         ),
         'B' => 
@@ -200,10 +201,6 @@ class ComposerStaticInit614276dd983f9843052e0d3234d62f27
         'yzh52521\\Flysystem\\Obs\\' => 
         array (
             0 => __DIR__ . '/..' . '/yzh52521/flysystem-obs/src',
-        ),
-        'xbase\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/xbase',
         ),
         'voku\\' => 
         array (
@@ -243,16 +240,16 @@ class ComposerStaticInit614276dd983f9843052e0d3234d62f27
         ),
         'think\\' => 
         array (
-            0 => __DIR__ . '/..' . '/topthink/framework/src/think',
-            1 => __DIR__ . '/..' . '/topthink/think-cache/src',
-            2 => __DIR__ . '/..' . '/topthink/think-container/src',
-            3 => __DIR__ . '/..' . '/topthink/think-helper/src',
-            4 => __DIR__ . '/..' . '/topthink/think-image/src',
-            5 => __DIR__ . '/..' . '/topthink/think-log/src',
-            6 => __DIR__ . '/..' . '/topthink/think-orm/src',
+            0 => __DIR__ . '/..' . '/topthink/think-helper/src',
+            1 => __DIR__ . '/..' . '/topthink/framework/src/think',
+            2 => __DIR__ . '/..' . '/topthink/think-cache/src',
+            3 => __DIR__ . '/..' . '/topthink/think-orm/src',
+            4 => __DIR__ . '/..' . '/topthink/think-container/src',
+            5 => __DIR__ . '/..' . '/topthink/think-image/src',
+            6 => __DIR__ . '/..' . '/topthink/think-log/src',
             7 => __DIR__ . '/..' . '/topthink/think-queue/src',
-            8 => __DIR__ . '/..' . '/topthink/think-template/src',
-            9 => __DIR__ . '/..' . '/topthink/think-validate/src',
+            8 => __DIR__ . '/..' . '/topthink/think-validate/src',
+            9 => __DIR__ . '/..' . '/topthink/think-template/src',
         ),
         'phpseclib3\\' => 
         array (
@@ -261,12 +258,16 @@ class ComposerStaticInit614276dd983f9843052e0d3234d62f27
         'phpDocumentor\\Reflection\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
-            1 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
-            2 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
+            1 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
+            2 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
         ),
         'loong\\oauth\\' => 
         array (
             0 => __DIR__ . '/..' . '/loong/oauth/src',
+        ),
+        'base\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/base',
         ),
         'app\\' => 
         array (
@@ -350,8 +351,8 @@ class ComposerStaticInit614276dd983f9843052e0d3234d62f27
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-factory/src',
-            1 => __DIR__ . '/..' . '/psr/http-message/src',
+            0 => __DIR__ . '/..' . '/psr/http-message/src',
+            1 => __DIR__ . '/..' . '/psr/http-factory/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (
@@ -493,6 +494,10 @@ class ComposerStaticInit614276dd983f9843052e0d3234d62f27
         array (
             0 => __DIR__ . '/..' . '/doctrine/annotations/lib/Doctrine/Common/Annotations',
         ),
+        'Carbon\\Doctrine\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/carbonphp/carbon-doctrine-types/src/Carbon/Doctrine',
+        ),
         'Carbon\\' => 
         array (
             0 => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon',
@@ -632,10 +637,10 @@ class ComposerStaticInit614276dd983f9843052e0d3234d62f27
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit614276dd983f9843052e0d3234d62f27::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit614276dd983f9843052e0d3234d62f27::$prefixDirsPsr4;
-            $loader->fallbackDirsPsr0 = ComposerStaticInit614276dd983f9843052e0d3234d62f27::$fallbackDirsPsr0;
-            $loader->classMap = ComposerStaticInit614276dd983f9843052e0d3234d62f27::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitd5a2db6d6e54541d9d5e0063c534ba72::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitd5a2db6d6e54541d9d5e0063c534ba72::$prefixDirsPsr4;
+            $loader->fallbackDirsPsr0 = ComposerStaticInitd5a2db6d6e54541d9d5e0063c534ba72::$fallbackDirsPsr0;
+            $loader->classMap = ComposerStaticInitd5a2db6d6e54541d9d5e0063c534ba72::$classMap;
 
         }, null, ClassLoader::class);
     }

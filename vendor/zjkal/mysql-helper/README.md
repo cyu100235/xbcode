@@ -1,6 +1,6 @@
 <br/>
 <p align="center">
-    <img src="https://gitee.com/zjkal/mysql-helper/raw/main/logo.svg" alt="MysqlHelper" width="180" />
+    <img src="https://zjkal.cn/assets/images/logo/mysql-helper.svg" alt="MysqlHelper" width="180" />
     <br/>
     <br/>
     中文文档 | <a href="https://github.com/zjkal/mysql-helper/blob/main/README_EN.md" target="_blank">English Document</a>
@@ -68,6 +68,8 @@ $mysql->setConfig($config);
 
 ### 2. 导出数据
 
+* 如果实例化时, 已经设置了表前缀,导出的表名可以不用带前缀
+
 ```php
 //导出数据库(包含表结构和数据)
 $mysql->exportSqlFile('test.sql');
@@ -82,7 +84,7 @@ $mysql->exportSqlFile('test.sql', true, ['table1', 'table2']);
 ### 3. 导入数据
 
 * sql文件中的表前缀需要使用`__PREFIX__`占位符代替
-* 如果实例化时,已经设置了数据库前缀,则可以不用传入第二个参数
+* 如果实例化时,已经设置了表前缀,则可以不用传入第二个参数
 
 ```php
 //导入数据库
@@ -94,12 +96,23 @@ $mysql->importSqlFile('test.sql', 'wp_');
 
 ## 📃更新日志
 
+> v1.0.2 2023年9月23日
+> * 增加了数据导出的稳定性
+
 > v1.0.1 2023年9月10日
 > * 修复了在Thinkphp框架下端口识别错误的BUG
 > * 增加了导入的稳定性
 
 > v1.0.0 2023年9月2日
 > * 首次发布
+
+## 💖支持我
+
+您的认可是我继续前行的动力, 如果您觉得`MysqlHelper`对您有帮助, 请[🙏支持我](https://zjkal.cn/sponsor), 谢谢您!
+
+## 🐧加入我的QQ频道
+
+[![QQ频道:世界上最好的编程语言](https://zjkal.cn/assets/images/qq_pindao_a1.png)](https://pd.qq.com/s/7h2hvcuxs)
 
 ## 📖开源协议
 

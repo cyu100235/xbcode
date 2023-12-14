@@ -94,12 +94,19 @@ $mysql->importSqlFile('test.sql', 'wp_');
 
 ## 📃Changelog
 
+> v1.0.2 Sep 23, 2023
+> * Increased export stability
+
 > v1.0.1 Sep 10, 2023
 > * Fixed the bug of incorrect port recognition under the Thinkphp framework
 > * Increased import stability
 
 > v1.0.0 Sep 2, 2023
 > * Initial Release
+
+## 💖sponsor me
+
+Your recognition is the motivation to move on, if you think `MysqlHelper` is helpful to you, please [🙏support me](https://zjkal.cn/sponsor), thank you!
 
 ## 📖License
 
