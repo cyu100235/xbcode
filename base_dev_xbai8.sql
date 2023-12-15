@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : 本地服务器
+ Source Server         : 楚羽幽个人-备案-开发服务器
  Source Server Type    : MySQL
- Source Server Version : 50743
+ Source Server Version : 50740
  Source Host           : localhost:3306
- Source Schema         : base_xb_com
+ Source Schema         : base_dev_xbai8
 
  Target Server Type    : MySQL
- Target Server Version : 50743
+ Target Server Version : 50740
  File Encoding         : 65001
 
- Date: 14/12/2023 22:09:41
+ Date: 15/12/2023 13:47:57
 */
 
 SET NAMES utf8mb4;
@@ -43,7 +43,7 @@ CREATE TABLE `xb_admin`  (
 -- ----------------------------
 -- Records of xb_admin
 -- ----------------------------
-INSERT INTO `xb_admin` VALUES (1, '2023-12-02 12:26:43', '2023-12-11 02:03:40', 1, NULL, 0, 'admin', '$2y$10$pXM73SY4sQCKSlTsiqTjZ.0eC89iRjkmsf/y4us5NrJZJuFtWHLtS', '20', '楚羽幽', '127.0.0.1', '2023-12-11 02:03:40', '', '20');
+INSERT INTO `xb_admin` VALUES (1, '2023-12-02 12:26:43', '2023-12-14 23:30:00', 1, NULL, 0, 'admin', '$2y$10$pXM73SY4sQCKSlTsiqTjZ.0eC89iRjkmsf/y4us5NrJZJuFtWHLtS', '20', '楚羽幽', '117.188.12.180', '2023-12-14 23:30:00', '', '20');
 
 -- ----------------------------
 -- Table structure for xb_admin_log
@@ -88,27 +88,10 @@ CREATE TABLE `xb_admin_role`  (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for xb_platforms
+-- Table structure for xb_app_ads
 -- ----------------------------
-DROP TABLE IF EXISTS `xb_platforms`;
-CREATE TABLE `xb_platforms`  (
-  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
-  `create_at` datetime NULL DEFAULT NULL,
-  `update_at` datetime NULL DEFAULT NULL,
-  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  `platform_type` enum('miniwechat','wechat','douyin','h5','app','other') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统-平台' ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of xb_platforms
--- ----------------------------
-
--- ----------------------------
--- Table structure for xb_plugin_ads
--- ----------------------------
-DROP TABLE IF EXISTS `xb_plugin_ads`;
-CREATE TABLE `xb_plugin_ads`  (
+DROP TABLE IF EXISTS `xb_app_ads`;
+CREATE TABLE `xb_app_ads`  (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '序号',
   `create_at` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_at` datetime NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
@@ -119,18 +102,19 @@ CREATE TABLE `xb_plugin_ads`  (
   `status` enum('10','20') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '10' COMMENT '状态：10禁用，20启用',
   `image_url` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '图片链接',
   `link_url` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '跳转链接',
+  `sort` int(11) NULL DEFAULT 0 COMMENT '排序',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '应用插件-图片广告' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '应用-图片广告' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
--- Records of xb_plugin_ads
+-- Records of xb_app_ads
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for xb_plugin_articles
+-- Table structure for xb_app_article
 -- ----------------------------
-DROP TABLE IF EXISTS `xb_plugin_articles`;
-CREATE TABLE `xb_plugin_articles`  (
+DROP TABLE IF EXISTS `xb_app_article`;
+CREATE TABLE `xb_app_article`  (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '序号',
   `create_at` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_at` datetime NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
@@ -144,17 +128,17 @@ CREATE TABLE `xb_plugin_articles`  (
   `view` int(11) NULL DEFAULT 0 COMMENT '热度',
   `virtually_view` int(11) NULL DEFAULT 0 COMMENT '虚拟热度',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '应用插件-文章内容' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '应用-文章内容' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
--- Records of xb_plugin_articles
+-- Records of xb_app_article
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for xb_plugin_articles_cate
+-- Table structure for xb_app_article_cate
 -- ----------------------------
-DROP TABLE IF EXISTS `xb_plugin_articles_cate`;
-CREATE TABLE `xb_plugin_articles_cate`  (
+DROP TABLE IF EXISTS `xb_app_article_cate`;
+CREATE TABLE `xb_app_article_cate`  (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '序号',
   `create_at` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_at` datetime NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
@@ -163,38 +147,17 @@ CREATE TABLE `xb_plugin_articles_cate`  (
   `status` enum('10','20') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '10' COMMENT '状态：10禁用，20启用',
   `sort` int(11) NULL DEFAULT NULL COMMENT '分类排序',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '应用插件-文章分类' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '应用-文章分类' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
--- Records of xb_plugin_articles_cate
+-- Records of xb_app_article_cate
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for xb_plugin_roles
+-- Table structure for xb_app_tags
 -- ----------------------------
-DROP TABLE IF EXISTS `xb_plugin_roles`;
-CREATE TABLE `xb_plugin_roles`  (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '序号',
-  `create_at` datetime NULL DEFAULT NULL COMMENT '创建时间',
-  `update_at` datetime NULL DEFAULT NULL COMMENT '更新时间',
-  `saas_appid` int(11) NULL DEFAULT NULL COMMENT '所属项目ID',
-  `pid` int(11) NULL DEFAULT 0 COMMENT '上级管理员，0顶级',
-  `title` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '部门名称',
-  `rule` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '部门权限',
-  `is_system` enum('10','20') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '10' COMMENT '是否系统：10不是系统，20是系统',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '应用插件-角色管理' ROW_FORMAT = DYNAMIC;
-
--- ----------------------------
--- Records of xb_plugin_roles
--- ----------------------------
-INSERT INTO `xb_plugin_roles` VALUES (1, '2023-12-02 12:27:52', '2023-12-02 12:27:55', NULL, 0, '系统管理员', NULL, '10');
-
--- ----------------------------
--- Table structure for xb_plugin_tags
--- ----------------------------
-DROP TABLE IF EXISTS `xb_plugin_tags`;
-CREATE TABLE `xb_plugin_tags`  (
+DROP TABLE IF EXISTS `xb_app_tags`;
+CREATE TABLE `xb_app_tags`  (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '序号',
   `create_at` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_at` datetime NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
@@ -206,10 +169,27 @@ CREATE TABLE `xb_plugin_tags`  (
   `status` enum('10','20') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT '10' COMMENT '状态：10禁用，20启用',
   `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '内容',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '应用插件-标签单页' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '应用-标签单页' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
--- Records of xb_plugin_tags
+-- Records of xb_app_tags
+-- ----------------------------
+
+-- ----------------------------
+-- Table structure for xb_platforms
+-- ----------------------------
+DROP TABLE IF EXISTS `xb_platforms`;
+CREATE TABLE `xb_platforms`  (
+  `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
+  `create_at` datetime NULL DEFAULT NULL,
+  `update_at` datetime NULL DEFAULT NULL,
+  `title` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `platform_type` enum('miniwechat','wechat','douyin','h5','app','other') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统-平台' ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of xb_platforms
 -- ----------------------------
 
 -- ----------------------------
