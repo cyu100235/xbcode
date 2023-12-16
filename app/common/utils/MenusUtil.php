@@ -36,7 +36,7 @@ class MenusUtil
      * @param array $data
      * @param int $id
      * @param string $xBaseName
-     * @return void
+     * @return int
      * @author 贵州猿创科技有限公司
      * @copyright 贵州猿创科技有限公司
      */
@@ -45,15 +45,60 @@ class MenusUtil
         if (empty($data)) {
             throw new Exception('菜单数据不能为空');
         }
-        $menus = self::getMenus($xBaseName);
+        # 处理父级菜单
+        if (!empty($data['pid']) && is_array($data['pid'])) {
+            $data['pid'] = end($data['pid']);
+        }
+        # 路由地址首字母转大写
+        $data['path']   = ucfirst($data['path']);
+        # 处理图标
+        if (isset($data['icon']['icon'])) {
+            $data['icon']   = $data['icon']['icon'];
+        }
+        # 获取菜单数据
+        $menus = self::getMenus($xBaseName,true);
         if ($id) {
-            # code...
-        } else if($data){
-            $menuId = self::getMenuId($data);
-            $menuId++;
-            $data['id'] = $menuId;
+            # 修改菜单数据
+            $arrayIndex = array_search($id, array_column($menus, 'id'));
+            $data['id']         = $id;
+            $menus[$arrayIndex] = $data;
+        } else {
+            # 新增菜单数据
+            $id = self::getMenuId($menus);
+            $id++;
+            $data['id'] = $id;
             array_push($menus, $data);
         }
+        # 保存菜单数据
+        self::saveMenusData($menus,$xBaseName);
+        return $id;
+    }
+
+    /**
+     * 批量保存菜单数据
+     * @param array $data
+     * @param string $xBaseName
+     * @return void
+     * @author 贵州猿创科技有限公司
+     * @copyright 贵州猿创科技有限公司
+     */
+    public static function saveAll(array $data,string $xBaseName = null)
+    {
+        foreach ($data as $value) {
+            self::save($value,null,$xBaseName);
+        }
+    }
+
+    /**
+     * 保存菜单数据
+     * @param array $menus
+     * @param string $xBaseName
+     * @return void
+     * @author 贵州猿创科技有限公司
+     * @copyright 贵州猿创科技有限公司
+     */
+    private static function saveMenusData(array $menus,string $xBaseName = null)
+    {
         # 还原菜单格式数据
         $menus = DataUtil::channelLevel($menus, 0, '', 'id', 'pid');
         # 递归处理菜单
@@ -64,6 +109,32 @@ class MenusUtil
         $menuPath = self::getMenuPath($xBaseName);
         # 储存菜单数据
         file_put_contents($menuPath, $menus);
+    }
+
+    /**
+     * 删除菜单数据
+     * @param int $id
+     * @param mixed $xBaseName
+     * @return void
+     * @author 贵州猿创科技有限公司
+     * @copyright 贵州猿创科技有限公司
+     */
+    public static function del(int $id,$xBaseName = null)
+    {
+        if (empty($id)) {
+            throw new Exception('参数错误');
+        }
+        # 获取菜单数据
+        $menus = self::getMenus($xBaseName,true);
+        $arrayIndex = array_search($id, array_column($menus, 'id'));
+        $detail     = isset($menus[$arrayIndex]) ? $menus[$arrayIndex] : [];
+        if (empty($detail)) {
+            throw new Exception('菜单数据不存在');
+        }
+        # 删除元数据
+        unset($menus[$arrayIndex]);
+        # 保存菜单数据
+        self::saveMenusData($menus,$xBaseName);
     }
 
     /**
@@ -116,6 +187,30 @@ class MenusUtil
         }
         # 返回数据
         return $data;
+    }
+
+    /**
+     * 获取菜单详情
+     * @param int $id
+     * @param string $xBaseName
+     * @return mixed
+     * @author 贵州猿创科技有限公司
+     * @copyright 贵州猿创科技有限公司
+     */
+    public static function find(int $id,string $xBaseName = null)
+    {
+        $data       = self::getMenus($xBaseName,true);
+        $arrayIndex = array_search($id, array_column($data, 'id'));
+        $detail     = $data[$arrayIndex] ?? [];
+        if (empty($detail)) {
+            throw new Exception('菜单数据不存在');
+        }
+        if (is_string($detail['icon']) && !empty($detail['icon'])) {
+            $detail['icon'] = [
+                'icon' => $detail['icon'],
+            ];
+        }
+        return $detail;
     }
 
     /**

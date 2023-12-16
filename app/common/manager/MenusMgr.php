@@ -10,6 +10,7 @@ use app\common\enum\ShowStatus;
 use app\common\enum\ShowStatusStyle;
 use app\common\utils\JsonUtil;
 use app\common\utils\MenusUtil;
+use app\common\validate\MenusValidate;
 use FormBuilder\Factory\Elm;
 use think\Request;
 
@@ -35,43 +36,49 @@ trait MenusMgr
         $builder = new ListBuilder;
         $data    = $builder
             ->addActionOptions('操作', [
-                'width' => 180
+                'width' => 180,
             ])
             ->editConfig()
             ->treeConfig([
-                'rowField' => 'id',
+                'rowField'  => 'id',
             ])
             ->addTopButton('add', '添加', [
-                'api' => '/Menus/add',
-                'path' => '/Menus/add'
-            ], [], [
-                'type' => 'primary'
+                'type'      => 'modal',
+                'api'       => '/Menus/add',
+                'path'      => '/Menus/add',
+            ], [
+                'title'     => '添加菜单',
+            ], [
+                'type'      => 'primary',
             ])
             ->addRightButton('edit', '修改', [
-                'api' => '/Menus/edit',
-                'path' => '/Menus/edit'
-            ], [], [
-                'type' => 'primary',
+                'type'      => 'modal',
+                'api'       => '/Menus/edit',
+                'path'      => '/Menus/edit',
+            ], [
+                'title'     => '修改菜单',
+            ], [
+                'type'      => 'primary',
             ])
             ->addRightButton('del', '删除', [
-                'type' => 'confirm',
-                'api' => '/Menus/del',
-                'method' => 'delete',
+                'type'      => 'confirm',
+                'api'       => '/Menus/del',
+                'method'    => 'delete',
             ], [
-                'type' => 'error',
-                'title' => '温馨提示',
-                'content' => '是否确认删除该数据',
+                'type'      => 'error',
+                'title'     => '温馨提示',
+                'content'   => '是否确认删除该数据',
             ], [
                 'type' => 'danger',
             ])
-            ->addColumn('path', '菜单地址', [
-                'treeNode' => true
+            ->addColumn('title', '菜单名称', [
+                'treeNode' => true,
             ])
-            ->addColumn('title', '菜单名称')
-            ->addColumnEle('icon', '菜单图标',[
-                'width'     => 80,
-                'params'    => [
-                    'type'  => 'icons',
+            ->addColumn('path', '菜单地址')
+            ->addColumnEle('icon', '菜单图标', [
+                'width' => 80,
+                'params' => [
+                    'type' => 'icons',
                 ],
             ])
             ->addColumnEle('show', '是否显示', [
@@ -91,7 +98,7 @@ trait MenusMgr
                 ],
             ])
             ->addColumn('method', '请求类型', [
-                'width' => 180
+                'width' => 180,
             ])
             ->addColumnEdit('sort', '排序', [
                 'width' => 100,
@@ -114,7 +121,7 @@ trait MenusMgr
      */
     public function index(Request $request)
     {
-        $data = MenusUtil::getMenus(null,true);
+        $data = MenusUtil::getMenus(null, true);
         return $this->successRes($data);
     }
 
@@ -127,8 +134,139 @@ trait MenusMgr
      */
     public function add(Request $request)
     {
-        $data = $this->formView()->create();
+        if ($request->isPost()) {
+            # 获取数据
+            $post = $request->post();
+            # 数据验证
+            xbValidate(MenusValidate::class, $post,'add');
+            $children = $post['children'];
+            unset($post['children']);
+            # 保存数据
+            $pid = MenusUtil::save($post);
+            # 保存子级菜单
+            $post['id'] = $pid;
+            # 表格组件额外新增表格规则
+            $appendMenus = [];
+            if ($post['component'] === 'table/index') {
+                $tableRule = [
+                    'pid'           => $pid,
+                    'title'         => "{$post['title']}-表格规则",
+                    'component'     => 'none/index',
+                    'path'          => "{$post['path']}Table",
+                    'show'          => '10',
+                    'method'        => ['GET'],
+                    'icon'          => '',
+                    'is_default'    => '10',
+                    'sort'          => '100',
+                    'auth_params'   => '',
+                    'is_system'     => '10',
+                ];
+                array_push($appendMenus, $tableRule);
+            }
+            $appendMenus = array_merge($appendMenus, $this->getMenusChildren($children, $post));
+            # 批量保存
+            MenusUtil::saveAll($appendMenus);
+            # 返回结果
+            return $this->success('添加成功');
+        }
+        $builder = $this->formView();
+        $children = [
+            [
+                'label' => '添加',
+                'value' => 'add',
+            ],
+            [
+                'label' => '编辑',
+                'value' => 'edit',
+            ],
+            [
+                'label' => '删除',
+                'value' => 'del',
+            ],
+        ];
+        $builder->addRow('children', 'checkbox', '子级权限', [], [
+            'col' => 12,
+            'options' => $children,
+        ]);
+        $data = $builder->setMethod('POST')->create();
         return $this->successRes($data);
+    }
+
+    /**
+     * 获取子级菜单数据
+     * @param array $children
+     * @param array $parent
+     * @return array|object|null
+     * @author 贵州猿创科技有限公司
+     * @copyright 贵州猿创科技有限公司
+     */
+    private function getMenusChildren(array $children,array $parent)
+    {
+        if (empty($children)) {
+            return [];
+        }
+        $data = [];
+        foreach ($children as $value) {
+            $parentPath = explode('/',$parent['path']);
+            # 添加
+            if ($value === 'add') {
+                $row = end($data);
+                $item   = [
+                    'pid'           => $parent['id'],
+                    'title'         => "{$parent['title']}-添加",
+                    'component'     => 'form/index',
+                    'is_api'        => '20',
+                    'path'          => "{$parentPath[0]}/add",
+                    'show'          => '10',
+                    'method'        => ['GET','POST'],
+                    'icon'          => '',
+                    'is_default'    => '10',
+                    'sort'          => '100',
+                    'auth_params'   => '',
+                    'is_system'     => '10',
+                ];
+                array_push($data, $item);
+            }
+            # 修改
+            if ($value === 'edit') {
+                $row = end($data);
+                $item   = [
+                    'pid'           => $parent['id'],
+                    'title'         => "{$parent['title']}-修改",
+                    'component'     => 'form/index',
+                    'is_api'        => '20',
+                    'path'          => "{$parentPath[0]}/edit",
+                    'show'          => '10',
+                    'method'        => ['GET','PUT'],
+                    'icon'          => '',
+                    'is_default'    => '10',
+                    'sort'          => '100',
+                    'auth_params'   => '',
+                    'is_system'     => '10',
+                ];
+                array_push($data, $item);
+            }
+            # 删除
+            if ($value === 'del') {
+                $row = end($data);
+                $item   = [
+                    'pid'           => $parent['id'],
+                    'title'         => "{$parent['title']}-删除",
+                    'component'     => 'none/index',
+                    'is_api'        => '20',
+                    'path'          => "{$parentPath[0]}/del",
+                    'show'          => '10',
+                    'method'        => ['GET','DELETE'],
+                    'icon'          => '',
+                    'is_default'    => '10',
+                    'sort'          => '100',
+                    'auth_params'   => '',
+                    'is_system'     => '10',
+                ];
+                array_push($data, $item);
+            }
+        }
+        return $data;
     }
 
     /**
@@ -140,8 +278,22 @@ trait MenusMgr
      */
     public function edit(Request $request)
     {
-        MenusUtil::save([]);
-        $data = $this->formView()->create();
+        $id = $request->get('id');
+        $detail = MenusUtil::find((int) $id);
+        if ($request->isPut()) {
+            # 获取数据
+            $post = $request->post();
+            # 数据验证
+            xbValidate(MenusValidate::class, $post,'edit');
+            # 保存数据
+            MenusUtil::save($post,$id);
+            # 返回结果
+            return $this->success('修改成功');
+        }
+        $data = $this->formView()
+        ->setMethod('PUT')
+        ->setFormData($detail)
+        ->create();
         return $this->successRes($data);
     }
 
@@ -154,7 +306,9 @@ trait MenusMgr
      */
     public function del(Request $request)
     {
-        return $this->successRes();
+        $id = $request->post('id');
+        MenusUtil::del((int) $id);
+        return $this->success('删除成功');
     }
 
     /**
@@ -168,68 +322,69 @@ trait MenusMgr
         $builder = new FormBuilder;
         $builder->addRow('title', 'input', '菜单名称', '', [
             'col' => 12,
-        ])
-            ->addRow('pid', 'cascader', '父级菜单', [0], [
+        ]);
+        $builder->addRow('pid', 'cascader', '父级菜单', [0], [
+            'props' => [
                 'props' => [
-                    'props' => [
-                        'checkStrictly' => true,
+                    'checkStrictly' => true,
+                ],
+            ],
+            'options' => MenusUtil::getCascaderOptions(),
+            'placeholder' => '如不选择则是顶级菜单',
+            'col' => 12,
+        ]);
+        $builder->addRow('component', 'select', '菜单类型', 'none/index', [
+            'options' => MenuComponent::options(),
+            'col' => 12,
+            // 使用联动组件
+            'control' => [
+                [
+                    'value' => 'remote/index',
+                    'where' => '==',
+                    'rule' => [
+                        Elm::input('auth_params', '远程组件')
+                            ->props([
+                                'placeholder' => '示例：remote/index，则会自动加载 http://www.xxx.com/remote/index.vue 文件作为组件渲染',
+                            ])
+                            ->col([
+                                'span' => 12,
+                            ]),
                     ],
                 ],
-                'options'       => MenusUtil::getCascaderOptions(),
-                'placeholder'   => '如不选择则是顶级菜单',
-                'col'           => 12,
-            ])
-            ->addRow('component', 'select', '菜单类型', 'none/index', [
-                'options' => MenuComponent::options(),
-                'col' => 12,
-                // 使用联动组件
-                'control' => [
-                    [
-                        'value' => 'remote/index',
-                        'where' => '==',
-                        'rule' => [
-                            Elm::input('auth_params', '远程组件')
-                                ->props([
-                                    'placeholder' => '示例：remote/index，则会自动加载 http://www.xxx.com/remote/index.vue 文件作为组件渲染',
-                                ])
-                                ->col([
-                                    'span' => 12
-                                ]),
-                        ],
-                    ],
-                    [
-                        'value' => ['', 'table/index', 'form/index'],
-                        'where' => 'in',
-                        'rule' => [
-                            Elm::input('auth_params', '附带参数')
-                                ->props([
-                                    'placeholder' => '附带地址栏参数（选填），格式：name=楚羽幽&sex=男'
-                                ])
-                                ->col([
-                                    'span' => 12
-                                ]),
-                        ],
+                [
+                    'value' => ['', 'table/index', 'form/index'],
+                    'where' => 'in',
+                    'rule' => [
+                        Elm::input('auth_params', '附带参数')
+                            ->props([
+                                'placeholder' => '附带地址栏参数（选填），格式：name=楚羽幽&sex=男',
+                            ])
+                            ->col([
+                                'span' => 12,
+                            ]),
                     ],
                 ],
-            ])
-            ->addRow('path', 'input', '菜单路由', '', [
-                'placeholder' => '示例：控制器/方法',
-                'col' => 12,
-            ])
-            ->addRow('show', 'radio', '显示隐藏', '10', [
-                'options' => ShowStatus::options(),
-                'col' => 12,
-            ])
-            ->addRow('method', 'checkbox', '请求类型', ['GET'], [
-                'options' => MethodsEnum::options(),
-                'col' => 12,
-            ])
-            ->addRow('icon', 'icons', '菜单图标', '', [
-                'col' => 12,
-            ])
-            ->addRow('sort', 'input', '菜单排序', '100', [
-                'col' => 12,
-            ]);
+            ],
+        ]);
+        $builder->addRow('path', 'input', '菜单路由', '', [
+            'placeholder' => '示例：控制器/方法',
+            'col' => 12,
+        ]);
+        $builder->addRow('show', 'radio', '显示隐藏', '10', [
+            'options' => ShowStatus::options(),
+            'col' => 12,
+        ]);
+
+        $builder->addRow('method', 'checkbox', '请求类型', ['GET'], [
+            'options' => MethodsEnum::options(),
+            'col' => 12,
+        ]);
+        $builder->addRow('icon', 'icons', '菜单图标', '', [
+            'col' => 12,
+        ]);
+        $builder->addRow('sort', 'input', '菜单排序', '100', [
+            'col' => 12,
+        ]);
         return $builder;
     }
 }
