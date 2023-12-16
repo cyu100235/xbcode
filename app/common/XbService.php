@@ -27,6 +27,7 @@ class XbService extends Service
         $this->app->event->listen('HttpRun', function () use ($route) {
             # 注册路由
             $route->rule('base/:name/[:module]/[:control]/[:action]', function ($name, $module = '', $control = '', $action = '') {
+                $appName  = '';
                 $module = $module ?: 'index';
                 $control  = $control ? ucfirst($control) : config('route.default_controller', 'Index');
                 $action   = $action ?: config('route.default_action', 'index');

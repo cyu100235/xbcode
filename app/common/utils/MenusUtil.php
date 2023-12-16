@@ -97,7 +97,7 @@ class MenusUtil
      * @author 贵州猿创科技有限公司
      * @copyright 贵州猿创科技有限公司
      */
-    private static function saveMenusData(array $menus,string $xBaseName = null)
+    public static function saveMenusData(array $menus,string $xBaseName = null)
     {
         # 还原菜单格式数据
         $menus = DataUtil::channelLevel($menus, 0, '', 'id', 'pid');

@@ -69,4 +69,16 @@ class AppService
         ];
         return $data;
     }
+    public static function getAppDirName(string $name)
+    {
+        return '';
+    }
+    public static function getAppid(string $name)
+    {
+        return '';
+    }
+    public static function getAppDetail(string $name)
+    {
+        return [];
+    }
 }

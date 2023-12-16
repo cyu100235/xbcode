@@ -5,7 +5,7 @@
         "component": "none/index",
         "path": "admin/systemIndex",
         "show": "20",
-        "sort": "1",
+        "sort": "100",
         "method": [
             "GET"
         ],
@@ -531,6 +531,8 @@
                 "sort": 100,
                 "auth_params": "remote/update/auth",
                 "id": 31,
+                "is_system": "10",
+                "is_default": "10",
                 "children": []
             }
         ]
