@@ -71,6 +71,8 @@ class XbServiceMiddleware
         $appName = $request->route('name', '');
         # 插件目录名
         $appDir = 'xbase';
+        # 设置插件目录
+        $request->xBaseDir = $appDir;
         # 设置插件名称
         $request->xBaseName = $appName;
         # 设置应用总路径

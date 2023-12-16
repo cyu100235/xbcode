@@ -39,7 +39,6 @@ class AppServiceMiddleware
     {
         # 获取应用名
         $appName = request()->xBaseName;
-        dd(request()->xBaseName);
         # 调度转发
         return $this->app->middleware
             ->pipeline('plugin')

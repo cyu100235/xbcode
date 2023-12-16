@@ -228,3 +228,24 @@ function list_sort_by(array $list, string $field, $sortby = 'asc')
     }
     return false;
 }
+
+/**
+ * 获取模块路由
+ * @return string
+ * @copyright 贵州小白基地网络科技有限公司
+ * @author 楚羽幽 cy958416459@qq.com
+ */
+function getModuleRoute()
+{
+    $request = request();
+    if (empty($request->xBaseName)) {
+        # 设置总后台路由格式
+        $moduleRoute = app('http')->getName();
+        $moduleRoute = "/{$moduleRoute}";
+    } else {
+        # 设置应用后台路由格式
+        $moduleRoute = $request->xBaseName;
+        $moduleRoute = "/base/{$moduleRoute}";
+    }
+    return $moduleRoute;
+}

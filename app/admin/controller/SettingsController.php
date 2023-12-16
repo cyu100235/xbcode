@@ -2,7 +2,7 @@
 namespace app\admin\controller;
 
 use app\common\BaseController;
-use app\common\trait\SettingsTrait;
+use app\common\manager\SettingsMgr;
 
 /**
  * 系统设置
@@ -11,5 +11,5 @@ use app\common\trait\SettingsTrait;
  */
 class SettingsController extends BaseController
 {
-    use SettingsTrait;
+    use SettingsMgr;
 }

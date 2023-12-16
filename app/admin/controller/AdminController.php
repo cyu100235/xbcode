@@ -3,9 +3,9 @@
 namespace app\admin\controller;
 
 use app\common\BaseController;
-use app\common\trait\AdminTrait;
+use app\common\manager\AdminMgr;
 
 class AdminController extends BaseController
 {
-    use AdminTrait;
+    use AdminMgr;
 }

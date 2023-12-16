@@ -2,7 +2,7 @@
 namespace app\admin\controller;
 
 use app\common\BaseController;
-use app\common\trait\UploadCateTrait;
+use app\common\manager\UploadCateMgr;
 
 /**
  * 附件库分类
@@ -11,5 +11,5 @@ use app\common\trait\UploadCateTrait;
  */
 class UploadCateController extends BaseController
 {
-    use UploadCateTrait;
+    use UploadCateMgr;
 }

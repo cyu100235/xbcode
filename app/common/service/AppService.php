@@ -10,9 +10,9 @@ class AppService
      * @return array
      * @author John
      */
-    public static function resutl(array $data,)
+    public static function resutl(array $data)
     {
-        $moduleName = request()->moduleName;
+        $moduleRoute = getModuleRoute();
         // 返回数据
         $data       = [
             'web_name'              => $data['web_name']??'XB-Base',
@@ -33,19 +33,19 @@ class AppService
             // 公用接口
             'public_api'            => [
                 // 登录接口
-                'login'             => $data['public_api_login']??"{$moduleName}/Users/login",
+                'login'             => $data['public_api_login']??"{$moduleRoute}/Login/login",
                 // 自定义登录页
                 'login_file'        => $data['public_api_login_file']??'',
                 // 退出接口
-                'loginout'          => $data['public_api_loginout']??"{$moduleName}/Users/loginout",
+                'loginout'          => $data['public_api_loginout']??"{$moduleRoute}/Login/loginout",
                 // 获取用户信息
-                'user'              => $data['public_api_user']??"{$moduleName}/Users/index",
+                'user'              => $data['public_api_user']??"{$moduleRoute}/Login/user",
                 // 清除缓存
-                'clear'             => $data['public_api_clear']??"{$moduleName}/Index/clear",
+                'clear'             => $data['public_api_clear']??"{$moduleRoute}/Index/clear",
                 // 锁定页面
-                'lock'              => $data['public_api_lock']??"{$moduleName}/Index/lock",
+                'lock'              => $data['public_api_lock']??"{$moduleRoute}/Index/lock",
                 // 修改登录者信息
-                "user_edit"         => $data['public_api_user_edit']??"{$moduleName}/Admin/info",
+                "user_edit"         => $data['public_api_user_edit']??"{$moduleRoute}/Admin/info",
                 // 头部toolBar远程文件
                 "header_right_file" => $data['public_api_header_right_file']??"remote/headerToolbar",
             ],
@@ -53,18 +53,18 @@ class AppService
             'remote_url'            => $data['remote_url']??[],
             // 附件库API
             'uploadify_api'         => [
-                'index'             => $data['uploadify_api_index']??"{$moduleName}/Upload/index",
-                'upload'            => $data['uploadify_api_upload']??"{$moduleName}/Upload/upload",
-                'edit'              => $data['uploadify_api_edit']??"{$moduleName}/Upload/edit",
-                'del'               => $data['uploadify_api_del']??"{$moduleName}/Upload/del",
-                'move'              => $data['uploadify_api_move']??"{$moduleName}/Upload/move",
+                'index'             => $data['uploadify_api_index']??"{$moduleRoute}/Upload/index",
+                'upload'            => $data['uploadify_api_upload']??"{$moduleRoute}/Upload/upload",
+                'edit'              => $data['uploadify_api_edit']??"{$moduleRoute}/Upload/edit",
+                'del'               => $data['uploadify_api_del']??"{$moduleRoute}/Upload/del",
+                'move'              => $data['uploadify_api_move']??"{$moduleRoute}/Upload/move",
             ],
             // 附件库分类
             'uploadify_cate'        => [
-                'index'             => $data['uploadify_cate_index']??"{$moduleName}/UploadCate/index",
-                'add'               => $data['uploadify_cate_add']??"{$moduleName}/UploadCate/add",
-                'edit'              => $data['uploadify_cate_edit']??"{$moduleName}/UploadCate/edit",
-                'del'               => $data['uploadify_cate_del']??"{$moduleName}/UploadCate/del",
+                'index'             => $data['uploadify_cate_index']??"{$moduleRoute}/UploadCate/index",
+                'add'               => $data['uploadify_cate_add']??"{$moduleRoute}/UploadCate/add",
+                'edit'              => $data['uploadify_cate_edit']??"{$moduleRoute}/UploadCate/edit",
+                'del'               => $data['uploadify_cate_del']??"{$moduleRoute}/UploadCate/del",
             ],
         ];
         return $data;

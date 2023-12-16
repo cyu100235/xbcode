@@ -3,7 +3,7 @@
 namespace app\admin\controller;
 
 use app\common\BaseController;
-use app\common\trait\MenusTrait;
+use app\common\manager\MenusMgr;
 
 /**
  * 菜单管理
@@ -12,5 +12,5 @@ use app\common\trait\MenusTrait;
  */
 class MenusController extends BaseController
 {
-    use MenusTrait;
+    use MenusMgr;
 }

@@ -121,7 +121,7 @@ trait ButtonTrait
             $button
         );
         // 设置按钮
-        $this->ExtraButtonList[] = $btnData;
+        $this->extraButtonList[] = $btnData;
         return $this;
     }
 
@@ -148,7 +148,6 @@ trait ButtonTrait
         );
         # 别名参数，仅右侧按钮
         $btnData['pageData']['aliasParams'] = [];
-        $btnData['pageData']                = array_merge($btnData['pageData'], $pageData);
         # 处理别名转换
         foreach ($btnData['pageData']['aliasParams'] as $key => $value) {
             if (is_numeric($key)) {
@@ -175,17 +174,24 @@ trait ButtonTrait
      */
     private function checkUsedAttrs(string $field, string $title, array $pageData = [], array $message = [], array $button = []): array
     {
+        # 获取默认数据
         $btnData = $this->getBtnDefaultAttrs($field, $title);
-        // 合并页面数据
+        # 处理API接口数据
+        if (!empty($pageData['api'])) {
+            $moduleRoute = getModuleRoute();
+            $pageData['api'] = "{$moduleRoute}{$pageData['api']}";
+            $pageData['api'] = trim($pageData['api'], '/');
+        }
+        # 合并页面数据
         $btnData['pageData'] = array_merge($btnData['pageData'], $pageData);
-        // 处理模态框参数
+        # 处理模态框参数
         $this->getModalAttrs($btnData);
-        // 合并消息数据
+        # 合并消息数据
         $btnData['message'] = array_merge($btnData['message'], $message);
-        // 默认的按钮样式
+        # 默认的按钮样式
         $btnData['button'] = array_merge($this->getBtnDefaultStyle(), $button);
 
-        //返回按钮
+        # 返回按钮
         return $btnData;
     }
 

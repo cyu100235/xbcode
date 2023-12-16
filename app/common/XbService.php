@@ -37,7 +37,7 @@ class XbService extends Service
                     throw new Exception("应用控制器不存在：{$class}");
                 }
                 # 调度转发
-                return \think\App::invokeMethod([$class, $action]);
+                return \think\facade\App::invokeMethod([$class, $action]);
             })
             ->middleware([
                 \app\common\middleware\XbServiceMiddleware::class,

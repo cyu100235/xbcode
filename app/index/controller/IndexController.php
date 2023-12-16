@@ -3,6 +3,7 @@
 namespace app\index\controller;
 
 use app\common\BaseController;
+use app\common\enum\YesNoEum;
 
 class IndexController extends BaseController
 {

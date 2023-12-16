@@ -2,9 +2,9 @@
 
 namespace app\common\builder;
 
-use app\common\builder\components\DividerTrait;
-use app\common\builder\components\FormValidateTrait;
-use app\common\builder\components\RowTrait;
+use app\common\builder\form\DividerTrait;
+use app\common\builder\form\FormValidateTrait;
+use app\common\builder\form\RowTrait;
 use app\common\builder\form\TabsFormTrait;
 use app\common\Model;
 use FormBuilder\Form;

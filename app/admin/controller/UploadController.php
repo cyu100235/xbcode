@@ -2,7 +2,7 @@
 namespace app\admin\controller;
 
 use app\common\BaseController;
-use app\common\trait\UploadTrait;
+use app\common\manager\UploadMgr;
 
 /**
  * 附件库管理
@@ -11,5 +11,5 @@ use app\common\trait\UploadTrait;
  */
 class UploadController extends BaseController
 {
-    use UploadTrait;
+    use UploadMgr;
 }

@@ -1,7 +1,6 @@
 <?php
 
 namespace app\common\builder\table;
-use app\common\builder\ListBuilder;
 
 /**
  * 表格属性

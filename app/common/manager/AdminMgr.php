@@ -1,11 +1,11 @@
 <?php
 
-namespace app\common\trait;
+namespace app\common\manager;
 
 use think\Request;
 use app\common\model\Admin;
 
-trait AdminTrait
+trait AdminMgr
 {
     /**
      * Saas应用ID
@@ -18,8 +18,8 @@ trait AdminTrait
      * @var Admin
      */
     protected $model = null;
-    public function indexTable(Request $request) {
-        $data = $this->model->find(1);
+    public function indexTable(Request $request)
+    {
     }
     public function index(Request $request) {
     }

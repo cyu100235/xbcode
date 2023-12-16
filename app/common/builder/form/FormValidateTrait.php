@@ -1,6 +1,6 @@
 <?php
 
-namespace app\common\builder\components;
+namespace app\common\builder\form;
 
 use app\common\builder\FormBuilder;
 use think\Validate;

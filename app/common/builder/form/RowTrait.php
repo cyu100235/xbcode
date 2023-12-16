@@ -1,6 +1,6 @@
 <?php
 
-namespace app\common\builder\components;
+namespace app\common\builder\form;
 
 use app\common\builder\FormBuilder;
 use FormBuilder\Factory\Elm;
@@ -33,10 +33,6 @@ trait RowTrait
         } else {
             # 创建自定义组件
             $component = new CustomComponent($type);
-            # 自定义组件所有属性均在props
-            $extra     = [
-                'props' => $extra
-            ];
         }
         # 设置字段，默认数据等
         $component->field($field)->title($title)->value($value);

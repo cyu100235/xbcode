@@ -2,7 +2,7 @@
 namespace app\admin\controller;
 
 use app\common\BaseController;
-use app\common\trait\AdminRoleTrait;
+use app\common\manager\AdminRoleMgr;
 
 /**
  * 角色管理
@@ -11,5 +11,5 @@ use app\common\trait\AdminRoleTrait;
  */
 class AdminRoleController extends BaseController
 {
-    use AdminRoleTrait;
+    use AdminRoleMgr;
 }

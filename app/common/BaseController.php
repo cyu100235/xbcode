@@ -3,7 +3,7 @@
 namespace app\common;
 
 use app\BaseController as BaseControl;
-use app\common\trait\JsonTrait;
+use app\common\utils\JsonUtil;
 
 /**
  * 控制器基类
@@ -13,7 +13,7 @@ use app\common\trait\JsonTrait;
 class BaseController extends BaseControl
 {
     // JSON工具类
-    use JsonTrait;
+    use JsonUtil;
 
     /**
      * 基类初始化
@@ -28,8 +28,5 @@ class BaseController extends BaseControl
         if (!file_exists(root_path().'.env')) {
             header('location:/install/');
         }
-        # 设置应用名称
-        $moduleName = app('http')->getName();
-        request()->moduleName = $moduleName;
     }
 }
