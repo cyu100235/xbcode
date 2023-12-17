@@ -11,6 +11,12 @@ use think\Model as BaseModel;
  */
 class Model extends BaseModel
 {
+    // 开启自动时间戳
+    protected $autoWriteTimestamp = 'datetime';
+    // 定义时间戳字段名
+    protected $createTime = 'create_at';
+    protected $updateTime = 'update_at';
+    
     // 定义全局查询范围
     protected $globalScope = ['appid'];
 
@@ -41,7 +47,6 @@ class Model extends BaseModel
     public static function onBeforeInsert($model)
     {
         $tableFields = $model->getTableFields();
-        dd($tableFields);
         // 判断数据表内是否数据SAAS
         if (in_array('saas_appid', $tableFields) && request()->saas_appid) {
             $saas_appid = request()->saas_appid ?? null;

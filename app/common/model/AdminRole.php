@@ -25,7 +25,7 @@ class AdminRole extends Model
         ];
         $field = [
             'id as value',
-            'username as label'
+            'title as label'
         ];
         $list = self::where($where)
             ->field($field)

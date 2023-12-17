@@ -21,30 +21,6 @@ class UploadService
     use BaseUpload;
     # 使用远程文件下载并储存
     use RemoteUpload;
-
-    /**
-     * 渠道ID
-     * @var null|int
-     * @author 贵州猿创科技有限公司
-     * @email 416716328@qq.com
-     */
-    protected static $store_id = null;
-
-    /**
-     * 应用ID
-     * @var null|int
-     * @author 贵州猿创科技有限公司
-     * @email 416716328@qq.com
-     */
-    protected static $saas_appid = null;
-
-    /**
-     * 用户ID
-     * @var null|int
-     * @author 贵州猿创科技有限公司
-     * @email 416716328@qq.com
-     */
-    protected static $uid = null;
     
     /**
      * 上传文件
