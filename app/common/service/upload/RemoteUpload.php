@@ -7,7 +7,6 @@ use think\file\UploadedFile;
 
 /**
  * 附件服务类
- *
  * @author 贵州猿创科技有限公司
  * @Email 416716328@qq.com
  * @DateTime 2023-03-04

@@ -2,10 +2,9 @@
 
 namespace app\common\service\upload;
 
-use app\common\manager\SettingsMgr;
-use app\common\model\SystemUpload;
 use app\common\model\Upload;
 use app\common\model\UploadCate;
+use app\common\utils\SettingUtil;
 use app\common\validate\AliyunValidate;
 use app\common\validate\QcloudValidate;
 use app\common\validate\QiniuValidate;
@@ -22,30 +21,6 @@ use yzh52521\filesystem\facade\Filesystem;
 trait BaseUpload
 {
     /**
-     * 渠道ID
-     * @var null|int
-     * @author 贵州猿创科技有限公司
-     * @email 416716328@qq.com
-     */
-    protected static $store_id = null;
-
-    /**
-     * 应用ID
-     * @var null|int
-     * @author 贵州猿创科技有限公司
-     * @email 416716328@qq.com
-     */
-    protected static $saas_appid = null;
-
-    /**
-     * 用户ID
-     * @var null|int
-     * @author 贵州猿创科技有限公司
-     * @email 416716328@qq.com
-     */
-    protected static $uid = null;
-
-    /**
      * 检测文件是否已存在
      * @param mixed $fileName
      * @param mixed $adapter
@@ -58,12 +33,6 @@ trait BaseUpload
     {
         $where['filename'] = $fileName;
         $where['adapter']  = $adapter;
-        if (self::$saas_appid) {
-            $where['saas_appid'] = self::$saas_appid;
-        }
-        if (self::$store_id) {
-            $where['store_id'] = self::$store_id;
-        }
         $fileModel = Upload::where($where)->find();
         if ($fileModel) {
             $fileModel->update_at = date('Y-m-d H:i:s');
@@ -92,15 +61,6 @@ trait BaseUpload
         } else {
             $where[] = ['is_system', '=', '20'];
         }
-        if (self::$saas_appid) {
-            $where[] = ['saas_appid', '=', self::$saas_appid];
-        }
-        if (self::$store_id) {
-            $where[] = ['store_id', '=', self::$store_id];
-        }
-        if (self::$uid) {
-            $where[] = ['uid', '=', self::$uid];
-        }
         $category = UploadCate::where($where)->find();
         if (!$category) {
             $category = UploadCate::order(['id' => 'asc'])->find();
@@ -120,20 +80,25 @@ trait BaseUpload
      */
     public static function getConfig()
     {
-        if (self::$saas_appid) {
-            # 应用级附件库
-            $config = SettingsMgr::group(self::$saas_appid, 'upload', []);
-        } else {
-            # 系统级附件库
-            $config = SettingsMgr::group(null, 'upload', []);
+        $active = SettingUtil::getActive('upload');
+        $config = SettingUtil::config('upload');
+        if ($config) {
+            $data = [];
+            foreach ($config as $drive => $value) {
+                foreach ($value as $k => $v) {
+                    $k = str_replace("{$drive}_", '', $k);
+                    $data[$drive][$k] = $v;
+                    if ($drive === 'local') {
+                        $web_url = SettingUtil::setting('system', 'web_url','');
+                        $data[$drive]['url'] = $web_url;
+                    }
+                }
+            }
         }
-        if (empty($config['upload_drive'])) {
-            throw new Exception('附件库驱动未设置', 13000);
-        }
-        if (empty($config['children'])) {
-            throw new Exception('请先设置附件库', 13000);
-        }
-        return $config;
+        return [
+            'active'        => $active,
+            'config'        => $data
+        ];
     }
 
     /**
@@ -148,16 +113,16 @@ trait BaseUpload
     public static function getCurrentConfig($drive = '')
     {
         $config = self::getConfig();
+        $active = $config['active'] ?? '';
         # 当前使用驱动
         if (empty($drive)) {
-            $drive = $config['upload_drive'];
+            $drive = $config['active'];
         }
         # 附件库配置
-        $settings = isset($config['children'][$drive]) ? $config['children'][$drive] : [];
-        if (empty($config['children'])) {
+        if (empty($config['config'])) {
             throw new Exception('请先设置附件库上传设置', 13000);
         }
-        return $settings;
+        return $config['config'][$active] ?? [];
     }
 
     /**
@@ -170,7 +135,7 @@ trait BaseUpload
     public static function getDrive()
     {
         $config = self::getConfig();
-        return $config['upload_drive'] ?? '';
+        return $config['active'] ?? '';
     }
 
     /**
@@ -187,12 +152,12 @@ trait BaseUpload
         $config = self::getConfig();
         # 设置驱动
         if (empty($drive)) {
-            $drive = $config['upload_drive'];
+            $drive = $config['active'];
         }
         # 当前使用附件库配置
         $settings = [];
         # 获取全部配置项
-        $configOptions = $config['children'];
+        $configOptions = $config['config'];
         # 合并配置
         $templateConfig = config("filesystem.disks", []);
         foreach ($configOptions as $key => $value) {
@@ -227,15 +192,12 @@ trait BaseUpload
      * 保存文件信息
      * @param string $path
      * @param string $dir_name
-     * @param int $store_id
-     * @param int $appid
-     * @param int $uid
      * @param string $drive
      * @return Upload
      * @author 贵州猿创科技有限公司
      * @copyright 贵州猿创科技有限公司
      */
-    public static function addUpload(string $path, string $dir_name, int $store_id = null, int $appid = null, int $uid = null, string $drive = 'local')
+    public static function addUpload(string $path, string $dir_name, string $drive = 'local')
     {
         # 完整地址
         $fullPath = public_path() . $path;
@@ -247,9 +209,6 @@ trait BaseUpload
         # 组装数据
         $data = [
             'cid'           => $category['id'],
-            'store_id'      => $store_id,
-            'saas_appid'    => $appid,
-            'uid'           => $uid,
             'title'         => $info['basename'],
             'filename'      => $info['filename'],
             'format'        => $info['extension'],
@@ -262,44 +221,5 @@ trait BaseUpload
             throw new Exception('保存文件信息失败');
         }
         return $model;
-    }
-
-    /**
-     * 设置渠道ID
-     * @param null|int $id
-     * @return void
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
-     * @email 416716328@qq.com
-     */
-    public static function setStoreId(null|int $id)
-    {
-        self::$store_id = $id;
-    }
-
-    /**
-     * 设置应用ID
-     * @param null|int $id
-     * @return void
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
-     * @email 416716328@qq.com
-     */
-    public static function setSaasAppid(null|int $id)
-    {
-        self::$saas_appid = $id;
-    }
-
-    /**
-     * 设置用户ID
-     * @param null|int $id
-     * @return void
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
-     * @email 416716328@qq.com
-     */
-    public static function setUid(null|int $id)
-    {
-        self::$uid = $id;
     }
 }

@@ -4,6 +4,7 @@ namespace app\common\manager;
 
 use app\common\builder\FormBuilder;
 use app\common\model\Upload;
+use app\common\service\UploadService;
 use think\Request;
 
 trait UploadMgr
@@ -108,7 +109,7 @@ trait UploadMgr
         # 获取上传目录
         $dirName = $request->post('dir_name', '');
         # 上传附件
-        $data = UploadService::upload($file, $dirName, $this->saas_appid, $this->uid, $this->store_id);
+        $data = UploadService::upload($file, $dirName);
         if (!$data) {
             return $this->fail('上传失败');
         }
@@ -136,7 +137,7 @@ trait UploadMgr
             return $this->fail('请选择移动的附件');
         }
         $where[] = ['id', 'in', $ads];
-        SystemUpload::where($where)->save(['cid' => $cid]);
+        Upload::where($where)->save(['cid' => $cid]);
         return $this->success('附件移动完成');
     }
 

@@ -25,24 +25,13 @@ class UploadService
     /**
      * 上传文件
      * @param \think\file\UploadedFile $file
-     * @param string $dir_name 上传目录(分类dir_name)
-     * @param mixed $appid 上传应用ID
-     * @param mixed $uid 上传用户ID
-     * @param mixed $store_id 上传渠道ID
-     * @throws \Exception
+     * @param string $dir_name
      * @return array
      * @author 贵州猿创科技有限公司
      * @copyright 贵州猿创科技有限公司
-     * @email 416716328@qq.com
      */
-    public static function upload(UploadedFile $file, string $dir_name = '', $appid = null, $uid = null,$store_id = null)
+    public static function upload(UploadedFile $file, string $dir_name = '')
     {
-        # 设置渠道ID
-        self::setStoreId($store_id);
-        # 设置应用ID
-        self::setSaasAppid($appid);
-        # 设置用户ID
-        self::setUid($uid);
         # 获取分类
         $category = self::getCategory($dir_name);
         # 获取文件后缀
@@ -61,9 +50,6 @@ class UploadService
         # 组装数据
         $data               = [
             'cid'           => $category['id'],
-            'store_id'      => $store_id,
-            'saas_appid'    => $appid,
-            'uid'           => $uid,
             'title'         => $file->getOriginalName(),
             'filename'      => $file->getOriginalName(),
             'format'        => $extension,
@@ -120,20 +106,6 @@ class UploadService
     }
 
     /**
-     * 删除系统附件
-     * @param int $id
-     * @param mixed $force
-     * @return bool
-     * @copyright 贵州猿创科技有限公司
-     * @Email 416716328@qq.com
-     * @DateTime 2023-04-29
-     */
-    public static function delete(int $id, $force = false): bool
-    {
-        return Upload::destroy($id, $force);
-    }
-
-    /**
      * 获取外链地址
      * @param mixed $path
      * @return mixed
@@ -158,10 +130,6 @@ class UploadService
             return '';
         }
         try {
-            # 设置数据
-            self::setSaasAppid($model['saas_appid']);
-            self::setStoreId($model['store_id']);
-            self::setUid($model['uid']);
             # 获取驱动SDK
             $disk = self::getDisk($model['adapter']);
             # 访问链接

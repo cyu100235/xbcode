@@ -19,8 +19,8 @@ class QiniuValidate extends Validate
     ];
 
     protected $message  =   [
-        'accessKey.require'         => '请配置附件设置-七牛云AccessKey',
-        'secretKey.require'         => '请配置附件设置-七牛云SecretKey',
+        'access_key.require'        => '请配置附件设置-七牛云AccessKey',
+        'secret_key.require'        => '请配置附件设置-七牛云SecretKey',
         'bucket.require'            => '请配置附件设置-七牛云Bucket',
         'domain.require'            => '请配置附件设置-七牛云域名',
     ];
