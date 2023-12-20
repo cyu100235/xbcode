@@ -1,7 +1,7 @@
 <?php
 namespace app\admin\controller;
 
-use app\admin\validate\LoginValidate;
+use app\common\validate\LoginValidate;
 use app\common\BaseController;
 use app\common\model\Admin;
 use app\common\utils\AuthUtil;

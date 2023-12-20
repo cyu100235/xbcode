@@ -170,7 +170,80 @@
                 "id": 10,
                 "pid": 9,
                 "is_default": "10",
-                "children": []
+                "children": [
+                    {
+                        "title": "购买应用",
+                        "pid": 10,
+                        "component": "none/index",
+                        "path": "Apps/buy",
+                        "show": "10",
+                        "method": [
+                            "GET",
+                            "POST"
+                        ],
+                        "icon": "",
+                        "sort": "100",
+                        "id": 34,
+                        "auth_params": "",
+                        "is_system": "10",
+                        "is_default": "10",
+                        "children": []
+                    },
+                    {
+                        "title": "安装应用",
+                        "pid": 10,
+                        "component": "none/index",
+                        "path": "Apps/install",
+                        "show": "10",
+                        "method": [
+                            "GET",
+                            "POST"
+                        ],
+                        "icon": "",
+                        "sort": "100",
+                        "id": 35,
+                        "auth_params": "",
+                        "is_system": "10",
+                        "is_default": "10",
+                        "children": []
+                    },
+                    {
+                        "title": "更新应用",
+                        "pid": 10,
+                        "component": "none/index",
+                        "path": "Apps/update",
+                        "show": "10",
+                        "method": [
+                            "GET",
+                            "PUT"
+                        ],
+                        "icon": "",
+                        "sort": "100",
+                        "id": 36,
+                        "auth_params": "",
+                        "is_system": "10",
+                        "is_default": "10",
+                        "children": []
+                    },
+                    {
+                        "title": "卸载应用",
+                        "pid": 10,
+                        "component": "none/index",
+                        "path": "Apps/uninstall",
+                        "show": "10",
+                        "method": [
+                            "GET",
+                            "DELETE"
+                        ],
+                        "icon": "",
+                        "sort": "100",
+                        "id": 37,
+                        "auth_params": "",
+                        "is_system": "10",
+                        "is_default": "10",
+                        "children": []
+                    }
+                ]
             }
         ]
     },
@@ -417,6 +490,114 @@
         ]
     },
     {
+        "title": "项目",
+        "pid": 0,
+        "component": "none/index",
+        "path": "Projects/group",
+        "show": "10",
+        "method": [
+            "GET"
+        ],
+        "icon": "",
+        "sort": "100",
+        "id": 38,
+        "auth_params": "",
+        "is_system": "10",
+        "is_default": "10",
+        "children": [
+            {
+                "title": "项目管理",
+                "pid": 38,
+                "component": "none/index",
+                "path": "Projects/index",
+                "show": "10",
+                "method": [
+                    "GET"
+                ],
+                "icon": "",
+                "sort": "100",
+                "id": 39,
+                "auth_params": "",
+                "is_system": "10",
+                "is_default": "10",
+                "children": [
+                    {
+                        "pid": 39,
+                        "title": "项目管理-添加",
+                        "component": "form/index",
+                        "is_api": "20",
+                        "path": "Projects/add",
+                        "show": "10",
+                        "method": [
+                            "GET",
+                            "POST"
+                        ],
+                        "icon": "",
+                        "is_default": "10",
+                        "sort": "100",
+                        "auth_params": "",
+                        "is_system": "10",
+                        "id": 40,
+                        "children": []
+                    },
+                    {
+                        "pid": 39,
+                        "title": "项目管理-修改",
+                        "component": "form/index",
+                        "is_api": "20",
+                        "path": "Projects/edit",
+                        "show": "10",
+                        "method": [
+                            "GET",
+                            "PUT"
+                        ],
+                        "icon": "",
+                        "is_default": "10",
+                        "sort": "100",
+                        "auth_params": "",
+                        "is_system": "10",
+                        "id": 41,
+                        "children": []
+                    },
+                    {
+                        "pid": 39,
+                        "title": "项目管理-删除",
+                        "component": "none/index",
+                        "is_api": "20",
+                        "path": "Projects/del",
+                        "show": "10",
+                        "method": [
+                            "GET",
+                            "DELETE"
+                        ],
+                        "icon": "",
+                        "is_default": "10",
+                        "sort": "100",
+                        "auth_params": "",
+                        "is_system": "10",
+                        "id": 42,
+                        "children": []
+                    },
+                    {
+                        "title": "项目介绍",
+                        "pid": 39,
+                        "component": "remote/index",
+                        "path": "Projects/desc",
+                        "show": "10",
+                        "method": [
+                            "GET"
+                        ],
+                        "icon": "",
+                        "sort": "100",
+                        "auth_params": "remote/project/desc",
+                        "id": 43,
+                        "children": []
+                    }
+                ]
+            }
+        ]
+    },
+    {
         "path": "systemConfig/tabs",
         "title": "设置",
         "method": [
@@ -481,6 +662,8 @@
                 "sort": "100",
                 "auth_params": "group=sms",
                 "id": 32,
+                "is_system": "10",
+                "is_default": "10",
                 "children": []
             },
             {
