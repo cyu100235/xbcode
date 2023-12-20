@@ -12,15 +12,17 @@ class ProjectValidate extends Validate
         'name'              => 'require',
         'username'          => 'require',
         'password'          => 'require',
+        'app_name'          => 'require',
         'logo'              => 'require',
     ];
 
     protected $message  =   [
         'title.require'             => '请输入项目名称',
-        'name.require'              => '请选择应用插件',
+        'name.require'              => '请输入项目标识',
         'username.require'          => '请输入管理员账号',
         'password.require'          => '请输入管理员密码',
-        'logo.require'              => '请上传应用图标',
+        'app_name.require'          => '请选择关联应用',
+        'logo.require'              => '请上传项目图标',
     ];
 
     public function sceneAdd()
