@@ -140,19 +140,19 @@
         ]
     },
     {
-        "path": "Apps/group",
         "title": "应用",
+        "pid": 0,
+        "component": "none/index",
+        "path": "Apps/group",
+        "show": "20",
         "method": [
             "GET"
         ],
-        "icon": "Setting",
-        "show": "20",
+        "icon": "Eleme",
         "sort": 100,
-        "component": "none/index",
+        "id": 9,
         "auth_params": "",
         "is_system": "10",
-        "id": 9,
-        "pid": 0,
         "is_default": "10",
         "children": [
             {
@@ -248,19 +248,19 @@
         ]
     },
     {
-        "path": "systemRules/tabs",
         "title": "权限",
+        "pid": 0,
+        "component": "none/index",
+        "path": "SystemRules/tabs",
+        "show": "20",
         "method": [
             "GET"
         ],
-        "show": "20",
+        "icon": "Connection",
         "sort": 100,
-        "icon": "Setting",
-        "component": "none/index",
+        "id": 11,
         "auth_params": "",
         "is_system": "10",
-        "id": 11,
-        "pid": 0,
         "is_default": "10",
         "children": [
             {
@@ -591,6 +591,8 @@
                         "sort": "100",
                         "auth_params": "remote/project/desc",
                         "id": 43,
+                        "is_system": "10",
+                        "is_default": "10",
                         "children": []
                     }
                 ]
@@ -688,20 +690,17 @@
         ]
     },
     {
-        "path": "systemUpdate/group",
         "title": "服务",
+        "pid": 0,
+        "component": "none/index",
+        "path": "SystemUpdate/group",
+        "show": "20",
         "method": [
             "GET"
         ],
-        "show": "20",
+        "icon": "UploadFilled",
         "sort": 9999,
-        "icon": "Setting",
-        "component": "none/index",
-        "auth_params": "",
-        "is_system": "10",
         "id": 28,
-        "pid": 0,
-        "is_default": "10",
         "children": [
             {
                 "path": "SystemUpdate/index",

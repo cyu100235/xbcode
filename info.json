@@ -1,0 +1,8 @@
+{
+    "version_name": "v1.0.0",
+    "version": 1000,
+    "link_url":{
+        "register":"http://www.baidu.com",
+        "forgot":"http://www.baidu.com"
+    }
+}

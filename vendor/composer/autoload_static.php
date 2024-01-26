@@ -9,23 +9,23 @@ class ComposerStaticInitd5a2db6d6e54541d9d5e0063c534ba72
     public static $files = array (
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
-        '9b552a3cc426e3287cc811caefa3cf53' => __DIR__ . '/..' . '/topthink/think-helper/src/helper.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
-        '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
-        '35fab96057f1bf5e7aba31a8a6d5fdde' => __DIR__ . '/..' . '/topthink/think-orm/stubs/load_stubs.php',
-        '23c18046f52bef3eea034657bafda50f' => __DIR__ . '/..' . '/symfony/polyfill-php81/bootstrap.php',
-        'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
-        'b067bc7112e384b61c701452d53a14a8' => __DIR__ . '/..' . '/mtdowling/jmespath.php/src/JmesPath.php',
-        'e39a8b23c42d4e1452234d762b03835a' => __DIR__ . '/..' . '/ramsey/uuid/src/functions.php',
-        '8a9dc1de0ca7e01f3e08231539562f61' => __DIR__ . '/..' . '/aws/aws-sdk-php/src/functions.php',
         'decc78cc4436b1292c6c0d151b19445c' => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib/bootstrap.php',
+        '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
+        'b067bc7112e384b61c701452d53a14a8' => __DIR__ . '/..' . '/mtdowling/jmespath.php/src/JmesPath.php',
+        '8a9dc1de0ca7e01f3e08231539562f61' => __DIR__ . '/..' . '/aws/aws-sdk-php/src/functions.php',
+        '23c18046f52bef3eea034657bafda50f' => __DIR__ . '/..' . '/symfony/polyfill-php81/bootstrap.php',
+        '9b552a3cc426e3287cc811caefa3cf53' => __DIR__ . '/..' . '/topthink/think-helper/src/helper.php',
+        'e39a8b23c42d4e1452234d762b03835a' => __DIR__ . '/..' . '/ramsey/uuid/src/functions.php',
+        '35fab96057f1bf5e7aba31a8a6d5fdde' => __DIR__ . '/..' . '/topthink/think-orm/stubs/load_stubs.php',
+        'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
+        'a1105708a18b76903365ca1c4aa61b02' => __DIR__ . '/..' . '/symfony/translation/Resources/functions.php',
         '841780ea2e1d6545ea3a253239d59c05' => __DIR__ . '/..' . '/qiniu/php-sdk/src/Qiniu/functions.php',
         '5dd19d8a547b7318af0c3a93c8bd6565' => __DIR__ . '/..' . '/qiniu/php-sdk/src/Qiniu/Http/Middleware/Middleware.php',
-        'a1105708a18b76903365ca1c4aa61b02' => __DIR__ . '/..' . '/symfony/translation/Resources/functions.php',
         '9a31621970d4295d5f00acf4e277e6f9' => __DIR__ . '/..' . '/stechstudio/backoff/src/helpers.php',
         '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
-        '1cfd2761b63b0a29ed23657ea394cb2d' => __DIR__ . '/..' . '/topthink/think-captcha/src/helper.php',
         'cc56288302d9df745d97c934d6a6e5f0' => __DIR__ . '/..' . '/topthink/think-queue/src/common.php',
+        '1cfd2761b63b0a29ed23657ea394cb2d' => __DIR__ . '/..' . '/topthink/think-captcha/src/helper.php',
         'af46dcea2921209ac30627b964175f13' => __DIR__ . '/..' . '/topthink/think-swoole/src/helpers.php',
     );
 
@@ -39,6 +39,7 @@ class ComposerStaticInitd5a2db6d6e54541d9d5e0063c534ba72
             'yzh52521\\filesystem\\' => 20,
             'yzh52521\\Flysystem\\Oss\\' => 23,
             'yzh52521\\Flysystem\\Obs\\' => 23,
+            'yzh52521\\EasyHttp\\' => 18,
         ),
         'v' => 
         array (
@@ -202,6 +203,10 @@ class ComposerStaticInitd5a2db6d6e54541d9d5e0063c534ba72
         array (
             0 => __DIR__ . '/..' . '/yzh52521/flysystem-obs/src',
         ),
+        'yzh52521\\EasyHttp\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/yzh52521/easyhttp/src',
+        ),
         'voku\\' => 
         array (
             0 => __DIR__ . '/..' . '/voku/portable-ascii/src/voku',
@@ -240,16 +245,16 @@ class ComposerStaticInitd5a2db6d6e54541d9d5e0063c534ba72
         ),
         'think\\' => 
         array (
-            0 => __DIR__ . '/..' . '/topthink/think-helper/src',
-            1 => __DIR__ . '/..' . '/topthink/framework/src/think',
-            2 => __DIR__ . '/..' . '/topthink/think-cache/src',
-            3 => __DIR__ . '/..' . '/topthink/think-orm/src',
-            4 => __DIR__ . '/..' . '/topthink/think-container/src',
-            5 => __DIR__ . '/..' . '/topthink/think-image/src',
-            6 => __DIR__ . '/..' . '/topthink/think-log/src',
+            0 => __DIR__ . '/..' . '/topthink/framework/src/think',
+            1 => __DIR__ . '/..' . '/topthink/think-cache/src',
+            2 => __DIR__ . '/..' . '/topthink/think-container/src',
+            3 => __DIR__ . '/..' . '/topthink/think-helper/src',
+            4 => __DIR__ . '/..' . '/topthink/think-image/src',
+            5 => __DIR__ . '/..' . '/topthink/think-log/src',
+            6 => __DIR__ . '/..' . '/topthink/think-orm/src',
             7 => __DIR__ . '/..' . '/topthink/think-queue/src',
-            8 => __DIR__ . '/..' . '/topthink/think-validate/src',
-            9 => __DIR__ . '/..' . '/topthink/think-template/src',
+            8 => __DIR__ . '/..' . '/topthink/think-template/src',
+            9 => __DIR__ . '/..' . '/topthink/think-validate/src',
         ),
         'phpseclib3\\' => 
         array (
@@ -258,8 +263,8 @@ class ComposerStaticInitd5a2db6d6e54541d9d5e0063c534ba72
         'phpDocumentor\\Reflection\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
-            1 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
-            2 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            1 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
+            2 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
         ),
         'loong\\oauth\\' => 
         array (
@@ -351,8 +356,8 @@ class ComposerStaticInitd5a2db6d6e54541d9d5e0063c534ba72
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-message/src',
-            1 => __DIR__ . '/..' . '/psr/http-factory/src',
+            0 => __DIR__ . '/..' . '/psr/http-factory/src',
+            1 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (

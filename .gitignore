@@ -9,3 +9,4 @@ Thumbs.db
 /.buildpath
 /.project
 /.env
+/app/common/version.json
