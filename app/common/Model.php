@@ -32,8 +32,9 @@ class Model extends BaseModel
         $tableFields = $query->getTableFields();
         // 判断数据表内是否数据SAAS
         if (in_array('saas_appid', $tableFields) && request()->saas_appid) {
-            $saas_appid = request()->saas_appid ?? null;
-            $query->where('saas_appid', $saas_appid);
+            $saas_appid     = request()->saas_appid ?? null;
+            $tableName      = $query->getTable();
+            $query->where("{$tableName}.saas_appid", $saas_appid);
         }
     }
 
@@ -44,13 +45,13 @@ class Model extends BaseModel
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public static function onBeforeInsert($model)
+    public static function onBeforeInsert(BaseModel $query)
     {
-        $tableFields = $model->getTableFields();
+        $tableFields = $query->getTableFields();
         // 判断数据表内是否数据SAAS
         if (in_array('saas_appid', $tableFields) && request()->saas_appid) {
             $saas_appid = request()->saas_appid ?? null;
-            $model->saas_appid = $saas_appid;
+            $query->saas_appid = $saas_appid;
         }
     }
 }

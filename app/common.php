@@ -244,8 +244,9 @@ function getModuleRoute()
         $moduleRoute = "/{$moduleRoute}";
     } else {
         # 设置应用后台路由格式
-        $moduleRoute = $request->xBaseName;
-        $moduleRoute = "/base/{$moduleRoute}";
+        $appName = $request->xBaseName;
+        $moduleName = $request->xModuleName;
+        $moduleRoute = "/base/{$appName}/{$moduleName}";
     }
     return $moduleRoute;
 }

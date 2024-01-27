@@ -158,13 +158,13 @@ class SettingFormUtil
     private static function getConfigTemplate(string|null $group)
     {
         $request   = request();
-        $xBaseName = $request->xBaseName;
-        if ($xBaseName) {
-            $path = root_path() . "xbase/{$xBaseName}/config/settings/{$group}.php";
+        $appName = $request->appName;
+        if ($appName) {
+            $path = root_path() . "base/{$appName}/config/settings/{$group}.php";
             if (!file_exists($path)) {
                 throw new Exception("应用配置文件不存在");
             }
-            $config = config("xbase.{$xBaseName}.settings.{$group}");
+            $config = config("plugin.{$appName}.settings.{$group}");
         } else {
             $path = config_path() . "settings/{$group}.php";
             if (!file_exists($path)) {

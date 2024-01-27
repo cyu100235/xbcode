@@ -2,8 +2,7 @@
 
 namespace app\common\service;
 use app\common\service\cloud\AppCloud;
-use app\common\service\cloud\FrameCloud;
-use app\common\service\cloud\HttpCloud;
+use app\common\service\cloud\FrameUpdate;
 use Exception;
 use think\facade\Cache;
 use yzh52521\EasyHttp\Http;
@@ -16,7 +15,7 @@ use yzh52521\EasyHttp\Http;
 class CloudService
 {
     use AppCloud;
-    use FrameCloud;
+    use FrameUpdate;
 
     /**
      * 请求地址

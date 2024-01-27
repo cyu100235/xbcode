@@ -23,27 +23,23 @@ class XbService extends Service
      */
     public function boot(Route $route)
     {
-        # 监听服务
         $this->app->event->listen('HttpRun', function () use ($route) {
-            # 注册路由
+            // 注册路由
             $route->rule('base/:name/[:module]/[:control]/[:action]', function ($name, $module = '', $control = '', $action = '') {
-                $appName  = '';
-                $module = $module ?: 'index';
+                $appName  = request()->appName;
+                $module   = $module ?: 'index';
                 $control  = $control ? ucfirst($control) : config('route.default_controller', 'Index');
                 $action   = $action ?: config('route.default_action', 'index');
                 $isSuffix = config('route.controller_suffix', false);
                 $suffix   = $isSuffix ? 'Controller' : '';
-                $class    = "\\base\\{$name}\\app\\{$module}\\controller\\{$control}{$suffix}";
+                $class    = "\\base\\{$appName}\\app\\{$module}\\controller\\{$control}{$suffix}";
                 if (!class_exists($class)) {
                     throw new Exception("应用控制器不存在：{$class}");
                 }
-                # 调度转发
+                // 调度转发
                 return \think\facade\App::invokeMethod([$class, $action]);
             })
-            ->middleware([
-                \app\common\middleware\XbServiceMiddleware::class,
-                \app\common\middleware\AppServiceMiddleware::class
-            ]);
+            ->middleware(\app\common\middleware\XbServiceMiddleware::class);
         });
     }
 }

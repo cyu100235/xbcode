@@ -18,18 +18,17 @@
                 </div>
                 <div class="project-content">
                     <div class="project-grid">
-                        <div class="item" v-for="(item, index) in 15" :key="index">
-                            <div class="info">
+                        <div class="item" v-for="(item, index) in projects.list" :key="index">
+                            <div class="info" @click="openUrl(item?.id)">
                                 <div class="icon">
-                                    <el-image style="width: 100%; height: 200px;border-radius: 3px;"
-                                        src="http://xb.dev.xbai8.com/uploads/system_upload/20231021/7ab28d88954ec17ad18e4c36cd9ade85.jpeg" />
+                                    <el-image style="width: 100%; height: 200px;border-radius: 3px;" :src="item?.logo" />
                                 </div>
                                 <div class="title">
-                                    匿名聊天
+                                    {{ item.title }}
                                 </div>
                             </div>
                             <div class="btns">
-                                <el-button type="primary" size="small">
+                                <el-button type="primary" size="small" @click="openWin('/Projects/edit', { id: item?.id })">
                                     编辑
                                 </el-button>
                                 <el-button type="danger" size="small">
@@ -64,9 +63,28 @@ export default {
             },
         }
     },
-    mounted() {
+    async mounted() {
+        await this.getList()
     },
     methods: {
+        getList() {
+            this.$http.useGet('/admin/Projects/index').then((res) => {
+                this.projects.list = res?.data?.data ?? []
+                this.projects.paginate.page = res?.data?.current_page ?? []
+            })
+        },
+        openUrl(id) {
+            const params = {
+                id
+            }
+            this.$http.useGet('/admin/Projects/login', params).then((res) => {
+                if (!res?.data?.url) {
+                    this.$useNotifyError('获取地址失败')
+                    return;
+                }
+                window.open(res?.data?.url)
+            })
+        },
         openWin(url, params = {}) {
             this.$routerApp.push({
                 path: url,
@@ -191,7 +209,8 @@ export default {
                 }
 
             }
-            .xb-paginate{
+
+            .xb-paginate {
                 height: 50px;
                 display: flex;
                 justify-content: flex-end;

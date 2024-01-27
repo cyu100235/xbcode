@@ -13,6 +13,10 @@ class AppService
     public static function resutl(array $data)
     {
         $moduleRoute = getModuleRoute();
+        $toolbar     = '/remote/toolbar';
+        if ($moduleRoute !== '/admin') {
+            $toolbar = "{$moduleRoute}/remote/toolbar";
+        }
         // 返回数据
         $data       = [
             'web_name'              => $data['web_name']??'XB-Base',
@@ -47,7 +51,7 @@ class AppService
                 // 修改登录者信息
                 "user_edit"         => $data['public_api_user_edit']??"{$moduleRoute}/Admin/info",
                 // 头部toolBar远程文件
-                "header_right_file" => $data['public_api_header_right_file']??"remote/headerToolbar",
+                "header_right_file" => $data['public_api_header_right_file']??$toolbar,
             ],
             // 远程组件
             'remote_url'            => $data['remote_url']??[],
@@ -68,17 +72,5 @@ class AppService
             ],
         ];
         return $data;
-    }
-    public static function getAppDirName(string $name)
-    {
-        return '';
-    }
-    public static function getAppid(string $name)
-    {
-        return '';
-    }
-    public static function getAppDetail(string $name)
-    {
-        return [];
     }
 }

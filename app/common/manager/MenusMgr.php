@@ -25,12 +25,6 @@ trait MenusMgr
     protected $saas_appid = null;
 
     /**
-     * 项目地址
-     * @var string
-     */
-    protected $xBaseDir = null;
-
-    /**
      * 表格列
      * @param \think\Request $request
      * @return mixed
@@ -127,7 +121,7 @@ trait MenusMgr
      */
     public function index(Request $request)
     {
-        $data = MenusUtil::getMenus($this->xBaseDir, true);
+        $data = MenusUtil::getMenus(true);
         return $this->successRes($data);
     }
 
@@ -150,7 +144,7 @@ trait MenusMgr
         # 修改值
         $value = $request->post('value');
         # 获取列表
-        $data = MenusUtil::getMenus($this->xBaseDir,true);
+        $data = MenusUtil::getMenus(true);
         # 查询数据
         $arrayIndex = array_search($id, array_column($data, $keyField));
         # 检测并判断数据
@@ -160,7 +154,7 @@ trait MenusMgr
         }
         $data[$arrayIndex][$field] = $value;
         # 保存菜单数据
-        MenusUtil::saveMenusData($data,$this->xBaseDir);
+        MenusUtil::saveMenusData($data);
         # 返回结果
         return $this->success('修改成功');
     }
@@ -182,7 +176,7 @@ trait MenusMgr
             $children = $post['children'];
             unset($post['children']);
             # 保存数据
-            $pid = MenusUtil::save($post,null,$this->xBaseDir);
+            $pid = MenusUtil::save($post,null);
             # 保存子级菜单
             $post['id'] = $pid;
             # 表格组件额外新增表格规则
@@ -205,7 +199,7 @@ trait MenusMgr
             }
             $appendMenus = array_merge($appendMenus, $this->getMenusChildren($children, $post));
             # 批量保存
-            MenusUtil::saveAll($appendMenus,$this->xBaseDir);
+            MenusUtil::saveAll($appendMenus);
             # 返回结果
             return $this->success('添加成功');
         }
@@ -319,14 +313,14 @@ trait MenusMgr
     public function edit(Request $request)
     {
         $id = $request->get('id');
-        $detail = MenusUtil::find((int) $id,$this->xBaseDir);
+        $detail = MenusUtil::find((int) $id);
         if ($request->isPut()) {
             # 获取数据
             $post = $request->post();
             # 数据验证
             xbValidate(MenusValidate::class, $post,'edit');
             # 保存数据
-            MenusUtil::save($post,$id,$this->xBaseDir);
+            MenusUtil::save($post,$id);
             # 返回结果
             return $this->success('修改成功');
         }
@@ -347,7 +341,7 @@ trait MenusMgr
     public function del(Request $request)
     {
         $id = $request->post('id');
-        MenusUtil::del((int) $id,$this->xBaseDir);
+        MenusUtil::del((int) $id);
         return $this->success('删除成功');
     }
 
@@ -369,7 +363,7 @@ trait MenusMgr
                     'checkStrictly' => true,
                 ],
             ],
-            'options' => MenusUtil::getCascaderOptions($this->xBaseDir),
+            'options' => MenusUtil::getCascaderOptions(),
             'placeholder' => '如不选择则是顶级菜单',
             'col' => 12,
         ]);

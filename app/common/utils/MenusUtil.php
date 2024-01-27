@@ -58,7 +58,7 @@ class MenusUtil
      * @author 贵州猿创科技有限公司
      * @copyright 贵州猿创科技有限公司
      */
-    public static function save(array $data,int $id = null,string $xBaseName = null)
+    public static function save(array $data,int $id = null,)
     {
         if (empty($data)) {
             throw new Exception('菜单数据不能为空');
@@ -74,7 +74,7 @@ class MenusUtil
             $data['icon']   = $data['icon']['icon'];
         }
         # 获取菜单数据
-        $menus = self::getMenus($xBaseName,true);
+        $menus = self::getMenus(true);
         if ($id) {
             # 修改菜单数据
             $arrayIndex = array_search($id, array_column($menus, 'id'));
@@ -88,7 +88,7 @@ class MenusUtil
             array_push($menus, $data);
         }
         # 保存菜单数据
-        self::saveMenusData($menus,$xBaseName);
+        self::saveMenusData($menus);
         return $id;
     }
 
@@ -100,10 +100,10 @@ class MenusUtil
      * @author 贵州猿创科技有限公司
      * @copyright 贵州猿创科技有限公司
      */
-    public static function saveAll(array $data,string $xBaseName = null)
+    public static function saveAll(array $data,)
     {
         foreach ($data as $value) {
-            self::save($value,null,$xBaseName);
+            self::save($value,null);
         }
     }
 
@@ -115,7 +115,7 @@ class MenusUtil
      * @author 贵州猿创科技有限公司
      * @copyright 贵州猿创科技有限公司
      */
-    public static function saveMenusData(array $menus,string $xBaseName = null)
+    public static function saveMenusData(array $menus,)
     {
         # 还原菜单格式数据
         $menus = DataUtil::channelLevel($menus, 0, '', 'id', 'pid');
@@ -124,7 +124,7 @@ class MenusUtil
         # 转换菜单JSON格式数据
         $menus = json_encode($menus, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
         # 获取菜单保存路径
-        $menuPath = self::getMenuPath($xBaseName);
+        $menuPath = self::getMenuPath();
         # 储存菜单数据
         file_put_contents($menuPath, $menus);
     }
@@ -137,13 +137,13 @@ class MenusUtil
      * @author 贵州猿创科技有限公司
      * @copyright 贵州猿创科技有限公司
      */
-    public static function del(int $id,$xBaseName = null)
+    public static function del(int $id)
     {
         if (empty($id)) {
             throw new Exception('参数错误');
         }
         # 获取菜单数据
-        $menus = self::getMenus($xBaseName,true);
+        $menus = self::getMenus(true);
         $arrayIndex = array_search($id, array_column($menus, 'id'));
         $detail     = isset($menus[$arrayIndex]) ? $menus[$arrayIndex] : [];
         if (empty($detail)) {
@@ -152,7 +152,7 @@ class MenusUtil
         # 删除元数据
         unset($menus[$arrayIndex]);
         # 保存菜单数据
-        self::saveMenusData($menus,$xBaseName);
+        self::saveMenusData($menus);
     }
 
     /**
@@ -185,10 +185,10 @@ class MenusUtil
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public static function getMenus(string $xBaseName = null,bool $origin = false)
+    public static function getMenus(bool $origin = false)
     {
         # 获得菜单数据
-        $data = self::getOriginMenus($xBaseName);
+        $data = self::getOriginMenus();
         # 处理菜单数据
         $data = self::parseMenus($data);
         # 处理可展示数据
@@ -215,9 +215,9 @@ class MenusUtil
      * @author 贵州猿创科技有限公司
      * @copyright 贵州猿创科技有限公司
      */
-    public static function find(int $id,string $xBaseName = null)
+    public static function find(int $id,)
     {
-        $data       = self::getMenus($xBaseName,true);
+        $data       = self::getMenus(true);
         $arrayIndex = array_search($id, array_column($data, 'id'));
         $detail     = $data[$arrayIndex] ?? [];
         if (empty($detail)) {
@@ -238,9 +238,9 @@ class MenusUtil
      * @author 贵州猿创科技有限公司
      * @copyright 贵州猿创科技有限公司
      */
-    public static function getCascaderOptions(string $xBaseName = null)
+    public static function getCascaderOptions()
     {
-        $data   = self::getMenus($xBaseName,true);
+        $data   = self::getMenus(true);
         $data   = list_sort_by($data, 'sort', 'asc');
         $data   = DataUtil::channelLevel($data, 0, '', 'id', 'pid');
         $data   = self::getChildrenOptions($data);
@@ -289,12 +289,13 @@ class MenusUtil
      * @author 贵州猿创科技有限公司
      * @copyright 贵州猿创科技有限公司
      */
-    public static function getMenuPath(string $xBaseName = null)
+    public static function getMenuPath()
     {
         $request  = request();
         $menuPath = app_path() . 'menus.json';
+        $xBaseName = $request->appName;
         if ($xBaseName) {
-            $menuPath = "{$request->xbBasePath}/{$xBaseName}/menus.json";
+            $menuPath = "{$request->xBaseModulePath}menus.json";
         }
         return $menuPath;
     }
@@ -306,9 +307,9 @@ class MenusUtil
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public static function getOriginMenus(string $xBaseName = null)
+    public static function getOriginMenus()
     {
-        $menuPath = self::getMenuPath($xBaseName);
+        $menuPath = self::getMenuPath();
         if (!file_exists($menuPath)) {
             throw new Exception("菜单文件不存在：{$menuPath}");
         }
