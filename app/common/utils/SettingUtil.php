@@ -6,41 +6,57 @@ use app\common\model\Settings;
 use Exception;
 
 /**
- * 配置工具类
- * @author 贵州猿创科技有限公司
- * @copyright (c) 贵州猿创科技有限公司
+ * 配置项工具类
+ * @copyright 贵州小白基地网络科技有限公司
+ * @author 楚羽幽 cy958416459@qq.com
  */
 class SettingUtil
 {
     /**
-     * 组装为层级值
-     * @param array $data
-     * @param mixed $value
+     * 获取配置项
+     * @param string $group
+     * @param mixed $default
+     * @param string|array $name
      * @return mixed
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
-     * @email 416716328@qq.com
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
      */
-    private static function createNestedArray(array $data, mixed $config)
+    public static function config(string $group, $default = null,string|array $name ='')
     {
-        $data2   = [];
-        $current = &$data2;
-        foreach ($data as $field) {
-            $current = &$current[$field];
+        $data = self::getOriginal($group);
+        // 没有配置项
+        if (empty($data)) {
+            return $default;
         }
-        $current = $config;
-        return $data2;
+        // 取出指定配置项
+        if (is_array($name)) {
+            $result = [];
+            foreach ($name as $value) {
+                $result[$value] = $data[$value] ?? $default;
+            }
+            // 解析配置项键值对
+            $result = self::getConfigValue($result);
+            // 返回配置数据
+            return $result;
+        }
+        // 取出指定配置项
+        if ($name) {
+            return $data[$name] ?? $default;
+        }
+        // 解析配置项键值对
+        $data = self::getConfigValue($data);
+        // 返回所有配置项
+        return $data;
     }
-
+    
     /**
      * 获取配置项数据
      * @param array $data
-     * @return mixed
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
-     * @email 416716328@qq.com
+     * @return array
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
      */
-    public static function getConfigValue(array $data)
+    protected static function getConfigValue(array $data)
     {
         $configValue = [];
         foreach ($data as $field => $value) {
@@ -55,158 +71,82 @@ class SettingUtil
         }
         return $configValue;
     }
-
+    
     /**
-     * 获取原始未解析配置项数据
-     * @param array $where
-     * @param mixed $default
-     * @return mixed
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
-     * @email 416716328@qq.com
+     * 组装为层级值
+     * @param array $data
+     * @param mixed $config
+     * @return array
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
      */
-    public static function getOriginConfig(array $where, mixed $default = null,bool $system = false)
+    protected static function createNestedArray(array $data, mixed $config)
     {
-        if ($system) {
-            $model = Settings::withoutGlobalScope();
-        } else {
-            $model = Settings::where($where);
+        $data2   = [];
+        $current = &$data2;
+        foreach ($data as $field) {
+            $current = &$current[$field];
         }
-        $value = $model->value('value');
-        if (empty($value)) {
-            return $default;
-        }
-        return $value;
-    }
-
-    /**
-     * 获取选中项
-     * @param string $group
-     * @param mixed $default
-     * @return mixed
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
-     */
-    public static function getActive(string $group, mixed $default = null)
-    {
-        $value = Settings::where('name',$group)->value('active');
-        if (empty($value)) {
-            return $default;
-        }
-        return $value;
+        $current = $config;
+        return $data2;
     }
     
     /**
-     * 读取系统级配置项数据
-     * @param string $group
-     * @param string $name
+     * 获取原始数据值
+     * @param string|null $group
      * @param mixed $default
      * @return mixed
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
      */
-    public static function setting(string $group, string $name = null, mixed $default = null)
+    public static function getOriginal(string $group,$default = null)
     {
-        $data = self::getOriginConfig(['name'=> $group],$default,true);
+        $data = Settings::where('group',$group)->column('value','name');
         if (empty($data)) {
             return $default;
         }
-        if (empty($name)) {
-            if (is_array($data)) {
-                return self::getConfigValue($data);
+        foreach ($data as $field => $value) {
+            // 检测是否图片文件
+            if (strpos($value, '[xbase]') !== false) {
+                $data[$field] = explode('[xbase]', $value);
             }
-            return $data;
-        }
-        if (isset($data[$name])) {
-            $data = $data[$name];
-            if (is_array($data)) {
-                # 解析层级数据
-                return self::getConfigValue($data);
-            }
-            return $data;
-        }
-        # 解析层级数据
-        if (is_array($data)) {
-            return self::getConfigValue($data);
         }
         return $data;
     }
 
     /**
-     * 获取非系统级配置
-     * @param string $group
-     * @param string $name
-     * @param mixed $default
-     * @return mixed
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
-     */
-    public static function config(string $group, string $name = null, mixed $default = null)
-    {
-        $data = self::getOriginConfig(['name' => $group]);
-        if (empty($data)) {
-            return $default;
-        }
-        if (empty($name)) {
-            $data = self::getConfigValue($data);
-            return $data;
-        }
-        if (isset($data[$name])) {
-            $data = $data[$name];
-            # 解析层级数据
-            $data = self::getConfigValue($data);
-            return $data;
-        }
-        # 解析层级数据
-        $data = self::getConfigValue($data);
-        return $data;
-    }
-
-    /**
-     * 获取选中配置项数据
-     * @param string $group
-     * @param string $name
-     * @param mixed $default
-     * @return mixed
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
-     */
-    public static function active(string $group, string $name = null, mixed $default = null)
-    {
-        $data = self::getOriginConfig(['name' => $group]);
-        if (empty($data)) {
-            return $default;
-        }
-        $active = self::getActive($group);
-        $data = $data[$active] ?? [];
-        if (empty($data)) {
-            return $default;
-        }
-        $data = self::getConfigValue($data);
-        return $data;
-    }
-    
-    /**
-     * 保存配置项数据
+     * 保存配置项
      * @param string $group
      * @param array $data
      * @return void
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
      */
-    public static function save(string $group, array $data,string $active = null)
+    public static function save(string $group,array $data)
     {
-        $model = Settings::where(['name' => $group])->find();
-        if (!$model) {
-            $model = new Settings;
-            $model->name = $group;
-            if ($active) {
-                $model->active = $active;
+        foreach ($data as $field => $value) {
+            $where  = [
+                'group' => $group,
+                'name'  => $field,
+            ];
+            $model = Settings::where($where)->find();
+            if (!$model) {
+                $model       = new Settings;
+                $model->name = $field;
+                $model->group = $group;
             }
-        }
-        $model->value = $data;
-        if (!$model->save()) {
-            throw new Exception('保存配置项失败');
+            // 检测是否文件
+            if (is_array($value)) {
+                if (count($value) > 1) {
+                    $value = implode('[xbase]', $value);
+                } else {
+                    $value = current($value);
+                }
+            }
+            $model->value = $value;
+            if (!$model->save()) {
+                throw new Exception('保存失败');
+            }
         }
     }
 }

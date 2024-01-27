@@ -58,7 +58,7 @@ class FormBuilder extends Form
         $extraConfig       = [
             'submitBtn' => [
                 'type' => 'primary',
-                'content' => '提交保存',
+                'content' => '提交',
                 'show' => true,
                 'style' => [
                     'padding' => '0 30px'
@@ -66,7 +66,7 @@ class FormBuilder extends Form
             ],
             'resetBtn' => [
                 'type' => 'info',
-                'content' => '数据重置',
+                'content' => '重置',
                 'show' => true,
                 'style' => [
                     'padding' => '0 30px'

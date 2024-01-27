@@ -7,6 +7,6 @@ return [
     \think\middleware\LoadLangPack::class,
     // Session初始化
     \think\middleware\SessionInit::class,
-    // 控制台中间件
+    // swoole中间件
     \think\swoole\middleware\InteractsWithVarDumper::class,
 ];

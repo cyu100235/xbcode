@@ -9,7 +9,7 @@ class ProjectValidate extends Validate
 {
     protected $rule =   [
         'title'             => 'require|verifyTitle',
-        'name'              => 'require|alpha|verifyName|unique:projects',
+        'name'              => 'require|alphaNum|verifyName|unique:projects',
         'username'          => 'require',
         'password'          => 'require',
         'app_name'          => 'require',
@@ -19,7 +19,7 @@ class ProjectValidate extends Validate
     protected $message  =   [
         'title.require'             => '请输入项目名称',
         'name.require'              => '请输入项目标识',
-        'name.alpha'                => '项目标识只能为字母',
+        'name.alphaNum'             => '项目标识只能为字母',
         'name.unique'               => '该项目标识已创建',
         'username.require'          => '请输入管理员账号',
         'password.require'          => '请输入管理员密码',

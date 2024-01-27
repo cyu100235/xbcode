@@ -80,24 +80,22 @@ trait BaseUpload
      */
     public static function getConfig()
     {
-        $active = SettingUtil::getActive('upload');
-        $config = SettingUtil::config('upload');
-        if ($config) {
-            $data = [];
-            foreach ($config as $drive => $value) {
-                foreach ($value as $k => $v) {
-                    $k = str_replace("{$drive}_", '', $k);
-                    $data[$drive][$k] = $v;
-                    if ($drive === 'local') {
-                        $web_url = SettingUtil::setting('system', 'web_url','');
-                        $data[$drive]['url'] = $web_url;
-                    }
-                }
+        $active = SettingUtil::config('upload','local','selected_active');
+        $config = SettingUtil::config('upload',[]);
+        if (empty($config)) {
+            throw new Exception('请先设置附件库上传设置');
+        }
+        // 本地附件库设置
+        if ($active === 'local') {
+            $web_url = SettingUtil::config('system','','web_url');
+            if (empty($web_url)) {
+                throw new Exception('请先设置系统域名');
             }
+            $config[$active]['url'] = $web_url;
         }
         return [
             'active'        => $active,
-            'config'        => $data
+            'config'        => $config
         ];
     }
 
@@ -114,11 +112,11 @@ trait BaseUpload
     {
         $config = self::getConfig();
         $active = $config['active'] ?? '';
-        # 当前使用驱动
+        // 当前使用驱动
         if (empty($drive)) {
             $drive = $config['active'];
         }
-        # 附件库配置
+        // 附件库配置
         if (empty($config['config'])) {
             throw new Exception('请先设置附件库上传设置', 13000);
         }
@@ -148,42 +146,38 @@ trait BaseUpload
      */
     public static function getDisk($drive = '')
     {
-        # 获取配置项
+        // 获取配置项
         $config = self::getConfig();
-        # 设置驱动
+        // 设置驱动
         if (empty($drive)) {
             $drive = $config['active'];
         }
-        # 当前使用附件库配置
-        $settings = [];
-        # 获取全部配置项
-        $configOptions = $config['config'];
-        # 合并配置
+        // 当前使用附件库配置
+        $settings = $config['config'][$drive] ?? [];
+        // 合并模板配置
         $templateConfig = config("filesystem.disks", []);
-        foreach ($configOptions as $key => $value) {
-            $configSave     = array_merge($templateConfig[$key] ?? [], $value);
-            $settings[$key] = $configSave;
+        if (!isset($templateConfig[$drive])) {
+            $templateConfig[$drive] = [];
         }
-        # 取验证数据
-        $settingConf = empty($settings[$drive]) ? [] : $settings[$drive];
-        # 阿里云驱动验证
+        $templateConfig[$drive] = $settings;
+        // 阿里云驱动验证
         if ($drive === 'aliyun') {
-            xbValidate(AliyunValidate::class, $settingConf);
+            xbValidate(AliyunValidate::class, $settings);
         }
-        # 腾讯云驱动
+        // 腾讯云驱动
         if ($drive === 'qcloud') {
-            xbValidate(QcloudValidate::class, $settingConf);
+            xbValidate(QcloudValidate::class, $settings);
         }
-        # 七牛云驱动
+        // 七牛云驱动
         if ($drive === 'qiniu') {
-            xbValidate(QiniuValidate::class, $settingConf);
+            xbValidate(QiniuValidate::class, $settings);
         }
-        # 动态设置配置
+        // 动态设置配置
         Config::set([
-            'default' => $drive,
-            'disks' => $settings
+            'default'   => $drive,
+            'disks'     => $templateConfig
         ], 'filesystem');
-        # 获取驱动SDK
+        // 获取驱动SDK
         return Filesystem::disk($drive);
     }
 
@@ -199,14 +193,14 @@ trait BaseUpload
      */
     public static function addUpload(string $path, string $dir_name, string $drive = 'local')
     {
-        # 完整地址
+        // 完整地址
         $fullPath = public_path() . $path;
-        # 获取文件信息
+        // 获取文件信息
         $info = pathinfo($fullPath);
         $size = filesize($fullPath);
-        # 获取分类
+        // 获取分类
         $category = self::getCategory($dir_name);
-        # 组装数据
+        // 组装数据
         $data = [
             'cid'           => $category['id'],
             'title'         => $info['basename'],

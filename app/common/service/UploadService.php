@@ -17,9 +17,9 @@ use think\file\UploadedFile;
  */
 class UploadService
 {
-    # 使用基础类
+    // 使用基础类
     use BaseUpload;
-    # 使用远程文件下载并储存
+    // 使用远程文件下载并储存
     use RemoteUpload;
     
     /**
@@ -32,22 +32,22 @@ class UploadService
      */
     public static function upload(UploadedFile $file, string $dir_name = '')
     {
-        # 获取分类
+        // 获取分类
         $category = self::getCategory($dir_name);
-        # 获取文件后缀
+        // 获取文件后缀
         $extension = $file->extension();
-        # 必须储存本地文件后缀
+        // 必须储存本地文件后缀
         $suffix = config('localsuffix');
         $suffix = empty($suffix) ? [] : $suffix;
-        # 使用附件驱动
+        // 使用附件驱动
         $drive    = self::getDrive();
-        # 检测是否必须储存本地
+        // 检测是否必须储存本地
         if (in_array($extension, $suffix)) {
             $drive = 'local';
         }
-        # 获取驱动SDK
+        // 获取驱动SDK
         $filesystem = self::getDisk($drive);
-        # 组装数据
+        // 组装数据
         $data               = [
             'cid'           => $category['id'],
             'title'         => $file->getOriginalName(),
@@ -59,19 +59,19 @@ class UploadService
             'url'           => '',
         ];
 
-        # 检测文件是否存在
+        // 检测文件是否存在
         if ($info = self::getFileInfo($data['filename'], $data['adapter'])) {
             $data['size'] = $info['size'];
             $data['path'] = $info['path'];
             $data['url']  = $filesystem->url($info['path']);
-            # 返回数据
+            // 返回数据
             return $data;
         }
-        # 上传子目录
+        // 上传子目录
         $dirName = $category['dir_name'] ?? 'default';
-        # 上传文件
+        // 上传文件
         $path = $filesystem->putFile($dirName, $file);
-        # 本地附件库(重设储存路径)
+        // 本地附件库(重设储存路径)
         $localPath = $path;
         if ($data['adapter'] === 'local') {
             $config = self::getCurrentConfig($drive);
@@ -80,12 +80,12 @@ class UploadService
         $data['path']           = $localPath;
         $data['size']           = $filesystem->size($path);
         $data['url']            = $filesystem->url($localPath);
-        # 保存数据
+        // 保存数据
         $model = new Upload;
         if (!$model->save($data)) {
             throw new Exception('附件上传失败');
         }
-        # 返回数据
+        // 返回数据
         return $data;
     }
 
@@ -125,53 +125,52 @@ class UploadService
         if (empty($path) || is_null($path)) {
             return null;
         }
-        $model = self::model($path);
+        $model = UploadService::model($path);
         if (!$model) {
-            return '';
+            return null;
         }
         try {
-            # 获取驱动SDK
+            // 获取驱动SDK
             $disk = self::getDisk($model['adapter']);
-            # 访问链接
+            // 访问链接
             $url = '';
-            # 是否私有空间
+            // 是否私有空间
             $private_type = config('filesystem.disks.' . $model['adapter'] . '.private_type','10');
             if ($private_type === '20') {
-                # 过期时间（单位：秒）
+                // 过期时间（单位：秒）
                 $expire_time = 600;
                 switch ($model['adapter']) {
                     case 'aliyun':
                         /** @var \yzh52521\Flysystem\Oss\OssAdapter */
                         $cosDisk = $disk->getAdapter();
-                        # 获取临时链接（一个小时有效）
+                        // 获取临时链接（一个小时有效）
                         $url = $cosDisk->getTemporaryUrl($path,$expire_time);
                         break;
                     case 'qcloud':
                         /** @var \Overtrue\Flysystem\Cos\CosAdapter */
                         $cosDisk = $disk->getAdapter();
-                        # 获取临时链接（一个小时有效）
+                        // 获取临时链接（一个小时有效）
                         $expire_time = $expire_time / 10;
                         $url = $cosDisk->getTemporaryUrl($path,"+{$expire_time} minutes");
                         break;
                     case 'qiniu':
                         /** @var \Overtrue\Flysystem\Qiniu\QiniuAdapter */
                         $qiniuDisk = $disk->getAdapter();
-                        # 获取临时链接（一个小时有效）
+                        // 获取临时链接（一个小时有效）
                         $url = $qiniuDisk->getTemporaryUrl($path,$expire_time);
                         break;
                     default:
-                        # 驱动错误，尝试换取普通链接
+                        // 驱动错误，尝试换取普通链接
                         $url  = $disk->url($path);
                         break;
                 }
             } else {
-                # 换取普通链接
+                // 换取普通链接
                 $url  = $disk->url($path);
             }
             return $url;
         } catch (\Throwable $e) {
-            Log::error("附件外链获取失败：{$e->getMessage()}");
-            return $path;
+            throw new Exception("附件外链获取失败：{$e->getMessage()}");
         }
     }
 
@@ -205,7 +204,7 @@ class UploadService
         $where = [
             'path'      => $path,
         ];
-        $model = Upload::where($where)->find();
+        $model = Upload::where($where)->hidden(['url'])->find();
         if (!$model) {
             return '';
         }

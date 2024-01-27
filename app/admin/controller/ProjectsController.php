@@ -7,6 +7,7 @@ use app\common\builder\FormBuilder;
 use app\common\model\Admin;
 use app\common\model\AdminRole;
 use app\common\model\Projects;
+use app\common\model\UploadCate;
 use Exception;
 use think\facade\Db;
 use think\Request;
@@ -82,6 +83,17 @@ class ProjectsController extends BaseController
                 $adminModel = new Admin;
                 if (!$adminModel->save($data)) {
                     throw new Exception('创建项目管理员失败');
+                }
+                // 创建附件分类
+                $data = [
+                    'saas_appid'    => $model->id,
+                    'title'         => '默认分类',
+                    'dir_name'      => 'default',
+                    'is_system'     => '20',
+                ];
+                $categoryModel = new UploadCate;
+                if (!$categoryModel->save($data)) {
+                    throw new Exception('创建附件分类失败');
                 }
                 Db::commit();
             } catch (\Throwable $e) {

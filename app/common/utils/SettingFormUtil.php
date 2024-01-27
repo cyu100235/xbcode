@@ -55,7 +55,7 @@ class SettingFormUtil
         ]);
         foreach ($template as $value) {
             # 获取表单
-            $formRow = self::getFormView($value['children'])
+            $formRow = self::getFormView($value['children'] ?? [])
             ->getBuilder()
             ->formRule();
             # 设置表单项
