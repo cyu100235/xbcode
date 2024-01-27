@@ -12,18 +12,22 @@ class AppService
      */
     public static function resutl(array $data)
     {
+        // 获取模块路由
         $moduleRoute = getModuleRoute();
+        // 头部toolBar远程文件
         $toolbar     = '/remote/toolbar';
         if ($moduleRoute !== '/admin') {
             $toolbar = "{$moduleRoute}/remote/toolbar";
         }
+        // 获取系统信息
+        $versionData = SystemService::info();
         // 返回数据
         $data       = [
             'web_name'              => $data['web_name']??'XB-Base',
             'web_title'             => $data['web_title']??'后台登录',
             'web_logo'              => $data['web_logo']??'',
-            'version_name'          => $data['version_name']??'',
-            'version'               => $data['version']??'',
+            'version_name'          => $data['version_name']??$versionData['version_name'],
+            'version'               => $data['version']??$versionData['version'],
             // 版权token
             'empower_token'         => $data['empower_token']??'',
             // 版权私钥

@@ -1,10 +1,13 @@
 <?php
-
 namespace app\common\service;
+
 use app\common\service\cloud\AppCloud;
+use app\common\service\cloud\AppPluginsCloud;
 use app\common\service\cloud\FrameUpdate;
+use app\common\service\cloud\ProjectCloud;
 use Exception;
 use think\facade\Cache;
+use think\facade\Cookie;
 use yzh52521\EasyHttp\Http;
 
 /**
@@ -15,6 +18,8 @@ use yzh52521\EasyHttp\Http;
 class CloudService
 {
     use AppCloud;
+    use AppPluginsCloud;
+    use ProjectCloud;
     use FrameUpdate;
 
     /**
@@ -22,7 +27,7 @@ class CloudService
      * @var string
      */
     protected static $baseUrl = 'http://111.230.55.84:39601/cloud/';
-    
+
     /**
      * 获取验证码
      * @return \yzh52521\EasyHttp\Response
@@ -33,7 +38,7 @@ class CloudService
     {
         return self::send('Login/captcha');
     }
-    
+
     /**
      * 用户登录
      * @param string $username
@@ -46,12 +51,13 @@ class CloudService
     public static function login(string $username, string $password, string $scode)
     {
         $host = request()->host();
-        $data = self::send('Login/login', [
-            'host'      => $host,
-            'username'  => $username,
-            'password'  => $password,
-            'scode'     => $scode,
-        ])->array();
+        $params = [
+            'host' => $host,
+            'username' => $username,
+            'password' => $password,
+            'scode' => $scode,
+        ];
+        $data = self::send('Login/login', $params)->array();
         if (empty($data)) {
             throw new Exception('登录失败，接口异常');
         }
@@ -60,7 +66,7 @@ class CloudService
         }
         return $data;
     }
-    
+
     /**
      * 获取用户信息
      * @return void
@@ -70,7 +76,7 @@ class CloudService
     public static function user()
     {
     }
-    
+
     /**
      * 发送请求
      * @param string $url
@@ -84,13 +90,16 @@ class CloudService
     {
         $url     = self::$baseUrl . $url;
         $headers = [
-            'Accept'       => 'application/json',
+            'Accept' => 'application/json',
         ];
         $token   = Cache::get('token');
         if ($token) {
             $headers['Authorization'] = $token;
         }
+        $cookies = Cookie::get();
+        $domain = request()->rootUrl();
         $res = Http::withHost(self::$baseUrl)
+            ->withCookies($cookies,$domain)
             ->withHeaders($headers)
             ->post($url, $data);
         return $res;

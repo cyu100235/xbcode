@@ -1,13 +1,12 @@
 <?php
 namespace app\admin\controller;
 
-use app\admin\validate\ProjectValidate;
+use app\common\validate\ProjectValidate;
 use app\common\BaseController;
 use app\common\builder\FormBuilder;
 use app\common\model\Admin;
-use app\common\model\AdminRole;
 use app\common\model\Projects;
-use app\common\model\UploadCate;
+use app\common\service\CloudService;
 use Exception;
 use think\facade\Db;
 use think\Request;
@@ -41,65 +40,11 @@ class ProjectsController extends BaseController
     public function add(Request $request)
     {
         if ($request->isPost()) {
-            # 获取表单数据
+            // 获取表单数据
             $post = $request->post();
-            # 数据验证
-            xbValidate(ProjectValidate::class, $post, 'add');
-            # 开启事务
-            Db::startTrans();
-            try {
-                // 创建项目
-                $data  = [
-                    'title' => $post['title'],
-                    'app_name' => 'xbaiChat',
-                    'name' => $post['name'],
-                    'logo' => $post['logo'],
-                ];
-                $model = new Projects;
-                if (!$model->save($data)) {
-                    throw new Exception('创建项目失败');
-                }
-                // 创建项目角色
-                $data      = [
-                    'saas_appid' => $model->id,
-                    'pid' => 0,
-                    'title' => "{$post['title']}-超级管理员",
-                    'is_system' => '20',
-                ];
-                $roleModel = new AdminRole;
-                if (!$roleModel->save($data)) {
-                    throw new Exception('创建项目角色失败');
-                }
-                // 创建管理员
-                $data       = [
-                    'role_id' => $roleModel->id,
-                    'saas_appid' => $model->id,
-                    'username' => $post['username'],
-                    'password' => $post['password'],
-                    'nickname' => "{$post['title']}管理员",
-                    'status' => '20',
-                    'is_system' => '20',
-                ];
-                $adminModel = new Admin;
-                if (!$adminModel->save($data)) {
-                    throw new Exception('创建项目管理员失败');
-                }
-                // 创建附件分类
-                $data = [
-                    'saas_appid'    => $model->id,
-                    'title'         => '默认分类',
-                    'dir_name'      => 'default',
-                    'is_system'     => '20',
-                ];
-                $categoryModel = new UploadCate;
-                if (!$categoryModel->save($data)) {
-                    throw new Exception('创建附件分类失败');
-                }
-                Db::commit();
-            } catch (\Throwable $e) {
-                Db::rollback();
-                throw $e;
-            }
+            // 创建项目
+            CloudService::createdProject($post);
+            // 返回数据
             return $this->success('项目创建成功');
         }
         $builder = $this->formView();
@@ -122,9 +67,9 @@ class ProjectsController extends BaseController
             return $this->fail('项目不存在');
         }
         if ($request->isPut()) {
-            # 获取表单数据
+            // 获取表单数据
             $post = $request->post();
-            # 数据验证
+            // 数据验证
             xbValidate(ProjectValidate::class, $post, 'edit');
             $model = Projects::where('id', $id)->find();
             if (!$model) {
@@ -138,7 +83,7 @@ class ProjectsController extends BaseController
             if (!$adminModel) {
                 return $this->fail('项目管理员不存在');
             }
-            # 开启事务
+            // 开启事务
             Db::startTrans();
             try {
                 // 更新项目
@@ -153,8 +98,10 @@ class ProjectsController extends BaseController
                 // 更新管理员
                 $data       = [
                     'username' => $post['username'],
-                    'password' => $post['password'],
                 ];
+                if ($post['password']) {
+                    $data['password'] = $post['password'];
+                }
                 if (!$adminModel->save($data)) {
                     throw new Exception('更新项目管理员失败');
                 }
@@ -187,24 +134,8 @@ class ProjectsController extends BaseController
      */
     public function del(Request $request)
     {
-        $id    = $request->post();
-        $model = Projects::where('id', $id)->find();
-        if (!$model) {
-            return $this->fail('项目不存在');
-        }
-        Db::startTrans();
-        try {
-            if (!Admin::where('saas_appid', $id)->delete()) {
-                throw new Exception('删除项目管理员失败');
-            }
-            if (!$model->delete()) {
-                throw new Exception('删除项目失败');
-            }
-            Db::commit();
-        } catch (\Throwable $e) {
-            Db::rollback();
-            throw $e;
-        }
+        $id    = $request->post('id');
+        CloudService::deleteProject($id);
         return $this->success('项目删除成功');
     }
 

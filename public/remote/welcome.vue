@@ -17,7 +17,7 @@
                     </div>
                 </div>
                 <div class="project-content">
-                    <div class="project-grid">
+                    <div class="project-grid" v-if="projects.list.length > 0">
                         <div class="item" v-for="(item, index) in projects.list" :key="index">
                             <div class="info" @click="openUrl(item?.id)">
                                 <div class="icon">
@@ -31,11 +31,14 @@
                                 <el-button type="primary" size="small" @click="openWin('/Projects/edit', { id: item?.id })">
                                     编辑
                                 </el-button>
-                                <el-button type="danger" size="small">
+                                <el-button type="danger" size="small" @click="openDel(item?.id)">
                                     删除
                                 </el-button>
                             </div>
                         </div>
+                    </div>
+                    <div class="empty-container" v-else>
+                        <el-empty description="当前没有更多的项目" />
                     </div>
                 </div>
                 <!-- 分页 -->
@@ -67,6 +70,16 @@ export default {
         await this.getList()
     },
     methods: {
+        openDel(id) {
+            this.$useConfirm('是否确定删除该项目？', '温馨提示', 'error').then(() => {
+                const params = {
+                    id
+                }
+                this.$http.useDelete('/admin/Projects/del', params).then((res) => {
+                    this.$useNotifySuccess(res?.msg ?? '删除成功')
+                })
+            })
+        },
         getList() {
             this.$http.useGet('/admin/Projects/index').then((res) => {
                 this.projects.list = res?.data?.data ?? []
@@ -207,7 +220,13 @@ export default {
                         border-radius: 6px;
                     }
                 }
-
+                .empty-container{
+                    height: 100%;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    background-color: #fff;
+                }
             }
 
             .xb-paginate {

@@ -32,7 +32,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '505257f91b22863b0669d761256378eb82b773bf',
+    'reference' => 'b3ad3138c177430d2626fe3799ef00c3ad515595',
     'name' => 'topthink/think',
   ),
   'versions' => 
@@ -732,7 +732,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '505257f91b22863b0669d761256378eb82b773bf',
+      'reference' => 'b3ad3138c177430d2626fe3799ef00c3ad515595',
     ),
     'topthink/think-annotation' => 
     array (
@@ -967,6 +967,15 @@ private static $installed = array (
       array (
       ),
       'reference' => '7c82ce9624075e322f405d7c2d25a02e73ff64dc',
+    ),
+    'zjkal/time-helper' => 
+    array (
+      'pretty_version' => 'v1.1.4',
+      'version' => '1.1.4.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '202e6876414aa9393ebe05ecca1f402a6e259c51',
     ),
   ),
 );

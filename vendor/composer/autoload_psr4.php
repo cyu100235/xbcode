@@ -6,7 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'zjkal\\' => array($vendorDir . '/zjkal/mysql-helper/src'),
+    'zjkal\\' => array($vendorDir . '/zjkal/mysql-helper/src', $vendorDir . '/zjkal/time-helper/src'),
     'yzh52521\\filesystem\\' => array($vendorDir . '/yzh52521/think-filesystem/src'),
     'yzh52521\\Flysystem\\Oss\\' => array($vendorDir . '/yzh52521/flysystem-oss/src'),
     'yzh52521\\Flysystem\\Obs\\' => array($vendorDir . '/yzh52521/flysystem-obs/src'),

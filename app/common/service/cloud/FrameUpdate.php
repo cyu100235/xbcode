@@ -9,4 +9,23 @@ namespace app\common\service\cloud;
  */
 trait FrameUpdate
 {
+    // 获取框架升级信息
+    public static function getFrameUpdate()
+    {
+        return self::send('FrameUpdate/getFrameUpdate');
+    }
+    // 下载框架升级包
+    public static function downloadFrame()
+    {
+    }
+
+    // 获取框架升级日志
+    public static function getFrameLogList()
+    {
+    }
+    
+    // 获取框架授权信息
+    public static function getFrameAuth()
+    {
+    }
 }

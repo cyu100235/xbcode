@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace app\common\middleware;
 
 use app\common\model\Projects;
+use app\common\service\cloud\AppCloud;
 use Closure;
 use Exception;
 use think\App;
@@ -50,8 +51,7 @@ class XbServiceMiddleware
         $this->loadComposer();
         // 4.注册插件中间件
         $this->registerMiddlewares();
-        // 5.检测应用是否到期
-        // 6.检测是否静态文件
+        // 5.检测是否静态文件
         if ($staticContent = $this->checkStaticFile($request)) {
             return $staticContent;
         }
@@ -146,7 +146,8 @@ class XbServiceMiddleware
         if (!$project) {
             throw new Exception("应用不存在：{$projectName}");
         }
-        Cache::set($projectName, $project);
+        // 设置缓存1小时
+        Cache::set($projectName, $project, 3600*1);
         return $project;
     }
 

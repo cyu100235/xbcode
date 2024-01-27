@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e75905ee2b68894f4b8ef751e6b02471",
+    "content-hash": "d593a70d0b92166da282ba54c5a26cf8",
     "packages": [
         {
             "name": "aliyuncs/oss-sdk-php",
@@ -5947,6 +5947,57 @@
                 "source": "https://github.com/zjkal/mysql-helper/tree/v1.0.3"
             },
             "time": "2023-12-09T02:36:56+00:00"
+        },
+        {
+            "name": "zjkal/time-helper",
+            "version": "v1.1.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zjkal/time-helper.git",
+                "reference": "202e6876414aa9393ebe05ecca1f402a6e259c51"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zjkal/time-helper/zipball/202e6876414aa9393ebe05ecca1f402a6e259c51",
+                "reference": "202e6876414aa9393ebe05ecca1f402a6e259c51",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "@stable"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "zjkal\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "zjkal",
+                    "email": "zjkal@qq.com"
+                }
+            ],
+            "description": "一个简单快捷的PHP日期时间助手类库。 a smart PHP datetime helper library.",
+            "keywords": [
+                "date",
+                "datetime",
+                "helper",
+                "php",
+                "time",
+                "zjkal"
+            ],
+            "support": {
+                "issues": "https://github.com/zjkal/time-helper/issues",
+                "source": "https://github.com/zjkal/time-helper/tree/v1.1.4"
+            },
+            "time": "2023-10-25T03:42:01+00:00"
         }
     ],
     "packages-dev": [
