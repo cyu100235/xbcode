@@ -2,6 +2,7 @@
 
 namespace app\common\utils;
 
+use Exception;
 use think\Response;
 
 trait JsonUtil
@@ -21,6 +22,22 @@ trait JsonUtil
         $json['code']   = $code;
         $json['data']   = $data;
         return Response::create($json, 'json');
+    }
+
+    /**
+     * 返回固定JSON
+     * @param array $data
+     * @return mixed
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public static function toData(array $data)
+    {
+        if (!isset($data['msg']) || !isset($data['code']) || !isset($data['data'])){
+            throw new Exception("返回数据格式错误", 404);
+            
+        }
+        return self::json($data['msg'],$data['code'],$data['data']);
     }
     
     /**

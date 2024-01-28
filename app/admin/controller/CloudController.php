@@ -31,31 +31,26 @@ class CloudController extends BaseController
     {
         $username = $request->post('username','');
         $password = $request->post('password','');
-        $scode = $request->post('scode','');
-        return CloudService::login($username, $password,$scode);
+        return CloudService::login($username, $password);
     }
     
     /**
-     * 获取验证码
-     * @param \think\Request $request
-     * @return \yzh52521\EasyHttp\Response
-     * @copyright 贵州小白基地网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
-     */
-    public function captcha(Request $request)
-    {
-        return CloudService::captcha();
-    }
-
-    /**
      * 用户信息
      * @param \think\Request $request
-     * @return void
+     * @return mixed
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public function user(Request $request)
     {
+        $data = CloudService::user();
+        if (!isset($data['code'])){
+            return $this->fail('云端返回数据格式错误');
+        }
+        if ($data['code'] !== 200) {
+            return $this->successRes($data);
+        }
+        return $this->successRes($data['data']);
     }
     
     /**

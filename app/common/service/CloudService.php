@@ -43,19 +43,17 @@ class CloudService
      * 用户登录
      * @param string $username
      * @param string $password
-     * @param string $scode
      * @return array|mixed
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public static function login(string $username, string $password, string $scode)
+    public static function login(string $username, string $password)
     {
         $host = request()->host();
         $params = [
             'host' => $host,
             'username' => $username,
             'password' => $password,
-            'scode' => $scode,
         ];
         $data = self::send('Login/login', $params)->array();
         if (empty($data)) {
@@ -66,15 +64,17 @@ class CloudService
         }
         return $data;
     }
-
+    
     /**
      * 获取用户信息
-     * @return void
+     * @return array|mixed
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public static function user()
     {
+        $data = self::send('User/index')->array();
+        return $data;
     }
 
     /**
@@ -92,12 +92,16 @@ class CloudService
         $headers = [
             'Accept' => 'application/json',
         ];
-        $token   = Cache::get('token');
+        $host = request()->host();
+        $token   = Cache::get($host);
         if ($token) {
             $headers['Authorization'] = $token;
         }
         $cookies = Cookie::get();
-        $domain = request()->rootUrl();
+        $domain = request()->host(true);
+        $ip = request()->ip();
+        $headers['xbase-domain'] = $domain;
+        $headers['xbase-ip'] = $ip;
         $res = Http::withHost(self::$baseUrl)
             ->withCookies($cookies,$domain)
             ->withHeaders($headers)

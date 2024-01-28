@@ -8,13 +8,6 @@
                 <el-form-item label="登录密码">
                     <el-input type="password" v-model="form.password" placeholder="请输入登录密码" />
                 </el-form-item>
-                <el-form-item label="验证码">
-                    <el-input v-model="form.scode" placeholder="请输入验证码">
-                        <template #suffix>
-                            <el-image :src="scodeSrc" @click="getCaptcha()" class="captcha" />
-                        </template>
-                    </el-input>
-                </el-form-item>
                 <div class="action-btn">
                     <a :href="system_info?.link_url?.register ?? ''" target="_blank">注册账号</a>
                     <a :href="system_info?.link_url?.forgot ?? ''" target="_blank">忘记密码</a>
@@ -36,17 +29,14 @@ export default {
             form: {
                 username: "",
                 password: "",
-                scode: "",
             },
             system_info: {},
-            scodeSrc: '',
         };
     },
     props: {
         url: String,
     },
-    created() {
-        this.init();
+    mounted() {
         this.$useKeyCodeEvent(() => this.onSubmit())
     },
     methods: {
@@ -60,21 +50,6 @@ export default {
                     _this.$emit("update:closeWin");
                     _this.$useNotify(res?.msg || "登录成功", 'success', '温馨提示')
                 })
-        },
-        getCaptcha() {
-            this.scodeSrc = `/admin/Cloud/captcha?t=${Math.random()}`
-        },
-        getEmpower() {
-            const _this = this;
-            _this.$http.useGet("admin/Cloud/info").then((res) => {
-                _this.system_info = res?.data || {};
-            })
-        },
-        init() {
-            // 初始化验证码
-            this.getCaptcha();
-            // 获取系统信息
-            this.getEmpower();
         },
     },
 };
