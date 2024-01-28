@@ -2,6 +2,7 @@
 namespace app\common\utils;
 
 use app\common\exception\RollBackCodeException;
+use app\common\exception\RollBackSqlException;
 use app\common\service\CloudService;
 use app\common\service\SystemService;
 use app\common\utils\zip\ZipUtil;
@@ -27,7 +28,7 @@ class FrameUpdateUtil
     /**
      * 当前请求管理器
      * @var Request
-     * @author 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     protected $request = null;
@@ -35,7 +36,7 @@ class FrameUpdateUtil
     /**
      * 本地版本名称
      * @var string
-     * @author 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     protected $clientVersionName = '';
@@ -43,7 +44,7 @@ class FrameUpdateUtil
     /**
      * 本地版本号
      * @var int
-     * @author 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     protected $clientVersion = 0;
@@ -51,7 +52,7 @@ class FrameUpdateUtil
     /**
      * 临时ZIP文件路径
      * @var string
-     * @author 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     protected $tempZipFilePath = null;
@@ -59,7 +60,7 @@ class FrameUpdateUtil
     /**
      * 备份源代码路径
      * @var string
-     * @author 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     protected $backupCodePath = null;
@@ -73,7 +74,7 @@ class FrameUpdateUtil
     /**
      * 备份覆盖代码路径
      * @var 
-     * @author 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     protected $backCoverPath = null;
@@ -89,11 +90,12 @@ class FrameUpdateUtil
      * 打包时忽略文件或目录列表
      * 删除时忽略以下目录或文件
      * @var array
-     * @author 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     protected $ignoreList = [
         '.git',
+        '.example.env',
         'backup',
         'update',
         'public/upload',
@@ -105,7 +107,7 @@ class FrameUpdateUtil
     /**
      * 备份需要覆盖的文件
      * @var array
-     * @author 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     protected $backCoverList = [
@@ -168,7 +170,7 @@ class FrameUpdateUtil
             throw new Exception('下载版本号错误');
         }
         // 下载更新包
-        // CloudService::downloadFrame($version, $this->tempZipFilePath);
+        CloudService::downloadFrame($version, $this->tempZipFilePath);
         // 下载成功
         return JsonUtil::successRes([
             'next' => 'backCode'
@@ -194,9 +196,11 @@ class FrameUpdateUtil
                     'next' => 'backSql'
                 ]);
             }
-            // 备份原始代码
+            // 备份原始代码（备份前先删除原有压缩包）
+            file_exists($this->backupCodePath) && unlink($this->backupCodePath);
             ZipUtil::build($this->backupCodePath, $this->targetPath, $this->ignoreList);
-            // 备份覆盖代码
+            // 备份临时覆盖代码（备份前先删除原有压缩包）
+            file_exists($this->backCoverPath) && unlink($this->backCoverPath);
             ZipUtil::buildFiles($this->backCoverPath, $this->targetPath, $this->backCoverList);
         } catch (\Throwable $e) {
             Log::write(
@@ -275,7 +279,7 @@ class FrameUpdateUtil
             'next' => 'updateData'
         ]);
     }
-
+    
     /**
      * 执行数据同步更新
      * @return mixed
@@ -284,6 +288,70 @@ class FrameUpdateUtil
      */
     public function updateData()
     {
+        try {
+            // SQL目录
+            $dir = root_path('update');
+            if (!is_dir($dir)) {
+                return [];
+            }
+            // 获取数据库前缀
+            $prefix     = config('database.connections.mysql.prefix');
+            // 预替换前缀
+            $prefixs    = ['`php_', '`xb_'];
+            // 扫描SQL目录下的所有SQL文件
+            $files = glob("{$dir}/*.sql");
+            $data     = [];
+            // 处理SQL文件
+            foreach ($files as $file) {
+                $sqlContent = file_get_contents($file);
+                if (empty($sqlContent) && file_exists($file)) {
+                    unlink("{$dir}/{$file}");
+                    continue;
+                }
+                // 替换前缀
+                $sqlContent = str_replace($prefixs, '`__PREFIX__', $sqlContent);
+                file_put_contents($file, $sqlContent);
+                // 添加到数组
+                array_push($data, $file);
+            }
+            // 连接数据库
+            $config = config('database.connections.mysql');
+            $mysql  = new MysqlHelper(
+                $config['username'],
+                $config['password'],
+                $config['database'],
+                $config['hostname'],
+                $config['hostport'],
+                $config['prefix'],
+                $config['charset']
+            );
+            // 批量执行导入SQL文件
+            foreach ($data as $file) {
+                try {
+                    // 执行导入
+                    $mysql->importSqlFile($file, $prefix);
+                } catch (\Throwable $e) {
+                    // 表已存在，忽略
+                    $tableExists = strpos($e->getMessage(), 'already exists') !== false;
+                    // 字段已存在，忽略
+                    $fieldExists = strpos($e->getMessage(), 'Duplicate column name') !== false;
+                    if ($tableExists || $fieldExists){
+                        // 数据已存在，忽略
+                        continue;
+                    } else {
+                        // 其他报错，并抛出异常
+                        throw $e;
+                    }
+                }
+            }
+        } catch (\Throwable $e) {
+            // 日志记录
+            Log::write(
+                "更新数据出错：{$e->getMessage()}，line：{$e->getLine()}，file：{$e->getFile()}",
+                "xbase_update_error"
+            );
+            throw new RollBackSqlException("更新数据出错：{$e->getMessage()}");
+        }
         return JsonUtil::successRes([
             'next' => 'success'
         ]);

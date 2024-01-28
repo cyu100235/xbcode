@@ -1,6 +1,7 @@
 <?php
 
 namespace app\common\service\cloud;
+use app\common\model\Apps;
 use Exception;
 
 /**
@@ -16,12 +17,11 @@ trait AppCloud
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public static function getAppList(int $page, int $limit)
+    public static function getAppList(array $params)
     {
-        return self::send('Apps/getAppsList', [
-            'page'      => $page,
-            'limit'     => $limit,
-        ]);
+        $apps = self::getAppNameVersion();
+        $params['apps'] = $apps;
+        return self::send('Apps/index', $params)->array();
     }
 
     /**
@@ -31,11 +31,69 @@ trait AppCloud
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public static function getAppInfo(string $appName)
+    public static function getAppDetail(string $appName)
     {
-        return self::send('Apps/getAppInfo', [
-            'app_name'  => $appName,
-        ]);
+        $apps = self::getAppNameVersion();
+        $params['apps'] = $apps;
+        $params['name'] = $appName;
+        return self::send('Apps/detail', $params)->array();
+    }
+
+    /**
+     * 获取已安装应用名称及版本
+     * @return array
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    protected static function getAppNameVersion()
+    {
+        $field = [
+            'name',
+            'version_name',
+            'version',
+        ];
+        $list = Apps::order('id desc')->field($field)->select()->toArray();
+        $data  = [];
+        foreach ($list as $value) {
+            $data[$value['name']] = [
+                'version_name'  => $value['version_name'],
+                'version'       => $value['version'],
+            ];
+        }
+        return $data;
+    }
+    
+    /**
+     * 获取应用类型
+     * @return mixed
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public static function getAppType()
+    {
+        return self::send('Apps/appType')->array();
+    }
+
+    /**
+     * 获取应用安装状态
+     * @return mixed
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public static function getAppInstall()
+    {
+        return self::send('Apps/appInstall')->array();
+    }
+
+    /**
+     * 获取应用分类
+     * @return mixed
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public static function getAppCategory()
+    {
+        return self::send('AppsCate/category')->array();
     }
     
     /**

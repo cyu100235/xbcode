@@ -8,8 +8,8 @@ use think\Request;
 
 /**
  * 配置页面管理
- * @author 贵州猿创科技有限公司
- * @copyright (c) 贵州猿创科技有限公司
+ * @author 贵州小白基地网络科技有限公司
+ * @copyright (c) 贵州小白基地网络科技有限公司
  */
 trait SettingsMgr
 {
@@ -17,8 +17,8 @@ trait SettingsMgr
      * 配置表单
      * @param \think\Request $request
      * @return mixed
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      */
     public function config(Request $request)
     {
@@ -43,8 +43,8 @@ trait SettingsMgr
      * 分割配置表单
      * @param \think\Request $request
      * @return mixed
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      */
     public function divider(Request $request)
     {
@@ -66,8 +66,8 @@ trait SettingsMgr
      * 条件显示配置项
      * @param \think\Request $request
      * @return mixed
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      */
     public function selected(Request $request)
     {
@@ -90,8 +90,8 @@ trait SettingsMgr
      * 选项卡配置表单
      * @param \think\Request $request
      * @return mixed
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      */
     public function tabs(Request $request)
     {

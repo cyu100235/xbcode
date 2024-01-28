@@ -16,8 +16,8 @@ trait TabsFormTrait
      * @param string $active
      * @param array $extra
      * @return \app\common\builder\FormBuilder
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     public function initTabs(string $active, array $extra = []): FormBuilder
@@ -34,8 +34,8 @@ trait TabsFormTrait
      * @param string $active
      * @param array $extra
      * @return \app\common\builder\FormBuilder
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     public function initTabsActive(string $field,string $active, array $extra = []): FormBuilder
@@ -79,7 +79,7 @@ trait TabsFormTrait
      * @param string $title
      * @param array $children
      * @return FormBuilder
-     * @copyright 贵州猿创科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-04-29
      */
@@ -101,7 +101,7 @@ trait TabsFormTrait
     /**
      * 结束选项卡表单
      * @return FormBuilder
-     * @copyright 贵州猿创科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-04-29
      */

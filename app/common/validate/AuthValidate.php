@@ -6,7 +6,7 @@ use think\Validate;
 
 /**
  * 鉴权加密验证
- * @author 贵州猿创科技有限公司
+ * @author 贵州小白基地网络科技有限公司
  * @copyright (c) 2023
  */
 class AuthValidate extends Validate

@@ -7,7 +7,7 @@ use think\Validate;
 
 /**
  * 表单验证
- * @author 贵州猿创科技有限公司
+ * @author 贵州小白基地网络科技有限公司
  * @copyright (c) 2023
  */
 trait FormValidateTrait
@@ -16,7 +16,7 @@ trait FormValidateTrait
      * 表单验证
      * @param mixed $validate
      * @return FormBuilder
-     * @copyright 贵州猿创科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-04-29
      */

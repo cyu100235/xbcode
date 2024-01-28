@@ -142,10 +142,9 @@ export default {
         },
         // 点击更新
         hanldUpdate() {
-            const _this = this;
-            _this.$useConfirm('是否确定现在开始更新系统框架？', '温馨提示', 'warning').then(() => {
-                _this.stepData.lock = true;
-                _this.hanldStepUpdate('download');
+            this.$useConfirm('是否确定现在开始更新系统框架？', '温馨提示', 'warning').then(() => {
+                this.stepData.lock = true;
+                this.hanldStepUpdate('download');
             })
         },
         // 获取版本详情

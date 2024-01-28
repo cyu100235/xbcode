@@ -5,8 +5,8 @@ use think\Validate;
 
 /**
  * 菜单验证器
- * @author 贵州猿创科技有限公司
- * @copyright (c) 贵州猿创科技有限公司
+ * @author 贵州小白基地网络科技有限公司
+ * @copyright (c) 贵州小白基地网络科技有限公司
  */
 class MenusValidate extends Validate
 {
@@ -46,8 +46,8 @@ class MenusValidate extends Validate
      * @param mixed $rule
      * @param mixed $data
      * @return bool|string
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      */
     public function verifyPath($value, $rule, $data)
     {
@@ -64,7 +64,7 @@ class MenusValidate extends Validate
      * @param mixed $rule
      * @param mixed $data
      * @return bool|string
-     * @copyright 贵州猿创科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-04-30
      */

@@ -13,7 +13,7 @@ trait TabsTrait
     /**
      * 是否选项表格
      * @var array
-     * @author 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     protected $tabsConfig = [
@@ -24,7 +24,7 @@ trait TabsTrait
 
     /**
      * 设置选项卡表格
-     * @Author 贵州猿创科技有限公司
+     * @Author 贵州小白基地网络科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-03-15
      * @param  array       $config

@@ -141,13 +141,13 @@ class XbServiceMiddleware
         if ($project) {
             return $project;
         }
-        // 重设缓存
+        // 查询项目数据
         $project = Projects::where('name', $projectName)->find();
         if (!$project) {
             throw new Exception("应用不存在：{$projectName}");
         }
-        // 设置缓存1小时
-        Cache::set($projectName, $project, 3600*1);
+        // 设置缓存5分钟
+        Cache::set($projectName, $project, 300);
         return $project;
     }
 
@@ -236,8 +236,8 @@ class XbServiceMiddleware
     /**
      * 注册应用中间件
      * @return void
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     private function registerMiddlewares()

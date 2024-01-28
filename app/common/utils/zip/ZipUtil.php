@@ -4,8 +4,8 @@ use Exception;
 
 /**
  * 使用ZIP管理器
- * @author 贵州猿创科技有限公司
- * @copyright 贵州猿创科技有限公司
+ * @author 贵州小白基地网络科技有限公司
+ * @copyright 贵州小白基地网络科技有限公司
  * @email 416716328@qq.com
  */
 class ZipUtil
@@ -17,8 +17,8 @@ class ZipUtil
      * @param array $ignoreFiles 需要忽略的目录或者文件
      * @throws \Exception
      * @return void
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     public static function build(string $zipFilePath,string $extractTo,array $ignoreFiles = [])
@@ -50,8 +50,8 @@ class ZipUtil
      * @param string $extractTo 打包目标路径
      * @param array $files 需要打包的文件
      * @return void
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     public static function buildFiles(string $zipFilePath,string $extractTo,array $files = [])
@@ -83,8 +83,8 @@ class ZipUtil
      * @param string $extractTo 解压目标路径
      * @throws \Exception
      * @return void
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     public static function unzip(string $zipFilePath,string $extractTo)

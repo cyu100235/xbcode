@@ -4,8 +4,8 @@ namespace app\common\builder\table;
 
 /**
  * 实时表格
- * @author 贵州猿创科技有限公司
- * @copyright 贵州猿创科技有限公司
+ * @author 贵州小白基地网络科技有限公司
+ * @copyright 贵州小白基地网络科技有限公司
  * @email 416716328@qq.com
  */
 trait RealTableTrait
@@ -13,7 +13,7 @@ trait RealTableTrait
     /**
      * 实时表格
      * @var array
-     * @author 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     protected $realTable    = [
@@ -28,8 +28,8 @@ trait RealTableTrait
      * @param bool $enable
      * @param int $time_interval
      * @return mixed
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     public function realTable(bool $enable = true, int $time_interval = 10)

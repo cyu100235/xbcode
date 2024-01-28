@@ -16,7 +16,7 @@ trait ColumnTrait
 
     /**
      * 列配置
-     * @Author 贵州猿创科技有限公司
+     * @Author 贵州小白基地网络科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-03-07
      * @param  array       $columnConfig
@@ -44,7 +44,7 @@ trait ColumnTrait
 
     /**
      * 添加列
-     * @Author 贵州猿创科技有限公司
+     * @Author 贵州小白基地网络科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-02-27
      * @param  string      $field
@@ -65,7 +65,7 @@ trait ColumnTrait
     /**
      * 添加元素列
      *
-     * @Author 贵州猿创科技有限公司
+     * @Author 贵州小白基地网络科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-03-07
      * @param  string      $field
@@ -91,7 +91,7 @@ trait ColumnTrait
     /**
      * 添加编辑列
      *
-     * @Author 贵州猿创科技有限公司
+     * @Author 贵州小白基地网络科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-03-13
      * @param  string      $field

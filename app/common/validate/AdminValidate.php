@@ -26,7 +26,7 @@ class AdminValidate extends Validate
     /**
      * 登录场景
      * @return Validate
-     * @copyright 贵州猿创科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-04-30
      */
@@ -43,7 +43,7 @@ class AdminValidate extends Validate
     /**
      * 添加场景验证
      * @return Validate
-     * @copyright 贵州猿创科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-04-30
      */
@@ -62,7 +62,7 @@ class AdminValidate extends Validate
     /**
      * 修改场景
      * @return Validate
-     * @copyright 贵州猿创科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-04-30
      */
@@ -81,7 +81,7 @@ class AdminValidate extends Validate
     /**
      * 修改自身数据
      * @return Validate
-     * @copyright 贵州猿创科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-04-30
      */
@@ -100,7 +100,7 @@ class AdminValidate extends Validate
      * 验证是否存在
      * @param mixed $value
      * @return bool|string
-     * @copyright 贵州猿创科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-04-30
      */

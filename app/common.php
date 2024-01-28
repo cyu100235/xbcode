@@ -55,8 +55,8 @@ function xbValidate($validate, array $data, string $scene = ''): bool
  * 友好时间显示
  * @param int $time
  * @return bool|string
- * @author 贵州猿创科技有限公司
- * @copyright 贵州猿创科技有限公司
+ * @author 贵州小白基地网络科技有限公司
+ * @copyright 贵州小白基地网络科技有限公司
  */
 function friend_date(int $time)
 {
@@ -116,8 +116,8 @@ function friend_date(int $time)
  * 生成6位随机数
  * @param int $len
  * @return string
- * @author 贵州猿创科技有限公司
- * @copyright 贵州猿创科技有限公司
+ * @author 贵州小白基地网络科技有限公司
+ * @copyright 贵州小白基地网络科技有限公司
  */
 function get_random(int $len = 6)
 {
@@ -127,7 +127,7 @@ function get_random(int $len = 6)
 /**
  * XML转数组
  *
- * @Author 贵州猿创科技有限公司
+ * @Author 贵州小白基地网络科技有限公司
  * @Email 416716328@qq.com
  * @DateTime 2023-03-12
  * @param  string $xml
@@ -147,7 +147,7 @@ function xmlToArr(string $xml): array
 /**
  * 根据大小返回标准单位 KB  MB GB等
  *
- * @Author 贵州猿创科技有限公司
+ * @Author 贵州小白基地网络科技有限公司
  * @Email 416716328@qq.com
  * @DateTime 2023-03-12
  * @param  integer $size
@@ -201,7 +201,7 @@ function uncamelize(string $camelCaps, $separator = '_'): string
  * @param mixed $field 排序的字段名
  * @param mixed $sortby 排序类型
  * @return array|bool
- * @copyright 贵州猿创科技有限公司
+ * @copyright 贵州小白基地网络科技有限公司
  * @Email 416716328@qq.com
  * @DateTime 2023-05-03
  */

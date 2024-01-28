@@ -36,8 +36,6 @@ class Model extends BaseModel
         $tableName  = $query->getTable();
         if ($saas_appid && in_array('saas_appid', $tableFields)) {
             $query->where("{$tableName}.saas_appid", $saas_appid);
-        }else if(in_array('saas_appid', $tableFields)){
-            $query->where("{$tableName}.saas_appid", null);
         }
     }
 

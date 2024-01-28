@@ -22,8 +22,8 @@ class ProjectsController extends BaseController
      * 项目列表
      * @param \think\Request $request
      * @return mixed
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      */
     public function index(Request $request)
     {
@@ -34,8 +34,8 @@ class ProjectsController extends BaseController
     /**
      * 添加
      * @return mixed
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      */
     public function add(Request $request)
     {
@@ -56,8 +56,8 @@ class ProjectsController extends BaseController
      * 修改项目
      * @param \think\Request $request
      * @return mixed
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      */
     public function edit(Request $request)
     {
@@ -129,8 +129,8 @@ class ProjectsController extends BaseController
      * 删除项目
      * @param \think\Request $request
      * @return mixed
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      */
     public function del(Request $request)
     {
@@ -158,7 +158,14 @@ class ProjectsController extends BaseController
                 throw new Exception('项目应用错误');
             }
             $project = $model->toArray();
+            $classPath   = root_path("base/{$model->app_name}")."Package.php";
+            if (!file_exists($classPath)) {
+                throw new Exception("应用{$model->app_name}/Package文件不存在");
+            }
             $class   = "base\\{$model->app_name}\\Package";
+            if (!class_exists($class)) {
+                throw new Exception("应用{$model->app_name}/Package类不存在");
+            }
             $url     = call_user_func(
                 [$class, 'login'],
                 $request,
@@ -176,8 +183,8 @@ class ProjectsController extends BaseController
      * 表单视图
      * @param mixed $edit
      * @return FormBuilder
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      */
     private function formView($edit = false)
     {
@@ -197,7 +204,7 @@ class ProjectsController extends BaseController
             'col' => 12,
         ]);
         if ($edit) {
-            $builder->addRow('app_name', 'info', '所属应用', '', [
+            $builder->addRow('app_name', 'info', '应用标识', '', [
                 'col' => 12,
             ]);
         } else {

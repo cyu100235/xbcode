@@ -30,7 +30,7 @@ use app\common\builder\table\TreeTrait;
 /**
  * 表格构造器
  *
- * @author 贵州猿创科技有限公司
+ * @author 贵州小白基地网络科技有限公司
  * @Email 416716328@qq.com
  * @DateTime 2023-02-27
  */
@@ -67,7 +67,7 @@ class ListBuilder
 
     /**
      * 初始化表格
-     * @Author 贵州猿创科技有限公司
+     * @Author 贵州小白基地网络科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-02-28
      */
@@ -77,7 +77,7 @@ class ListBuilder
 
     /**
      * 解析表格规则
-     * @Author 贵州猿创科技有限公司
+     * @Author 贵州小白基地网络科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-02-27
      * @return array
@@ -90,8 +90,8 @@ class ListBuilder
     /**
      * 获取表格JSON规则
      * @return \think\response\Json
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     public function JSONRule()
@@ -102,7 +102,7 @@ class ListBuilder
     /**
      * 返回表格规则
      *
-     * @Author 贵州猿创科技有限公司
+     * @Author 贵州小白基地网络科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-02-27
      * @return array
@@ -154,7 +154,7 @@ class ListBuilder
      * @param mixed $name
      * @param mixed $value
      * @return void
-     * @copyright 贵州猿创科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-04-29
      */

@@ -7,7 +7,7 @@ use app\common\service\UploadService;
 
 /**
  * 项目模型
- * @copyright 贵州猿创科技有限公司
+ * @copyright 贵州小白基地网络科技有限公司
  * @Email 416716328@qq.com
  * @DateTime 2023-05-03
  */
@@ -17,8 +17,8 @@ class Projects extends Model
      * 设置图标
      * @param mixed $value
      * @return mixed
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      */
     public function setLogoAttr($value)
     {
@@ -32,8 +32,8 @@ class Projects extends Model
      * 获取图标
      * @param mixed $value
      * @return mixed
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      */
     public function getLogoAttr($value)
     {

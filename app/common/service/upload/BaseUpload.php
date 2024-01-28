@@ -14,8 +14,8 @@ use yzh52521\filesystem\facade\Filesystem;
 
 /**
  * 附件上传基础类
- * @author 贵州猿创科技有限公司
- * @copyright 贵州猿创科技有限公司
+ * @author 贵州小白基地网络科技有限公司
+ * @copyright 贵州小白基地网络科技有限公司
  * @email 416716328@qq.com
  */
 trait BaseUpload
@@ -25,8 +25,8 @@ trait BaseUpload
      * @param mixed $fileName
      * @param mixed $adapter
      * @return mixed
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     public static function getFileInfo($fileName, $adapter)
@@ -49,8 +49,8 @@ trait BaseUpload
      * @param mixed $store_id
      * @throws \Exception
      * @return array
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     protected static function getCategory(string $dir_name): array
@@ -74,8 +74,8 @@ trait BaseUpload
     /**
      * 获取附件库配置项
      * @return mixed
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     public static function getConfig()
@@ -104,8 +104,8 @@ trait BaseUpload
      * @param mixed $drive
      * @throws \Exception
      * @return mixed
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     public static function getCurrentConfig($drive = '')
@@ -126,8 +126,8 @@ trait BaseUpload
     /**
      * 获取当前使用驱动
      * @return mixed
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     public static function getDrive()
@@ -140,8 +140,8 @@ trait BaseUpload
      * 获取驱动SDK
      * @param mixed $drive
      * @return \yzh52521\filesystem\Driver
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     public static function getDisk($drive = '')
@@ -188,8 +188,8 @@ trait BaseUpload
      * @param string $dir_name
      * @param string $drive
      * @return Upload
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      */
     public static function addUpload(string $path, string $dir_name, string $drive = 'local')
     {

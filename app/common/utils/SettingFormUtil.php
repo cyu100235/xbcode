@@ -8,8 +8,8 @@ use Exception;
 
 /**
  * 配置表单工具类
- * @author 贵州猿创科技有限公司
- * @copyright (c) 贵州猿创科技有限公司
+ * @author 贵州小白基地网络科技有限公司
+ * @copyright (c) 贵州小白基地网络科技有限公司
  */
 class SettingFormUtil
 {
@@ -17,8 +17,8 @@ class SettingFormUtil
      * 获取配置表单
      * @param string $group
      * @return FormBuilder
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      */
     public static function formView(string|null $group): FormBuilder
     {
@@ -34,8 +34,8 @@ class SettingFormUtil
      * 获取选项卡配置表单
      * @param string|null $group
      * @return FormBuilder
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      */
     public static function tabsFormView(string|null $group)
     {
@@ -75,8 +75,8 @@ class SettingFormUtil
      * 获取虚线框配置表单
      * @param string|null $group
      * @return FormBuilder
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      */
     public static function getDivider(string|null $group)
     {
@@ -104,8 +104,8 @@ class SettingFormUtil
      * 获取表单规则
      * @param array $data
      * @return \app\common\builder\FormBuilder
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      */
     private static function getFormView(array $data): FormBuilder
     {
@@ -152,8 +152,8 @@ class SettingFormUtil
      * 获取配置模板
      * @param string $group
      * @return mixed
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      */
     private static function getConfigTemplate(string|null $group)
     {

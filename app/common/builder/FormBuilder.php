@@ -42,7 +42,7 @@ class FormBuilder extends Form
 
     /**
      * 构造函数
-     * @copyright 贵州猿创科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-04-29
      */
@@ -81,7 +81,7 @@ class FormBuilder extends Form
      * 设置表单渲染数据
      * @param array $data
      * @return FormBuilder
-     * @copyright 贵州猿创科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-04-29
      */
@@ -95,7 +95,7 @@ class FormBuilder extends Form
      * 设置请求方式
      * @param mixed $method
      * @return FormBuilder
-     * @copyright 贵州猿创科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-04-29
      */
@@ -109,7 +109,7 @@ class FormBuilder extends Form
      * 设置请求地址
      * @param mixed $action
      * @return FormBuilder
-     * @copyright 贵州猿创科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-04-29
      */
@@ -123,7 +123,7 @@ class FormBuilder extends Form
      * 设置提交后重定向地址
      * @param string $url
      * @return FormBuilder
-     * @copyright 贵州猿创科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-04-29
      */
@@ -137,7 +137,7 @@ class FormBuilder extends Form
      * 设置数据
      * @param Model $model
      * @return FormBuilder
-     * @copyright 贵州猿创科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-04-29
      */
@@ -153,7 +153,7 @@ class FormBuilder extends Form
     /**
      * 快速生成表单
      * @return array
-     * @copyright 贵州猿创科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-04-29
      */
@@ -173,7 +173,7 @@ class FormBuilder extends Form
     /**
      * 获取builder生成类对象
      * @return Form
-     * @copyright 贵州猿创科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-04-29
      */

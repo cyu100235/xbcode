@@ -22,7 +22,7 @@ class Admin extends Model
      * 密码加密写入
      * @param mixed $value
      * @return bool|string
-     * @copyright 贵州猿创科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-04-29
      */
@@ -38,7 +38,7 @@ class Admin extends Model
      * 设置头像储存
      * @param mixed $value
      * @return array|string
-     * @copyright 贵州猿创科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-05-03
      */
@@ -50,7 +50,7 @@ class Admin extends Model
     /**
      * 关联等级
      * @return \think\model\relation\HasOne
-     * @copyright 贵州猿创科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-04-29
      */
@@ -73,7 +73,7 @@ class Admin extends Model
     /**
      * 获取管理员组件选项
      *
-     * @Author 贵州猿创科技有限公司
+     * @Author 贵州小白基地网络科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-03-09
      * @param  integer $admin_id

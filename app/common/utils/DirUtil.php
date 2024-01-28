@@ -7,8 +7,8 @@ use think\facade\Log;
 
 /**
  * 目录操作类
- * @author 贵州猿创科技有限公司
- * @copyright 贵州猿创科技有限公司
+ * @author 贵州小白基地网络科技有限公司
+ * @copyright 贵州小白基地网络科技有限公司
  * @email 416716328@qq.com
  */
 final class DirUtil
@@ -17,8 +17,8 @@ final class DirUtil
      * 目录名
      * @param mixed $dir_name
      * @return array|string
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     static public function dirPath($dir_name)
@@ -31,8 +31,8 @@ final class DirUtil
      * 获取文件扩展名
      * @param string $file
      * @return string
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     static public function getExt(string $file)
@@ -47,8 +47,8 @@ final class DirUtil
      * @param mixed $son 是否显示子目录
      * @param mixed $list 目录列表
      * @return array
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     static public function tree2(string $dirName = null, $exts = '', $son = 0, $list = array())
@@ -84,8 +84,8 @@ final class DirUtil
      * @param string $dirPath
      * @param string $targetPath
      * @return void
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      */
     public static function copyDir(string $dirPath, string $targetPath)
     {
@@ -102,8 +102,8 @@ final class DirUtil
      * @param array $data
      * @param string $targetPath
      * @return void
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      */
     private static function copyFile(array $data, string $targetPath)
     {
@@ -132,8 +132,8 @@ final class DirUtil
      * @param mixed $exts
      * @param string $parent
      * @return array
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      */
     public static function tree(string $dirPath, bool $son = false, $exts = '', string $parent = '')
     {
@@ -214,8 +214,8 @@ final class DirUtil
      * 获取目录大小
      * @param mixed $dirPath
      * @return float|int
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     static public function get_dir_size($dirPath)
@@ -234,8 +234,8 @@ final class DirUtil
      * @param mixed $pid 父目录ID
      * @param mixed $dirs 目录列表
      * @return mixed
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     static public function treeDir($dirName = null, $son = 0, $pid = 0, $dirs = array())
@@ -262,8 +262,8 @@ final class DirUtil
      * @param mixed $ignorePatterns 需要忽略的文件或目录
      * @throws \Exception
      * @return void
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     public static function delDir($dir, $ignorePatterns = [])
@@ -303,8 +303,8 @@ final class DirUtil
      * 检测目录是否为空
      * @param mixed $dir
      * @return bool|null
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     public static function isDirEmpty($dir)

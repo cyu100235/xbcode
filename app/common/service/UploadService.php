@@ -11,7 +11,7 @@ use think\file\UploadedFile;
 
 /**
  * 附件服务类
- * @author 贵州猿创科技有限公司
+ * @author 贵州小白基地网络科技有限公司
  * @Email 416716328@qq.com
  * @DateTime 2023-03-04
  */
@@ -27,8 +27,8 @@ class UploadService
      * @param \think\file\UploadedFile $file
      * @param string $dir_name
      * @return array
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      */
     public static function upload(UploadedFile $file, string $dir_name = '')
     {
@@ -93,8 +93,8 @@ class UploadService
      * 获取文件fileMime
      * @param mixed $file_path
      * @return bool|string
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     private static function getFileMimeType($file_path)
@@ -109,8 +109,8 @@ class UploadService
      * 获取外链地址
      * @param mixed $path
      * @return mixed
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     public static function url(mixed $path)
@@ -178,7 +178,7 @@ class UploadService
      * 批量获取URL外链
      * @param array $data
      * @return array
-     * @copyright 贵州猿创科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-05-03
      */
@@ -195,8 +195,8 @@ class UploadService
      * 查询模型数据
      * @param string $path
      * @return mixed
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     public static function model(string $path)
@@ -215,7 +215,7 @@ class UploadService
      * URL转PATH
      * @param string|array $url
      * @return array|string
-     * @copyright 贵州猿创科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-05-03
      */

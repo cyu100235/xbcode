@@ -7,7 +7,7 @@ use think\file\UploadedFile;
 
 /**
  * 附件服务类
- * @author 贵州猿创科技有限公司
+ * @author 贵州小白基地网络科技有限公司
  * @Email 416716328@qq.com
  * @DateTime 2023-03-04
  */
@@ -25,8 +25,8 @@ trait RemoteUpload
      * @param mixed $store_id
      * @throws \Exception
      * @return array
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     public static function remoteFile(string $url, string $dir_name = '', $appid = null, $uid = null,$store_id = null): array

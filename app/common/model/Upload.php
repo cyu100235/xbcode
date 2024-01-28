@@ -16,7 +16,7 @@ class Upload extends Model
     /**
      * 关联附件分类
      * @return \think\model\relation\HasOne
-     * @copyright 贵州猿创科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-04-30
      */
@@ -30,7 +30,7 @@ class Upload extends Model
      * @param mixed $value
      * @param mixed $data
      * @return string
-     * @copyright 贵州猿创科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-04-30
      */

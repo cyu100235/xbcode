@@ -17,7 +17,7 @@ trait DividerTrait
      * @param string $title
      * @param array $extra
      * @return FormBuilder
-     * @copyright 贵州猿创科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-04-29
      */

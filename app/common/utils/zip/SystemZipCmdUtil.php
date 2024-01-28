@@ -6,8 +6,8 @@ use Exception;
 
 /**
  * 执行系统命令ZIP管理器
- * @author 贵州猿创科技有限公司
- * @copyright 贵州猿创科技有限公司
+ * @author 贵州小白基地网络科技有限公司
+ * @copyright 贵州小白基地网络科技有限公司
  * @email 416716328@qq.com
  */
 class SystemZipCmdUtil
@@ -18,8 +18,8 @@ class SystemZipCmdUtil
      * @param mixed $extractTo
      * @throws \Exception
      * @return void
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     public static function unzipWith($zipFile, $extractTo)
@@ -68,8 +68,8 @@ class SystemZipCmdUtil
      * @param mixed $ignoreFiles 需要忽略的目录或者文件
      * @throws \Exception
      * @return void
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     public static function zipBuild($zipFile, $extractTo, $ignoreFiles = [])
@@ -102,8 +102,8 @@ class SystemZipCmdUtil
      * @param array $files 需要打包的文件
      * @throws \Exception
      * @return void
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     public static function zipBuildFiles(string $zipFilePath, string $extractTo, array $files)
@@ -136,8 +136,8 @@ class SystemZipCmdUtil
      * @param mixed $extractTo 打包的目标目录，存在小写逗号时，表示打包指定文件
      * @param mixed $ignoreFiles 需要忽略的目录或者文件
      * @return string
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     public static function getZipBuildCmd($zipFile, $extractTo, $ignoreFiles = [])
@@ -207,8 +207,8 @@ class SystemZipCmdUtil
      * 指定打包文件
      * @param string $extractTo
      * @return void
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     private static function appointFiles(string &$extractTo)
@@ -227,8 +227,8 @@ class SystemZipCmdUtil
      * @param string $default
      * @param array $extraDirs
      * @return string
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     public static function findCmd(string $name, string $default = null, array $extraDirs = [])

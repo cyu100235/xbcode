@@ -116,8 +116,8 @@ trait MenusMgr
      * 列表数据
      * @param \think\Request $request
      * @return mixed
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      */
     public function index(Request $request)
     {
@@ -163,8 +163,8 @@ trait MenusMgr
      * 添加
      * @param \think\Request $request
      * @return mixed
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      */
     public function add(Request $request)
     {
@@ -231,8 +231,8 @@ trait MenusMgr
      * @param array $children
      * @param array $parent
      * @return array|object|null
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      */
     private function getMenusChildren(array $children,array $parent)
     {
@@ -307,8 +307,8 @@ trait MenusMgr
      * 修改
      * @param \think\Request $request
      * @return mixed
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      */
     public function edit(Request $request)
     {
@@ -335,8 +335,8 @@ trait MenusMgr
      * 删除
      * @param \think\Request $request
      * @return mixed
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      */
     public function del(Request $request)
     {
@@ -348,8 +348,8 @@ trait MenusMgr
     /**
      * 获取渲染视图
      * @return FormBuilder
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      */
     public function formView()
     {

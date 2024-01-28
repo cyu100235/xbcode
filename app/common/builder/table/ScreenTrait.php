@@ -7,7 +7,7 @@ use app\common\builder\ListBuilder;
 /**
  * 表格筛选配置
  *
- * @author 贵州猿创科技有限公司
+ * @author 贵州小白基地网络科技有限公司
  * @Email 416716328@qq.com
  * @DateTime 2023-02-27
  */
@@ -42,7 +42,7 @@ trait ScreenTrait
      * @param string $remote
      * @param array $params
      * @return \app\common\builder\ListBuilder
-     * @copyright 贵州猿创科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     public function screenRemote(string $remote, array $params = []): ListBuilder
@@ -59,8 +59,8 @@ trait ScreenTrait
      * @param string $title
      * @param array $extra
      * @return \app\common\builder\ListBuilder
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      */
     public function addScreen(string $field, string $type, string $title, array $extra = []): ListBuilder
     {
@@ -90,8 +90,8 @@ trait ScreenTrait
      * 设置提交按钮
      * @param array $config
      * @return mixed
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      */
     public function submitConfig(array $config)
     {
@@ -103,8 +103,8 @@ trait ScreenTrait
      * 设置重置按钮
      * @param array $config
      * @return mixed
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      */
     public function restConfig(array $config)
     {

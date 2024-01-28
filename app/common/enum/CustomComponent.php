@@ -5,8 +5,8 @@ use app\common\Enum;
 
 /**
  * 自定义组件类型
- * @author 贵州猿创科技有限公司
- * @copyright 贵州猿创科技有限公司
+ * @author 贵州小白基地网络科技有限公司
+ * @copyright 贵州小白基地网络科技有限公司
  * @email 416716328@qq.com
  */
 class CustomComponent extends Enum

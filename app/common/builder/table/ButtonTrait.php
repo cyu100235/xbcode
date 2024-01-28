@@ -6,7 +6,7 @@ use app\common\builder\ListBuilder;
 
 /**
  * 表格按钮配置
- * @author 贵州猿创科技有限公司
+ * @author 贵州小白基地网络科技有限公司
  * @Email 416716328@qq.com
  * @DateTime 2023-02-27
  */
@@ -15,7 +15,7 @@ trait ButtonTrait
     /**
      * 表格顶部按钮
      * @var array
-     * @author 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     private $topButtonList = [];
@@ -23,7 +23,7 @@ trait ButtonTrait
     /**
      * 开启扩展按钮操作
      * @var array
-     * @author 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     private $extraButtonList = [];
@@ -31,7 +31,7 @@ trait ButtonTrait
     /**
      * 表格列按钮
      * @var array
-     * @author 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     private $rightButtonList = [];
@@ -39,7 +39,7 @@ trait ButtonTrait
     /**
      * 开启右侧操作选项
      *
-     * @Author 贵州猿创科技有限公司
+     * @Author 贵州小白基地网络科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-02-28
      * @param  string      $title
@@ -77,7 +77,7 @@ trait ButtonTrait
     /**
      * 添加表格头部按钮
      *
-     * @Author 贵州猿创科技有限公司
+     * @Author 贵州小白基地网络科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-03-01
      * @param  string      $field
@@ -107,8 +107,8 @@ trait ButtonTrait
      * @param array $message
      * @param array $button
      * @return \app\common\builder\ListBuilder
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @email 416716328@qq.com
      */
     public function addExtraButton(string $field, string $title, array $pageData = [], array $message = [], array $button = []): ListBuilder
@@ -127,7 +127,7 @@ trait ButtonTrait
 
     /**
      * 添加右侧列按钮
-     * @Author 贵州猿创科技有限公司
+     * @Author 贵州小白基地网络科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-02-28
      * @param  string      $field
@@ -168,7 +168,7 @@ trait ButtonTrait
      * @param array $message
      * @param array $button
      * @return array
-     * @copyright 贵州猿创科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-04-18
      */
@@ -200,7 +200,7 @@ trait ButtonTrait
      * @param string $field
      * @param string $title
      * @return array
-     * @copyright 贵州猿创科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-04-18
      */
@@ -248,7 +248,7 @@ trait ButtonTrait
      * 合并模态框参数
      * @param array $btnData
      * @return array
-     * @copyright 贵州猿创科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-04-18
      */
@@ -269,7 +269,7 @@ trait ButtonTrait
 
     /**
      * 获得默认按钮样式
-     * @Author 贵州猿创科技有限公司
+     * @Author 贵州小白基地网络科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-02-28
      * @param  string $text

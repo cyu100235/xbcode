@@ -5,8 +5,8 @@ use app\common\Enum;
 
 /**
  * 是否安装枚举类
- * @author 贵州猿创科技有限公司
- * @copyright 贵州猿创科技有限公司
+ * @author 贵州小白基地网络科技有限公司
+ * @copyright 贵州小白基地网络科技有限公司
  * @email 416716328@qq.com
  */
 class InstallEnum extends Enum

@@ -13,7 +13,7 @@ trait ResizableTrait
     /**
      * 调整大小配置
      *
-     * @Author 贵州猿创科技有限公司
+     * @Author 贵州小白基地网络科技有限公司
      * @Email 416716328@qq.com
      * @DateTime 2023-03-07
      * @param  array       $config

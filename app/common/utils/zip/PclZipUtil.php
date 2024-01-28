@@ -5,16 +5,16 @@ use Exception;
 
 /**
  * 使用PclZip扩展管理器
- * @author 贵州猿创科技有限公司
- * @copyright 贵州猿创科技有限公司
+ * @author 贵州小白基地网络科技有限公司
+ * @copyright 贵州小白基地网络科技有限公司
  * @email 416716328@qq.com
  */
 class PclZipUtil
 {
     /**
      * 构造函数
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      */
     public function __construct()
     {
@@ -29,8 +29,8 @@ class PclZipUtil
      * @param string $extractTo 打包目标路径
      * @param array $ignoreFiles 需要忽略的绝对目录路径或者文件（可选）
      * @return void
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      */
     public function build(string $zipFilePath, string $extractTo, array $ignoreFiles = [])
     {
@@ -48,8 +48,8 @@ class PclZipUtil
      * @param string $zipFilePath
      * @param array $files
      * @return void
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      */
     public function buildFiles(string $zipFilePath,string $extractTo, array $files)
     {
@@ -76,8 +76,8 @@ class PclZipUtil
      * @param string $zipPath
      * @param array $ignoreFiles
      * @return void
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      */
     private function addFileToZip(ZipArchive $zip, string $sourcePath, string $zipPath = '/', array $ignoreFiles = [])
     {
@@ -102,8 +102,8 @@ class PclZipUtil
      * @param string $zipFilePath 压缩包路径
      * @param string $tarGetPath 解压至目标路径
      * @return void
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
      */
     public function unzip(string $zipFilePath, string $tarGetPath)
     {
