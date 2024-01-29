@@ -124,9 +124,14 @@ export default {
             this.$useRemote('remote/apps/detail', { app_name }, {
                 title: '应用详情',
                 customStyle: {
-                    width: '55%',
+                    width: '1000px',
                     height: '700px',
                 },
+                beforeClose: (value, state, done) => {
+                    this.paginate.page = 1
+                    this.getList()
+                    done()
+                }
             })
         },
         // 点击分类

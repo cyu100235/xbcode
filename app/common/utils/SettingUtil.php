@@ -15,13 +15,13 @@ class SettingUtil
     /**
      * 获取配置项
      * @param string $group
-     * @param mixed $default
      * @param string|array $name
+     * @param mixed $default
      * @return mixed
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public static function config(string $group, $default = null,string|array $name ='')
+    public static function config(string $group, string|array $name ='',$default = null)
     {
         $data = self::getOriginal($group);
         // 没有配置项

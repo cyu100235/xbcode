@@ -20,9 +20,9 @@ trait AppPluginsCloud
         return self::send('AppPlugins/getPluginsInfo');
     }
     // 购买插件
-    public static function createPluginOrder()
+    public static function buyPlugin()
     {
-        return self::send('Order/createPluginOrder');
+        return self::send('Orders/buyPlugin');
     }
     // 下载插件包
     public static function downloadPlugin()

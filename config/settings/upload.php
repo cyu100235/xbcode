@@ -34,7 +34,7 @@ return [
                     'where' => '==',
                     'rule'  => [
                         Elm::hidden('local.type', 'local')->build(),
-                        Elm::input('local.root', '储存路径', '')
+                        Elm::input('local.root', '储存路径', 'uploads')
                             ->appendRule('suffix', [
                                 'type' => 'prompt-tip',
                                 'props' => [

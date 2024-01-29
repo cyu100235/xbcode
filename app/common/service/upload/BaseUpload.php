@@ -80,14 +80,14 @@ trait BaseUpload
      */
     public static function getConfig()
     {
-        $active = SettingUtil::config('upload','local','selected_active');
-        $config = SettingUtil::config('upload',[]);
+        $active = SettingUtil::config('upload','selected_active','local');
+        $config = SettingUtil::config('upload','',[]);
         if (empty($config)) {
             throw new Exception('请先设置附件库上传设置');
         }
         // 本地附件库设置
         if ($active === 'local') {
-            $web_url = SettingUtil::config('system','','web_url');
+            $web_url = SettingUtil::config('system','web_url','');
             if (empty($web_url)) {
                 throw new Exception('请先设置系统域名');
             }

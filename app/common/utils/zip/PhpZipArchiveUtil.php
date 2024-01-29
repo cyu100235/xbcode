@@ -41,6 +41,10 @@ class PhpZipArchiveUtil
      */
     public function build(string $zipFilePath, string $extractTo, array $ignoreFiles = [])
     {
+        // 检测目标目录是否有权限
+        if (!is_writable($extractTo)) {
+            throw new Exception('打包目录无权限');
+        }
         $zip = new ZipArchive;
         $openStatus = $zip->open($zipFilePath, ZipArchive::CREATE);
         if ($openStatus !== true) {
@@ -62,6 +66,10 @@ class PhpZipArchiveUtil
      */
     public function buildFiles(string $zipFilePath, string $extractTo, array $files)
     {
+        // 检测目标目录是否有权限
+        if (!is_writable($extractTo)) {
+            throw new Exception('解压目录无权限');
+        }
         $zip = new ZipArchive;
         $openStatus = $zip->open($zipFilePath, ZipArchive::CREATE);
         if ($openStatus !== true) {
