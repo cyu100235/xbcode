@@ -6,7 +6,7 @@
                     <el-input v-model="form.username" placeholder="请输入手机号码" />
                 </el-form-item>
                 <el-form-item label="登录密码">
-                    <el-input type="password" v-model="form.password" placeholder="请输入登录密码" />
+                    <el-input type="password" v-model="form.password" placeholder="请输入登录密码" :show-password="true" />
                 </el-form-item>
                 <div class="action-btn">
                     <a :href="system_info?.link_url?.register ?? ''" target="_blank">注册账号</a>

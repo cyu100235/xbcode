@@ -2,6 +2,7 @@
 namespace app\common\utils\apps;
 
 use app\common\service\CloudService;
+use app\common\utils\DirUtil;
 use app\common\utils\JsonUtil;
 use app\common\utils\zip\ZipUtil;
 use Exception;
@@ -73,7 +74,7 @@ class UpdateUtil
      * @var int|null
      */
     protected $version = null;
-    
+
     /**
      * 构造方法
      * @param \think\Request $request
@@ -82,7 +83,7 @@ class UpdateUtil
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public function __construct(Request $request,string $appName, int $version)
+    public function __construct(Request $request, string $appName, int $version)
     {
         // 设置请求对象
         $this->request = $request;
@@ -96,7 +97,7 @@ class UpdateUtil
         // 备份总目录
         $backupDir = root_path("backup");
         // 检测备份总目录是否有权限
-        if (!is_dir($backupDir) || !is_writable($backupDir)){
+        if (!is_dir($backupDir) || !is_writable($backupDir)) {
             throw new Exception("备份总目录不存在或无权限");
         }
         // 备份应用包文件
@@ -105,10 +106,6 @@ class UpdateUtil
         $this->backupSql = "{$backupDir}{$appName}-{$version}.sql";
         // 应用目录
         $this->baseDirPath = root_path("base/{$appName}");
-        // 检测应用目录是否存在
-        if (!is_dir($this->baseDirPath)) {
-            throw new Exception("【{$appName}】应用目录不存在");
-        }
         // 安装SQL文件路径
         $this->installSqlPath = "{$this->baseDirPath}data/install.sql";
         // 设置应用标识
@@ -116,7 +113,7 @@ class UpdateUtil
         // 设置版本号
         $this->version = $version;
     }
-    
+
     /**
      * 下载更新包
      * @return mixed
@@ -126,10 +123,10 @@ class UpdateUtil
     public function download()
     {
         // 下载应用包
-        // CloudService::downloadApp($this->appName, $this->version, $this->package);
+        CloudService::downloadApp($this->appName, $this->version, $this->package);
         // 返回结果
         return $this->successRes([
-            'next'  => 'backCode'
+            'next' => 'backCode'
         ]);
     }
 
@@ -141,11 +138,15 @@ class UpdateUtil
      */
     public function backCode()
     {
+        // 检测应用目录是否存在
+        if (!is_dir($this->baseDirPath)) {
+            throw new Exception("【{$this->appName}】应用目录不存在");
+        }
         // 开始备份代码包
-        // ZipUtil::build($this->backupFile, $this->baseDirPath);
+        ZipUtil::build($this->backupFile, $this->baseDirPath);
         // 返回结果
         return $this->successRes([
-            'next'  => 'backSql'
+            'next' => 'backSql'
         ]);
     }
 
@@ -179,7 +180,7 @@ class UpdateUtil
                     $config['charset']
                 );
                 // 替换表前缀
-                $prefixs = ['xb_','php_'];
+                $prefixs = ['xb_', 'php_'];
                 foreach ($tables as $key => $name) {
                     $tables[$key] = str_replace($prefixs, $config['prefix'], $name);
                 }
@@ -189,7 +190,7 @@ class UpdateUtil
         }
         // 返回结果
         return $this->successRes([
-            'next'  => 'deleteCode'
+            'next' => 'deleteCode'
         ]);
     }
 
@@ -201,9 +202,14 @@ class UpdateUtil
      */
     public function deleteCode()
     {
-        sleep(3);
+        if (!is_dir($this->baseDirPath)) {
+            throw new Exception("【{$this->appName}】应用目录不存在");
+        }
+        // 删除应用目录
+        DirUtil::delDir($this->baseDirPath);
+        // 返回结果
         return $this->successRes([
-            'next'  => 'unzip'
+            'next' => 'unzip'
         ]);
     }
 
@@ -219,9 +225,11 @@ class UpdateUtil
         if (!is_dir($this->baseDirPath)) {
             mkdir($this->baseDirPath, 0755, true);
         }
-        sleep(3);
+        // 解压应用包
+        ZipUtil::unzip($this->package, $this->baseDirPath);
+        // 返回结果
         return $this->successRes([
-            'next'  => 'updateData'
+            'next' => 'updateData'
         ]);
     }
 
@@ -233,9 +241,59 @@ class UpdateUtil
      */
     public function updateData()
     {
-        sleep(3);
+        // 应用初始类
+        $class = "\\base\\{$this->appName}\\Package";
+        // 执行更新前置
+        if (method_exists($class, 'before_update')) {
+            call_user_func([$class, 'before_update'], $this->request, $this->appName, $this->version);
+        }
+        // 版本目录
+        $versionPath = root_path("base/{$this->appName}/data/version/{$this->version}");
+        // 检测版本目录是否存在
+        if (is_dir($versionPath)) {
+            // 扫描目录下所有SQL文件
+            $files = glob("{$versionPath}*.sql");
+            // 连接数据库
+            $config = config('database.connections.mysql');
+            $mysql  = new MysqlHelper(
+                $config['username'],
+                $config['password'],
+                $config['database'],
+                $config['hostname'],
+                $config['hostport'],
+                $config['prefix'],
+                $config['charset']
+            );
+            // 循环处理SQL更新
+            foreach ($files as $file) {
+                // 读取SQL文件
+                $sql = file_get_contents($file);
+                // 检测SQL是否为空
+                if (empty($sql)) {
+                    continue;
+                }
+                try {
+                    // 导入SQL文件
+                    $mysql->importSqlFile($file, $config['prefix']);
+                } catch (\Throwable $e) {
+                    // 表已存在，忽略
+                    $tableExists = strpos($e->getMessage(), 'already exists') !== false;
+                    // 字段已存在，忽略
+                    $fieldExists = strpos($e->getMessage(), 'Duplicate column name') !== false;
+                    if (!$tableExists && !$fieldExists) {
+                        // 其他报错，并抛出异常
+                        throw $e;
+                    }
+                }
+            }
+        }
+        // 执行更新前置
+        if (method_exists($class, 'before_update')) {
+            call_user_func([$class, 'before_update'], $this->request, $this->appName, $this->version);
+        }
+        // 返回结果
         return $this->successRes([
-            'next'  => 'success'
+            'next' => 'success'
         ]);
     }
 
@@ -247,9 +305,13 @@ class UpdateUtil
      */
     public function success()
     {
-        sleep(3);
-        return $this->successRes([
-            'next'  => ''
+        // 更新完成
+        CloudService::updateApp($this->appName, $this->version);
+        // 更新完成，删除临时应用包
+        file_exists($this->package) && unlink($this->package);
+        // 返回结果
+        return $this->successFul('更新成功',[
+            'next' => ''
         ]);
     }
 }

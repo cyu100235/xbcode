@@ -157,9 +157,9 @@ class InstallUtil
                 }
             }
         }
-        // 执行安装后置
-        if (method_exists($class, 'after_install')) {
-            call_user_func([$class, 'after_install'], $this->request, $this->appName, $this->version);
+        // 执行更新后置
+        if (method_exists($class, 'after_update')) {
+            call_user_func([$class, 'after_update'], $this->request, $this->appName, $this->version);
         }
         // 返回结果
         return JsonUtil::successRes([
@@ -180,8 +180,8 @@ class InstallUtil
         // 安装完成，删除临时应用包
         file_exists($this->package) && unlink($this->package);
         // 返回结果
-        return JsonUtil::successRes([
-            'next' => '',
+        return $this->successFul('安装完成',[
+            'next' => ''
         ]);
     }
 }

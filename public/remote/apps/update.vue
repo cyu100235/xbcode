@@ -40,23 +40,23 @@ export default {
                     },
                     {
                         step: 'download',
-                        title: '下载安装包',
+                        title: '下载应用',
                     },
                     {
                         step: 'backCode',
-                        title: '备份应用代码',
+                        title: '备份代码',
                     },
                     {
                         step: 'backSql',
-                        title: '备份数据库',
+                        title: '备份数据',
                     },
                     {
                         step: 'deleteCode',
-                        title: '卸载应用代码',
+                        title: '卸载代码',
                     },
                     {
                         step: 'unzip',
-                        title: '解压安装包',
+                        title: '解压安装',
                     },
                     {
                         step: 'updateData',
@@ -95,9 +95,11 @@ export default {
                 if (res?.data?.next !== '') {
                     this.install(res?.data?.next ?? '')
                 } else {
+                    this.$useNotify(res?.msg || "更新失败", 'success', '温馨提示')
+                    this.$emit("update:closeWin");
                     setTimeout(() => {
-                        this.$emit("update:closeWin")
-                    }, 3000);
+                        window.location.reload();
+                    }, 2000);
                 }
             }).catch(() => {
                 this.$emit("update:closeWin");

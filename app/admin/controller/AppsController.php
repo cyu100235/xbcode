@@ -112,7 +112,7 @@ class AppsController extends BaseController
         $step    = $request->get('step', '');
         $appName = $request->get('app_name', '');
         $version = (int) $request->get('version', 0);
-        if (!in_array($step, ['download', 'unzip', 'updateData', 'success'])) {
+        if (!in_array($step, ['deleteCode', 'deleteSql', 'uninstallData', 'success'])) {
             return $this->fail('卸载步骤错误');
         }
         if (empty($appName) || empty($version)) {

@@ -24,9 +24,10 @@ export default {
         checkCloud() {
             this.$useRemote('remote/cloud/login', {}, {
                 title: '云服务登录',
+                showClose:false,
                 customStyle: {
                     width: '420px',
-                    height: '430px',
+                    height: '350px',
                 },
             })
         }

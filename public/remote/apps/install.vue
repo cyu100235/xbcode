@@ -79,13 +79,14 @@ export default {
                 step: step
             }
             this.$http.useGet('admin/Apps/install', params).then((res) => {
-                console.log('res', res);
                 if (res?.data?.next !== '') {
                     this.install(res?.data?.next ?? '')
                 } else {
+                    this.$useNotify(res?.msg || "安装失败", 'success', '温馨提示')
+                    this.$emit("update:closeWin");
                     setTimeout(() => {
-                        this.$emit("update:closeWin")
-                    }, 3000);
+                        window.location.reload();
+                    }, 2000);
                 }
             }).catch(() => {
                 this.$emit("update:closeWin");

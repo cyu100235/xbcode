@@ -93,7 +93,7 @@ final class DirUtil
         if (!is_dir($targetPath)) {
             mkdir($targetPath, 0777, true);
         }
-        # 开始复制文件及目录
+        // 开始复制文件及目录
         self::copyFile($data, $targetPath);
     }
 
@@ -118,7 +118,7 @@ final class DirUtil
             if (is_file($value['path'])) {
                 copy($value['path'], $path);
             }
-            # 继续复制子目录与文件
+            // 继续复制子目录与文件
             if (!empty($value['children'])) {
                 self::copyFile($value['children'], $targetPath);
             }
@@ -144,7 +144,7 @@ final class DirUtil
         if (is_dir($dirPath)) {
             $dirs = array_diff(scandir($dirPath), ['.', '..']);
             foreach ($dirs as $file) {
-                # 检查文件扩展名
+                // 检查文件扩展名
                 if ($exts && !preg_match("/\.($exts)/i", $file)) {
                     continue;
                 }
@@ -268,34 +268,29 @@ final class DirUtil
      */
     public static function delDir($dir, $ignorePatterns = [])
     {
-        try {
-            if (!is_dir($dir)) {
-                throw new Exception('该目录不存在');
-            }
-            $files = glob("{$dir}/{,.}*", GLOB_BRACE | GLOB_NOSORT);
-            $files = array_filter($files, function ($file) {
-                return !in_array(basename($file), ['.', '..']);
-            });
-            foreach ($files as $pathName) {
-                if (!in_array(rtrim($pathName, '/'), $ignorePatterns)) {
-                    if (is_dir($pathName)) {
-                        self::delDir($pathName, $ignorePatterns);
-                        # 判断是否为空目录，删除空目录
-                        if (self::isDirEmpty($pathName)) {
-                            @rmdir($pathName);
-                        }
-                    } else if (file_exists($pathName)) {
-                        @unlink($pathName);
+        if (!is_dir($dir)) {
+            throw new Exception('该目录不存在');
+        }
+        $files = glob("{$dir}/{,.}*", GLOB_BRACE | GLOB_NOSORT);
+        $files = array_filter($files, function ($file) {
+            return !in_array(basename($file), ['.', '..']);
+        });
+        foreach ($files as $pathName) {
+            if (!in_array(rtrim($pathName, '/'), $ignorePatterns)) {
+                if (is_dir($pathName)) {
+                    self::delDir($pathName, $ignorePatterns);
+                    # 判断是否为空目录，删除空目录
+                    if (self::isDirEmpty($pathName)) {
+                        @rmdir($pathName);
                     }
+                } else if (file_exists($pathName)) {
+                    @unlink($pathName);
                 }
             }
-            # 判断是否为空目录，删除空目录
-            if (self::isDirEmpty($dir)) {
-                @rmdir($dir);
-            }
-        } catch (\Throwable $e) {
-            Log::error("删除目录出错：{$e->getMessage()}，line：{$e->getLine()}，file：{$e->getFile()}");
-            throw $e;
+        }
+        # 判断是否为空目录，删除空目录
+        if (self::isDirEmpty($dir)) {
+            @rmdir($dir);
         }
     }
 
@@ -309,8 +304,6 @@ final class DirUtil
      */
     public static function isDirEmpty($dir)
     {
-        if (!is_readable($dir))
-            return null;
-        return (count(glob("$dir/*", GLOB_BRACE | GLOB_NOSORT)) === 0);
+        return (count(glob("{$dir}/*", GLOB_BRACE | GLOB_NOSORT)) === 0);
     }
 }
