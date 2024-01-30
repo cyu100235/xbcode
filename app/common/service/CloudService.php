@@ -76,6 +76,67 @@ class CloudService
         $data = self::send('User/index')->array();
         return $data;
     }
+    
+    /**
+     * 在线充值
+     * @param float $money
+     * @param string $payType
+     * @return array|mixed
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public static function recharge(float $money, string $payType)
+    {
+        return self::send('User/recharge', [
+            'money'     => $money,
+            'pay_type'  => $payType,
+        ])->array();
+    }
+    
+    /**
+     * 获取充值二维码
+     * @param string $order_no
+     * @return array|mixed
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public static function getRechargeQrcode(string $order_no,string $payType)
+    {
+        return self::send('User/getRechargeQrcode', [
+            'order_no'  => $order_no,
+            'pay_type'  => $payType,
+        ])->array();
+    }
+
+    /**
+     * 获取官方公告
+     * @return array|mixed
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public static function getNotice()
+    {
+        $data = self::send('Notice/index')->array();
+        return $data;
+    }
+    
+    /**
+     * 获取账单信息
+     * @param int $page
+     * @param int $limit
+     * @return array|mixed
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public static function getBill(int $page,int $limit)
+    {
+        $params = [
+            'page'  => $page,
+            'limit' => $limit,
+        ];
+        $data = self::send('Bill/index',$params)->array();
+        return $data;
+    }
 
     /**
      * 发送请求
