@@ -1,13 +1,12 @@
 <?php
 namespace app\common\validate;
 
-use app\common\model\Projects;
 use think\Validate;
 
 class ProjectValidate extends Validate
 {
     protected $rule =   [
-        'title'             => 'require|verifyTitle',
+        'title'             => 'require',
         'name'              => 'require|alphaNum|verifyName|unique:projects',
         'username'          => 'require',
         'password'          => 'require',
@@ -48,25 +47,6 @@ class ProjectValidate extends Validate
             ])
             ->remove('title', ['verifyTitle'])
             ->remove('name', ['unique']);
-    }
-
-    /**
-     * 添加验证
-     * @param mixed $value
-     * @return bool|string
-     * @copyright 贵州小白基地网络科技有限公司
-     * @Email 416716328@qq.com
-     * @DateTime 2023-05-11
-     */
-    protected function verifyTitle($value)
-    {
-        $where = [
-            'title'         => $value
-        ];
-        if (Projects::where($where)->count()) {
-            return '该应用已添加';
-        }
-        return true;
     }
     
     /**

@@ -18,18 +18,22 @@ trait UploadMgr
      */
     public function index(Request $request)
     {
-        $cid    = $request->get('cid', '');
-        $suffix = $request->get('suffix', '*');
-        $order  = $request->get('order', 'desc');
+        $cid        = $request->get('cid', '');
+        $suffix     = $request->get('suffix', '*');
+        $order      = $request->get('order', 'desc');
+        $appName    = $request->appName ?? null;
 
-        # 查询条件组装
+        // 查询条件组装
         $where = [];
-        # 取出对后缀格式
+        // 取出对后缀格式
         if ($suffix !== '*' && !empty($suffix)) {
             $where[] = ['format', 'in', $suffix];
         }
         if ($cid) {
             $where[] = ['cid', '=', $cid];
+        }
+        if (!$appName) {
+            $where[] = ['saas_appid', '=', null];
         }
         $data = Upload::with(['category'])
             ->where($where)
@@ -87,7 +91,7 @@ trait UploadMgr
                 return $this->fail('删除失败');
             }
         }
-        # 批量删除
+        // 批量删除
         foreach ($ids as $id) {
             UploadService::delete($id);
         }
@@ -104,11 +108,11 @@ trait UploadMgr
      */
     public function upload(Request $request)
     {
-        # 获取上传文件
+        // 获取上传文件
         $file = $request->file('file');
-        # 获取上传目录
+        // 获取上传目录
         $dirName = $request->post('dir_name', '');
-        # 上传附件
+        // 上传附件
         $data = UploadService::upload($file, $dirName);
         if (!$data) {
             return $this->fail('上传失败');

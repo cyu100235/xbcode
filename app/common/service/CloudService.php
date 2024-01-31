@@ -105,6 +105,20 @@ class CloudService
         return self::send('User/getRechargeQrcode', [
             'order_no'  => $order_no,
             'pay_type'  => $payType,
+        ]);
+    }
+
+    /**
+     * 检测充值订单状态
+     * @param string $order_no
+     * @return \yzh52521\EasyHttp\Response
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public static function awaitPay(string $order_no)
+    {
+        return self::send('User/awaitPay', [
+            'order_no'  => $order_no,
         ])->array();
     }
 

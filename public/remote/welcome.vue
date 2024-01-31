@@ -2,7 +2,8 @@
     <div class="pages-container">
         <div class="tools-container">
             <div class="screen">
-                <el-input placeholder="请输入内容" v-model="input" clearable></el-input>
+                <el-input v-model="projects.screen.keyword" placeholder="请输入关键词" />
+                <el-button type="primary" @click="getList">搜索</el-button>
             </div>
             <div class="tools">
             </div>
@@ -12,7 +13,6 @@
                 <div class="project-title">
                     <div class="title">项目管理</div>
                     <div class="action">
-                        <el-button type="warning" @click="openWin('/Projects/desc')">项目独立</el-button>
                         <el-button type="primary" @click="openWin('/Projects/add')">新建项目</el-button>
                     </div>
                 </div>
@@ -43,9 +43,7 @@
                 </div>
                 <!-- 分页 -->
                 <div class="xb-paginate">
-                    <el-pagination layout="prev, pager, next" v-model:current-page="projects.paginate.page"
-                        :total="projects.paginate.total" :page-size="projects.paginate.limit"
-                        @current-change="hanldChangePage" small background />
+                    <el-pagination v-bind="paginate" :page-size="projects.screen.limit" @current-change="hanldChangePage" />
                 </div>
             </div>
         </div>
@@ -56,13 +54,18 @@
 export default {
     data() {
         return {
+            paginate: {
+                background: true,
+                total: 0,
+                layout: 'prev, pager, next',
+            },
             projects: {
-                list: [],
-                paginate: {
+                screen: {
+                    keyword:'',
                     page: 1,
                     limit: 20,
-                    total: 1000,
                 },
+                list: [],
             },
         }
     },
@@ -70,22 +73,34 @@ export default {
         await this.getList()
     },
     methods: {
+        // 删除项目
         openDel(id) {
             this.$useConfirm('是否确定删除该项目？', '温馨提示', 'error').then(() => {
                 const params = {
                     id
                 }
                 this.$http.useDelete('/admin/Projects/del', params).then((res) => {
-                    this.$useNotifySuccess(res?.msg ?? '删除成功')
+                    this.projects.screen.page = 1
+                    this.getList()
+                    this.$useNotify(res?.msg || "登录成功", 'success', '温馨提示')
                 })
             })
         },
+        // 获取项目列表
         getList() {
-            this.$http.useGet('/admin/Projects/index').then((res) => {
+            const params = {
+                keyword: this.projects.screen.keyword,
+                page: this.projects.screen.page,
+                limit: this.projects.screen.limit,
+            }
+            this.$http.useGet('/admin/Projects/index', params).then((res) => {
                 this.projects.list = res?.data?.data ?? []
-                this.projects.paginate.page = res?.data?.current_page ?? []
+                this.projects.screen.page = res?.data?.current_page ?? 1
+                this.projects.screen.limit = res?.data?.per_page ?? 20
+                this.paginate.total = res?.data?.total ?? 0
             })
         },
+        // 打开新窗口后台
         openUrl(id) {
             const params = {
                 id
@@ -98,6 +113,12 @@ export default {
                 window.open(res?.data?.url)
             })
         },
+        // 分页改变
+        hanldChangePage(value) {
+            this.projects.screen.page = value
+            this.getList()
+        },
+        // 跳转地址
         openWin(url, params = {}) {
             this.$routerApp.push({
                 path: url,
@@ -125,7 +146,10 @@ export default {
         justify-content: space-between;
         padding: 0 15px;
 
-        .screen {}
+        .screen {
+            display: flex;
+            gap:20px;
+        }
 
         .tools {}
     }
@@ -160,7 +184,7 @@ export default {
                 flex: 1;
                 overflow-y: auto;
                 overflow-x: hidden;
-                padding-top: 15px;
+                padding: 15px 0 15px 0;
 
                 .project-grid {
                     display: grid;
@@ -233,6 +257,8 @@ export default {
                 height: 50px;
                 display: flex;
                 justify-content: flex-end;
+                background-color: #fff;
+                padding: 0 20px;
             }
         }
     }

@@ -35,6 +35,21 @@ trait AppCloud
         ];
         return self::send('Apps/detail', $params)->array();
     }
+
+    /**
+     * 获取应用安装列表
+     * @return mixed
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public static function getAppInstallList()
+    {
+        $data = self::send('AppsInstall/index')->array();
+        if (!isset($data['code']) || !isset($data['data'])) {
+            throw new Exception($data['msg'], (int)$data['code']);
+        }
+        return $data['data'];
+    }
     
     /**
      * 获取应用类型

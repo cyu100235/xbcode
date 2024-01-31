@@ -27,7 +27,17 @@ class ProjectsController extends BaseController
      */
     public function index(Request $request)
     {
-        $data = Projects::order(['id' => 'desc'])->paginate();
+        $page = (int)$request->get('page', 1);
+        $limit = (int)$request->get('limit', 20);
+        $keyword = $request->get('keyword', '');
+        $where = [];
+        if ($keyword) {
+            $where[] = ['title', 'like', "%{$keyword}%"];
+        }
+        $data = Projects::where($where)->order(['id' => 'desc'])->paginate([
+            'list_rows' => $limit,
+            'page'      => $page,
+        ]);
         return $this->successRes($data);
     }
 
@@ -188,6 +198,7 @@ class ProjectsController extends BaseController
      */
     private function formView($edit = false)
     {
+        $apps    = CloudService::getAppInstallList();
         $builder = new FormBuilder;
         $builder->setMethod('POST');
         $builder->addRow('title', 'input', '项目名称', '', [
@@ -205,12 +216,13 @@ class ProjectsController extends BaseController
         ]);
         if ($edit) {
             $builder->addRow('app_name', 'info', '应用标识', '', [
-                'col' => 12,
+                'col'       => 12
             ]);
         } else {
             $builder->addRow('app_name', 'select', '所属应用', '', [
-                'col' => 12,
-                'noDataText' => '您还没有更多的应用',
+                'col'           => 12,
+                'noDataText'    => '您还没有更多的应用',
+                'options'       => $apps
             ]);
         }
         $builder->addRow('logo', 'uploadify', '项目图标', '', [

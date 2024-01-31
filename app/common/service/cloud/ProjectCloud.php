@@ -33,10 +33,10 @@ trait ProjectCloud
         try {
             // 创建项目
             $data  = [
-                'title' => $post['title'],
-                'app_name' => 'xbaiChat',
-                'name' => $post['name'],
-                'logo' => $post['logo'],
+                'title'     => $post['title'],
+                'app_name'  => $post['app_name'],
+                'name'      => $post['name'],
+                'logo'      => $post['logo'],
             ];
             $model = new Projects;
             if (!$model->save($data)) {
@@ -44,10 +44,10 @@ trait ProjectCloud
             }
             // 创建项目角色
             $data      = [
-                'saas_appid' => $model->id,
-                'pid' => 0,
-                'title' => "{$post['title']}-超级管理员",
-                'is_system' => '20',
+                'saas_appid'    => $model->id,
+                'pid'           => 0,
+                'title'         => "超级管理员",
+                'is_system'     => '20',
             ];
             $roleModel = new AdminRole;
             if (!$roleModel->save($data)) {
@@ -55,13 +55,13 @@ trait ProjectCloud
             }
             // 创建管理员
             $data       = [
-                'role_id' => $roleModel->id,
-                'saas_appid' => $model->id,
-                'username' => $post['username'],
-                'password' => $post['password'],
-                'nickname' => "{$post['title']}管理员",
-                'status' => '20',
-                'is_system' => '20',
+                'role_id'       => $roleModel->id,
+                'saas_appid'    => $model->id,
+                'username'      => $post['username'],
+                'password'      => $post['password'],
+                'nickname'      => "{$post['title']}管理员",
+                'status'        => '20',
+                'is_system'     => '20',
             ];
             $adminModel = new Admin;
             if (!$adminModel->save($data)) {
@@ -116,7 +116,8 @@ trait ProjectCloud
             if (!AdminRole::where('saas_appid', $id)->delete()) {
                 throw new Exception('删除项目角色失败');
             }
-            // 删除云端项目
+            // 删除缓存标识
+            Cache::delete($model['name']);
             // 删除项目
             if (!$model->delete()) {
                 throw new Exception('删除项目失败');

@@ -20,7 +20,11 @@ trait UploadCateMgr
     public function index(Request $request)
     {
         $order = $request->get('order', 'asc');
+        $appName = $request->appName ?? null;
         $where = [];
+        if (!$appName) {
+            $where[] = ['saas_appid', '=', null];
+        }
         $data = UploadCate::where($where)
         ->order("sort {$order},id asc")
         ->select()
