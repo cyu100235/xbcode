@@ -28,10 +28,10 @@ class LoginController extends BaseController
      */
     public function login(Request $request)
     {
-        # 获取数据
+        // 获取数据
         $post = $request->post();
 
-        # 数据验证
+        // 数据验证
         xbValidate(LoginValidate::class, $post);
 
         // 查询数据
@@ -57,15 +57,10 @@ class LoginController extends BaseController
 
         $user  = $model->toArray();
         $token = AuthUtil::encrypt($user);
-        # 跳转地址
-        $url = 'Index/index';
-        if (!empty($user['project']['name'])) {
-            $url = "/xbase/{$user['project']['name']}/admin/";
-        }
-        # 返回数据
+        // 返回数据
         $data = [
             'token'     => $token,
-            'url'       => $url
+            'url'       => 'Index/index'
         ];
         return $this->successFul('登录成功',$data);
     }
@@ -90,7 +85,7 @@ class LoginController extends BaseController
         if (empty($user)) {
             return $this->failFul('用户信息错误，请重新登录',12000);
         }
-        # 前端数据
+        // 前端数据
         $data = $user->toArray();
         $data['menus'] = MenusUtil::getMenus();
         return $this->successRes($data);

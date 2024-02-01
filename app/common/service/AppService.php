@@ -54,10 +54,13 @@ class AppService
                 'lock'              => $data['public_api_lock']??"{$moduleRoute}/Index/lock",
                 // 修改登录者信息
                 "user_edit"         => $data['public_api_user_edit']??"{$moduleRoute}/Admin/info",
+                // 修改用户页面视图地址
+                "user_edit_path"    => $data['public_api_user_edit_path']??"/Admin/info",
                 // 头部toolBar远程文件
+                "header_left_file" => $data['header_left_file']??'',
                 "header_right_file" => $data['public_api_header_right_file']??$toolbar,
             ],
-            // 远程组件
+            // 远程组件页面
             'remote_url'            => $data['remote_url']??[],
             // 附件库API
             'uploadify_api'         => [

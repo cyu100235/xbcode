@@ -45,6 +45,8 @@
                         "sort": "100",
                         "auth_params": "",
                         "id": 38,
+                        "is_system": "10",
+                        "is_default": "10",
                         "children": [
                             {
                                 "title": "项目管理",
@@ -420,6 +422,22 @@
                         "id": 15,
                         "pid": 12,
                         "is_default": "10",
+                        "children": []
+                    },
+                    {
+                        "title": "管理员-修改资料",
+                        "pid": 12,
+                        "component": "form/index",
+                        "path": "Admin/info",
+                        "show": "10",
+                        "method": [
+                            "GET",
+                            "PUT"
+                        ],
+                        "icon": "",
+                        "sort": "100",
+                        "auth_params": "",
+                        "id": 43,
                         "children": []
                     }
                 ]
