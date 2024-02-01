@@ -250,3 +250,28 @@ function getModuleRoute()
     }
     return $moduleRoute;
 }
+
+/**
+ * 获取应用路由
+ * @return string
+ * @copyright 贵州小白基地网络科技有限公司
+ * @author 楚羽幽 cy958416459@qq.com
+ */
+function getBaseRoute()
+{
+    $request = request();
+    if (empty($request->xBaseName)) {
+        # 设置总后台路由格式
+        $moduleRoute = app('http')->getName();
+        $route = "/{$moduleRoute}";
+    } else {
+        # 设置应用后台路由格式
+        $appName = $request->pathinfo();
+        $data = explode('/', $appName);
+        if (!isset($data[3])) {
+            throw new Exception('应用路由错误');
+        }
+        $route = "/{$data[0]}/{$data[1]}/{$data[2]}";
+    }
+    return $route;
+}

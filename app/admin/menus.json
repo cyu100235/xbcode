@@ -234,114 +234,6 @@
         ]
     },
     {
-        "title": "应用",
-        "pid": 0,
-        "component": "none/index",
-        "path": "Apps/group",
-        "show": "20",
-        "method": [
-            "GET"
-        ],
-        "icon": "Eleme",
-        "sort": 100,
-        "id": 9,
-        "auth_params": "",
-        "is_system": "10",
-        "is_default": "10",
-        "children": [
-            {
-                "path": "Apps/index",
-                "title": "应用市场",
-                "method": [
-                    "GET"
-                ],
-                "show": "20",
-                "sort": 100,
-                "icon": "",
-                "component": "remote/index",
-                "auth_params": "remote/apps/index",
-                "is_system": "10",
-                "id": 10,
-                "pid": 9,
-                "is_default": "10",
-                "children": [
-                    {
-                        "title": "购买应用",
-                        "pid": 10,
-                        "component": "none/index",
-                        "path": "Apps/buy",
-                        "show": "10",
-                        "method": [
-                            "GET",
-                            "POST"
-                        ],
-                        "icon": "",
-                        "sort": "100",
-                        "id": 34,
-                        "auth_params": "",
-                        "is_system": "10",
-                        "is_default": "10",
-                        "children": []
-                    },
-                    {
-                        "title": "安装应用",
-                        "pid": 10,
-                        "component": "none/index",
-                        "path": "Apps/install",
-                        "show": "10",
-                        "method": [
-                            "GET",
-                            "POST"
-                        ],
-                        "icon": "",
-                        "sort": "100",
-                        "id": 35,
-                        "auth_params": "",
-                        "is_system": "10",
-                        "is_default": "10",
-                        "children": []
-                    },
-                    {
-                        "title": "更新应用",
-                        "pid": 10,
-                        "component": "none/index",
-                        "path": "Apps/update",
-                        "show": "10",
-                        "method": [
-                            "GET",
-                            "PUT"
-                        ],
-                        "icon": "",
-                        "sort": "100",
-                        "id": 36,
-                        "auth_params": "",
-                        "is_system": "10",
-                        "is_default": "10",
-                        "children": []
-                    },
-                    {
-                        "title": "卸载应用",
-                        "pid": 10,
-                        "component": "none/index",
-                        "path": "Apps/uninstall",
-                        "show": "10",
-                        "method": [
-                            "GET",
-                            "DELETE"
-                        ],
-                        "icon": "",
-                        "sort": "100",
-                        "id": 37,
-                        "auth_params": "",
-                        "is_system": "10",
-                        "is_default": "10",
-                        "children": []
-                    }
-                ]
-            }
-        ]
-    },
-    {
         "title": "权限",
         "pid": 0,
         "component": "none/index",
@@ -438,6 +330,8 @@
                         "sort": "100",
                         "auth_params": "",
                         "id": 43,
+                        "is_system": "10",
+                        "is_default": "10",
                         "children": []
                     }
                 ]
@@ -600,13 +494,121 @@
         ]
     },
     {
+        "title": "应用",
+        "pid": 0,
+        "component": "none/index",
+        "path": "Apps/group",
+        "show": "20",
+        "method": [
+            "GET"
+        ],
+        "icon": "Eleme",
+        "sort": "8000",
+        "id": 9,
+        "auth_params": "",
+        "is_system": "10",
+        "is_default": "10",
+        "children": [
+            {
+                "path": "Apps/index",
+                "title": "应用市场",
+                "method": [
+                    "GET"
+                ],
+                "show": "20",
+                "sort": 100,
+                "icon": "",
+                "component": "remote/index",
+                "auth_params": "remote/apps/index",
+                "is_system": "10",
+                "id": 10,
+                "pid": 9,
+                "is_default": "10",
+                "children": [
+                    {
+                        "title": "购买应用",
+                        "pid": 10,
+                        "component": "none/index",
+                        "path": "Apps/buy",
+                        "show": "10",
+                        "method": [
+                            "GET",
+                            "POST"
+                        ],
+                        "icon": "",
+                        "sort": "100",
+                        "id": 34,
+                        "auth_params": "",
+                        "is_system": "10",
+                        "is_default": "10",
+                        "children": []
+                    },
+                    {
+                        "title": "安装应用",
+                        "pid": 10,
+                        "component": "none/index",
+                        "path": "Apps/install",
+                        "show": "10",
+                        "method": [
+                            "GET",
+                            "POST"
+                        ],
+                        "icon": "",
+                        "sort": "100",
+                        "id": 35,
+                        "auth_params": "",
+                        "is_system": "10",
+                        "is_default": "10",
+                        "children": []
+                    },
+                    {
+                        "title": "更新应用",
+                        "pid": 10,
+                        "component": "none/index",
+                        "path": "Apps/update",
+                        "show": "10",
+                        "method": [
+                            "GET",
+                            "PUT"
+                        ],
+                        "icon": "",
+                        "sort": "100",
+                        "id": 36,
+                        "auth_params": "",
+                        "is_system": "10",
+                        "is_default": "10",
+                        "children": []
+                    },
+                    {
+                        "title": "卸载应用",
+                        "pid": 10,
+                        "component": "none/index",
+                        "path": "Apps/uninstall",
+                        "show": "10",
+                        "method": [
+                            "GET",
+                            "DELETE"
+                        ],
+                        "icon": "",
+                        "sort": "100",
+                        "id": 37,
+                        "auth_params": "",
+                        "is_system": "10",
+                        "is_default": "10",
+                        "children": []
+                    }
+                ]
+            }
+        ]
+    },
+    {
         "path": "systemConfig/tabs",
         "title": "设置",
         "method": [
             "GET"
         ],
         "show": "20",
-        "sort": 8888,
+        "sort": "9000",
         "icon": "Setting",
         "component": "none/index",
         "auth_params": "",

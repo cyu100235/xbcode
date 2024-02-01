@@ -22,7 +22,7 @@ trait SettingsMgr
      */
     public function config(Request $request)
     {
-        $group = $request->get('group');
+        $group = $request->get('group','');
         if ($request->isPut()) {
             $post  = $request->post();
             if (empty($group)) {
@@ -32,6 +32,9 @@ trait SettingsMgr
             SettingUtil::save($group, $post);
             // 返回结果
             return $this->success('保存成功');
+        }
+        if (empty($group)) {
+            return $this->fail('分组参数错误');
         }
         $data     = SettingUtil::getOriginal($group,[]);
         $formView = SettingFormUtil::formView($group);
@@ -56,6 +59,9 @@ trait SettingsMgr
             // 返回结果
             return $this->success('保存成功');
         }
+        if (empty($group)) {
+            return $this->fail('分组参数错误');
+        }
         $data     = SettingUtil::getOriginal($group,[]);
         $formView = SettingFormUtil::getDivider($group);
         $formView = $formView->setFormData($data)->create();
@@ -78,6 +84,9 @@ trait SettingsMgr
             SettingUtil::save($group, $post);
             // 返回结果
             return $this->success('保存成功');
+        }
+        if (empty($group)) {
+            return $this->fail('分组参数错误');
         }
         $data = SettingUtil::getOriginal($group,[]);
         $builder = SettingFormUtil::formView($group);
@@ -102,6 +111,9 @@ trait SettingsMgr
             SettingUtil::save($group, $post);
             // 返回结果
             return $this->success('保存成功');
+        }
+        if (empty($group)) {
+            return $this->fail('分组参数错误');
         }
         $data = SettingUtil::getOriginal($group,[]);
         $builder = SettingFormUtil::tabsFormView($group);

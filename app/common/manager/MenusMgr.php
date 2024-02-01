@@ -104,7 +104,7 @@ trait MenusMgr
                 'width' => 100,
                 'params' => [
                     'type' => 'input',
-                    'api' => $request->moduleName . '/admin/Menus/rowEdit',
+                    'api' => getBaseRoute() . '/Menus/rowEdit',
                     'min' => 0,
                 ],
             ])

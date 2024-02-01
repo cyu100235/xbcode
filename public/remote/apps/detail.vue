@@ -136,8 +136,8 @@ export default {
                 this.$useRemote('remote/apps/install', params, {
                     title: '应用安装',
                     customStyle: {
-                        width: '1000px',
-                        height: '700px',
+                        width: '70%',
+                        height: '90vh',
                     },
                 })
             })
@@ -153,8 +153,8 @@ export default {
                 this.$useRemote('remote/apps/update', params, {
                     title: '应用更新',
                     customStyle: {
-                        width: '1000px',
-                        height: '700px',
+                        width: '70%',
+                        height: '90vh',
                     },
                 })
             })
@@ -170,8 +170,8 @@ export default {
                 this.$useRemote('remote/apps/uninstall', params, {
                     title: '应用卸载',
                     customStyle: {
-                        width: '1000px',
-                        height: '700px',
+                        width: '70%',
+                        height: '90vh',
                     },
                 })
             })
@@ -195,8 +195,8 @@ export default {
             this.$useRemote('remote/cloud/user', {}, {
                 title: '用户中心',
                 customStyle: {
-                    width: '1000px',
-                    height: '700px',
+                    width: '70%',
+                    height: '90vh',
                 },
             })
         },

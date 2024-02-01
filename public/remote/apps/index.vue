@@ -124,8 +124,8 @@ export default {
             this.$useRemote('remote/apps/detail', { app_name }, {
                 title: '应用详情',
                 customStyle: {
-                    width: '1000px',
-                    height: '700px',
+                    width: '70%',
+                    height: '90vh',
                 },
                 beforeClose: (value, state, done) => {
                     this.paginate.page = 1

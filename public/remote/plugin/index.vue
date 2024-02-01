@@ -1,18 +1,18 @@
 <template>
     <div class="plugin-container">
         <div class="title">插件管理</div>
-        <div class="content">
-            <div class="item" v-for="(item,index) in 15" :key="index">
+        <div class="content" v-if="datalist.length">
+            <div class="item" v-for="(item,index) in datalist" :key="index" @click="detail(item?.name)">
                 <div class="logo-container">
                     <el-image class="logo" src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" />
                 </div>
-                <div class="action">
-                    <el-button type="success" link>购买</el-button>
-                    <!-- <el-button type="primary" link>安装</el-button> -->
-                    <!-- <el-button type="warning" link>更新</el-button> -->
-                    <!-- <el-button type="danger" link>卸载</el-button> -->
+                <div class="money">
+                    {{ parseFloat(item?.money) ? `￥${item?.money}` : '免费'}}
                 </div>
             </div>
+        </div>
+        <div class="empty-container" v-else>
+            <el-empty description="该应用暂无插件" />
         </div>
     </div>
 </template>
@@ -21,15 +21,36 @@
 export default {
     data() {
         return {
+            datalist:[]
         }
     },
-    mounted() {
+    async mounted() {
+        await this.getList()
     },
     methods: {
-        buy() { },
-        install() { },
-        update() { },
-        uninstall() { },
+        // 插件详情
+        detail(name) {
+            const params = {
+                app_name: name
+            }
+            this.$useRemote('remote/plugin/detail', params, {
+                title: '插件详情',
+                customStyle: {
+                    width: '500px',
+                    height: '80vh',
+                },
+                beforeClose: (value, state, done) => {
+                    this.getList()
+                    done()
+                }
+            })
+        },
+        // 获取插件列表
+        getList() {
+            this.$http.useGet(`${this.$moduleName}/Plugins/index`).then(res => {
+                this.datalist = res?.data ?? []
+            })
+        },
     },
 }
 </script>
@@ -60,6 +81,7 @@ export default {
             flex-direction: column;
             justify-content: center;
             padding-top:15px;
+            cursor: pointer;
             .logo-container {
                 display: flex;
                 justify-content: center;
@@ -70,11 +92,13 @@ export default {
                 }
             }
 
-            .action {
+            .money {
                 display: flex;
                 justify-content: center;
                 align-items: center;
                 padding-top: 5px;
+                color: red;
+                font-size: 14px;
             }
         }
     }

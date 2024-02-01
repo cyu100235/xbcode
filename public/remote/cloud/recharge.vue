@@ -2,32 +2,34 @@
     <div class="pages-container" v-if="user">
         <!-- 充值界面 -->
         <div class="recharge-container" v-if="!qrcode.order_no">
-            <div class="account">
-                <div class="label">账户余额：</div>
-                <div class="value">￥{{ user?.balance }}</div>
-            </div>
-            <div class="pay-container">
-                <div class="label">充值金额：</div>
-                <div class="recharge">
-                    <el-input v-model="formData.money" placeholder="请输入充值金额" class="input" />
+            <div class="recharge-box">
+                <div class="account">
+                    <div class="label">账户余额：</div>
+                    <div class="value">￥{{ user?.balance }}</div>
                 </div>
-            </div>
-            <div class="type-container">
-                <div class="label">支付方式：</div>
-                <div class="pay">
-                    <el-radio-group v-model="formData.pay_type">
-                        <el-radio label="wxpay" border>
-                            微信支付
-                        </el-radio>
-                        <!-- <el-radio label="alipay" border>
+                <div class="pay-container">
+                    <div class="label">充值金额：</div>
+                    <div class="recharge">
+                        <el-input v-model="formData.money" placeholder="请输入充值金额" class="input" />
+                    </div>
+                </div>
+                <div class="type-container">
+                    <div class="label">支付方式：</div>
+                    <div class="pay">
+                        <el-radio-group v-model="formData.pay_type">
+                            <el-radio label="wxpay" border>
+                                微信支付
+                            </el-radio>
+                            <!-- <el-radio label="alipay" border>
                             支付宝支付
                         </el-radio> -->
-                    </el-radio-group>
+                        </el-radio-group>
+                    </div>
                 </div>
-            </div>
-            <div class="recharge-btn">
-                <div class="submit" @click="hanldPay">
-                    立即充值
+                <div class="recharge-btn">
+                    <div class="submit" @click="hanldPay">
+                        立即充值
+                    </div>
                 </div>
             </div>
         </div>
@@ -122,66 +124,70 @@ export default {
 
 <style lang="scss" scoped>
 .pages-container {
-    padding-top: 100px;
 
     .recharge-container {
-        width: 400px;
-        margin: 0 auto;
-        background-color: #f5f5f5;
-        border-radius: 6px;
-        padding: 40px 20px;
+        padding-top: 100px;
 
-        .account {
-            display: flex;
-            font-size: 14px;
+        .recharge-box {
 
-            .label {}
+            width: 400px;
+            margin: 0 auto;
+            background-color: #f5f5f5;
+            border-radius: 6px;
+            padding: 40px 20px;
 
-            .value {}
-        }
-
-        .pay-container {
-            display: flex;
-            margin-top: 30px;
-
-            .label {
+            .account {
                 display: flex;
-                align-items: center;
+                font-size: 14px;
+
+                .label {}
+
+                .value {}
             }
 
-            .recharge {
-                .input {
-                    width: 100%;
+            .pay-container {
+                display: flex;
+                margin-top: 30px;
+
+                .label {
+                    display: flex;
+                    align-items: center;
+                }
+
+                .recharge {
+                    .input {
+                        width: 100%;
+                    }
                 }
             }
-        }
 
-        .type-container {
-            margin-top: 30px;
-            display: flex;
-
-            .label {
+            .type-container {
+                margin-top: 30px;
                 display: flex;
-                align-items: center;
+
+                .label {
+                    display: flex;
+                    align-items: center;
+                }
+
+                .pay {}
             }
 
-            .pay {}
-        }
+            .recharge-btn {
+                display: flex;
+                justify-content: center;
+                margin-top: 30px;
 
-        .recharge-btn {
-            display: flex;
-            justify-content: center;
-            margin-top: 30px;
+                .submit {
+                    padding: 10px 50px;
+                    background-color: var(--el-color-warning);
+                    color: #fff;
+                    border-radius: 6px;
+                    cursor: pointer;
 
-            .submit {
-                padding: 10px 50px;
-                background-color: var(--el-color-warning);
-                color: #fff;
-                border-radius: 6px;
-                cursor: pointer;
-
-                &:hover {
-                    background-color: var(--el-color-warning-light-3);
+                    &:hover {
+                        background-color: var(--el-color-warning-light-3);
+                    }
                 }
             }
         }

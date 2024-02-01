@@ -92,8 +92,8 @@ export default {
             this.$useRemote('remote/cloud/recharge', {}, {
                 title: '在线充值',
                 customStyle: {
-                    width: '60%',
-                    height: '700px',
+                    width: '500px',
+                    height: '550px',
                 },
                 beforeClose: (value, state, done) => {
                     this.getUser()

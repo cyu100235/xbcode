@@ -47,6 +47,12 @@ class InstallUtil
     protected $appName = null;
 
     /**
+     * 插件标识
+     * @var string|null
+     */
+    protected $pluginName = null;
+
+    /**
      * 版本号
      * @var int|null
      */
@@ -60,35 +66,37 @@ class InstallUtil
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public function __construct(Request $request,string $appName, int $version)
+    public function __construct(Request $request,string $appName,string $pluginName, int $version)
     {
         // 设置请求对象
         $this->request = $request;
-        // 临时应用包路径
-        $this->package = root_path("runtime/apps") . "{$appName}-{$version}-install.zip";
+        // 临时插件包路径
+        $this->package = root_path("runtime/plugin") . "{$pluginName}-{$version}-install.zip";
         // 检测临时应用包目录，不存在则创建
         $packageDirPath = dirname($this->package);
         if (!is_dir($packageDirPath)) {
             mkdir($packageDirPath, 0755, true);
         }
-        // 应用目录
-        $this->baseDirPath = root_path("base/{$appName}");
+        // 插件目录
+        $this->baseDirPath = root_path("base/{$appName}/plugins/{$pluginName}");
         // 设置应用标识
         $this->appName = $appName;
+        // 设置插件标识
+        $this->pluginName = $pluginName;
         // 设置版本号
         $this->version = $version;
     }
     
     /**
-     * 下载应用包
+     * 下载插件包
      * @return mixed
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public function download()
     {
-        // 下载应用包
-        CloudService::downloadApp($this->appName, $this->version, $this->package);
+        // 下载插件包
+        CloudService::downloadPlugin($this->appName, $this->version, $this->package);
         // 返回结果
         return JsonUtil::successRes([
             'next' => 'unzip',

@@ -68,13 +68,17 @@ trait ScreenTrait
             $this->formConfig['data']  = [];
             $this->formConfig['items'] = [];
         }
+        $plaholder = "请输入{$title}";
+        if (in_array($type, ['select', 'radio', 'checkbox'])) {
+            $plaholder = "请选择{$title}";
+        }
         $item = [
             'field' => $field,
             'title' => $title,
             'itemRender' => [
                 'name' => "\${$type}",
                 'props' => [
-                    'placeholder' => "请输入{$title}"
+                    'placeholder' => $plaholder
                 ],
             ],
         ];

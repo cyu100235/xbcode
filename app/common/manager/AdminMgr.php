@@ -114,10 +114,10 @@ trait AdminMgr
             $post = $request->post();
             $post['pid']    = $admin_id;
 
-            # 数据验证
+            // 数据验证
             xbValidate(AdminValidate::class, $post, 'add');
             
-            # 验证是否已存在
+            // 验证是否已存在
             $where = [
                 'username'      => $post['username']
             ];

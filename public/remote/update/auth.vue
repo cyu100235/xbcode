@@ -3,6 +3,7 @@
         <div class="title-container">
             <div class="title">系统授权信息</div>
             <div class="more">
+                <el-button type="info" @click="openDeveloper()">开发者应用</el-button>
                 <el-button type="warning" @click="openRecharge()">在线充值</el-button>
                 <el-button type="success" @click="openCloud()">云服务</el-button>
             </div>
@@ -71,8 +72,8 @@ export default {
             this.$useRemote('remote/cloud/user', {}, {
                 title: '云服务中心',
                 customStyle: {
-                    width: '60%',
-                    height: '700px',
+                    width: '70%',
+                    height: '90vh',
                 },
                 beforeClose: (value, state, done) => {
                     done()
@@ -84,13 +85,17 @@ export default {
             this.$useRemote('remote/cloud/recharge', {}, {
                 title: '在线充值',
                 customStyle: {
-                    width: '60%',
-                    height: '700px',
+                    width: '500px',
+                    height: '550px',
                 },
                 beforeClose: (value, state, done) => {
                     done()
                 }
             })
+        },
+        // 打开开发者应用页面
+        openDeveloper() {
+            this.$emit("update:openWin", 'remote/developer/index');
         },
         // 获取授权信息
         getDetail() {
