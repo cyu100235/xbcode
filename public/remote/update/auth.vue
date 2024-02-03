@@ -3,9 +3,15 @@
         <div class="title-container">
             <div class="title">系统授权信息</div>
             <div class="more">
-                <el-button type="info" @click="openDeveloper()">开发者应用</el-button>
-                <el-button type="warning" @click="openRecharge()">在线充值</el-button>
-                <el-button type="success" @click="openCloud()">云服务</el-button>
+                <el-button type="info" @click="openDeveloper()" v-if="user?.is_dev === '30'">
+                    开发者应用
+                </el-button>
+                <el-button type="warning" @click="openRecharge()">
+                    在线充值
+                </el-button>
+                <el-button type="success" @click="openCloud()">
+                    云服务
+                </el-button>
             </div>
         </div>
         <div class="empower-box">
@@ -54,6 +60,7 @@
 export default {
     data() {
         return {
+            user:null,
             detail: {
                 title: '',
                 ip: '',
@@ -64,6 +71,7 @@ export default {
         }
     },
     async mounted() {
+        await this.getUser();
         await this.getDetail();
     },
     methods: {
@@ -104,6 +112,13 @@ export default {
                 beforeClose: (value, state, done) => {
                     done()
                 }
+            })
+        },
+        // 获取用户信息
+        async getUser() {
+            return await this.$http.useGet('admin/Cloud/user').then((res) => {
+                this.user = res?.data ?? {}
+                return res
             })
         },
         // 获取授权信息

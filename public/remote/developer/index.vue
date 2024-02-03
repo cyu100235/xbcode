@@ -96,6 +96,7 @@ export default {
                 developerMode: value
             }
             this.$http.usePost('admin/developer/getDeveloperMode', params).then(res => {
+                this.getList()
                 this.$useNotify(res?.msg || "网络错误", 'success', '温馨提示')
             })
         },
