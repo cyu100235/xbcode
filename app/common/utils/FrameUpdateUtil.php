@@ -9,7 +9,7 @@ use app\common\utils\zip\ZipUtil;
 use Exception;
 use think\facade\Log;
 use think\Request;
-use zjkal\MysqlHelper;
+use xbai8\MysqlHelper;
 
 /**
  * 框架更新服务

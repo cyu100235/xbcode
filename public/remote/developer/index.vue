@@ -13,12 +13,22 @@
         </el-card>
         <div class="content-container" v-if="datalist.length">
             <div class="content">
-                <div class="item" v-for="(item, index) in datalist" :key="index" @click="detail(item?.name)">
+                <div class="item" v-for="(item, index) in datalist" :key="index">
                     <div class="logo-container">
                         <el-image class="logo"
                             src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg" />
                     </div>
+                    <div class="title">{{ item.title }}</div>
                     <div class="action">
+                        <el-tooltip effect="dark" content="安装测试" placement="bottom">
+                            <AppIcons class="icon" icon="InfoFilled" :size="22" @click="install(item?.name)" />
+                        </el-tooltip>
+                        <el-tooltip effect="dark" content="更新测试" placement="bottom">
+                            <AppIcons class="icon" icon="WarningFilled" :size="22" @click="update(item?.name)" />
+                        </el-tooltip>
+                        <el-tooltip effect="dark" content="发布应用" placement="bottom">
+                            <AppIcons class="icon" icon="UploadFilled" :size="22" @click="publish(item?.name)" />
+                        </el-tooltip>
                     </div>
                 </div>
             </div>
@@ -42,6 +52,44 @@ export default {
         await this.getList()
     },
     methods: {
+        // 应用发布
+        publish(app_name) {
+            this.$useRemote('remote/developer/publish', { app_name }, {
+                title: '更新测试',
+                customStyle: {
+                    width: '70%',
+                    height: '90vh',
+                },
+                beforeClose: (value, state, done) => {
+                    this.getList()
+                    done()
+                }
+            })
+        },
+        // 安装测试
+        install(app_name) {
+            const params = {
+                app_name
+            }
+            const loading = this.$useLoading('正在进行数据安装测试...')
+            this.$http.useGet('admin/developer/install',params).then(res => {
+                this.$useNotify(res?.msg || "网络错误", 'success', '温馨提示')
+            }).finally(() => {
+                loading.close()
+            })
+        },
+        // 更新测试
+        update(app_name) {
+            const params = {
+                app_name
+            }
+            const loading = this.$useLoading('正在进行数据更新测试...')
+            this.$http.useGet('admin/developer/update',params).then(res => {
+                this.$useNotify(res?.msg || "网络错误", 'success', '温馨提示')
+            }).finally(() => {
+                loading.close()
+            })
+        },
         // 切换模式
         hanldMode(value) {
             const params = {
@@ -59,6 +107,9 @@ export default {
         },
         // 获取应用数据
         getList() {
+            this.$http.useGet('admin/developer/index').then(res => {
+                this.datalist = res?.data ?? []
+            })
         }
     },
 }
@@ -88,6 +139,7 @@ export default {
                 flex-direction: column;
                 justify-content: center;
                 padding-top: 15px;
+                position: relative;
 
                 .logo-container {
                     display: flex;
@@ -95,16 +147,34 @@ export default {
                     align-items: center;
 
                     .logo {
-                        width: 80px;
-                        height: 80px;
-                        border-radius: 5px;
+                        width: 100%;
+                        height: 100px;
                     }
+                }
+
+                .title {
+                    position: absolute;
+                    bottom: 28px;
+                    left: 0;
+                    right: 0;
+                    background: rgba(#000000, .4);
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    color: #fff;
+                    padding: 3px 6px;
+                    font-size: 12px;
                 }
 
                 .action {
                     display: flex;
-                    justify-content: center;
+                    justify-content: space-between;
                     align-items: center;
+                    padding-top: 6px;
+
+                    .icon {
+                        cursor: pointer;
+                    }
                 }
             }
         }

@@ -81,6 +81,12 @@ class UninstallUtil
      */
     public function deleteSql()
     {
+        // 应用初始类
+        $class = "\\base\\{$this->appName}\\Package";
+        // 执行安装前置
+        if (method_exists($class, 'before_uninstall')) {
+            call_user_func([$class, 'before_uninstall'], $this->request, $this->appName, $this->version);
+        }
         if (is_file($this->installSqlPath) && file_exists($this->installSqlPath)) {
             // 读取安装SQL文件
             $sql = file_get_contents($this->installSqlPath);
@@ -151,6 +157,12 @@ class UninstallUtil
      */
     public function success()
     {
+        // 应用初始类
+        $class = "\\base\\{$this->appName}\\Package";
+        // 执行安装前置
+        if (method_exists($class, 'after_uninstall')) {
+            call_user_func([$class, 'after_uninstall'], $this->request, $this->appName, $this->version);
+        }
         return $this->successFul('卸载完成',[
             'next'  => ''
         ]);

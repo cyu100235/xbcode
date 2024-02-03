@@ -5989,6 +5989,55 @@
             "install-path": "../xaboy/form-builder"
         },
         {
+            "name": "xbai8/mysql-helper",
+            "version": "1.0.3",
+            "version_normalized": "1.0.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/xbai8/mysql-helper.git",
+                "reference": "f6fc0f25144b94235a8e364f1594bce601bea5bb"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/xbai8/mysql-helper/zipball/f6fc0f25144b94235a8e364f1594bce601bea5bb",
+                "reference": "f6fc0f25144b94235a8e364f1594bce601bea5bb",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mysqli": "*",
+                "php": ">=8.0"
+            },
+            "time": "2024-02-03T09:31:36+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "xbai8\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "authors": [
+                {
+                    "name": "楚羽幽",
+                    "email": "cy958416459@qq.com"
+                }
+            ],
+            "description": "一个便捷的MySQL导入导出的助手类库。 a mysql import and export helper library.",
+            "keywords": [
+                "export",
+                "helper",
+                "import",
+                "mysql",
+                "php",
+                "xiaobai"
+            ],
+            "support": {
+                "issues": "https://github.com/xbai8/mysql-helper/issues",
+                "source": "https://github.com/xbai8/mysql-helper/tree/1.0.3"
+            },
+            "install-path": "../xbai8/mysql-helper"
+        },
+        {
             "name": "yzh52521/easyhttp",
             "version": "v1.1.3",
             "version_normalized": "1.1.3.0",
@@ -6265,61 +6314,6 @@
                 "source": "https://github.com/zingimmick/huaweicloud-sdk-php-obs/tree/3.23.5.1"
             },
             "install-path": "../zing/esdk-obs-php"
-        },
-        {
-            "name": "zjkal/mysql-helper",
-            "version": "v1.0.3",
-            "version_normalized": "1.0.3.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/zjkal/mysql-helper.git",
-                "reference": "7c82ce9624075e322f405d7c2d25a02e73ff64dc"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/zjkal/mysql-helper/zipball/7c82ce9624075e322f405d7c2d25a02e73ff64dc",
-                "reference": "7c82ce9624075e322f405d7c2d25a02e73ff64dc",
-                "shasum": ""
-            },
-            "require": {
-                "ext-mysqli": "*",
-                "php": ">=7.1"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "@stable"
-            },
-            "time": "2023-12-09T02:36:56+00:00",
-            "type": "library",
-            "installation-source": "dist",
-            "autoload": {
-                "psr-4": {
-                    "zjkal\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "zjkal",
-                    "email": "zjkal@qq.com"
-                }
-            ],
-            "description": "一个便捷的MySQL导入导出的助手类库。 a mysql import and export helper library.",
-            "keywords": [
-                "export",
-                "helper",
-                "import",
-                "mysql",
-                "php",
-                "zjkal"
-            ],
-            "support": {
-                "issues": "https://github.com/zjkal/mysql-helper/issues",
-                "source": "https://github.com/zjkal/mysql-helper/tree/v1.0.3"
-            },
-            "install-path": "../zjkal/mysql-helper"
         },
         {
             "name": "zjkal/time-helper",

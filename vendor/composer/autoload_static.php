@@ -41,6 +41,10 @@ class ComposerStaticInitd5a2db6d6e54541d9d5e0063c534ba72
             'yzh52521\\Flysystem\\Obs\\' => 23,
             'yzh52521\\EasyHttp\\' => 18,
         ),
+        'x' => 
+        array (
+            'xbai8\\' => 6,
+        ),
         'v' => 
         array (
             'voku\\' => 5,
@@ -189,8 +193,7 @@ class ComposerStaticInitd5a2db6d6e54541d9d5e0063c534ba72
     public static $prefixDirsPsr4 = array (
         'zjkal\\' => 
         array (
-            0 => __DIR__ . '/..' . '/zjkal/mysql-helper/src',
-            1 => __DIR__ . '/..' . '/zjkal/time-helper/src',
+            0 => __DIR__ . '/..' . '/zjkal/time-helper/src',
         ),
         'yzh52521\\filesystem\\' => 
         array (
@@ -207,6 +210,10 @@ class ComposerStaticInitd5a2db6d6e54541d9d5e0063c534ba72
         'yzh52521\\EasyHttp\\' => 
         array (
             0 => __DIR__ . '/..' . '/yzh52521/easyhttp/src',
+        ),
+        'xbai8\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/xbai8/mysql-helper/src',
         ),
         'voku\\' => 
         array (

@@ -120,8 +120,8 @@ export default {
         await this.getList()
     },
     methods: {
-        async detail(app_name) {
-            return await this.$useRemote('remote/apps/detail', { app_name }, {
+        detail(app_name) {
+            this.$useRemote('remote/apps/detail', { app_name }, {
                 title: '应用详情',
                 customStyle: {
                     width: '70%',

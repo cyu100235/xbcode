@@ -7,7 +7,7 @@ use app\common\utils\JsonUtil;
 use app\common\utils\zip\ZipUtil;
 use Exception;
 use think\Request;
-use zjkal\MysqlHelper;
+use xbai8\MysqlHelper;
 
 /**
  * 应用更新服务
@@ -17,7 +17,7 @@ use zjkal\MysqlHelper;
  * 3、备份数据库
  * 4、删除应用旧代码
  * 5、解压更新包
- * 6、执行执行数据安装
+ * 6、执行数据安装
  * 7、安装成功
  * @copyright 贵州小白基地网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com

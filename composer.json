@@ -41,9 +41,9 @@
         "xaboy/form-builder": "^2.0",
         "loong/oauth": "^1.0",
         "pclzip/pclzip": "^2.8",
-        "zjkal/mysql-helper": "^1.0",
         "yzh52521/think-filesystem": "^3.0",
         "yzh52521/easyhttp": "^1.1",
+        "xbai8/mysql-helper": "^1.0",
         "zjkal/time-helper": "^1.1"
     },
     "require-dev": {

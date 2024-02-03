@@ -5,7 +5,7 @@ use app\common\service\CloudService;
 use app\common\utils\JsonUtil;
 use app\common\utils\zip\ZipUtil;
 use think\Request;
-use zjkal\MysqlHelper;
+use xbai8\MysqlHelper;
 
 /**
  * 应用安装服务

@@ -181,4 +181,27 @@ trait AppCloud
             'version'   => $version,
         ])->array();
     }
+
+    /**
+     * 获取应用本地版本号
+     * @param string $appName
+     * @return mixed
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public static function getAppLocalVersion(string $appName)
+    {
+        $infoPath = root_path("base/{$appName}").'info.json';
+        if (!file_exists($infoPath)) {
+            throw new Exception('应用信息文件不存在');
+        }
+        $info = json_decode(file_get_contents($infoPath), true);
+        if (!isset($info['version_name'])) {
+            throw new Exception('应用版本名称错误');
+        }
+        if (!isset($info['version'])) {
+            throw new Exception('应用版本号错误');
+        }
+        return $info;
+    }
 }

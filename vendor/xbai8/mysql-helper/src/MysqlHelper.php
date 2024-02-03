@@ -1,15 +1,15 @@
 <?php
 declare (strict_types=1);
 
-namespace zjkal;
+namespace xbai8;
 
 use InvalidArgumentException;
 use mysqli;
 
 /**
  * 最方便的mysql操作类,可以便捷导入.sql文件和将数据库导出为.sql文件
- * Class MysqlHelper
- * @package zjkal
+ * @copyright 贵州小白基地网络科技有限公司
+ * @author 楚羽幽 cy958416459@qq.com
  */
 class MysqlHelper
 {
@@ -44,6 +44,12 @@ class MysqlHelper
     private $prefix = '';
 
     /**
+     * 数据库连接
+     * @var mysqli|null
+     */
+    private $connect;
+
+    /**
      * 构造函数
      * @param string|null $username 用户名
      * @param string|null $password 密码
@@ -69,56 +75,87 @@ class MysqlHelper
         $this->port = intval($port);
         $this->prefix = $prefix;
         $this->charset = $charset;
+
+        // 创建MySQL连接
+        $this->connect = new mysqli(
+            $this->host,
+            $this->username,
+            $this->password,
+            $this->database,
+            $this->port
+        );
+
+        // 检查连接是否成功
+        if ($this->connect->connect_error) {
+            throw new \mysqli_sql_exception("数据库连接失败: " . $this->connect->connect_error);
+        }
+        // 设置编码
+        $this->connect->set_charset($this->charset);
     }
 
     /**
-     * @param array $config 设置参数
-     * @return void
+     * 获取数据库连接
+     * @return mysqli|null
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
      */
-    public function setConfig(array $config = [])
+    public function getConnect()
     {
-        if (empty($config)) {
-            throw new InvalidArgumentException('配置数组不能为空');
-        }
-        if (empty($config['username']) || empty($config['password']) || empty($config['database'])) {
-            throw new InvalidArgumentException('配置数据必须包含用户名,密码和数据库名');
-        }
-        $this->__construct(
-            $config['username'],
-            $config['password'],
-            $config['database'],
-            $config['host'] ?? $config['hostname'] ?? '127.0.0.1',
-            $config['port'] ?? $config['hostport'] ?? 3306,
-            $config['prefix'] ?? '',
-            $config['charset'] ?? 'utf8mb4'
-        );
+        return $this->connect;
     }
 
+    /**
+     * 开启事务
+     * @return bool
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public function startTrans()
+    {
+        // 设置非自动提交事务
+        $this->connect->autocommit(false);
+        // 开启事务
+        return $this->connect->begin_transaction();
+    }
+
+    /**
+     * 提交事务
+     * @return bool
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public function commit()
+    {
+        return $this->connect->commit();
+    }
+
+    /**
+     * 回滚事务
+     * @return bool
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public function rollback()
+    {
+        return $this->connect->rollback();
+    }
+    
     /**
      * 将.sql文件导入到mysql数据库
-     * @param string $sqlFilePath .sql文件路径
-     * @param string $prefix      表前缀(优先级高于构造函数中的表前缀,默认为空)
+     * @param string $sqlFilePath SQL文件路径
+     * @param string $prefix     表前缀(默认为空)
+     * @param string|array $oldPrefix 旧表前缀(默认为__PREFIX__)
      * @return void
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
      */
-    public function importSqlFile(string $sqlFilePath, string $prefix = '')
+    public function importSqlFile(string $sqlFilePath, string $prefix = '', string|array $oldPrefix = '__PREFIX__')
     {
-
         if (!file_exists($sqlFilePath)) {
             throw new InvalidArgumentException('sql文件不存在');
         }
 
         $prefix = $prefix ?: $this->prefix;
-
-        // 创建MySQL连接
-        $conn = new mysqli($this->host, $this->username, $this->password, $this->database, $this->port);
-
-        // 检查连接是否成功
-        if ($conn->connect_error) {
-            throw new \mysqli_sql_exception("数据库连接失败: " . $conn->connect_error);
-        }
-
-        // 设置编码
-        $conn->set_charset($this->charset);
 
         //读取.sql文件内容
         $sqlContent = file($sqlFilePath);
@@ -132,44 +169,33 @@ class MysqlHelper
 
             $tmp .= $line;
             if (substr(trim($line), -1) === ';') {
-                $tmp = str_ireplace('__PREFIX__', $prefix, $tmp);
+                $tmp = str_ireplace($oldPrefix, $prefix, $tmp);
                 $tmp = str_ireplace('INSERT INTO ', 'INSERT IGNORE INTO ', $tmp);
-                $result = $conn->query($tmp);
+                $result = $this->connect->query($tmp);
                 if (!$result) {
-                    throw new \mysqli_sql_exception("导入失败: " . $conn->error);
+                    throw new \mysqli_sql_exception("导入失败: " . $this->connect->error);
                 }
                 $tmp = '';
             }
         }
-
-        // 关闭连接
-        $conn->close();
     }
-
+    
     /**
      * 将mysql数据库表结构和数据导出为.sql文件
      * @param string $sqlFilePath 导出的.sql文件路径
-     * @param bool   $withData    是否导出表数据(默认为true)
-     * @param array  $tables      要导出的表名数组(默认为空，即导出所有表)
+     * @param bool $withData 是否导出表数据(默认为true)
+     * @param array $tables 要导出的表名数组(默认为空，即导出所有表)
      * @return void
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
      */
     public function exportSqlFile(string $sqlFilePath, bool $withData = true, array $tables = [])
     {
-        // 创建MySQL连接
-        $conn = new mysqli($this->host, $this->username, $this->password, $this->database, $this->port);
-
-        // 检查连接是否成功
-        if ($conn->connect_error) {
-            throw new \mysqli_sql_exception("数据库连接失败: " . $conn->connect_error);
-        }
-
-        // 设置编码
-        $conn->set_charset($this->charset);
-
         // 获取所有表名
-        $result = $conn->query("SHOW TABLES");
+        $result = $this->connect->query("SHOW TABLES");
         $all_tables = [];
 
+        // 取出表结果集数量
         while ($row = $result->fetch_row()) {
             $all_tables[] = $row[0];
         }
@@ -189,13 +215,13 @@ class MysqlHelper
 
             // 导出表结构
             fwrite($outputFile, "-- 表结构：$table\n");
-            $createTableSQL = $conn->query("SHOW CREATE TABLE $table");
+            $createTableSQL = $this->connect->query("SHOW CREATE TABLE $table");
             $createTableRow = $createTableSQL->fetch_row();
             fwrite($outputFile, $createTableRow[1] . ";\n");
 
             if ($withData) {
                 // 导出表数据
-                $result = $conn->query("SELECT * FROM $table");
+                $result = $this->connect->query("SELECT * FROM $table");
                 if (!$result) {
                     fwrite($outputFile, "/* 查询失败或" . $table . "表不存在 */\n");
                 } else if ($result->num_rows == 0) {
@@ -203,8 +229,8 @@ class MysqlHelper
                 } else {
                     fwrite($outputFile, "-- 表数据：$table\n");
                     while ($row = $result->fetch_assoc()) {
-                        $escapedValues = array_map(function ($value) use ($conn) {
-                            return $conn->escape_string(strval($value));
+                        $escapedValues = array_map(function ($value) {
+                            return $this->connect->escape_string(strval($value));
                         }, $row);
                         $columns = implode("','", $escapedValues);
                         fwrite($outputFile, "INSERT INTO `$table` VALUES ('$columns');\n");
@@ -214,9 +240,17 @@ class MysqlHelper
                 }
             }
         }
-
         // 关闭文件和连接
         fclose($outputFile);
-        $conn->close();
+    }
+
+    /**
+     * 析构函数
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public function __destruct()
+    {
+        $this->connect->close();
     }
 }

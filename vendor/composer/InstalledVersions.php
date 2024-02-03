@@ -32,7 +32,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => 'b3ad3138c177430d2626fe3799ef00c3ad515595',
+    'reference' => '95f51a34688e02b3ee31caf48724520a8dac1e0d',
     'name' => 'topthink/think',
   ),
   'versions' => 
@@ -732,7 +732,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => 'b3ad3138c177430d2626fe3799ef00c3ad515595',
+      'reference' => '95f51a34688e02b3ee31caf48724520a8dac1e0d',
     ),
     'topthink/think-annotation' => 
     array (
@@ -914,6 +914,15 @@ private static $installed = array (
       ),
       'reference' => '5cf3f5435a63954c1d11ba82c3cd4cfe3d145acf',
     ),
+    'xbai8/mysql-helper' => 
+    array (
+      'pretty_version' => '1.0.3',
+      'version' => '1.0.3.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'f6fc0f25144b94235a8e364f1594bce601bea5bb',
+    ),
     'yzh52521/easyhttp' => 
     array (
       'pretty_version' => 'v1.1.3',
@@ -958,15 +967,6 @@ private static $installed = array (
       array (
       ),
       'reference' => '0f41b7093709e7357bdb2f31679b8446fcbdc01f',
-    ),
-    'zjkal/mysql-helper' => 
-    array (
-      'pretty_version' => 'v1.0.3',
-      'version' => '1.0.3.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '7c82ce9624075e322f405d7c2d25a02e73ff64dc',
     ),
     'zjkal/time-helper' => 
     array (
