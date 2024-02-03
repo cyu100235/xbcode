@@ -3,6 +3,7 @@
 namespace app\admin\controller;
 
 use app\common\BaseController;
+use app\common\service\CloudService;
 use think\Request;
 
 class DeveloperController extends BaseController
@@ -10,49 +11,33 @@ class DeveloperController extends BaseController
     /**
      * 开发者应用列表
      * @param \think\Request $request
-     * @return void
+     * @return mixed
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public function index(Request $request)
     {
-        return $this->successRes([]);
+        return CloudService::getAuthorAppList();
     }
 
     /**
-     * 应用安装
+     * 开发者模式
      * @param \think\Request $request
      * @return mixed
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public function install(Request $request)
+    public function getDeveloperMode(Request $request)
     {
-        return $this->successRes([]);
-    }
-
-    /**
-     * 应用更新
-     * @param \think\Request $request
-     * @return mixed
-     * @copyright 贵州小白基地网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
-     */
-    public function update(Request $request)
-    {
-        return $this->successRes([]);
-    }
-
-    /**
-     * 应用卸载
-     * @param \think\Request $request
-     * @return mixed
-     * @copyright 贵州小白基地网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
-     */
-    public function uninstall(Request $request)
-    {
-        return $this->successRes([]);
+        if ($request->isPost()) {
+            $developerMode = $request->post('developerMode','');
+            CloudService::developerMode($developerMode);
+            return $this->success('切换模式成功');
+        }
+        $data = [
+            'developerMode'  => CloudService::developerMode()
+        ];
+        return $this->successRes($data);
     }
 
     /**

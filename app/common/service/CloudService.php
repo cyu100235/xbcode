@@ -3,6 +3,7 @@ namespace app\common\service;
 
 use app\common\service\cloud\AppCloud;
 use app\common\service\cloud\AppPluginsCloud;
+use app\common\service\cloud\DeveloperCloud;
 use app\common\service\cloud\FrameUpdate;
 use app\common\service\cloud\ProjectCloud;
 use Exception;
@@ -21,6 +22,7 @@ class CloudService
     use AppPluginsCloud;
     use ProjectCloud;
     use FrameUpdate;
+    use DeveloperCloud;
 
     /**
      * 请求地址
@@ -49,11 +51,11 @@ class CloudService
      */
     public static function login(string $username, string $password)
     {
-        $host = request()->host();
+        $host = request()->host(true);
         $params = [
-            'host' => $host,
-            'username' => $username,
-            'password' => $password,
+            'host'      => $host,
+            'username'  => $username,
+            'password'  => $password,
         ];
         $data = self::send('Login/login', $params)->array();
         if (empty($data)) {
@@ -117,9 +119,10 @@ class CloudService
      */
     public static function awaitPay(string $order_no)
     {
-        return self::send('User/awaitPay', [
+        $data = self::send('User/awaitPay', [
             'order_no'  => $order_no,
         ])->array();
+        return $data;
     }
 
     /**
@@ -167,9 +170,9 @@ class CloudService
         $headers = [
             'Accept' => 'application/json',
         ];
-        $host = request()->host();
-        $token   = Cache::get($host);
-        if ($token) {
+        $host = request()->host(true);
+        if (Cache::has($host)) {
+            $token   = Cache::get($host);
             $headers['Authorization'] = $token;
         }
         $cookies = Cookie::get();

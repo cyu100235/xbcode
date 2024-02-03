@@ -113,7 +113,14 @@ class CloudController extends BaseController
     {
         $page  = (int) $request->get('page', 1);
         $limit = (int) $request->get('limit', 20);
-        return CloudService::getBill($page, $limit);
+        $data = CloudService::getBill($page, $limit);
+        if (!isset($data['code'])) {
+            return $this->fail('云端返回数据格式错误');
+        }
+        if ($data['code'] !== 200) {
+            return $this->failFul($data['msg'], $data['code']);
+        }
+        return $data;
     }
 
     /**
@@ -125,7 +132,14 @@ class CloudController extends BaseController
      */
     public function notice(Request $request)
     {
-        return CloudService::getNotice();
+        $data = CloudService::getNotice();
+        if (!isset($data['code'])) {
+            return $this->fail('云端返回数据格式错误');
+        }
+        if ($data['code'] !== 200) {
+            return $this->failFul($data['msg'], $data['code']);
+        }
+        return $data;
     }
 
     /**

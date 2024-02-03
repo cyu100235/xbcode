@@ -2,6 +2,7 @@
 
 namespace app\common\service\cloud;
 use Exception;
+use think\facade\Cache;
 
 /**
  * 应用管理服务
@@ -111,7 +112,12 @@ trait AppCloud
      */
     public static function downloadApp(string $appName,int $version, string $package)
     {
-        $content = self::send('Apps/download',[
+        $url     = 'Apps/download';
+        $devMode = Cache::get('developer_mode','10');
+        if ($devMode == '20') {
+            $url = 'Developer/download';
+        }
+        $content = self::send($url,[
             'name'      => $appName,
             'version'   => $version,
         ]);

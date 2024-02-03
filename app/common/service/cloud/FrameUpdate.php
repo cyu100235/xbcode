@@ -66,9 +66,6 @@ trait FrameUpdate
         if (empty($data)) {
             throw new Exception('获取授权信息失败，接口异常');
         }
-        if ($data['code'] != 200) {
-            throw new Exception($data['msg']);
-        }
         $data['data']['system_info'] = SystemService::info();
         return $data;
     }

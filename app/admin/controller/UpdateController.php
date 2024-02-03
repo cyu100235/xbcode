@@ -23,7 +23,14 @@ class UpdateController extends BaseController
      */
     public function index(Request $request)
     {
-        return CloudService::getFrameLogList();
+        $data = CloudService::getFrameLogList();
+        if (!isset($data['code'])) {
+            return $this->fail('云端返回数据格式错误');
+        }
+        if ($data['code'] !== 200) {
+            return $this->successRes($data);
+        }
+        return $data;
     }
 
     /**
@@ -34,7 +41,14 @@ class UpdateController extends BaseController
      */
     public function auth(Request $request)
     {
-        return CloudService::getFrameAuth();
+        $data = CloudService::getFrameAuth();
+        if (!isset($data['code'])) {
+            return $this->fail('云端返回数据格式错误');
+        }
+        if ($data['code'] !== 200) {
+            return $this->successRes($data);
+        }
+        return $data;
     }
 
     /**
@@ -45,7 +59,14 @@ class UpdateController extends BaseController
      */
     public function getUpdate(Request $request)
     {
-        return CloudService::getFrameUpdate();
+        $data = CloudService::getFrameUpdate();
+        if (!isset($data['code'])) {
+            return $this->fail('云端返回数据格式错误');
+        }
+        if ($data['code'] !== 200) {
+            return $this->successRes($data);
+        }
+        return $data;
     }
 
     /**

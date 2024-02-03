@@ -79,7 +79,7 @@
                 </div>
             </div>
             <div class="empty-content" v-else>
-                <el-empty description="没有更多应用，或未登录云服务" />
+                <el-empty description="当前没有更多的应用" />
             </div>
         </div>
     </div>
@@ -120,8 +120,8 @@ export default {
         await this.getList()
     },
     methods: {
-        detail(app_name) {
-            this.$useRemote('remote/apps/detail', { app_name }, {
+        async detail(app_name) {
+            return await this.$useRemote('remote/apps/detail', { app_name }, {
                 title: '应用详情',
                 customStyle: {
                     width: '70%',
@@ -140,28 +140,32 @@ export default {
             this.getList()
         },
         // 获取安装状态
-        getInstallStatus() {
-            this.$http.useGet('admin/Apps/installStatus').then((res) => {
+        async getInstallStatus() {
+            return await this.$http.useGet('admin/Apps/installStatus').then((res) => {
                 this.installStatus.list = res?.data || []
             })
         },
         // 获取应用类型
-        getAppsType() {
-            this.$http.useGet('admin/Apps/appType').then((res) => {
+        async getAppsType() {
+            return await this.$http.useGet('admin/Apps/appType').then((res) => {
                 this.appsType.list = res?.data || []
             })
         },
         // 获取应用分类
-        getCategory() {
-            this.$http.useGet('admin/Apps/category').then((res) => {
+        async getCategory() {
+            return await this.$http.useGet('admin/Apps/category').then((res) => {
                 this.category.list = res?.data || []
             })
         },
+        // 搜索
         search() {
-            this.getList()
+            const loading = this.$useLoading('正在搜索...')
+            this.getList().finally(() => {
+                loading.close()
+            })
         },
         // 获取应用列表
-        getList() {
+        async getList() {
             const params = {
                 page: this.paginate.page,
                 limit: this.paginate.limit,
@@ -170,7 +174,7 @@ export default {
                 platform: this.appsType.active,
                 install: this.installStatus.active,
             }
-            this.$http.useGet('admin/Apps/index', params).then((res) => {
+            return await this.$http.useGet('admin/Apps/index', params).then((res) => {
                 this.datalist = res?.data?.data || []
                 this.paginate.page = res?.data?.current_page || 1
                 this.paginate.limit = res?.data?.per_page || 20
@@ -198,7 +202,7 @@ export default {
             .item {
                 font-size: 14px;
                 cursor: pointer;
-                padding: 0 10px;
+                padding: 0 5px;
 
                 &:hover {
                     color: var(--el-menu-active-color);

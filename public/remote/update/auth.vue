@@ -95,7 +95,16 @@ export default {
         },
         // 打开开发者应用页面
         openDeveloper() {
-            this.$emit("update:openWin", 'remote/developer/index');
+            this.$useRemote('remote/developer/index', {}, {
+                title: '开发者应用',
+                customStyle: {
+                    width: '70%',
+                    height: '90vh',
+                },
+                beforeClose: (value, state, done) => {
+                    done()
+                }
+            })
         },
         // 获取授权信息
         getDetail() {

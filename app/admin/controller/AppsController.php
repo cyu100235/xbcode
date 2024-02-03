@@ -71,8 +71,11 @@ class AppsController extends BaseController
         if (!in_array($step, ['download', 'unzip', 'updateData', 'success'])) {
             return $this->fail('安装步骤错误');
         }
-        if (empty($appName) || empty($version)) {
-            return $this->fail('应用名称或版本参数错误');
+        if (empty($appName)) {
+            return $this->fail('应用名称参数错误');
+        }
+        if (empty($version)) {
+            return $this->fail('应用版本参数错误');
         }
         $class = new InstallUtil($request, $appName, $version);
         return call_user_func([$class, $step]);
@@ -93,8 +96,11 @@ class AppsController extends BaseController
         if (!in_array($step, ['download', 'backCode', 'backSql', 'deleteCode', 'unzip', 'updateData', 'success'])) {
             return $this->fail('更新步骤错误');
         }
-        if (empty($appName) || empty($version)) {
-            return $this->fail('应用名称或版本参数错误');
+        if (empty($appName)) {
+            return $this->fail('应用名称参数错误');
+        }
+        if (empty($version)) {
+            return $this->fail('应用版本参数错误');
         }
         $class = new UpdateUtil($request, $appName, $version);
         return call_user_func([$class, $step]);
@@ -115,8 +121,11 @@ class AppsController extends BaseController
         if (!in_array($step, ['deleteCode', 'deleteSql', 'uninstallData', 'success'])) {
             return $this->fail('卸载步骤错误');
         }
-        if (empty($appName) || empty($version)) {
-            return $this->fail('应用名称或版本参数错误');
+        if (empty($appName)) {
+            return $this->fail('应用名称参数错误');
+        }
+        if (empty($version)) {
+            return $this->fail('应用版本参数错误');
         }
         $class = new UninstallUtil($request, $appName, $version);
         return call_user_func([$class, $step]);
