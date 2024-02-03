@@ -55,7 +55,7 @@ export default {
         // 应用发布
         publish(app_name) {
             this.$useRemote('remote/developer/publish', { app_name }, {
-                title: '更新测试',
+                title: '应用发布',
                 customStyle: {
                     width: '70%',
                     height: '90vh',

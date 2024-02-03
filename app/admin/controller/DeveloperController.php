@@ -174,6 +174,22 @@ class DeveloperController extends BaseController
     }
 
     /**
+     * 获取框架版本
+     * @param \think\Request $request
+     * @return mixed
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public function getFrameVersion(Request $request)
+    {
+        $data = CloudService::getFrameVersion();
+        if (!isset($data['code']) || $data['code'] != 200){
+            return $this->fail('获取框架版本失败');
+        }
+        return $this->successRes($data['data']);
+    }
+
+    /**
      * 发布代码
      * @param \think\Request $request
      * @return mixed
@@ -182,6 +198,7 @@ class DeveloperController extends BaseController
      */
     public function publish(Request $request)
     {
-        return $this->successRes([]);
+        $data = $request->post();
+        return CloudService::publishAuthorApp($data);
     }
 }

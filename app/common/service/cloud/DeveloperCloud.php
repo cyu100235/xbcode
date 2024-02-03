@@ -54,13 +54,25 @@ trait DeveloperCloud
     }
 
     /**
-     * 发布开发者应用
+     * 获取框架版本列表
      * @return mixed
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public static function publishAuthorApp()
+    public static function getFrameVersion()
     {
-        return self::send('Developer/publish')->array();
+        return self::send('Frame/versionList')->array();
+    }
+    
+    /**
+     * 发布开发者应用
+     * @param array $params
+     * @return mixed
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public static function publishAuthorApp(array $params)
+    {
+        return self::send('Developer/publish',$params)->array();
     }
 }
