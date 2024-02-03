@@ -59,7 +59,7 @@ class MenusUtil
      * @author 贵州小白基地网络科技有限公司
      * @copyright 贵州小白基地网络科技有限公司
      */
-    public static function save(array $data, int $id = null, )
+    public static function save(array $data, int $id = null)
     {
         if (empty($data)) {
             throw new Exception('菜单数据不能为空');
@@ -218,7 +218,7 @@ class MenusUtil
      * @author 贵州小白基地网络科技有限公司
      * @copyright 贵州小白基地网络科技有限公司
      */
-    public static function find(int $id, )
+    public static function find(int $id)
     {
         $data       = self::getMenus(true);
         $arrayIndex = array_search($id, array_column($data, 'id'));
@@ -226,6 +226,25 @@ class MenusUtil
         if (empty($detail)) {
             throw new Exception('菜单数据不存在');
         }
+        return $detail;
+    }
+
+    /**
+     * 获取菜单详情
+     * @param string $name
+     * @param string $value
+     * @return mixed
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public static function findWhere(string $name,string $value)
+    {
+        $data = self::getMenus(true);
+        $arrayIndex = array_search($value, array_column($data, $name));
+        if (!$arrayIndex) {
+            return [];
+        }
+        $detail = $data[$arrayIndex] ?? [];
         return $detail;
     }
 

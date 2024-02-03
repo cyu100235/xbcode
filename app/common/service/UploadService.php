@@ -6,7 +6,6 @@ use app\common\model\Upload;
 use app\common\service\upload\BaseUpload;
 use app\common\service\upload\RemoteUpload;
 use Exception;
-use think\facade\Log;
 use think\file\UploadedFile;
 
 /**

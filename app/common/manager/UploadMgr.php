@@ -87,13 +87,13 @@ trait UploadMgr
             return $this->fail('请选择需要删除的附件');
         }
         if (empty($ids)) {
-            if (!UploadService::delete($id)) {
+            if (!Upload::where('id', $id)->delete()) {
                 return $this->fail('删除失败');
             }
         }
         // 批量删除
         foreach ($ids as $id) {
-            UploadService::delete($id);
+            Upload::where('id', $id)->delete();
         }
         return $this->success('删除完成');
     }
