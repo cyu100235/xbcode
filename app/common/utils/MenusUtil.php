@@ -206,6 +206,8 @@ class MenusUtil
             }
             $data[$key] = $value;
         }
+        // 重新处理菜单排序
+        $data = list_sort_by($data, 'sort', 'asc');
         // 返回数据
         return $data;
     }

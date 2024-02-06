@@ -46,9 +46,9 @@
                         :title="item?.title">
                         <div class="logo-container">
                             <el-image class="logo" :src="item?.logo" />
-                            <div class="platform">
+                            <!-- <div class="platform">
                                 <el-tag size="mini" type="success">微信小程序</el-tag>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="app-title">{{ item?.title }}</div>
                         <div class="info">
