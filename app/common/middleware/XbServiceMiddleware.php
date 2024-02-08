@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace app\common\middleware;
 
 use app\common\model\Projects;
-use app\common\service\cloud\AppCloud;
 use Closure;
 use Exception;
 use think\App;
@@ -302,13 +301,14 @@ class XbServiceMiddleware
     private function getFileRule()
     {
         // 检测文件规则
-        $rule = '/\.(?:png|jpg|jpeg|gif|ico|js|vue|html|css|eot|svg|ttf|woff|woff2|otf|map)$/i';
+        $rule = '/\.(?:png|jpg|jpeg|gif|ico|js|vue|html|css|scss|eot|svg|ttf|woff|woff2|otf|map)$/i';
         // 文件类型
         $mimeContentTypes = [
             'xml'   => 'application/xml,text/xml,application/x-xml',
             'json'  => 'application/json,text/x-json,application/jsonrequest,text/json',
             'js'    => 'text/javascript,application/javascript,application/x-javascript',
             'css'   => 'text/css',
+            'scss'  => 'text/css',
             'rss'   => 'application/rss+xml',
             'yaml'  => 'application/x-yaml,text/yaml',
             'atom'  => 'application/atom+xml',
