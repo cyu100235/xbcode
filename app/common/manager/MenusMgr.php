@@ -135,27 +135,27 @@ trait MenusMgr
      */
     public function rowEdit(Request $request)
     {
-        # 需要修改的ID
+        // 需要修改的ID
         $id = $request->post('id');
-        # 查询键
+        // 查询键
         $keyField = $request->post('keyField');
-        # 修改键
+        // 修改键
         $field = $request->post('field');
-        # 修改值
+        // 修改值
         $value = $request->post('value');
-        # 获取列表
+        // 获取列表
         $data = MenusUtil::getMenus(true);
-        # 查询数据
+        // 查询数据
         $arrayIndex = array_search($id, array_column($data, $keyField));
-        # 检测并判断数据
+        // 检测并判断数据
         $item = isset($data[$arrayIndex]) ? $data[$arrayIndex] : [];
         if (empty($item)) {
             return $this->fail('数据不存在');
         }
         $data[$arrayIndex][$field] = $value;
-        # 保存菜单数据
+        // 保存菜单数据
         MenusUtil::saveMenusData($data);
-        # 返回结果
+        // 返回结果
         return $this->success('修改成功');
     }
 
@@ -169,17 +169,17 @@ trait MenusMgr
     public function add(Request $request)
     {
         if ($request->isPost()) {
-            # 获取数据
+            // 获取数据
             $post = $request->post();
-            # 数据验证
+            // 数据验证
             xbValidate(MenusValidate::class, $post,'add');
             $children = $post['children'];
             unset($post['children']);
-            # 保存数据
+            // 保存数据
             $pid = MenusUtil::save($post,null);
-            # 保存子级菜单
+            // 保存子级菜单
             $post['id'] = $pid;
-            # 表格组件额外新增表格规则
+            // 表格组件额外新增表格规则
             $appendMenus = [];
             if ($post['component'] === 'table/index') {
                 $tableRule = [
@@ -198,9 +198,9 @@ trait MenusMgr
                 array_push($appendMenus, $tableRule);
             }
             $appendMenus = array_merge($appendMenus, $this->getMenusChildren($children, $post));
-            # 批量保存
+            // 批量保存
             MenusUtil::saveAll($appendMenus);
-            # 返回结果
+            // 返回结果
             return $this->success('添加成功');
         }
         $builder = $this->formView();
@@ -242,7 +242,7 @@ trait MenusMgr
         $data = [];
         foreach ($children as $value) {
             $parentPath = explode('/',$parent['path']);
-            # 添加
+            // 添加
             if ($value === 'add') {
                 $row = end($data);
                 $item   = [
@@ -261,7 +261,7 @@ trait MenusMgr
                 ];
                 array_push($data, $item);
             }
-            # 修改
+            // 修改
             if ($value === 'edit') {
                 $row = end($data);
                 $item   = [
@@ -280,7 +280,7 @@ trait MenusMgr
                 ];
                 array_push($data, $item);
             }
-            # 删除
+            // 删除
             if ($value === 'del') {
                 $row = end($data);
                 $item   = [
@@ -315,13 +315,13 @@ trait MenusMgr
         $id = $request->get('id');
         $detail = MenusUtil::find((int) $id);
         if ($request->isPut()) {
-            # 获取数据
+            // 获取数据
             $post = $request->post();
-            # 数据验证
+            // 数据验证
             xbValidate(MenusValidate::class, $post,'edit');
-            # 保存数据
+            // 保存数据
             MenusUtil::save($post,$id);
-            # 返回结果
+            // 返回结果
             return $this->success('修改成功');
         }
         $data = $this->formView()
