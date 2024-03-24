@@ -23,7 +23,7 @@ class AppService
         $versionData = SystemService::info();
         // 返回数据
         $data       = [
-            'web_name'              => $data['web_name']??'XB-Base',
+            'web_name'              => $data['web_name']??'XbCloud',
             'web_title'             => $data['web_title']??'后台登录',
             'web_logo'              => $data['web_logo']??'',
             'version_name'          => $data['version_name']??$versionData['version_name'],

@@ -6,7 +6,7 @@ use app\common\BaseController;
 use app\common\builder\FormBuilder;
 use app\common\model\Admin;
 use app\common\model\Projects;
-use app\common\service\CloudService;
+use xbCloud\CloudService;
 use Exception;
 use think\facade\Db;
 use think\Request;

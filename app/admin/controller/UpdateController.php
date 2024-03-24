@@ -4,7 +4,7 @@ namespace app\admin\controller;
 use app\common\BaseController;
 use app\common\exception\RollBackCodeException;
 use app\common\exception\RollBackSqlException;
-use app\common\service\CloudService;
+use xbCloud\CloudService;
 use app\common\utils\FrameUpdateUtil;
 use think\Request;
 

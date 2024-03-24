@@ -3,7 +3,7 @@
 namespace app\admin\controller;
 
 use app\common\BaseController;
-use app\common\service\CloudService;
+use xbCloud\CloudService;
 use think\facade\Db;
 use think\Request;
 use xbai8\MysqlHelper;

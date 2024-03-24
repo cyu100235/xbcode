@@ -124,14 +124,13 @@ function get_random(int $len = 6)
     $unique_no = substr(base_convert(md5(uniqid(md5(microtime(true)), true)), 16, 10), 0, $len);
     return $unique_no;
 }
+
 /**
  * XML转数组
- *
- * @Author 贵州小白基地网络科技有限公司
- * @Email 416716328@qq.com
- * @DateTime 2023-03-12
- * @param  string $xml
+ * @param string $xml
  * @return array
+ * @copyright 贵州小白基地网络科技有限公司
+ * @author 楚羽幽 cy958416459@qq.com
  */
 function xmlToArr(string $xml): array
 {
@@ -146,13 +145,11 @@ function xmlToArr(string $xml): array
 
 /**
  * 根据大小返回标准单位 KB  MB GB等
- *
- * @Author 贵州小白基地网络科技有限公司
- * @Email 416716328@qq.com
- * @DateTime 2023-03-12
- * @param  integer $size
- * @param  integer $decimals
+ * @param int $size
+ * @param int $decimals
  * @return string
+ * @copyright 贵州小白基地网络科技有限公司
+ * @author 楚羽幽 cy958416459@qq.com
  */
 function get_size(int $size, int $decimals = 2): string
 {
@@ -197,13 +194,12 @@ function uncamelize(string $camelCaps, $separator = '_'): string
 /**
  * 对查询结果集进行排序
  * asc正向排序 desc逆向排序 nat自然排序
- * @param mixed $list 查询结果
- * @param mixed $field 排序的字段名
- * @param mixed $sortby 排序类型
+ * @param array $list
+ * @param string $field
+ * @param mixed $sortby
  * @return array|bool
  * @copyright 贵州小白基地网络科技有限公司
- * @Email 416716328@qq.com
- * @DateTime 2023-05-03
+ * @author 楚羽幽 cy958416459@qq.com
  */
 function list_sort_by(array $list, string $field, $sortby = 'asc')
 {

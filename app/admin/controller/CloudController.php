@@ -3,7 +3,7 @@
 namespace app\admin\controller;
 
 use app\common\BaseController;
-use app\common\service\CloudService;
+use xbCloud\CloudService;
 use app\common\service\SystemService;
 use think\Request;
 

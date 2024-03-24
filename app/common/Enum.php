@@ -4,9 +4,8 @@ namespace app\common;
 
 /**
  * 枚举基类
- * @copyright 贵州猿创科技有限公司
- * @Email 416716328@qq.com
- * @DateTime 2023-04-29
+ * @copyright 贵州小白基地网络科技有限公司
+ * @author 楚羽幽 cy958416459@qq.com
  */
 abstract class Enum extends EnumBase
 {
@@ -25,14 +24,14 @@ abstract class Enum extends EnumBase
         }
         return $list;
     }
-
+    
     /**
      * 获取枚举字典label
      * @param string $label
      * @param string $default
      * @return mixed
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
      */
     public static function getLabel(string $label,string $default = null)
     {
@@ -43,14 +42,14 @@ abstract class Enum extends EnumBase
         $data = array_column($data,'label','value');
         return $data[$label] ?? $default;
     }
-
+    
     /**
      * 获取枚举字典value
      * @param string $value
      * @param string $default
      * @return mixed
-     * @author 贵州猿创科技有限公司
-     * @copyright 贵州猿创科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
      */
     public static function getValue(string $value,string $default = null)
     {

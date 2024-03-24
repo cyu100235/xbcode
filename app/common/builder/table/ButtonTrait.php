@@ -5,10 +5,9 @@ namespace app\common\builder\table;
 use app\common\builder\ListBuilder;
 
 /**
- * 表格按钮配置
- * @author 贵州小白基地网络科技有限公司
- * @Email 416716328@qq.com
- * @DateTime 2023-02-27
+ * Trait ButtonTrait
+ * @copyright 贵州小白基地网络科技有限公司
+ * @author 楚羽幽 cy958416459@qq.com
  */
 trait ButtonTrait
 {

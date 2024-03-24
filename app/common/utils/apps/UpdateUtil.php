@@ -1,7 +1,7 @@
 <?php
 namespace app\common\utils\apps;
 
-use app\common\service\CloudService;
+use xbCloud\CloudService;
 use app\common\utils\DirUtil;
 use app\common\utils\JsonUtil;
 use app\common\utils\zip\ZipUtil;

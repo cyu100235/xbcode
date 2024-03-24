@@ -18,7 +18,7 @@ return [
                 'type'          => 'text',
             ],
             'prompt'        => [
-                'text'      => '网站链接，以斜杠结尾，如：https://www.xiaobai.host/'
+                'text'      => '网站链接，以斜杠结尾，如：http://www.xb-cloud.net/'
             ],
         ],
     ],

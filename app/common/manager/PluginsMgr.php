@@ -2,7 +2,7 @@
 
 namespace app\common\manager;
 
-use app\common\service\CloudService;
+use xbCloud\CloudService;
 use think\Request;
 
 trait PluginsMgr

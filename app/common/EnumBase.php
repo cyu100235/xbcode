@@ -4,10 +4,8 @@ namespace app\common;
 
 /**
  * 枚举基类
- *
- * @author 贵州小白基地网络科技有限公司
- * @Email 416716328@qq.com
- * @DateTime 2023-03-06
+ * @copyright 贵州小白基地网络科技有限公司
+ * @author 楚羽幽 cy958416459@qq.com
  */
 abstract class EnumBase implements \JsonSerializable
 {

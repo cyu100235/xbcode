@@ -3,7 +3,7 @@
 namespace app\admin\controller;
 
 use app\common\BaseController;
-use app\common\service\CloudService;
+use xbCloud\CloudService;
 use app\common\utils\apps\InstallUtil;
 use app\common\utils\apps\UninstallUtil;
 use app\common\utils\apps\UpdateUtil;

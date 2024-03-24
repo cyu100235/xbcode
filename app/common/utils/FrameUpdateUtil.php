@@ -3,7 +3,7 @@ namespace app\common\utils;
 
 use app\common\exception\RollBackCodeException;
 use app\common\exception\RollBackSqlException;
-use app\common\service\CloudService;
+use xbCloud\CloudService;
 use app\common\service\SystemService;
 use app\common\utils\zip\ZipUtil;
 use Exception;

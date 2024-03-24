@@ -39,12 +39,11 @@ class FormBuilder extends Form
 
     // 提交后重定向地址
     protected $redirect = '';
-
+    
     /**
      * 构造函数
      * @copyright 贵州小白基地网络科技有限公司
-     * @Email 416716328@qq.com
-     * @DateTime 2023-04-29
+     * @author 楚羽幽 cy958416459@qq.com
      */
     public function __construct()
     {

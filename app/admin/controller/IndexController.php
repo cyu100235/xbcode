@@ -39,7 +39,7 @@ class IndexController extends BaseController
     {
         // 返回数据
         $data       = [
-            'web_name'              => 'XB-Base',
+            'web_name'              => 'XbCloud',
             'web_title'             => '后台登录',
             'web_logo'              => '',
         ];

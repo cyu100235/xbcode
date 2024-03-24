@@ -19,7 +19,7 @@ class SystemService
         'version_name'      => '1.0.0',
         'name'              => '贵州小白基地网络科技有限公司',
         'logo'              => '',
-        'domain'            => 'www.xiaobaijidi.com',
+        'domain'            => 'www.xb-cloud.net',
         'icp'               => '黔ICP备19003265号-1',
         'phone'             => '0851-88888888',
         'email'             => ''

@@ -120,7 +120,7 @@ export default {
         },
         // 跳转地址
         openWin(url, params = {}) {
-            this.$routerApp.push({
+            this.$router.push({
                 path: url,
                 query: {
                     ...params,
