@@ -1,12 +1,7 @@
-*.log
-.env
-composer.phar
-.DS_Store
-Thumbs.db
+/runtime
 /.idea
 /.vscode
-/.settings
-/.buildpath
-/.project
-/.env
-/app/common/version.json
+*.log
+.env
+/tests/tmp
+/tests/.phpunit.result.cache

@@ -1,115 +1,83 @@
 <?php
-declare(strict_types=1);
-
 namespace app\admin\middleware;
 
-use app\common\utils\AuthUtil;
-use app\common\utils\JsonUtil;
-use Closure;
+use app\utils\JsonUtil;
 use Exception;
-use loong\oauth\facade\Auth;
-use think\Request;
+use Tinywan\Jwt\JwtToken;
+use Webman\MiddlewareInterface;
+use Webman\Http\Response;
+use Webman\Http\Request;
 
 /**
- * 鉴权中间件
+ * 鉴权中间件检测
  * @copyright 贵州小白基地网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
-class AuthMiddleware
+class AuthMiddleware implements MiddlewareInterface
 {
+    use JsonUtil;
+
     /**
-     * 业务逻辑处理
-     * @param mixed $request
-     * @param \Closure $next
-     * @return mixed
+     * 处理请求
+     * @param \Webman\Http\Request $request
+     * @param callable $handler
+     * @return \Webman\Http\Response
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public function handle($request, Closure $next)
+    public function process(Request $request, callable $handler): Response
     {
-        $request->token     = null;
-        $request->userId    = null;
-        $request->user      = null;
         try {
-            self::canAccess($request);
+            // 鉴权前置钩子
+            $this->canAuth($request,$handler);
         } catch (\Throwable $e) {
-            return JsonUtil::failFul($e->getMessage(),$e->getCode() ?: 404);
+            return $this->failFul($e->getMessage(), 12000);
         }
-        $response = $next($request);
+        // 鉴权前置钩子
+        $response = $request->method() == 'OPTIONS' ? response('', 204) : $handler($request);
+        // 鉴权后置钩子
         return $response;
     }
 
     /**
-     * 权限检测
-     * @param \think\Request $request
+     * 用户鉴权
+     * @param \Webman\Http\Request $request
+     * @param callable $handler
      * @throws \Exception
      * @return bool
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    private function canAccess(Request $request): bool
+    private function canAuth(Request $request, callable $handler)
     {
-        $control  = 'Index';
-        $action  = 'index';
-        $pathinfo = array_filter(explode('/',$request->pathinfo()));
-        if (isset($pathinfo[0])) {
-            $control = ucfirst($pathinfo[0]);
-        }
-        if (isset($pathinfo[1])) {
-            $action = $pathinfo[1];
-        }
-        // 无控制器地址
-        if (!$control) {
-            throw new Exception('无效控制器');
-        }
-        // 获取控制器鉴权信息
-        $class = app()->getNamespace() . '\\controller\\' . $control . 'Controller';
-        $class = new \ReflectionClass($class);
+        $control = $request->controller;
+        // 反射获取控制器属性
+        $class = new \ReflectionClass($control);
         $properties = $class->getDefaultProperties();
+        // 获取无需登录
         $noLogin = $properties['noLogin'] ?? [];
-        $nopAuth = $properties['nopAuth'] ?? [];
-
+        // 获取无需鉴权
+        $noAuth = $properties['noAuth'] ?? [];
         // 不需要登录
+        $action = $request->action;
         if (in_array($action, $noLogin)) {
             return true;
         }
-        // 获取登录信息
-        $authorization = $request->header('Authorization', '');
-        if (empty($authorization)) {
-            throw new Exception('请先登录', 12000);
+        // 鉴权
+        $uid = JwtToken::getCurrentId();
+        if (!$uid) {
+            throw new Exception('请重新登录');
         }
-        // 获取用户信息
-        try {
-            $token      = str_replace('Bearer ', '', $authorization);
-            $user       = Auth::setExpire(3600*24*7)->decrypt($token);
-        } catch (\Throwable $e) {
-            throw new Exception('登录已过期，请重新登录', 12000);
-        }
-        if (!$user) {
-            throw new Exception('用户信息获取失败', 12000);
-        }
-        $request->token     = $authorization;
-        $request->userId    = $user['id'];
-        $request->user      = $user;
-        # 验证渠道状态
-        if ($user['status'] === '10') {
-            throw new Exception('该用户已被禁用，请联系管理员', 12000);
+        // 验证状态
+        $state = JwtToken::getExtendVal('state');
+        if ($state !== '20') {
+            throw new Exception('该用户已被封禁');
         }
         // 不需要鉴权
-        if (in_array($action, $nopAuth)) {
+        if (in_array($action, $noAuth)) {
             return true;
         }
-        if (empty($user['is_system'])) {
-            throw new Exception('操作权限出错，请重新登录');
-        }
-        // 系统级部门，不需要鉴权
-        if ($user['is_system'] === '20') {
-            return true;
-        }
-        $path = "{$control}/{$action}";
-        if (!AuthUtil::canAuth((int) $user['id'],$path)) {
-            throw new Exception('没有该操作权限');
-        }
+        // 鉴权通过
         return true;
     }
 }

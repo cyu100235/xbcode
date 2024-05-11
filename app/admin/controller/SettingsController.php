@@ -1,15 +1,127 @@
 <?php
 namespace app\admin\controller;
 
-use app\common\BaseController;
-use app\common\manager\SettingsMgr;
+use app\providers\ConfigFormProvider;
+use app\providers\ConfigProvider;
+use hg\apidoc\annotation as Apidoc;
+use support\Request;
+use app\XbController;
 
 /**
  * 系统设置
  * @copyright 贵州小白基地网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
-class SettingsController extends BaseController
+class SettingsController extends XbController
 {
-    use SettingsMgr;
+    /**
+     * 配置表单
+     * @Apidoc\Method ("GET,PUT")
+     * @param \support\Request $request
+     * @return mixed
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
+     */
+    public function config(Request $request)
+    {
+        $group = $request->get('group', '');
+        if ($request->method() === 'PUT') {
+            $post = $request->post();
+            if (empty($group)) {
+                return $this->fail('分组参数错误');
+            }
+            // 数据验证
+            if (!empty($post['xbValidateor'])) {
+                if (!class_exists($post['xbValidateor'])) {
+                    return $this->fail('验证器不存在');
+                }
+                xbValidate($post['xbValidateor'], $post);
+                unset($post['xbValidateor']);
+            }
+            // 保存配置项
+            ConfigProvider::save($group, $post);
+            // 返回结果
+            return $this->success('保存成功');
+        }
+        if (empty($group)) {
+            return $this->fail('分组参数错误');
+        }
+        $data     = ConfigProvider::getOriginal($group, []);
+        $builder  = ConfigFormProvider::formView($group);
+        $builder  = $builder->setFormData($data);
+        $formView = $builder->create();
+        return $this->successRes($formView);
+    }
+
+    /**
+     * 条件显示配置项
+     * @Apidoc\Method ("GET,PUT")
+     * @param \support\Request $request
+     * @return mixed
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
+     */
+    public function selected(Request $request)
+    {
+        $group = $request->get('group');
+        if ($request->method() === 'PUT') {
+            $post = $request->post();
+            // 数据验证
+            if (!empty($post['xbValidateor'])) {
+                if (!class_exists($post['xbValidateor'])) {
+                    return $this->fail('验证器不存在');
+                }
+                xbValidate($post['xbValidateor'], $post);
+                unset($post['xbValidateor']);
+            }
+            // 保存配置项
+            ConfigProvider::save($group, $post);
+            // 返回结果
+            return $this->success('保存成功');
+        }
+        if (empty($group)) {
+            return $this->fail('分组参数错误');
+        }
+        $data    = ConfigProvider::getOriginal($group, []);
+        $builder = ConfigFormProvider::formView($group);
+        $builder->setFormData($data);
+        $formView = $builder->create();
+        return $this->successRes($formView);
+    }
+
+    /**
+     * 选项卡配置表单
+     * @Apidoc\Method ("GET,PUT")
+     * @param \support\Request $request
+     * @return mixed
+     * @author 贵州小白基地网络科技有限公司
+     * @copyright 贵州小白基地网络科技有限公司
+     */
+    public function tabs(Request $request)
+    {
+        $group = $request->get('group');
+        if ($request->method() === 'PUT') {
+            $post = $request->post();
+            // 数据验证
+            if (!empty($post['xbValidateor'])) {
+                if (!class_exists($post['xbValidateor'])) {
+                    return $this->fail('验证器不存在');
+                }
+                xbValidate($post['xbValidateor'], $post);
+                unset($post['xbValidateor']);
+            }
+            // 保存配置项
+            ConfigProvider::save($group, $post);
+            // 返回结果
+            return $this->success('保存成功');
+        }
+        if (empty($group)) {
+            return $this->fail('分组参数错误');
+        }
+        $data    = ConfigProvider::getOriginal($group, []);
+        $builder = ConfigFormProvider::tabsFormView($group);
+        $builder->setFormData($data);
+        $formView = $builder->create();
+        return $this->successRes($formView);
+    }
 }

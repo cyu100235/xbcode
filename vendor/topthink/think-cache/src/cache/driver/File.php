@@ -2,23 +2,27 @@
 // +----------------------------------------------------------------------
 // | ThinkPHP [ WE CAN DO IT JUST THINK ]
 // +----------------------------------------------------------------------
-// | Copyright (c) 2006~2017 http://thinkphp.cn All rights reserved.
+// | Copyright (c) 2006~2019 http://thinkphp.cn All rights reserved.
 // +----------------------------------------------------------------------
 // | Licensed ( http://www.apache.org/licenses/LICENSE-2.0 )
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
+declare (strict_types = 1);
 
 namespace think\cache\driver;
 
 use think\cache\Driver;
 
 /**
- * 文件类型缓存类
- * @author    liu21st <liu21st@gmail.com>
+ * 文件缓存类
  */
 class File extends Driver
 {
+    /**
+     * 配置参数
+     * @var array
+     */
     protected $options = [
         'expire'        => 0,
         'cache_subdir'  => true,
@@ -26,15 +30,21 @@ class File extends Driver
         'path'          => '',
         'hash_type'     => 'md5',
         'data_compress' => false,
+        'tag_prefix'    => 'tag:',
+        'serialize'     => [],
     ];
 
+    /**
+     * 有效期
+     * @var int|\DateTime
+     */
     protected $expire;
 
     /**
      * 架构函数
-     * @param array $options
+     * @param array $options 参数
      */
-    public function __construct($options = [])
+    public function __construct(array $options = [])
     {
         if (!empty($options)) {
             $this->options = array_merge($this->options, $options);
@@ -43,35 +53,15 @@ class File extends Driver
         if (substr($this->options['path'], -1) != DIRECTORY_SEPARATOR) {
             $this->options['path'] .= DIRECTORY_SEPARATOR;
         }
-
-        $this->init();
-    }
-
-    /**
-     * 初始化检查
-     * @access private
-     * @return boolean
-     */
-    private function init()
-    {
-        // 创建项目缓存目录
-        if (!is_dir($this->options['path'])) {
-            if (mkdir($this->options['path'], 0755, true)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /**
      * 取得变量的存储文件名
-     * @access protected
+     * @access public
      * @param  string $name 缓存变量名
-     * @param  bool   $auto 是否自动创建目录
      * @return string
      */
-    protected function getCacheKey($name, $auto = false)
+    public function getCacheKey(string $name): string
     {
         $name = hash($this->options['hash_type'], $name);
 
@@ -84,14 +74,7 @@ class File extends Driver
             $name = $this->options['prefix'] . DIRECTORY_SEPARATOR . $name;
         }
 
-        $filename = $this->options['path'] . $name . '.php';
-        $dir      = dirname($filename);
-
-        if ($auto && !is_dir($dir)) {
-            mkdir($dir, 0755, true);
-        }
-
-        return $filename;
+        return $this->options['path'] . $name . '.php';
     }
 
     /**
@@ -100,9 +83,9 @@ class File extends Driver
      * @param  string $name 缓存变量名
      * @return bool
      */
-    public function has($name)
+    public function has($name): bool
     {
-        return $this->get($name) ? true : false;
+        return false !== $this->get($name) ? true : false;
     }
 
     /**
@@ -112,7 +95,7 @@ class File extends Driver
      * @param  mixed  $default 默认值
      * @return mixed
      */
-    public function get($name, $default = false)
+    public function get($name, $default = null)
     {
         $this->readTimes++;
 
@@ -124,17 +107,18 @@ class File extends Driver
 
         $content      = file_get_contents($filename);
         $this->expire = null;
+
         if (false !== $content) {
             $expire = (int) substr($content, 8, 12);
-
             if (0 != $expire && time() > filemtime($filename) + $expire) {
                 //缓存过期删除缓存文件
                 $this->unlink($filename);
                 return $default;
             }
-            $this->expire = $expire;
 
-            $content = substr($content, 32);
+            $this->expire = $expire;
+            $content      = substr($content, 32);
+
             if ($this->options['data_compress'] && function_exists('gzcompress')) {
                 //启用数据压缩
                 $content = gzuncompress($content);
@@ -151,9 +135,9 @@ class File extends Driver
      * @param  string        $name 缓存变量名
      * @param  mixed         $value  存储数据
      * @param  int|\DateTime $expire  有效时间 0为永久
-     * @return boolean
+     * @return bool
      */
-    public function set($name, $value, $expire = null)
+    public function set($name, $value, $expire = null): bool
     {
         $this->writeTimes++;
 
@@ -162,10 +146,16 @@ class File extends Driver
         }
 
         $expire   = $this->getExpireTime($expire);
-        $filename = $this->getCacheKey($name, true);
+        $filename = $this->getCacheKey($name);
 
-        if ($this->tag && !is_file($filename)) {
-            $first = true;
+        $dir = dirname($filename);
+
+        if (!is_dir($dir)) {
+            try {
+                mkdir($dir, 0755, true);
+            } catch (\Exception $e) {
+                // 创建失败
+            }
         }
 
         $data = $this->serialize($value);
@@ -179,22 +169,21 @@ class File extends Driver
         $result = file_put_contents($filename, $data);
 
         if ($result) {
-            isset($first) && $this->setTagItem($filename);
             clearstatcache();
             return true;
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     /**
      * 自增缓存（针对数值缓存）
      * @access public
-     * @param  string    $name 缓存变量名
-     * @param  int       $step 步长
+     * @param  string $name 缓存变量名
+     * @param  int    $step 步长
      * @return false|int
      */
-    public function inc($name, $step = 1)
+    public function inc(string $name, int $step = 1)
     {
         if ($this->has($name)) {
             $value  = $this->get($name) + $step;
@@ -210,11 +199,11 @@ class File extends Driver
     /**
      * 自减缓存（针对数值缓存）
      * @access public
-     * @param  string    $name 缓存变量名
-     * @param  int       $step 步长
+     * @param  string $name 缓存变量名
+     * @param  int    $step 步长
      * @return false|int
      */
-    public function dec($name, $step = 1)
+    public function dec(string $name, int $step = 1)
     {
         if ($this->has($name)) {
             $value  = $this->get($name) - $step;
@@ -231,40 +220,33 @@ class File extends Driver
      * 删除缓存
      * @access public
      * @param  string $name 缓存变量名
-     * @return boolean
+     * @return bool
      */
-    public function rm($name)
+    public function delete($name): bool
     {
         $this->writeTimes++;
 
-        return $this->unlink($this->getCacheKey($name));
+        try {
+            return $this->unlink($this->getCacheKey($name));
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 
     /**
      * 清除缓存
      * @access public
-     * @param  string $tag 标签名
-     * @return boolean
+     * @return bool
      */
-    public function clear($tag = null)
+    public function clear(): bool
     {
-        if ($tag) {
-            // 指定标签清除
-            $keys = $this->getTagItem($tag);
-            foreach ($keys as $key) {
-                $this->unlink($key);
-            }
-            $this->rm('tag_' . md5($tag));
-            return true;
-        }
-
         $this->writeTimes++;
 
         $files = (array) glob($this->options['path'] . ($this->options['prefix'] ? $this->options['prefix'] . DIRECTORY_SEPARATOR : '') . '*');
 
         foreach ($files as $path) {
             if (is_dir($path)) {
-                $matches = glob($path . '/*.php');
+                $matches = glob($path . DIRECTORY_SEPARATOR . '*.php');
                 if (is_array($matches)) {
                     array_map('unlink', $matches);
                 }
@@ -278,14 +260,25 @@ class File extends Driver
     }
 
     /**
+     * 删除缓存标签
+     * @access public
+     * @param  array $keys 缓存标识列表
+     * @return void
+     */
+    public function clearTag(array $keys): void
+    {
+        foreach ($keys as $key) {
+            $this->unlink($key);
+        }
+    }
+
+    /**
      * 判断文件是否存在后，删除
      * @access private
      * @param  string $path
      * @return bool
-     * @author byron sampson <xiaobo.sun@qq.com>
-     * @return boolean
      */
-    private function unlink($path)
+    private function unlink(string $path): bool
     {
         return is_file($path) && unlink($path);
     }
