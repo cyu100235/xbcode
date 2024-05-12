@@ -5,8 +5,10 @@ namespace app\admin\controller;
 use app\providers\ConfigProvider;
 use app\providers\AppProvider;
 use app\providers\RouteProvider;
+use app\utils\FrameUtil;
 use app\XbController;
 use support\Request;
+use think\facade\Cache;
 
 class IndexController extends XbController
 {
@@ -14,7 +16,10 @@ class IndexController extends XbController
      * 无需登录方法
      * @var array
      */
-    protected $noLogin = ['index', 'site'];
+    protected $noLogin = [
+        'index',
+        'site'
+    ];
 
     /**
      * 渲染后台视图
@@ -25,6 +30,16 @@ class IndexController extends XbController
      */
     public function index(Request $request)
     {
+        // 检测菜单不存在
+        if (!Cache::get('admin_menus')) {
+            // 缓存菜单
+            RouteProvider::cacheMenus();
+            // 重启服务
+            FrameUtil::pcntlAlarm(2, function () {
+                FrameUtil::reload();
+            });
+        }
+        // 渲染视图
         return $this->adminView();
     }
 
@@ -37,8 +52,6 @@ class IndexController extends XbController
      */
     public function site(Request $request)
     {
-        // 缓存菜单
-        RouteProvider::cacheMenus();
         // 获取配置
         $config = ConfigProvider::get('system','',[]);
         $config = ConfigProvider::parseData($config);

@@ -29,7 +29,7 @@ class RouteProvider
             Route::disableDefaultRoute();
         }
         // 注册首页路由
-        Route::any('/', 'app\controller\IndexController@index');
+        Route::get('/', 'app\controller\IndexController@index');
         // 渲染视图
         Route::get('/install/', 'app\controller\InstallController@index');
         // 获取协议
@@ -187,7 +187,7 @@ class RouteProvider
      */
     public static function cacheMenus()
     {
-        $data = AdminRule::order('sort', 'asc')->select()->toArray();
+        $data = AdminRule::order('sort asc')->select()->toArray();
         foreach ($data as &$value) {
             $value['methods'] = explode(',', $value['methods']);
         }

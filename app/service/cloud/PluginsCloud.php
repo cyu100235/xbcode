@@ -1,0 +1,55 @@
+<?php
+namespace app\service\cloud;
+use Exception;
+
+/**
+ * 插件云服务
+ * @copyright 贵州小白基地网络科技有限公司
+ * @author 楚羽幽 cy958416459@qq.com
+ */
+trait PluginsCloud
+{
+    /**
+     * 获取插件列表
+     * @param string $keyword
+     * @param int $page
+     * @param int $limit
+     * @return array
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public static function pluginList(string $keyword = '',int $page = 1, int $limit = 20)
+    {
+        $data = [
+            'keyword' => $keyword,
+            'page' => $page,
+            'limit' => $limit
+        ];
+        $result = HttpCloud::get('plugins/index',$data)->array();
+        if (!isset($result['code']) || $result['code'] != 200) {
+            return [];
+        }
+        return $result['data'] ?? [];
+    }
+
+    /**
+     * 获取插件详情
+     * @param string $name
+     * @param string $version
+     * @return mixed
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public static function pluginDetail(string $name,string $version)
+    {
+        $data = [
+            'name' => $name,
+            'version' => $version,
+        ];
+        $result = HttpCloud::get('plugins/detail',$data)->array();
+        if (isset($result['code']) && $result['code'] != 200) {
+            throw new Exception($result['msg'],$result['code']);
+        }
+        return $result['data'] ?? [];
+    }
+}

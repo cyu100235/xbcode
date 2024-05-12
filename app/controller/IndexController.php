@@ -2,7 +2,6 @@
 
 namespace app\controller;
 
-use app\providers\RouteProvider;
 use app\utils\InstallUtil;
 use app\XbController;
 use support\Request;
