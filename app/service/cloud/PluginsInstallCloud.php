@@ -79,13 +79,9 @@ trait PluginsInstallCloud
             'name' => $name,
             'version' => $version
         ];
-        $result = HttpCloud::get('plugins/download', $data);
-        // 获取错误
-        $data = $result->array();
-        if (isset($data['code']) || isset($data['msg'])) {
-            throw new Exception($data['msg'], $data['code']);
-        }
-        $content = $result->body();
+        $result = HttpCloud::get('user/Plugins/download', $data);
+        // 获取结果集
+        $content = HttpCloud::getContent($result,false);
         // 临时文件路径
         $package = base_path("runtime/plugin/") . "{$name}-{$version}-install.zip";
         // 写入文件

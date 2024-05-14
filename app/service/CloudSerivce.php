@@ -1,7 +1,6 @@
 <?php
 namespace app\service;
 
-use app\service\cloud\LoginCloud;
 use app\service\cloud\PluginsOrderCloud;
 use app\service\cloud\UtilCloud;
 use app\service\cloud\PluginsCateCloud;
@@ -19,7 +18,6 @@ use app\service\cloud\UserCloud;
 class CloudSerivce
 {
     use UtilCloud;
-    use LoginCloud;
     use UserCloud;
     use PluginsCloud;
     use PluginsOrderCloud;

@@ -2,6 +2,7 @@
 
 namespace app\admin\controller;
 
+use app\service\CloudSerivce;
 use app\XbController;
 use support\Request;
 
@@ -37,17 +38,18 @@ class CloudController extends XbController
      */
     public function login(Request $request)
     {
-        return $this->successRes('清除缓存成功');
+        return CloudSerivce::login($request);
     }
 
     /**
-     * 渲染后台视图
+     * 获取用户信息
      * @param \support\Request $request
-     * @return string
+     * @return mixed
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public function index(Request $request)
     {
+        return CloudSerivce::userInfo($request);
     }
 }

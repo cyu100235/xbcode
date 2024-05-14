@@ -44,12 +44,12 @@ class AuthUtil
             throw new Exception('参数错误，缺少状态');
         }
         // 构建数据
-        $data  = [
+        $data  = array_merge($data, [
             'id' => $data['id'],
             'state' => $data['state'],
             'client' => $client,
             'access_exp' => $expire,
-        ];
+        ], $data);
         $token = JwtToken::generateToken($data);
         return $token;
     }

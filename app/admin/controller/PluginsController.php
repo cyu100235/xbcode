@@ -60,23 +60,30 @@ class PluginsController extends XbController
         ]);
         $builder->setTabs($data, 'active', $active);
         $builder->pageConfig();
-        $builder->addRightButton('demo', '演示', [
-            'type' => 'confirm',
-            'api' => xbUrl('Plugins/demo'),
-            'method' => 'delete',
+        $builder->addTopButton('user', '云服务中心', [
+            'type' => 'remote',
+            'api' => xbUrl('Cloud/index'),
+            'path' => '/vue'.xbUrl('cloud/index'),
+            'method' => 'GET',
         ], [
-            'type' => 'success',
-            'title' => '温馨提示',
-            'content' => '是否确认安装该插件数据？',
+            'title' => '云服务中心',
+        ], [
+            'type' => 'primary',
+        ]);
+        $builder->addRightButton('demo', '演示', [
+            'type' => 'link',
+            'api' => xbUrl('Plugins/demo'),
+            'method' => 'GET',
+        ], [
         ], [
             'type' => 'primary',
             'icon' => 'UploadFilled',
         ]);
-        $builder->addRightButton('order', '购买', [
+        $builder->addRightButton('install', '安装', [
             'type' => 'remote',
-            'api' => xbUrl('Plugins/order'),
-            'path' => '/vue'.xbUrl('plugins/order'),
-            'method' => 'POST',
+            'api' => xbUrl('Plugins/detail'),
+            'path' => '/vue'.xbUrl('plugins/detail'),
+            'method' => 'GET',
             'params' => [
                 'field' => 'plugin_state',
                 'value' => '10',
@@ -86,60 +93,38 @@ class PluginsController extends XbController
                 'version'
             ],
         ], [
-            'title' => '购买插件',
-        ], [
-            'type' => 'warning',
-            'icon' => 'Download',
-        ]);
-        $builder->addRightButton('install', '安装', [
-            'type' => 'confirm',
-            'api' => xbUrl('Plugins/install'),
-            'method' => 'POST',
-            'params' => [
-                'field' => 'plugin_state',
-                'value' => '20',
-            ],
-            'aliasParams' => [
-                'name',
-                'version'
-            ],
-        ], [
-            'type' => 'success',
-            'title' => '温馨提示',
-            'content' => '是否确认安装该插件数据？',
+            'title' => '插件详情',
         ], [
             'type' => 'success',
             'icon' => 'Download',
         ]);
         $builder->addRightButton('update', '更新', [
-            'type' => 'confirm',
-            'api' => xbUrl('Plugins/update'),
-            'method' => 'PUT',
+            'type' => 'remote',
+            'api' => xbUrl('plugins/detail'),
+            'path' => '/vue'.xbUrl('Plugins/detail'),
+            'method' => 'GET',
             'params' => [
                 'field' => 'plugin_state',
-                'value' => '40',
+                'value' => '30',
             ],
         ], [
-            'type' => 'error',
-            'title' => '温馨提示',
-            'content' => '是否确认更新该插件？【谨慎】更新前请备份站点',
+            'title' => '插件详情',
         ], [
             'type' => 'warning',
             'icon' => 'UploadFilled',
         ]);
         $builder->addRightButton('uninstall', '卸载', [
-            'type' => 'confirm',
-            'api' => xbUrl('Plugins/uninstall'),
-            'method' => 'delete',
+            'type' => 'remote',
+            'api' => xbUrl('Plugins/detail'),
+            'path' => '/vue'.xbUrl('plugins/detail'),
+            'method' => 'GET',
             'params' => [
                 'field' => 'plugin_state',
                 'where' => 'in',
-                'value' => ['30', '40'],
+                'value' => ['20', '30'],
             ],
         ], [
-            'type' => 'error',
-            'title' => '温馨提示',
-            'content' => '是否确认卸载该插件？',
+            'title' => '插件详情',
         ], [
             'type' => 'danger',
             'icon' => 'DeleteFilled',
@@ -220,22 +205,17 @@ class PluginsController extends XbController
         $list = $data['data'] ?? [];
         foreach ($list as &$value)
         {
-            // 插件状态：10未购买，20未安装，30已安装，40有更新
+            // 插件状态：10未安装，20已安装，30有更新
             $value['plugin_state'] = '10';
-            // 检测是否购买
-            $isBuy = empty($value['is_buy']) ? '10' : $value['is_buy'];
-            if ($isBuy === '20') {
-                $value['plugin_state'] = '20';
-            }
             // 检测是否安装
             $localVersion = Plugins::where('name', $value['name'])->value('version');
             if ($localVersion)
             {
                 // 已安装
-                $value['plugin_state'] = '30';
+                $value['plugin_state'] = '20';
                 // 检测是否可更新
                 if ($value['version'] > $localVersion) {
-                    $value['plugin_state'] = '40';
+                    $value['plugin_state'] = '30';
                 }
             }
             // 插件价格
@@ -250,18 +230,6 @@ class PluginsController extends XbController
         }
         $data['data'] = $list;
         return $this->successRes($data);
-    }
-
-    /**
-     * 购买订单
-     * @param \support\Request $request
-     * @return void
-     * @copyright 贵州小白基地网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
-     */
-    public function order(Request $request)
-    {
-        return CloudSerivce::create($request);
     }
 
     /**
@@ -298,6 +266,18 @@ class PluginsController extends XbController
     public function uninstall(Request $request)
     {
         return CloudSerivce::uninstall($request);
+    }
+
+    /**
+     * 购买订单
+     * @param \support\Request $request
+     * @return void
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public function order(Request $request)
+    {
+        return CloudSerivce::create($request);
     }
 
     /**

@@ -8,6 +8,7 @@ use app\builder\table\CheckboxTrait;
 use app\builder\table\ColumnTrait;
 use app\builder\table\CustomTrait;
 use app\builder\table\EditColumnTrait;
+use app\builder\table\EventTrait;
 use app\builder\table\ExpandTrait;
 use app\builder\table\ExportTrait;
 use app\builder\table\FilterTrait;
@@ -37,41 +38,31 @@ class ListBuilder
 {
     // 工具类
     use AttrsTrait,
-    ButtonTrait,
-    CheckboxTrait,
-    ColumnTrait,
-    CustomTrait,
-    EditColumnTrait,
-    ExpandTrait,
-    ExportTrait,
-    FilterTrait,
-    FormTrait,
-    ImportTrait,
-    MenuTrait,
-    PagesTrait,
-    PrintTrait,
-    RadioTrait,
-    RealTableTrait,
-    ResizableTrait,
-    RowTrait,
-    SortTrait,
-    TabsTrait,
-    ToolbarTrait,
-    TooltipTrait,
-    TreeTrait;
+        ButtonTrait,
+        CheckboxTrait,
+        ColumnTrait,
+        CustomTrait,
+        EditColumnTrait,
+        ExpandTrait,
+        ExportTrait,
+        FilterTrait,
+        FormTrait,
+        ImportTrait,
+        MenuTrait,
+        PagesTrait,
+        PrintTrait,
+        RadioTrait,
+        RealTableTrait,
+        ResizableTrait,
+        RowTrait,
+        SortTrait,
+        TabsTrait,
+        ToolbarTrait,
+        TooltipTrait,
+        TreeTrait;
 
     // 在每个对象的静态缓存中存储现有属性。
     protected static $cache = [];
-
-    /**
-     * 初始化表格
-     * @Author 贵州小白基地网络科技有限公司
-     * @Email cy958416459@qq.com
-     * @DateTime 2023-02-28
-     */
-    public function __construct()
-    {
-    }
 
     /**
      * 解析表格规则

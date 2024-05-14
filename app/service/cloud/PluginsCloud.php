@@ -25,11 +25,10 @@ trait PluginsCloud
             'page' => $page,
             'limit' => $limit
         ];
-        $result = HttpCloud::get('plugins/index',$data)->array();
-        if (!isset($result['code']) || $result['code'] != 200) {
-            return [];
-        }
-        return $result['data'] ?? [];
+        $result = HttpCloud::get('Plugins/index',$data);
+        // 数据验证
+        $data = HttpCloud::getContent($result);
+        return $data;
     }
 
     /**
@@ -46,10 +45,8 @@ trait PluginsCloud
             'name' => $name,
             'version' => $version,
         ];
-        $result = HttpCloud::get('plugins/detail',$data)->array();
-        if (isset($result['code']) && $result['code'] != 200) {
-            throw new Exception($result['msg'],$result['code']);
-        }
+        $result = HttpCloud::get('Plugins/detail',$data);
+        $data = HttpCloud::getContent($result);
         return $result['data'] ?? [];
     }
 }

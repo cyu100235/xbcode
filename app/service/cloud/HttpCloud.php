@@ -2,6 +2,7 @@
 namespace app\service\cloud;
 use think\facade\Cache;
 use yzh52521\EasyHttp\Http;
+use yzh52521\EasyHttp\Response;
 
 /**
  * 网络请求服务
@@ -71,6 +72,89 @@ class HttpCloud
     {
         return self::send($url, 'DELETE', $data, $headers);
     }
+    
+    /**
+     * 获取数据
+     * @param \yzh52521\EasyHttp\Response $result
+     * @param bool $isArray
+     * @return mixed
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public static function getContent(Response $result,bool $isArray = true)
+    {
+        $array = $result->array();
+        $body = $result->body();
+        if (empty($array) && empty($body)) {
+            throw new \Exception('请求失败',500);
+        }
+        if (is_string($body) && strpos($body,'html') !== false) {
+            throw new \Exception($body,500);
+        }
+        if (isset($array['code']) && $array['code'] !== 200) {
+            throw new \Exception($array['msg'],$array['code']);
+        }
+        if ($isArray) {
+            // 返回数组
+            $data = $array['data'] ?? [];
+        } else {
+            // 返回内容体
+            $data = $body;
+        }
+        return $data;
+    }
+
+    /**
+     * 获取站点储存token名称
+     * @return string
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public static function getTokenName()
+    {
+        $token   = str_replace('.','_',basename(base_path()));
+        return $token;
+    }
+
+    /**
+     * 获取站点储存token
+     * @return mixed
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public static function getToken()
+    {
+        $tokenName   = self::getTokenName();
+        if (!$tokenName) {
+            return '';
+        }
+        $token = Cache::get($tokenName,'');
+        if (!$token) {
+            return '';
+        }
+        if (!isset($token['access_token'])){
+            return '';
+        }
+        if (strpos('Bearer ',$token['access_token']) === false) {
+            return 'Bearer ' . $token['access_token'];
+        }
+        return $token['access_token'];
+    }
+
+    /**
+     * 设置储存token
+     * @param array $data
+     * @return void
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public static function setToken(array $data)
+    {
+        if (isset($data['expires_in'])) {
+            $data['expires_time'] = time() + $data['expires_in'];
+        }
+        Cache::set(self::getTokenName(),$data);
+    }
 
     /**
      * 发送请求
@@ -84,19 +168,19 @@ class HttpCloud
     public static function send(string $url,string $method = 'GET',array $data = [],array $headers = [])
     {
         $url     = self::$baseUrl . $url;
+        $referer = request()->header('referer','');
+        $host = parse_url($referer,PHP_URL_HOST);
         $headers = array_merge($headers,[
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json',
+            'Accept'            => 'application/json',
+            'Content-Type'      => 'application/x-www-form-urlencoded',
+            'X-Requested-With'  => 'XMLHttpRequest',
+            'X-Host'            => $host,
         ]);
-        $host = request()->host(true);
-        if (Cache::has($host)) {
-            $token   = Cache::get($host);
+        // 获取站点储存Token
+        $token   = self::getToken();
+        if ($token) {
             $headers['Authorization'] = $token;
         }
-        $domain = request()->host(true);
-        $ip = request()->getRealIp();
-        $headers['x-domain'] = $domain;
-        $headers['x-ip'] = $ip;
         $http = Http::withHost(self::$baseUrl)->withHeaders($headers);
         $res = [];
         if ($method == 'GET') {

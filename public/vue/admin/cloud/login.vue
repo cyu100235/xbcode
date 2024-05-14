@@ -54,7 +54,7 @@ export default {
     methods: {
         onSubmit() {
             var _this = this;
-            _this.$http.usePost("admin/PluginCloud/login", _this.form)
+            _this.$http.usePost("admin/Cloud/login", _this.form)
                 .then((res) => {
                     _this.$emit("update:closeWin");
                     _this.$useNotify(res?.msg || "登录成功", 'success', '温馨提示')

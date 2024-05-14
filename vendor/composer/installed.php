@@ -3,7 +3,7 @@
         'name' => 'xbase/admin',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => 'b68b815ae2d7893965a76a080d41f954e7dc7587',
+        'reference' => 'd76e3e39e8eed8aadcf16fa66f2e594c8986e96c',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -605,7 +605,7 @@
         'xbase/admin' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'b68b815ae2d7893965a76a080d41f954e7dc7587',
+            'reference' => 'd76e3e39e8eed8aadcf16fa66f2e594c8986e96c',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
