@@ -25,8 +25,7 @@ class AppProvider
             'web_desc' => $data['web_desc'] ?? '',
             'login_desc' => $data['login_desc'] ?? '',
             'web_logo' => $data['web_logo'] ?? '',
-            'version_name' => $data['version_name'] ?? '1.0.0',
-            'version' => $data['version'] ?? 1000,
+            'version' => $data['version'] ?? '1.0.0',
             // 版权token
             'empower_token' => $data['empower_token'] ?? '',
             // 版权私钥

@@ -55,10 +55,6 @@ class ComposerStaticInite07e252fcf63af9e26b4119020c12e84
         array (
             'clagiordano\\weblibs\\configmanager\\' => 34,
         ),
-        'b' => 
-        array (
-            'base\\' => 5,
-        ),
         'a' => 
         array (
             'app\\View\\Components\\' => 20,
@@ -181,9 +177,9 @@ class ComposerStaticInite07e252fcf63af9e26b4119020c12e84
         ),
         'think\\' => 
         array (
-            0 => __DIR__ . '/..' . '/topthink/think-cache/src',
+            0 => __DIR__ . '/..' . '/topthink/think-helper/src',
             1 => __DIR__ . '/..' . '/topthink/think-container/src',
-            2 => __DIR__ . '/..' . '/topthink/think-helper/src',
+            2 => __DIR__ . '/..' . '/topthink/think-cache/src',
             3 => __DIR__ . '/..' . '/topthink/think-orm/src',
         ),
         'support\\' => 
@@ -197,10 +193,6 @@ class ComposerStaticInite07e252fcf63af9e26b4119020c12e84
         'clagiordano\\weblibs\\configmanager\\' => 
         array (
             0 => __DIR__ . '/..' . '/clagiordano/weblibs-configmanager/src',
-        ),
-        'base\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/base',
         ),
         'app\\View\\Components\\' => 
         array (
@@ -328,8 +320,8 @@ class ComposerStaticInite07e252fcf63af9e26b4119020c12e84
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-factory/src',
-            1 => __DIR__ . '/..' . '/psr/http-message/src',
+            0 => __DIR__ . '/..' . '/psr/http-message/src',
+            1 => __DIR__ . '/..' . '/psr/http-factory/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (

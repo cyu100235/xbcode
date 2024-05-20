@@ -146,7 +146,9 @@ function list_sort_by(array $list, string $field, $sortby = 'asc')
  */
 function p(mixed $data)
 {
-    echo PHP_EOL;
-    print_r($data);
-    echo PHP_EOL;
+    if (config('app.debug')) {
+        echo PHP_EOL;
+        print_r($data);
+        echo PHP_EOL;
+    }
 }

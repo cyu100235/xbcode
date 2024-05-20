@@ -2,12 +2,8 @@
 namespace app\service;
 
 use app\service\cloud\PluginsOrderCloud;
-use app\service\cloud\UtilCloud;
 use app\service\cloud\PluginsCateCloud;
 use app\service\cloud\PluginsCloud;
-use app\service\cloud\PluginsInstallCloud;
-use app\service\cloud\PluginsUninstallCloud;
-use app\service\cloud\PluginsUpdateCloud;
 use app\service\cloud\UserCloud;
 
 /**
@@ -17,12 +13,8 @@ use app\service\cloud\UserCloud;
  */
 class CloudSerivce
 {
-    use UtilCloud;
     use UserCloud;
     use PluginsCloud;
     use PluginsOrderCloud;
-    use PluginsInstallCloud;
-    use PluginsUpdateCloud;
-    use PluginsUninstallCloud;
     use PluginsCateCloud;
 }

@@ -26,6 +26,11 @@ class PluginMiddleware implements MiddlewareInterface
      */
     public function process(Request $request, callable $handler): Response
     {
+        $route = $request->route;
+        $name  = $route->param();
+        $middleware = base_path("base/{$name['name']}/app/index/middleware.php");
+        $middleware = include $middleware;
+        $route->middleware($middleware);
         // 鉴权前置钩子
         $this->canAuth($request,$handler);
         // 鉴权前置钩子

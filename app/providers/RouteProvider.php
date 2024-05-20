@@ -1,13 +1,14 @@
 <?php
 namespace app\providers;
 
+use app\middleware\PluginMiddleware;
 use app\model\AdminRule;
-use app\model\Plugins;
+use app\service\CloudSerivce;
 use app\utils\InstallUtil;
-use Exception;
 use support\Request;
 use think\facade\Cache;
 use Webman\Route;
+use Exception;
 
 /**
  * 路由服务提供者
@@ -60,73 +61,8 @@ class RouteProvider
             Route::post('/install/install', 'app\controller\InstallController@install');
         } else {
             // 注册应用路由
-            self::registerSystem();
-            // 注册插件路由
-            self::registerPlugin();
+            self::registerRoute();
         }
-    }
-
-    /**
-     * 注册插件路由
-     * @return void
-     * @copyright 贵州小白基地网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
-     */
-    private static function registerPlugin()
-    {
-        // 注册插件路由
-        Route::any('/plugin/{name}[/{path}]', function (Request $request, $name = '', $path = '') {
-            // 安全检查，避免url里 /../../../password 这样的非法访问
-            if (strpos($name, '..') !== false || strpos($path, '..') !== false) {
-                return response('<h1>400 Bad Request</h1>', 400);
-            }
-            if (!$name) {
-                throw new Exception('插件标识参数错误');
-            }
-            // 检测插件是否安装
-            $model = Plugins::where('name', $name)->find();
-            if (!$model) {
-                throw new Exception("该插件未安装");
-            }
-            // 检测插件是否启用
-            if ($model['state'] !== '20') {
-                throw new Exception("该插件未启用");
-            }
-            $control = 'Index';
-            $action  = 'index';
-            $data    = array_filter(explode('/', $path));
-            if (isset ($data[0])) {
-                $control = ucfirst($data[0]);
-            }
-            // 控制器后缀
-            $suffix  = config('app.controller_suffix', '');
-            $control = "{$control}{$suffix}";
-            if (isset ($data[1])) {
-                $action = $data[1];
-            }
-            // 检测是否存在控制器方法
-            $class = "\\base\\{$name}\\controller\\{$control}";
-            if (method_exists($class, $action)) {
-                $class = new $class;
-                return call_user_func([$class, $action], $request);
-            }
-            // 插件目录
-            $pluginPath = base_path("base/{$name}");
-            $path       = $path ? "/{$path}" : '';
-            $dirPath    = "{$pluginPath}/public{$path}";
-            // 检测是否存在默认文档
-            $docements = [
-                'index.html',
-                'index.htm',
-            ];
-            foreach ($docements as $value) {
-                $htmlPath = "{$dirPath}/{$value}";
-                if (is_file($htmlPath)) {
-                    return response()->withFile($htmlPath);
-                }
-            }
-            return response('<h1>404 Plugin Not Found</h1>', 404);
-        })->middleware([\app\middleware\PluginMiddleware::class]);
     }
 
     /**
@@ -135,22 +71,13 @@ class RouteProvider
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    private static function registerSystem()
+    private static function registerRoute()
     {
         // 模块名称
         $moduleName = config('admin.module_name', '');
         if (!$moduleName) {
             throw new Exception('请配置后台模块名称');
         }
-        $middleware = [];
-        $path       = app_path("{$moduleName}/middleware.php");
-        if (file_exists($path)) {
-            $middleware = include $path;
-        }
-        // 中间件合并
-        $middleware = array_merge([
-            \app\middleware\AuthMiddleware::class
-        ], $middleware);
         // 注册后台路由
         Route::get("/{$moduleName}/", 'app\admin\controller\IndexController@index');
         $menus = Cache::get('admin_menus', []);
@@ -160,7 +87,7 @@ class RouteProvider
                     $value['methods'],
                     "/{$value['path']}",
                     $value['class']
-                )->middleware($middleware);
+                );
             }
         }
         // 注册静态文件路由
@@ -177,6 +104,46 @@ class RouteProvider
             }
             return response()->withFile($file);
         });
+    }
+
+    /**
+     * 获取路由路径
+     * @param string $name
+     * @param string $path
+     * @return string[]
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    private static function getRoutePath(string $name,string $path = '')
+    {
+        $module  = 'index';
+        $control = 'Index';
+        $action  = 'index';
+        if ($path) {
+            $path = ltrim($path, '/');
+        }
+        $data    = array_filter(explode('/', $path));
+        if (isset ($data[0])) {
+            $module = $data[0];
+        }
+        if (isset ($data[1])) {
+            $control = ucfirst($data[1]);
+        }
+        // 控制器后缀
+        $suffix  = config('app.controller_suffix', '');
+        $control = "{$control}{$suffix}";
+        if (isset ($data[2])) {
+            $action = $data[2];
+        }
+        // 检测是否存在控制器方法
+        $class = "\\base\\{$name}\\app\\{$module}\\controller\\{$control}";
+        return [
+            'plugin'    => $name,
+            'class'     => $class,
+            'module'    => $module,
+            'control'   => $control,
+            'action'    => $action,
+        ];
     }
 
     /**

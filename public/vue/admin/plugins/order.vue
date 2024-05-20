@@ -10,10 +10,6 @@
                 <span class="value">{{ detail?.order_no }}</span>
             </div>
             <div class="item">
-                <span class="label">授权类型：</span>
-                <span class="value">{{ detail?.order_no }}</span>
-            </div>
-            <div class="item">
                 <span class="label">订单价格：</span>
                 <span class="value price">￥{{ detail?.total }}</span>
             </div>
@@ -21,14 +17,9 @@
         <div class="content">
             <div class="pay-type">
                 <div class="pay-list">
-                    <div class="item active">
-                        <el-image class="logo" src="/static/image/alipay.png" />
-                    </div>
-                    <div class="item">
-                        <el-image class="logo" src="/static/image/wechat.png" />
-                    </div>
-                    <div class="item">
-                        <el-image class="logo" src="/static/image/wechat.png" />
+                    <div class="item" :class="{ 'active': payType === item.name }" v-for="(item, index) in paylist"
+                        :key="index" @click="hanldPayType(item?.name)">
+                        <el-image class="logo" :src="item.logo" />
                     </div>
                 </div>
                 <div class="other-list">
@@ -45,7 +36,10 @@
                 </div>
             </div>
             <div class="pay-qrcode">
-                <el-image class="logo" src="/static/image/qrcode.png" />
+                <div class="logo-box">
+                    <el-image class="logo" v-if="payQrcode" :src="payQrcode" />
+                    <div class="text" v-else>请选择支付方式</div>
+                </div>
                 <div class="tip">
                     <AppIcons icon="FullScreen" :size="40" />
                     <div class="qrcode">
@@ -60,40 +54,107 @@
 
 <script>
 export default {
+    props: {
+        name: String,
+        version: String | Number,
+    },
     data() {
         return {
-            detail: null
+            detail: null,
+            payType: '',
+            payQrcode: '',
+            paylist: [
+                // {
+                //     title: '支付宝支付',
+                //     name: 'alipay',
+                //     logo: '/static/image/alipay.png',
+                // },
+                // {
+                //     title: '微信支付',
+                //     name: 'wechat',
+                //     logo: '/static/image/wechat.png',
+                // },
+                {
+                    title: '余额支付',
+                    name: 'balance',
+                    logo: '/static/image/cash.png',
+                },
+            ],
         }
     },
     mounted() {
         this.getData()
     },
     methods: {
-        async getData() {
-            const params = {
-                name: this.$attrs?.name,
-                version: this.$attrs?.version
-            }
-            const url = 'admin/Plugins/order'
-            const data = await this.$http.useGet(url, params).catch((err) => {
-                return err
-            })
-            if (data?.code === 11000) {
-                this.$emit("update:closeWin");
-                this.$useRemote('/vue/admin/cloud/login', {}, {
-                    title: '云服务登录',
-                    customStyle: {
-                        width: '420px',
-                        height: '450px',
-                    },
+        // 发起支付
+        hanldPayType(type) {
+            this.payType = type
+            if (type.includes('balance')) {
+                this.$useConfirm('是否确认余额支付购买？', '温馨提示', 'warning').then(() => {
+                    this.unifiedOrder()
+                }).catch(() => { 
+                    this.payType = ''
                 })
-                return
+            } else {
+                this.unifiedOrder()
             }
-            if (data?.code !== 200) {
+        },
+        // 统一下单
+        unifiedOrder() {
+            const params = {
+                order_no: this.detail?.order_no,
+                pay_type: this.payType,
+            }
+            this.$http.useGet('admin/Plugins/unifiedOrder', params).then((res) => {
+                if (res?.code !== 200) {
+                    this.$emit("update:closeWin");
+                    return
+                }
+                // 余额付款
+                if (!res?.data?.is_pay && this.payType === 'balance') {
+                    this.$emit("update:closeWin");
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1500);
+                    this.$useNotify(res?.msg ?? '异常错误', 'success', '温馨提示')
+                }
+            }).catch((err) => {
+                if (err?.code === 11000) {
+                    this.$emit("update:closeWin");
+                    this.$useRemote('/vue/admin/cloud/login', {}, {
+                        title: '云服务登录',
+                        customStyle: {
+                            width: '420px',
+                            height: '450px',
+                        },
+                    })
+                }
+            })
+        },
+        // 获取订单信息
+        getData() {
+            const params = {
+                name: this.name,
+                version: this.version
+            }
+            this.$http.useGet('admin/Plugins/order', params).then((res) => {
+                if (res?.code !== 200) {
+                    this.$emit("update:closeWin");
+                    return
+                }
+                this.detail = res?.data ?? null
+            }).catch((err) => {
                 this.$emit("update:closeWin");
-                return
-            }
-            this.detail = data?.data
+                if (err?.code === 11000) {
+                    this.$useRemote('/vue/admin/cloud/login', {}, {
+                        title: '云服务登录',
+                        customStyle: {
+                            width: '420px',
+                            height: '450px',
+                        },
+                    })
+                }
+            })
         }
     },
 }
@@ -172,10 +233,30 @@ export default {
         }
 
         .pay-qrcode {
-            flex: 1;
+            .logo-box {
+                width: 300px;
+                height: 300px;
+                position: relative;
 
-            .logo {
-                width: 100%;
+                .logo {
+                    width: 100%;
+                }
+
+                .text {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background-color: #888;
+                    color: #fff;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    font-size: 18px;
+                    border-radius: 4px;
+                    user-select: none;
+                }
             }
 
             .tip {
@@ -199,4 +280,5 @@ export default {
             }
         }
     }
-}</style>
+}
+</style>

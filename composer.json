@@ -49,7 +49,6 @@
       "": "./",
       "app\\": "./app",
       "App\\": "./app",
-      "base\\": "./base",
       "app\\View\\Components\\": "./app/view/components"
     },
     "files": [

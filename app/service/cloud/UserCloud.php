@@ -47,10 +47,10 @@ trait UserCloud
     {
         $data = HttpCloud::get('user/Home/index')->array();
         if (empty($data)) {
-            return self::fail('获取用户信息失败');
+            return self::failFul('获取用户信息失败',11000);
         }
         if (isset($data['code']) && $data['code'] === 12000) {
-            return self::failFul($data['data'],11000);
+            return self::failFul('请登录云服务',11000);
         }
         if (isset($data['code']) && $data['code'] != 200) {
             return self::fail($data['msg'], $data['code']);

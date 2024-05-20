@@ -586,8 +586,8 @@ class App
         $pathExplodes = explode('/', trim($path, '/'));
         $plugin = '';
         if (isset($pathExplodes[1]) && $pathExplodes[0] === 'app') {
-            $publicDir = BASE_PATH . "/plugin/$pathExplodes[1]/public";
             $plugin = $pathExplodes[1];
+            $publicDir = static::config($plugin, 'app.public_path') ?: BASE_PATH . "/plugin/$pathExplodes[1]/public";
             $path = substr($path, strlen("/app/$pathExplodes[1]/"));
         } else {
             $publicDir = static::$publicPath;
@@ -798,10 +798,10 @@ class App
     protected static function getAction(string $controllerClass, string $action)
     {
         $methods = get_class_methods($controllerClass);
-        $action = strtolower($action);
+        $lowerAction = strtolower($action);
         $found = false;
         foreach ($methods as $candidate) {
-            if (strtolower($candidate) === $action) {
+            if (strtolower($candidate) === $lowerAction) {
                 $action = $candidate;
                 $found = true;
                 break;

@@ -1,5 +1,8 @@
 <template>
     <div class="pages-container">
+        <!-- 
+            TODO：完成首页数据展示统计
+         -->
         欢迎界面
     </div>
 </template>

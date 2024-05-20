@@ -88,7 +88,10 @@ class HttpCloud
         if (empty($array) && empty($body)) {
             throw new \Exception('请求失败',500);
         }
-        if (is_string($body) && strpos($body,'html') !== false) {
+        if (is_string($body) && strpos($body,'502 Bad Gateway') !== false) {
+            throw new \Exception('远程服务器错误',500);
+        }
+        if (is_string($body) && strpos($body,'<html>') !== false) {
             throw new \Exception($body,500);
         }
         if (isset($array['code']) && $array['code'] !== 200) {

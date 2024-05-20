@@ -17,12 +17,18 @@ class AuthUtil
      * 检测是否拥有权限
      * @param int $uid
      * @param string $path
-     * @return void
+     * @return bool
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public static function canAuth(int $uid, string $path)
     {
+        $data = self::getAuthRule($uid);
+        $data = array_column($data, 'path');
+        if (!in_array($path, $data)) {
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -56,6 +62,7 @@ class AuthUtil
 
     /**
      * 刷新token
+     * 用于单点登录的刷新token，无单点登录可不实现
      * @return void
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
@@ -64,7 +71,6 @@ class AuthUtil
     {
     }
 
-    // TODO：未完成获取用户专属角色规则
     /**
      * 获取用户权限
      * @param int $uid
@@ -87,10 +93,15 @@ class AuthUtil
             // 返回数据
             return $data;
         }
-        $rule = $model['rule'];
+        $rule = $model['rule']['rule'] ?? [];
         if (empty($rule)) {
             return [];
         }
-        return [];
+        // 获取菜单数据
+        $menus = MenuProvider::menuList(['path' => $rule]);
+        // 解析数据格式
+        $menus = MenuProvider::parseData($menus);
+        // 返回菜单数据
+        return $menus;
     }
 }
