@@ -47,7 +47,7 @@ class RouteProvider
                 return response('<h1>400 Bad Request</h1>', 400);
             }
             // 文件
-            $installPath = app_path('view/install');
+            $installPath = app_path('common/view/install');
             $file        = "{$installPath}/assets/{$path}";
             if (!is_file($file)) {
                 return response('<h1>404 Not Found</h1>', 404);

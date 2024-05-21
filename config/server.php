@@ -1,9 +1,9 @@
 <?php
 return [
-    'listen' => 'http://0.0.0.0:'.xbEnv('APP_PORT', 39600),
+    'listen' => 'http://0.0.0.0:'.xbEnv('APP_PORT', 39800),
     'transport' => 'tcp',
     'context' => [],
-    'name' => 'webman',
+    'name' => 'xbase',
     'count' => cpu_count() * 4,
     'user' => '',
     'group' => '',
