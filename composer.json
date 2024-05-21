@@ -6,7 +6,7 @@
     "http service"
   ],
   "homepage": "https://www.xiaobai.host",
-  "license": "MIT",
+  "license": "apache-2.0",
   "description": "High performance HTTP Service Framework.",
   "authors": [
     {
