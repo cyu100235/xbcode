@@ -1,7 +1,9 @@
 <?php
 namespace app\common\providers;
 
+use app\common\service\CloudSerivce;
 use app\common\utils\InstallUtil;
+use app\model\AdminRule;
 use support\Request;
 use think\facade\Cache;
 use Webman\Route;
@@ -101,5 +103,40 @@ class RouteProvider
             }
             return response()->withFile($file);
         });
+    }
+
+    /**
+     * 插件中间件
+     * @return string[]
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public static function pluginMiddleware()
+    {
+        $plugins = CloudSerivce::getLocalPlugin();
+        $data = [];
+        foreach ($plugins as $value) {
+            if (!empty($value['name'])) {
+                $data["plugin.{$value['name']}"] = [
+                    \app\common\middleware\PluginsMiddleware::class
+                ];
+            }
+        }
+        return $data;
+    }
+
+    /**
+     * 缓存菜单
+     * @return void
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public static function cacheMenus()
+    {
+        $data = AdminRule::order('sort asc')->select()->toArray();
+        foreach ($data as &$value) {
+            $value['methods'] = explode(',', $value['methods']);
+        }
+        Cache::set('admin_menus', $data);
     }
 }

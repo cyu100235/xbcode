@@ -3,7 +3,7 @@
 namespace app\model;
 
 use app\common\Model;
-use app\providers\UploadProvider;
+use app\common\providers\UploadProvider;
 
 class Settings extends Model
 {

@@ -6,7 +6,7 @@ use app\common\builder\form\DividerTrait;
 use app\common\builder\form\FormValidateTrait;
 use app\common\builder\form\RowTrait;
 use app\common\builder\form\TabsFormTrait;
-use app\model;
+use app\common\model;
 use FormBuilder\Form;
 
 /**

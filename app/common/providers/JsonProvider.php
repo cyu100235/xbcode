@@ -1,7 +1,7 @@
 <?php
 namespace app\common\providers;
 
-use app\utils\JsonUtil;
+use app\common\utils\JsonUtil;
 
 /**
  * JSON工具类

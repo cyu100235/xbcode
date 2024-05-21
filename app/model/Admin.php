@@ -4,7 +4,7 @@ namespace app\model;
 
 use app\common\Model;
 use app\providers\UploadProvider;
-use app\utils\PasswordUtil;
+use app\common\utils\PasswordUtil;
 
 /**
  * 管理员

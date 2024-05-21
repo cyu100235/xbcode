@@ -1,8 +1,8 @@
 <?php
 namespace app\common\providers\menus;
 
-use app\utils\enum\MenuComponent;
-use app\utils\DataUtil;
+use app\common\utils\enum\MenuComponent;
+use app\common\utils\DataUtil;
 
 /**
  * 菜单服务提供者

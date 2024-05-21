@@ -2,7 +2,7 @@
 
 namespace app\common\builder\form;
 
-use app\builder\FormBuilder;
+use app\common\builder\FormBuilder;
 
 /**
  * 表单验证

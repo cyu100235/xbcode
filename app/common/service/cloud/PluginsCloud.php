@@ -1,12 +1,11 @@
 <?php
 namespace app\common\service\cloud;
 
-use app\builder\FormBuilder;
-use app\model\Settings;
-use app\providers\ConfigFormProvider;
-use app\providers\ConfigProvider;
-use app\providers\UploadProvider;
+use app\common\builder\FormBuilder;
+use app\common\providers\ConfigFormProvider;
+use app\common\providers\ConfigProvider;
 use app\common\utils\JsonUtil;
+use app\model\Settings;
 use support\Request;
 use Exception;
 

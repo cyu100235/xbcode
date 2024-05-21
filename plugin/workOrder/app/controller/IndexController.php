@@ -1,6 +1,6 @@
 <?php
 
-namespace plugin\user\app\controller;
+namespace plugin\workOrder\app\controller;
 
 use support\Request;
 

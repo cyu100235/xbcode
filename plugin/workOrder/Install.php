@@ -1,7 +1,7 @@
 <?php
 namespace plugin\workOrder;
 
-use app\providers\MenuProvider;
+use app\common\providers\MenuProvider;
 
 /**
  * 插件安装卸载类
@@ -75,7 +75,7 @@ class Install
                 'title' => '基本配置',
                 'children' => [
                     [
-                        'field' => 'web_name',
+                        'field' => 'web.web_name',
                         'title' => '网站名称',
                         'value' => '',
                         'component' => 'input',
@@ -85,7 +85,7 @@ class Install
                         ],
                     ],
                     [
-                        'field' => 'web_url',
+                        'field' => 'web.web_url',
                         'title' => '网站域名',
                         'value' => '',
                         'component' => 'input',
@@ -95,7 +95,7 @@ class Install
                         ],
                     ],
                     [
-                        'field' => 'web_title',
+                        'field' => 'web.web_title',
                         'title' => '网站标题',
                         'value' => '',
                         'component' => 'input',
@@ -104,7 +104,7 @@ class Install
                         ],
                     ],
                     [
-                        'field' => 'web_keywords',
+                        'field' => 'web.web_keywords',
                         'title' => '网站关键字',
                         'value' => '',
                         'component' => 'input',
@@ -113,7 +113,7 @@ class Install
                         ],
                     ],
                     [
-                        'field' => 'web_description',
+                        'field' => 'web.web_description',
                         'title' => '网站描述',
                         'value' => '',
                         'component' => 'textarea',
@@ -124,7 +124,7 @@ class Install
                         ],
                     ],
                     [
-                        'field' => 'web_logo',
+                        'field' => 'web.web_logo',
                         'title' => '系统图标',
                         'value' => '',
                         'component' => 'uploadify',
@@ -137,7 +137,7 @@ class Install
                 'title' => '基本配置2',
                 'children' => [
                     [
-                        'field' => 'web_name2',
+                        'field' => 'user.web_name2',
                         'title' => '网站名称2',
                         'value' => '',
                         'component' => 'input',
@@ -147,7 +147,7 @@ class Install
                         ],
                     ],
                     [
-                        'field' => 'web_url2',
+                        'field' => 'user.web_url2',
                         'title' => '网站域名2',
                         'value' => '',
                         'component' => 'input',
@@ -157,7 +157,7 @@ class Install
                         ],
                     ],
                     [
-                        'field' => 'web_title2',
+                        'field' => 'user.web_title2',
                         'title' => '网站标题2',
                         'value' => '',
                         'component' => 'input',
@@ -166,7 +166,7 @@ class Install
                         ],
                     ],
                     [
-                        'field' => 'web_keywords2',
+                        'field' => 'user.web_keywords2',
                         'title' => '网站关键字2',
                         'value' => '',
                         'component' => 'input',
@@ -175,7 +175,7 @@ class Install
                         ],
                     ],
                     [
-                        'field' => 'web_description2',
+                        'field' => 'user.web_description2',
                         'title' => '网站描述2',
                         'value' => '',
                         'component' => 'textarea',
@@ -186,7 +186,7 @@ class Install
                         ],
                     ],
                     [
-                        'field' => 'web_logo2',
+                        'field' => 'user.web_logo2',
                         'title' => '系统图标2',
                         'value' => '',
                         'component' => 'uploadify',

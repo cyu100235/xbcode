@@ -3,7 +3,7 @@ namespace app\common\providers;
 
 use app\common\providers\menus\CascaderTrait;
 use app\common\providers\menus\MenuActionTrait;
-use app\utils\DataUtil;
+use app\common\utils\DataUtil;
 use Exception;
 
 /**

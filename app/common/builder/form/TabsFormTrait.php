@@ -6,8 +6,8 @@ use FormBuilder\Driver\CustomComponent;
 
 /**
  * 选项卡表单构建器
- * Class TabsFormBuilder
- * @package app\builder
+ * @copyright 贵州小白基地网络科技有限公司
+ * @author 楚羽幽 cy958416459@qq.com
  */
 trait TabsFormTrait
 {

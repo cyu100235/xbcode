@@ -1,5 +1,5 @@
 <?php
-use app\utils\enum\YesNoEnum;
+use app\common\utils\enum\YesNoEnum;
 use FormBuilder\Factory\Elm;
 
 return [
