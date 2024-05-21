@@ -2,12 +2,12 @@
 
 namespace app\admin\controller;
 
-use app\builder\ListBuilder;
-use app\service\action\PluginInstallAction;
-use app\service\action\PluginUnInstallAction;
-use app\service\action\PluginUpdateAction;
-use app\service\CloudSerivce;
-use app\XbController;
+use app\common\builder\ListBuilder;
+use app\common\service\action\PluginInstallAction;
+use app\common\service\action\PluginUnInstallAction;
+use app\common\service\action\PluginUpdateAction;
+use app\common\service\CloudSerivce;
+use app\common\XbController;
 use support\Request;
 
 /**

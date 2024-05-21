@@ -2,11 +2,11 @@
 
 namespace app\admin\controller;
 
-use app\providers\ConfigProvider;
-use app\providers\AppProvider;
-use app\providers\RouteProvider;
-use app\utils\FrameUtil;
-use app\XbController;
+use app\common\providers\ConfigProvider;
+use app\common\providers\AppProvider;
+use app\common\providers\RouteProvider;
+use app\common\utils\FrameUtil;
+use app\common\XbController;
 use support\Request;
 use think\facade\Cache;
 

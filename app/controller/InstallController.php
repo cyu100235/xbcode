@@ -2,10 +2,10 @@
 
 namespace app\controller;
 
-use app\utils\EnvironmentUtil;
-use app\utils\FrameUtil;
-use app\utils\InstallUtil;
-use app\XbController;
+use app\common\utils\EnvironmentUtil;
+use app\common\utils\FrameUtil;
+use app\common\utils\InstallUtil;
+use app\common\XbController;
 use support\Request;
 
 /**
@@ -24,7 +24,7 @@ class InstallController extends XbController
      */
     public function index(Request $request)
     {
-        return $this->adminView('app/view/install/index.html');
+        return $this->adminView('app/common/view/install/index.html');
     }
     
     /**

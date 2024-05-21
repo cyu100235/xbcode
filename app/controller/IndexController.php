@@ -2,8 +2,8 @@
 
 namespace app\controller;
 
-use app\utils\InstallUtil;
-use app\XbController;
+use app\common\utils\InstallUtil;
+use app\common\XbController;
 use support\Request;
 
 class IndexController extends XbController

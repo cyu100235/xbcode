@@ -1,9 +1,9 @@
 <?php
 namespace app\admin\controller;
 
-use app\builder\FormBuilder;
-use app\providers\UploadProvider;
-use app\XbController;
+use app\common\builder\FormBuilder;
+use app\common\providers\UploadProvider;
+use app\common\XbController;
 use hg\apidoc\annotation as Apidoc;
 use app\model\Upload;
 use support\Request;

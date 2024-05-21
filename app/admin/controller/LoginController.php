@@ -3,10 +3,10 @@ namespace app\admin\controller;
 
 use app\admin\validate\LoginValidate;
 use app\model\Admin;
-use app\utils\AuthUtil;
-use app\utils\PasswordUtil;
+use app\common\utils\AuthUtil;
+use app\common\utils\PasswordUtil;
 use hg\apidoc\annotation as Apidoc;
-use app\XbController;
+use app\common\XbController;
 use support\Request;
 use Exception;
 use Tinywan\Jwt\JwtToken;

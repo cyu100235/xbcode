@@ -1,7 +1,7 @@
 <?php
 namespace app\admin\middleware;
 
-use app\utils\JsonUtil;
+use app\common\utils\JsonUtil;
 use Exception;
 use Tinywan\Jwt\JwtToken;
 use Webman\MiddlewareInterface;

@@ -2,22 +2,22 @@
 namespace app\admin\controller;
 
 use app\admin\validate\MenusValidate;
-use app\builder\table\RowEditTrait;
-use app\providers\RouteProvider;
-use app\utils\enum\MenuComponentStyle;
-use app\utils\enum\MethodsEnum;
-use app\utils\FrameUtil;
+use app\common\builder\table\RowEditTrait;
+use app\common\providers\RouteProvider;
+use app\common\utils\enum\MenuComponentStyle;
+use app\common\utils\enum\MethodsEnum;
+use app\common\utils\FrameUtil;
 use hg\apidoc\annotation as Apidoc;
-use app\builder\FormBuilder;
-use app\builder\ListBuilder;
+use app\common\builder\FormBuilder;
+use app\common\builder\ListBuilder;
 use app\model\AdminRule;
-use app\providers\MenuProvider;
-use app\utils\enum\MenuComponent;
-use app\utils\enum\ShowEnum;
-use app\utils\enum\ShowStyle;
+use app\common\providers\MenuProvider;
+use app\common\utils\enum\MenuComponent;
+use app\common\utils\enum\ShowEnum;
+use app\common\utils\enum\ShowStyle;
 use FormBuilder\Factory\Elm;
 use support\Request;
-use app\XbController;
+use app\common\XbController;
 use think\facade\Db;
 
 /**

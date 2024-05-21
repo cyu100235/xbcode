@@ -2,7 +2,7 @@
 
 namespace app\model;
 
-use app\Model;
+use app\common\Model;
 use app\providers\UploadProvider;
 use app\utils\PasswordUtil;
 

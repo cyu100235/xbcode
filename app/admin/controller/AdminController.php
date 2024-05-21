@@ -1,16 +1,16 @@
 <?php
 namespace app\admin\controller;
 
-use app\builder\FormBuilder;
-use app\builder\ListBuilder;
+use app\common\builder\FormBuilder;
+use app\common\builder\ListBuilder;
 use app\model\AdminRole;
-use app\providers\UploadProvider;
-use app\utils\enum\BanEnum;
-use app\utils\enum\BanStyle;
+use app\common\providers\UploadProvider;
+use app\common\utils\enum\BanEnum;
+use app\common\utils\enum\BanStyle;
 use app\admin\validate\AdminValidate;
 use hg\apidoc\annotation as Apidoc;
 use Tinywan\Jwt\JwtToken;
-use app\XbController;
+use app\common\XbController;
 use app\model\Admin;
 use support\Request;
 

@@ -1,11 +1,11 @@
 <?php
 namespace app\admin\controller;
 
-use app\providers\ConfigFormProvider;
-use app\providers\ConfigProvider;
+use app\common\providers\ConfigFormProvider;
+use app\common\providers\ConfigProvider;
 use hg\apidoc\annotation as Apidoc;
 use support\Request;
-use app\XbController;
+use app\common\XbController;
 
 /**
  * 系统设置

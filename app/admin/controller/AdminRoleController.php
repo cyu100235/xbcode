@@ -1,12 +1,12 @@
 <?php
 namespace app\admin\controller;
 
-use app\builder\FormBuilder;
-use app\builder\ListBuilder;
-use app\providers\MenuProvider;
+use app\common\builder\FormBuilder;
+use app\common\builder\ListBuilder;
+use app\common\providers\MenuProvider;
 use hg\apidoc\annotation as Apidoc;
 use app\model\AdminRole;
-use app\XbController;
+use app\common\XbController;
 use app\model\Admin;
 use support\Request;
 use Exception;

@@ -3,7 +3,7 @@
 namespace app\admin\controller;
 
 use app\service\CloudSerivce;
-use app\XbController;
+use app\common\XbController;
 use support\Request;
 
 class CloudController extends XbController

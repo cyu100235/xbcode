@@ -2,7 +2,7 @@
 
 namespace app\model;
 
-use app\Model;
+use app\common\Model;
 
 /**
  * 菜单模型
