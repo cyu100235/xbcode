@@ -2,10 +2,13 @@
 namespace app\service\cloud;
 
 use app\builder\FormBuilder;
-use app\model\Plugins;
+use app\model\Settings;
+use app\providers\ConfigFormProvider;
+use app\providers\ConfigProvider;
+use app\providers\UploadProvider;
 use app\utils\JsonUtil;
 use support\Request;
-use think\facade\Cache;
+use Exception;
 
 /**
  * 插件云服务
@@ -248,7 +251,7 @@ trait PluginsCloud
         if (!method_exists($class, $methodName)) {
             return $default;
         }
-        $data = call_user_func([$class, $methodName]);
+        $data = call_user_func([new $class, $methodName]);
         if (!is_array($data)) {
             return $default;
         }
@@ -262,12 +265,60 @@ trait PluginsCloud
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public static function pluginConfig(string $name)
+    public static function pluginConfig(Request $request)
     {
-        $config = self::getLocalPluginConfig($name);
+        $name = $request->get('name', '');
+        if ($request->method() === 'PUT') {
+            $post = $request->post();
+            foreach ($post as $field => $value) {
+                $where = [
+                    'group'     => $name,
+                    'name'      => $field,
+                ];
+                $model = Settings::where($where)->find();
+                if (!$model) {
+                    $model = new Settings;
+                    $model->group = $name;
+                    $model->name  = $field;
+                }
+                if (!$model->save(['value'=> $value])) {
+                    return self::fail('配置保存失败');
+                }
+            }
+            return self::success('配置保存成功');
+        }
+        $active  = '';
+        $template = self::getLocalPluginConfig($name);
+        $config = ConfigProvider::getOriginal($name, []);
+        $config = ConfigProvider::parseData($config);
+        if ($template) {
+            $active = current($template)['field'] ?? '';
+        }
         $builder = new FormBuilder;
+        $builder->initTabsActive('active', $active, [
+            'props'             => [
+                // 选项卡样式
+                'tabPosition'   => 'top',
+            ],
+        ]);
+        foreach ($template as $value) {
+            if (!isset($value['title'])) {
+                throw new Exception('配置项标题不能为空');
+            }
+            if (!isset($value['field'])) {
+                throw new Exception('配置项字段不能为空');
+            }
+            if (!isset($value['children'])) {
+                throw new Exception('配置项表单内容不能为空');
+            }
+            $children = $value['children'] ?? [];
+            $formRow = ConfigFormProvider::getFormView($children)->getBuilder()->formRule();
+            $builder->addTab($value['field'] ?? '', $value['title'] ?? '', $formRow);
+        }
+        $builder->endTabs();
         $builder->setMethod('PUT');
+        $builder->setFormData($config);
         $data = $builder->create();
-        return $data;
+        return self::successRes($data);
     }
 }

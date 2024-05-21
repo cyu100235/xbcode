@@ -3,6 +3,8 @@
 namespace app\model;
 
 use app\Model;
+use app\providers\ConfigProvider;
+use app\providers\UploadProvider;
 use app\service\UploadService;
 use app\utils\PasswordUtil;
 use app\utils\Settings;
@@ -77,7 +79,7 @@ class User extends Model
     protected function setAvatarAttr($value)
     {
         if ($value) {
-            $value = UploadService::path($value);
+            $value = UploadProvider::path($value);
         }
         return $value;
     }
@@ -92,10 +94,10 @@ class User extends Model
     protected function getAvatarAttr($value)
     {
         if ($value) {
-            $value = UploadService::url($value);
+            $value = UploadProvider::url($value);
         }
         // 设置默认头像
-        $defaultAvatar = Settings::config('user', 'default_avatar');
+        $defaultAvatar = ConfigProvider::get('user', 'default_avatar','');
         if ($defaultAvatar && !$value) {
             $value = $defaultAvatar;
         }

@@ -329,9 +329,7 @@ class PluginsController extends XbController
      */
     public function config(Request $request)
     {
-        $name    = $request->get('name', '');
-        $data    = CloudSerivce::pluginConfig($name);
-        return $this->successRes($data);
+        return CloudSerivce::pluginConfig($request);
     }
 
     /**

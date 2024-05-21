@@ -47,7 +47,7 @@ return [
                             ->appendRule('suffix', [
                                 'type' => 'prompt-tip',
                                 'props' => [
-                                    'text' => '例如：/uploads，储存路径：/public/uploads/20230101/xxx.jpg',
+                                    'text' => '例如：uploads，储存路径：/public/uploads/20230101/xxx.jpg',
                                 ],
                             ])->build(),
                     ],

@@ -78,7 +78,7 @@ class ConfigFormProvider
      * @author 贵州小白基地网络科技有限公司
      * @copyright 贵州小白基地网络科技有限公司
      */
-    private static function getFormView(array $data): FormBuilder
+    public static function getFormView(array $data): FormBuilder
     {
         $builder = new FormBuilder;
         $builder->setMethod('PUT');

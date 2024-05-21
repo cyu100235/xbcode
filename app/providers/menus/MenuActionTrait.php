@@ -50,6 +50,18 @@ trait MenuActionTrait
      */
     public static function createMenu(string $path,array $data)
     {
+        if (empty($data['title'])) {
+            throw new Exception('菜单名称不能为空');
+        }
+        if (empty($data['path'])) {
+            throw new Exception('菜单路径不能为空');
+        }
+        if (empty($data['component'])) {
+            throw new Exception('菜单组件不能为空');
+        }
+        if (empty($data['methods'])) {
+            throw new Exception('请求类型不能为空');
+        }
         $pid   = 0;
         if ($path) {
             $model = AdminRule::where('path', $path)->find();
