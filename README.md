@@ -83,7 +83,7 @@ Swoole4 or Swoole5
 排名不分先后，感谢这些软件的开发者：webman、vxe-table、form-create、iview、vue、mysql、redis、uniapp、echarts、tree-table-vue、swiper、element-ui等，如有遗漏请联系我！
 
 ---
-###  🎬 核心开发团队
+###  🎬 开发团队
 产品：楚羽幽
 
 文档：下次一定
