@@ -40,7 +40,7 @@ class InstallController extends XbController
         if (InstallUtil::hasInstall()) {
             return $this->success('success');
         }
-        $path = app_path('data/protocol.txt');
+        $path = app_path('common/data/protocol.txt');
         $content = file_get_contents($path);
         return $this->successRes([
             'content'   => $content,

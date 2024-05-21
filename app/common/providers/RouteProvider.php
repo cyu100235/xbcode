@@ -33,7 +33,7 @@ class RouteProvider
         // 渲染视图
         Route::get('/install/', 'app\controller\InstallController@index');
         // 获取协议
-        Route::get('/install/protocol', 'app\controller\InstallController@protocol');
+        Route::get('/install/protocol', '\app\controller\InstallController@protocol');
         // 环境检测
         Route::post('/install/environment', 'app\controller\InstallController@environment');
         // 重启服务
