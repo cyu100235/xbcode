@@ -83,6 +83,7 @@ class XbPluginCreateCommand extends Command
         }
         echo "Create $path\r\n";
         mkdir($path, $mode, $recursive);
+        file_put_contents("$path/remarks.txt", "Create by 小白基地\n");
     }
 
     /**
