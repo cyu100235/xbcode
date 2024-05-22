@@ -77,6 +77,7 @@ class RouteProvider
         }
         // 注册后台路由
         Route::get("/{$moduleName}", 'app\admin\controller\IndexController@index');
+        Route::get("/{$moduleName}/", 'app\admin\controller\IndexController@index');
         $menus = Cache::get('admin_menus', []);
         foreach ($menus as $value) {
             if ($value['class'] && $value['path'] && $value['methods']) {
