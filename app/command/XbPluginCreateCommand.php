@@ -94,24 +94,19 @@ class XbPluginCreateCommand extends Command
     {
         $content = <<<EOF
 <?php
-
 namespace plugin\\$name\\app\\controller;
 
 use support\\Request;
 
 class IndexController
 {
-
-    public function index()
+    public function index(Request \$request)
     {
-        return view('index/index', ['name' => '$name']);
+        return view('index/index', ['name' => 'user']);
     }
-
 }
-
 EOF;
         file_put_contents($path, $content);
-
     }
 
     /**
