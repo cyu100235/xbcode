@@ -13,7 +13,7 @@ function xbEnv(string $name = '', $default = null)
     $path = base_path('.env');
     if (!file_exists($path))
     {
-        return $default;
+        $path = base_path('.env.install');
     }
     static $config = [];
     if (!$config)

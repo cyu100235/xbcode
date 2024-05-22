@@ -27,10 +27,16 @@ class InstallUtil
         $database = $request->post('database');
         $redis    = $request->post('redis');
         $site     = $request->post('site');
+        $port     = xbEnv('APP_PORT');
         if (empty($database) || empty($site)) {
             return $this->fail('参数错误');
         }
-
+        if (!file_exists(base_path('.env.install'))) {
+            return $this->fail('.env.install安装文件不存在');
+        }
+        if (!$port) {
+            return $this->fail('系统端口号获取失败');
+        }
         if (empty($database['host'])) {
             return $this->fail('请输入主机地址');
         }
@@ -210,8 +216,11 @@ class InstallUtil
         $envPath    = base_path('/.env');
         // 读取配置文件
         $envConfig = file_get_contents($envTplPath);
+        // 获取端口号
+        $port = xbEnv('APP_PORT');
         // 替换配置文件参数
         $str1      = [
+            "{APP_PORT}",
             "{TYPE}",
             "{HOSTNAME}",
             "{DATABASE}",
@@ -225,6 +234,7 @@ class InstallUtil
             "{REDIS_PREFIX}"
         ];
         $str2      = [
+            $port,
             $database['type'],
             $database['host'],
             $database['database'],
@@ -240,6 +250,8 @@ class InstallUtil
         $envConfig = str_replace($str1, $str2, $envConfig);
         // 写入配置文件
         file_put_contents($envPath, $envConfig);
+        // 删除安装文件
+        @unlink(base_path('.env.install'));
         // 延迟1秒重启
         FrameUtil::pcntlAlarm(1, function () {
             // 重启服务
@@ -257,7 +269,7 @@ class InstallUtil
      */
     public static function hasInstall()
     {
-        if (file_exists(base_path('.env'))) {
+        if (file_exists(base_path('.env') && !file_exists(base_path('.env.install')))) {
             return true;
         }
         return false;
