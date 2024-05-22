@@ -1,6 +1,0 @@
-{
-    "title": "定时任务",
-    "name": "crontab",
-    "version": "1.0.0",
-    "depend": []
-}
