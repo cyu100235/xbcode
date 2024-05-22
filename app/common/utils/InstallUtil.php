@@ -206,7 +206,7 @@ class InstallUtil
         $redis    = Cache::get('install_redis');
         $database = Cache::get('install_database');
         // 读取模板文件
-        $envTplPath = app_path('data/env.tpl');
+        $envTplPath = app_path('common/data/env.tpl');
         $envPath    = base_path('/.env');
         // 读取配置文件
         $envConfig = file_get_contents($envTplPath);
