@@ -102,7 +102,7 @@ class IndexController
 {
     public function index(Request \$request)
     {
-        return view('index/index', ['name' => 'user']);
+        return view('index/index', ['name' => '$name']);
     }
 }
 EOF;
