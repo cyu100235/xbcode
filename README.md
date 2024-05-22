@@ -81,7 +81,7 @@ Swoole4 or Swoole5
 
 ### ⚡ 系统演示
 
-![后台界面](https://img.alicdn.com/imgextra/i4/2064565174/O1CN017FqDVa1o5k8DHfOBx_!!2064565174.jpg)
+![后台界面](https://xbase-1256522594.cos.ap-chongqing.myqcloud.com/demo.png)
 
 系统演示： http://demo.xiaobai.host/admin 账号：admin 密码：123456
 
