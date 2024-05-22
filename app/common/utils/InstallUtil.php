@@ -116,7 +116,7 @@ class InstallUtil
             return $this->fail('获取安装数据库配置失败');
         }
         // 获取SQL文件树
-        $sqlFiles = glob(app_path('data/sql/*.sql'));
+        $sqlFiles = glob(app_path('common/data/sql/*.sql'));
         // 检测全部数据表是否安装完成
         if ($total >= count($sqlFiles)) {
             return $this->successFul("安装数据库结构完成...", [
