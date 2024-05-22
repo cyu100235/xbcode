@@ -36,8 +36,6 @@ class RouteProvider
         Route::get('/install/protocol', '\app\controller\InstallController@protocol');
         // 环境检测
         Route::post('/install/environment', 'app\controller\InstallController@environment');
-        // 重启服务
-        Route::get('/install/reload', 'app\controller\InstallController@reload');
         // 安装完成
         Route::get('/install/complete', 'app\controller\InstallController@complete');
         // 注册文件路由

@@ -1,5 +1,5 @@
 APP_DEBUG = false
-APP_PORT = 39600
+APP_PORT = 39800
 
 DEFAULT_TIMEZONE = Asia/Shanghai
 

@@ -40,7 +40,7 @@ class InstallController extends XbController
         if (InstallUtil::hasInstall()) {
             return $this->success('success');
         }
-        $path = app_path('common/data/protocol.txt');
+        $path = app_path('common/data/protocol.md');
         $content = file_get_contents($path);
         return $this->successRes([
             'content'   => $content,
@@ -80,21 +80,6 @@ class InstallController extends XbController
         $class = new InstallUtil;
         // 调用安装工具
         return call_user_func([$class, $step], $request);
-    }
-
-    /**
-     * 重启服务
-     * @param \support\Request $request
-     * @return mixed
-     * @copyright 贵州小白基地网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
-     */
-    public function reload(Request $request)
-    {
-        // 重启服务
-        FrameUtil::reload();
-        // 返回数据
-        return $this->success('服务重启成功');
     }
 
     /**

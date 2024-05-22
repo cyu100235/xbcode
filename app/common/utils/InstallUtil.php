@@ -93,9 +93,9 @@ class InstallUtil
             return $this->fail('管理员密码不能小于6位或大于20位');
         }
         // 缓存数据
-        Cache::set('install_database', $database, 300);
-        Cache::set('install_redis', $redis, 300);
-        Cache::set('install_site', $site, 300);
+        Cache::set('install_database', $database, 30);
+        Cache::set('install_redis', $redis, 30);
+        Cache::set('install_site', $site, 30);
         // 返回数据
         return $this->success('success');
     }
@@ -158,10 +158,10 @@ class InstallUtil
      */
     public function database(Request $request)
     {
-        $site = Cache::get('install_site');
+        $site     = Cache::get('install_site');
         $database = Cache::get('install_database');
         // 实例操作类
-        $mysql   = new MysqlHelper(
+        $mysql    = new MysqlHelper(
             $database['username'],
             $database['password'],
             $database['database'],
@@ -170,7 +170,7 @@ class InstallUtil
             $database['prefix'],
             $database['charset']
         );
-        $connect = $mysql->getConnect();
+        $connect  = $mysql->getConnect();
         $dateTime = date('Y-m-d H:i:s');
         // 写入站点名称
         $connect->query("INSERT INTO `{$database['prefix']}settings` (`create_at`,`update_at`,`name`, `value`,`group`) VALUES ('{$dateTime}','{$dateTime}','web_name', '{$site['web_name']}','system')");
@@ -203,7 +203,7 @@ class InstallUtil
     public function config(Request $request)
     {
         // 获取参数
-        $redis = Cache::get('install_redis');
+        $redis    = Cache::get('install_redis');
         $database = Cache::get('install_database');
         // 读取模板文件
         $envTplPath = app_path('data/env.tpl');
@@ -240,6 +240,11 @@ class InstallUtil
         $envConfig = str_replace($str1, $str2, $envConfig);
         // 写入配置文件
         file_put_contents($envPath, $envConfig);
+        // 延迟1秒重启
+        FrameUtil::pcntlAlarm(1, function () {
+            // 重启服务
+            FrameUtil::reload();
+        });
         // 返回成功
         return $this->success('安装配置完成，3秒后跳转...');
     }
