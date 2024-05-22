@@ -272,7 +272,7 @@ class InstallUtil
      */
     public static function hasInstall()
     {
-        if (file_exists(base_path('.env') && !file_exists(base_path('.env.install')))) {
+        if (file_exists(base_path('.env')) && !file_exists(base_path('.env.install'))) {
             return true;
         }
         return false;
