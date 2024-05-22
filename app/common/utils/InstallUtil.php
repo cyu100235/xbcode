@@ -185,9 +185,12 @@ class InstallUtil
         $connect->query("INSERT INTO `{$database['prefix']}settings` (`create_at`,`update_at`,`name`, `value`,`group`) VALUES ('{$dateTime}','{$dateTime}','web_keywords', '站点关键词','system')");
         $connect->query("INSERT INTO `{$database['prefix']}settings` (`create_at`,`update_at`,`name`, `value`,`group`) VALUES ('{$dateTime}','{$dateTime}','web_description', '站点描述','system')");
         $connect->query("INSERT INTO `{$database['prefix']}settings` (`create_at`,`update_at`,`name`, `value`,`group`) VALUES ('{$dateTime}','{$dateTime}','web_logo', '','system')");
+
+        // 写入上传配置
+        $webUrl = rtrim($site['web_url'], '/');
         $connect->query("INSERT INTO `{$database['prefix']}settings` (`create_at`,`update_at`,`name`, `value`,`group`) VALUES ('{$dateTime}','{$dateTime}','active', 'public','upload')");
-        $connect->query("INSERT INTO `{$database['prefix']}settings` (`create_at`,`update_at`,`name`, `value`,`group`) VALUES ('{$dateTime}','{$dateTime}','public.root', '/uploads','upload')");
-        $connect->query("INSERT INTO `{$database['prefix']}settings` (`create_at`,`update_at`,`name`, `value`,`group`) VALUES ('{$dateTime}','{$dateTime}','public.url', '{$site['web_url']}','upload')");
+        $connect->query("INSERT INTO `{$database['prefix']}settings` (`create_at`,`update_at`,`name`, `value`,`group`) VALUES ('{$dateTime}','{$dateTime}','public.root', 'uploads','upload')");
+        $connect->query("INSERT INTO `{$database['prefix']}settings` (`create_at`,`update_at`,`name`, `value`,`group`) VALUES ('{$dateTime}','{$dateTime}','public.url', '{$webUrl}','upload')");
 
         // 写入管理员
         $site['password'] = PasswordUtil::passwordHash($site['password']);
