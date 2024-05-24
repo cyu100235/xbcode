@@ -481,7 +481,7 @@ class MenusController extends XbController
         ]);
         $builder->addRow('class', 'input', '执行方法', '', [
             'col'       => 24,
-            'prompt'    => '命名空间类@方法名，示例：\base\user\controller\IndexController@index',
+            'prompt'    => '命名空间类@方法名，示例：\plugin\user\controller\IndexController@index',
         ]);
         $builder->addRow('is_show', 'radio', '显示隐藏', '10', [
             'options' => ShowEnum::options(),
