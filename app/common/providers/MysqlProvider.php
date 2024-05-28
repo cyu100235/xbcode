@@ -5,7 +5,7 @@ use think\facade\Db;
 use Exception;
 
 /**
- * 数据库操作类
+ * 最方便的mysql操作类,可以便捷导入.sql文件和将数据库导出为.sql文件
  * @copyright 贵州小白基地网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
@@ -24,8 +24,8 @@ class MysqlProvider
     }
 
     /**
-     * 获取数据表
-     * @param string $name 表名
+     * 获取数据表结构
+     * @param string $name
      * @return mixed
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
@@ -38,6 +38,32 @@ class MysqlProvider
             throw new Exception("数据表不存在：{$name}");
         }
         return current($result);
+    }
+
+    /**
+     * 获取数据表字段
+     * @param string $name
+     * @return array
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public static function getColumns(string $name)
+    {
+        $result = Db::query("SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = '{$name}';");
+        $result = array_map(function ($item) {
+            // 获取字段长度
+            $length = $item['DATA_TYPE'] === 'int' ? $item['NUMERIC_PRECISION'] : $item['CHARACTER_MAXIMUM_LENGTH'];
+            return [
+                'name' => $item['COLUMN_NAME'],
+                'type' => $item['DATA_TYPE'],
+                'length' => $length,
+                'comment' => $item['COLUMN_COMMENT'],
+                'default' => $item['COLUMN_DEFAULT'],
+                'is_null' => $item['IS_NULLABLE'] === 'YES',
+                'is_auto' => $item['EXTRA'] === 'auto_increment',
+            ];
+        }, $result);
+        return $result;
     }
 
     /**
