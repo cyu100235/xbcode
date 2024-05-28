@@ -42,9 +42,9 @@ class MenusController extends XbController
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    protected function initialize()
+    protected function init()
     {
-        parent::initialize();
+        parent::init();
         $this->model = new AdminRule;
     }
 
@@ -70,7 +70,7 @@ class MenusController extends XbController
             ->addTopButton('add', '添加', [
                 'type' => 'modal',
                 'api' => xbUrl('Menus/add'),
-                'path' => xbUrl('Menus/add',[],false),
+                'path' => xbUrl('Menus/add', [], false),
             ], [
                 'title' => '添加菜单',
             ], [
@@ -79,7 +79,7 @@ class MenusController extends XbController
             ->addRightButton('edit', '修改', [
                 'type' => 'modal',
                 'api' => xbUrl('Menus/edit'),
-                'path' => xbUrl('Menus/edit',[],false),
+                'path' => xbUrl('Menus/edit', [], false),
             ], [
                 'title' => '修改菜单',
             ], [
@@ -95,14 +95,14 @@ class MenusController extends XbController
                 'title' => '温馨提示',
                 'content' => '是否确认删除该数据',
             ], [
-                'type'  => 'danger',
-                'icon'  => 'Close',
+                'type' => 'danger',
+                'icon' => 'Close',
             ])
             ->addColumn('title', '菜单名称', [
                 'treeNode' => true,
             ])
             ->addColumn('path', '路由地址')
-            ->addColumn('methods', '请求类型',[
+            ->addColumn('methods', '请求类型', [
                 'width' => 180,
             ])
             ->addColumnEle('icon', '菜单图标', [
@@ -152,8 +152,8 @@ class MenusController extends XbController
     {
         $model = $this->model;
         $data  = $model
-        ->order('sort asc,id asc')
-        ->select();
+            ->order('sort asc,id asc')
+            ->select();
         return $this->successRes($data);
     }
 
@@ -167,31 +167,27 @@ class MenusController extends XbController
      */
     public function add(Request $request)
     {
-        if ($request->method() === 'POST')
-        {
+        if ($request->method() === 'POST') {
             // 获取数据
             $post = $request->post();
             // 数据验证
             xbValidate(MenusValidate::class, $post, 'add');
             // 获取父级ID
-            $post['pid'] = is_array($post['pid']) ? end($post['pid']) : $post['pid'];
+            $post['pid']     = is_array($post['pid']) ? end($post['pid']) : $post['pid'];
             $post['methods'] = implode(',', $post['methods']);
             // 是否有子级菜单
             $children = $post['children'];
             unset($post['children']);
             // 开启事务
             Db::startTrans();
-            try
-            {
+            try {
                 $model = $this->model;
-                if (!$model->save($post))
-                {
+                if (!$model->save($post)) {
                     return $this->fail('添加失败');
                 }
                 // 获取ID
                 $post['id'] = $model->id;
-                if ($post['component'] === 'table/index')
-                {
+                if ($post['component'] === 'table/index') {
                     $appendMenus = [
                         [
                             'pid' => $post['id'],
@@ -219,16 +215,14 @@ class MenusController extends XbController
                 // 缓存路由
                 RouteProvider::cacheMenus();
                 // 延迟重启
-                FrameUtil::pcntlAlarm(2,function(){
+                FrameUtil::pcntlAlarm(2, function () {
                     // 重启服务
                     FrameUtil::reload();
                     p('服务重启完成...');
                 });
                 // 返回结果
                 return $this->success('添加成功');
-            }
-            catch (\Throwable $e)
-            {
+            } catch (\Throwable $e) {
                 Db::rollback();
                 return $this->fail($e->getMessage());
             }
@@ -267,19 +261,16 @@ class MenusController extends XbController
      */
     private function getMenusChildren(array $children, array $parent)
     {
-        if (empty($children))
-        {
+        if (empty($children)) {
             return [];
         }
         $data = [];
-        foreach ($children as $value)
-        {
+        foreach ($children as $value) {
             // 删除多余字符串
-            $parentPath = str_replace('/index','', $parent['path']);
-            $classPath = str_replace('@index','', $parent['class']);
+            $parentPath = str_replace('/index', '', $parent['path']);
+            $classPath  = str_replace('@index', '', $parent['class']);
             // 添加
-            if ($value === 'add')
-            {
+            if ($value === 'add') {
                 $item = [
                     'pid' => $parent['id'],
                     'title' => "{$parent['title']}-添加",
@@ -297,8 +288,7 @@ class MenusController extends XbController
                 array_push($data, $item);
             }
             // 修改
-            if ($value === 'edit')
-            {
+            if ($value === 'edit') {
                 $item = [
                     'pid' => $parent['id'],
                     'title' => "{$parent['title']}-修改",
@@ -316,8 +306,7 @@ class MenusController extends XbController
                 array_push($data, $item);
             }
             // 删除
-            if ($value === 'del')
-            {
+            if ($value === 'del') {
                 $item = [
                     'pid' => $parent['id'],
                     'title' => "{$parent['title']}-删除",
@@ -350,29 +339,26 @@ class MenusController extends XbController
     {
         $id    = $request->get('id');
         $model = $this->model;
-        $model = $model->find((int)$id);
-        if (!$model)
-        {
+        $model = $model->find((int) $id);
+        if (!$model) {
             return $this->fail('数据不存在');
         }
-        if ($request->method() === 'PUT')
-        {
+        if ($request->method() === 'PUT') {
             // 获取数据
             $post = $request->post();
             // 数据验证
             xbValidate(MenusValidate::class, $post, 'edit');
             // 获取父级ID
-            $post['pid'] = is_array($post['pid']) ? end($post['pid']) : $post['pid'];
+            $post['pid']     = is_array($post['pid']) ? end($post['pid']) : $post['pid'];
             $post['methods'] = implode(',', $post['methods']);
             // 保存数据
-            if (!$model->save($post))
-            {
+            if (!$model->save($post)) {
                 return $this->fail('修改失败');
             }
             // 缓存路由
             RouteProvider::cacheMenus();
             // 延迟重启
-            FrameUtil::pcntlAlarm(2,function(){
+            FrameUtil::pcntlAlarm(2, function () {
                 // 重启服务
                 FrameUtil::reload();
                 p('服务重启完成...');
@@ -380,12 +366,12 @@ class MenusController extends XbController
             // 返回结果
             return $this->success('修改成功');
         }
-        $data             = $model->toArray();
+        $data            = $model->toArray();
         $data['methods'] = explode(',', $data['methods']);
-        $data = $this->formView()
-        ->setMethod('PUT')
-        ->setFormData($data)
-        ->create();
+        $data            = $this->formView()
+            ->setMethod('PUT')
+            ->setFormData($data)
+            ->create();
         return $this->successRes($data);
     }
 
@@ -401,16 +387,14 @@ class MenusController extends XbController
     {
         $id    = $request->post('id');
         $model = $this->model;
-        $model = $model->find((int)$id);
-        if (!$model)
-        {
+        $model = $model->find((int) $id);
+        if (!$model) {
             return $this->fail('数据不存在');
         }
         if ($model['is_system'] === '20') {
             return $this->fail('系统菜单不允许删除');
         }
-        if (!$model->delete())
-        {
+        if (!$model->delete()) {
             return $this->fail('删除失败');
         }
         // 缓存路由
@@ -480,8 +464,8 @@ class MenusController extends XbController
             'col' => 12,
         ]);
         $builder->addRow('class', 'input', '执行方法', '', [
-            'col'       => 24,
-            'prompt'    => '命名空间类@方法名，示例：\plugin\user\controller\IndexController@index',
+            'col' => 24,
+            'prompt' => '命名空间类@方法名，示例：\plugin\user\controller\IndexController@index',
         ]);
         $builder->addRow('is_show', 'radio', '显示隐藏', '10', [
             'options' => ShowEnum::options(),

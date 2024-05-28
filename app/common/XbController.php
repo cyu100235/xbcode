@@ -15,7 +15,7 @@ class XbController
      */
     public function __construct()
     {
-        $this->initialize();
+        $this->init();
     }
 
     /**
@@ -24,10 +24,10 @@ class XbController
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    protected function initialize()
+    protected function init()
     {
     }
-    
+
     /**
      * 渲染系统视图
      * @param string $file
@@ -49,6 +49,6 @@ class XbController
         if (!$content) {
             throw new \Exception('系统视图资源文件内容为空');
         }
-        return (string)$content;
+        return (string) $content;
     }
 }

@@ -36,7 +36,7 @@ class XbPluginCreateCommand extends Command
         }
 
         // Create dir config/plugin/$name
-        if (is_dir($plugin_config_path = base_path()."/plugin/$name")) {
+        if (is_dir($plugin_config_path = base_path() . "/plugin/$name")) {
             $output->writeln("<error>Dir $plugin_config_path already exists</error>");
             return self::FAILURE;
         }
@@ -97,9 +97,10 @@ class XbPluginCreateCommand extends Command
 <?php
 namespace plugin\\$name\\app\\controller;
 
+use app\common\XbController;
 use support\\Request;
 
-class IndexController
+class IndexController extends XbController
 {
     public function index(Request \$request)
     {
@@ -167,11 +168,11 @@ EOF;
      */
     protected function createInfoFiles($basePath, $name)
     {
-        $data = [
-            'title'     => '基础插件系统',
-            'name'      => $name,
-            'version'   => '1.0.0',
-            'depend'    => [],
+        $data    = [
+            'title' => '基础插件系统',
+            'name' => $name,
+            'version' => '1.0.0',
+            'depend' => [],
         ];
         $content = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
         file_put_contents("$basePath/info.json", $content);
