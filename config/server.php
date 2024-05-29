@@ -1,6 +1,6 @@
 <?php
 return [
-    'listen' => 'http://0.0.0.0:'.xbEnv('APP_PORT', 39800),
+    'listen' => 'http://0.0.0.0:' . xbEnv('APP_PORT', 39600),
     'transport' => 'tcp',
     'context' => [],
     'name' => 'xbase',
