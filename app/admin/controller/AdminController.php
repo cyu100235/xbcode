@@ -3,10 +3,9 @@ namespace app\admin\controller;
 
 use app\common\builder\FormBuilder;
 use app\common\builder\ListBuilder;
+use app\common\providers\DictProvider;
 use app\model\AdminRole;
 use app\common\providers\UploadProvider;
-use app\common\utils\enum\BanEnum;
-use app\common\utils\enum\BanStyle;
 use app\admin\validate\AdminValidate;
 use hg\apidoc\annotation as Apidoc;
 use Tinywan\Jwt\JwtToken;
@@ -32,22 +31,22 @@ class AdminController extends XbController
     {
         $builder = new ListBuilder;
         $builder->addActionOptions('操作', [
-                'width' => 180
+            'width' => 180
         ]);
         $builder->pageConfig();
         $builder->addTopButton('add', '添加', [
-                'type' => 'modal',
-                'api' => 'Admin/add',
-                'path' => 'Admin/add',
-            ], [
-                'title' => '添加管理员',
-            ], [
-                'type' => 'primary'
-            ]);
+            'type' => 'modal',
+            'api' => xbUrl('Admin/add'),
+            'path' => xbUrl('Admin/add'),
+        ], [
+            'title' => '添加管理员',
+        ], [
+            'type' => 'primary'
+        ]);
         $builder->addRightButton('edit', '修改', [
             'type' => 'modal',
-            'api' => 'Admin/edit',
-            'path' => 'Admin/edit',
+            'api' => xbUrl('Admin/edit'),
+            'path' => xbUrl('Admin/edit'),
         ], [
             'title' => '修改管理员信息',
         ], [
@@ -55,7 +54,7 @@ class AdminController extends XbController
         ]);
         $builder->addRightButton('del', '删除', [
             'type' => 'confirm',
-            'api' => 'Admin/del',
+            'api' => xbUrl('Admin/del'),
             'method' => 'delete',
         ], [
             'type' => 'error',
@@ -78,8 +77,8 @@ class AdminController extends XbController
             'width' => 90,
             'params' => [
                 'type' => 'tags',
-                'options' => BanEnum::dict(),
-                'style' => BanStyle::labelMap('type', false),
+                'options' => DictProvider::get('banText')->dict(),
+                'style' => DictProvider::get('banStyle')->style(),
             ],
         ]);
         $data = $builder->create();
@@ -96,7 +95,7 @@ class AdminController extends XbController
     public function index(Request $request)
     {
         $adminId = JwtToken::getCurrentId();
-        $data = Admin::with(['role'])
+        $data    = Admin::with(['role'])
             ->where('admin_id', $adminId)
             ->paginate()
             ->toArray();
@@ -113,9 +112,8 @@ class AdminController extends XbController
     public function add(Request $request)
     {
         $adminId = JwtToken::getCurrentId();
-        if ($request->method() == 'POST')
-        {
-            $post        = $request->post();
+        if ($request->method() == 'POST') {
+            $post             = $request->post();
             $post['admin_id'] = $adminId;
 
             // 数据验证
@@ -125,13 +123,11 @@ class AdminController extends XbController
             $where = [
                 'username' => $post['username']
             ];
-            if (Admin::where($where)->count())
-            {
+            if (Admin::where($where)->count()) {
                 return $this->fail('该登录账号已存在');
             }
             $model = new Admin;
-            if (!$model->save($post))
-            {
+            if (!$model->save($post)) {
                 return $this->fail('保存失败');
             }
             return $this->success('保存成功');
@@ -152,26 +148,22 @@ class AdminController extends XbController
      */
     public function edit(Request $request)
     {
-        $id       = $request->get('id');
-        $model    = Admin::where('id', $id)->find();
-        if (!$model)
-        {
+        $id    = $request->get('id');
+        $model = Admin::where('id', $id)->find();
+        if (!$model) {
             return $this->fail('该数据不存在');
         }
-        if ($request->method() == 'PUT')
-        {
+        if ($request->method() == 'PUT') {
             $post = $request->post();
 
             // 数据验证
             xbValidate(AdminValidate::class, $post, 'edit');
 
             // 空密码，不修改
-            if (empty($post['password']))
-            {
+            if (empty($post['password'])) {
                 unset($post['password']);
             }
-            if (!$model->save($post))
-            {
+            if (!$model->save($post)) {
                 return $this->fail('保存失败');
             }
             return $this->success('保存成功');
@@ -194,8 +186,7 @@ class AdminController extends XbController
     public function del(Request $request)
     {
         $id = $request->post('id');
-        if (!Admin::where('id', $id)->delete())
-        {
+        if (!Admin::where('id', $id)->delete()) {
             return $this->fail('删除失败');
         }
         return $this->success('删除成功');
@@ -213,24 +204,20 @@ class AdminController extends XbController
     {
         $adminId = JwtToken::getCurrentId();
         $model   = Admin::where('id', $adminId)->find();
-        if (!$model)
-        {
+        if (!$model) {
             return $this->fail('该数据不存在');
         }
-        if ($request->method() == 'PUT')
-        {
+        if ($request->method() == 'PUT') {
             $post = $request->post();
 
             // 数据验证
             xbValidate(AdminValidate::class, $post, 'editSelf');
 
             // 空密码，不修改
-            if (empty($post['password']))
-            {
+            if (empty($post['password'])) {
                 unset($post['password']);
             }
-            if (!$model->save($post))
-            {
+            if (!$model->save($post)) {
                 return $this->fail('保存失败');
             }
             return $this->success('保存成功');
@@ -268,15 +255,15 @@ class AdminController extends XbController
      */
     private function formView()
     {
-        $adminId = (int)JwtToken::getCurrentId();
+        $adminId = (int) JwtToken::getCurrentId();
         $builder = new FormBuilder;
         $builder->addRow('role_id', 'select', '所属角色', '', [
             'col' => 12,
-            'options' => AdminRole::getOptions((int)$adminId)
+            'options' => AdminRole::getOptions((int) $adminId)
         ]);
         $builder->addRow('state', 'radio', '用户状态', '20', [
             'col' => 12,
-            'options' => BanEnum::options()
+            'options' => DictProvider::get('banText')->options(),
         ]);
         $builder->addRow('username', 'input', '登录账号', '', [
             'col' => 12,

@@ -1,7 +1,7 @@
 <?php
 namespace app\common\providers\menus;
 
-use app\common\utils\enum\MenuComponent;
+use app\common\providers\DictProvider;
 use app\common\utils\DataUtil;
 
 /**
@@ -45,7 +45,7 @@ trait CascaderTrait
         $list = [];
         $i    = 0;
         foreach ($data as $value) {
-            $componentText        = MenuComponent::getLabel($value['component']);
+            $componentText        = DictProvider::get('componentText')->getLabel($value['component']);
             $title                = "{$value['title']}-{$componentText}";
             $list[$i]['label']    = $title;
             $list[$i]['value']    = $value['id'];

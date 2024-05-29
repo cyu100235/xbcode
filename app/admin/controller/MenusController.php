@@ -3,18 +3,14 @@ namespace app\admin\controller;
 
 use app\admin\validate\MenusValidate;
 use app\common\builder\table\RowEditTrait;
+use app\common\providers\DictProvider;
 use app\common\providers\RouteProvider;
-use app\common\utils\enum\MenuComponentStyle;
-use app\common\utils\enum\MethodsEnum;
 use app\common\utils\FrameUtil;
 use hg\apidoc\annotation as Apidoc;
 use app\common\builder\FormBuilder;
 use app\common\builder\ListBuilder;
 use app\model\AdminRule;
 use app\common\providers\MenuProvider;
-use app\common\utils\enum\MenuComponent;
-use app\common\utils\enum\ShowEnum;
-use app\common\utils\enum\ShowStyle;
 use FormBuilder\Factory\Elm;
 use support\Request;
 use app\common\XbController;
@@ -70,7 +66,7 @@ class MenusController extends XbController
             ->addTopButton('add', '添加', [
                 'type' => 'modal',
                 'api' => xbUrl('Menus/add'),
-                'path' => xbUrl('Menus/add', [], false),
+                'path' => xbUrl('Menus/add'),
             ], [
                 'title' => '添加菜单',
             ], [
@@ -79,7 +75,7 @@ class MenusController extends XbController
             ->addRightButton('edit', '修改', [
                 'type' => 'modal',
                 'api' => xbUrl('Menus/edit'),
-                'path' => xbUrl('Menus/edit', [], false),
+                'path' => xbUrl('Menus/edit'),
             ], [
                 'title' => '修改菜单',
             ], [
@@ -116,16 +112,16 @@ class MenusController extends XbController
                 'params' => [
                     'type' => 'switch',
                     'api' => xbUrl('Menus/rowEdit'),
-                    'unchecked' => ShowEnum::getActiveEnum('SHOW_NO', 'text'),
-                    'checked' => ShowEnum::getActiveEnum('SHOW_YES', 'text'),
+                    'unchecked' => DictProvider::get('yesNoText')->switch('10'),
+                    'checked' => DictProvider::get('yesNoText')->switch('20'),
                 ],
             ])
             ->addColumnEle('component', '组件类型', [
                 'width' => 120,
                 'params' => [
                     'type' => 'tags',
-                    'options' => MenuComponent::dict(),
-                    'style' => MenuComponentStyle::labelMap('type', false),
+                    'options' => DictProvider::get('componentText')->dict(),
+                    'style' => DictProvider::get('componentStyle')->style(),
                 ],
             ])
             ->addColumnEdit('sort', '排序', [
@@ -428,7 +424,7 @@ class MenusController extends XbController
             ],
         ]);
         $builder->addRow('component', 'select', '菜单类型', 'none/index', [
-            'options' => MenuComponent::options(),
+            'options' => DictProvider::get('componentText')->options(),
             'col' => 12,
             // 使用联动组件
             'control' => [
@@ -468,11 +464,11 @@ class MenusController extends XbController
             'prompt' => '命名空间类@方法名，示例：\plugin\user\controller\IndexController@index',
         ]);
         $builder->addRow('is_show', 'radio', '显示隐藏', '10', [
-            'options' => ShowEnum::options(),
+            'options' => DictProvider::get('showText')->options(),
             'col' => 12,
         ]);
         $builder->addRow('methods', 'checkbox', '请求类型', ['GET'], [
-            'options' => MethodsEnum::options(),
+            'options' => DictProvider::get('methodsText')->options(),
             'col' => 12,
         ]);
         $builder->addRow('icon', 'icons', '菜单图标', '', [

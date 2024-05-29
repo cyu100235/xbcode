@@ -16,11 +16,11 @@ CREATE TABLE `xb_admin_rule`  (
   `params` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '菜单参数',
   `sort` int(11) NULL DEFAULT 100 COMMENT '菜单排序（值越大，越靠后）',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 267 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统-角色菜单' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 274 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统-角色菜单' ROW_FORMAT = DYNAMIC;
 
-INSERT INTO `xb_admin_rule` VALUES (1, '2024-03-27 15:57:10', '2024-05-05 16:27:01', '首页', 'Index/group', '', 0, 'none/index', '20', '20', '20', 'GET', 'HomeFilled', '', 1);
-INSERT INTO `xb_admin_rule` VALUES (2, '2024-03-27 15:57:58', '2024-04-30 16:43:12', '权限', 'Auth/group', NULL, 0, 'none/index', '20', '10', '10', 'GET', 'Connection', NULL, 7777);
-INSERT INTO `xb_admin_rule` VALUES (3, '2024-03-27 15:58:24', '2024-03-27 16:28:00', '系统', 'System/group', NULL, 0, 'none/index', '20', '10', '10', 'GET', 'Setting', NULL, 9999);
+INSERT INTO `xb_admin_rule` VALUES (1, '2024-03-27 15:57:10', '2024-05-29 11:30:40', '首页', 'home', '', 0, 'none/index', '20', '20', '20', 'GET', 'HomeFilled', '', 1);
+INSERT INTO `xb_admin_rule` VALUES (2, '2024-03-27 15:57:58', '2024-05-29 11:30:54', '权限', 'auth', '', 0, 'none/index', '20', '10', '10', 'GET', 'Connection', '', 7777);
+INSERT INTO `xb_admin_rule` VALUES (3, '2024-03-27 15:58:24', '2024-05-29 11:31:02', '系统', 'setting', '', 0, 'none/index', '20', '10', '10', 'GET', 'Setting', '', 9999);
 INSERT INTO `xb_admin_rule` VALUES (5, '2024-03-27 16:00:15', '2024-05-05 16:27:19', '工作台', 'Index/index', '', 1, 'remote/index', '20', '20', '20', 'GET', '', 'vue/admin/welcome', 0);
 INSERT INTO `xb_admin_rule` VALUES (6, '2024-03-27 16:00:53', '2024-03-27 17:19:43', '系统登录', 'admin/Login/login', '\\app\\admin\\controller\\LoginController@login', 1, 'none/index', '10', '20', '20', 'POST', '', NULL, 0);
 INSERT INTO `xb_admin_rule` VALUES (7, '2024-03-27 16:01:30', '2024-05-05 16:24:13', '获取应用信息', 'admin/Index/site', '\\app\\admin\\controller\\IndexController@site', 1, 'none/index', '10', '20', '20', 'GET', '', '', 0);
@@ -48,13 +48,13 @@ INSERT INTO `xb_admin_rule` VALUES (31, '2024-03-27 16:20:43', '2024-05-05 16:37
 INSERT INTO `xb_admin_rule` VALUES (32, '2024-03-27 16:21:44', '2024-04-19 11:49:44', '账号管理-资料', 'admin/Admin/info', '\\app\\admin\\controller\\AdminController@info', 16, 'form/index', '10', '10', '10', 'GET', '', '', 0);
 INSERT INTO `xb_admin_rule` VALUES (33, '2024-03-27 16:22:57', '2024-05-05 16:38:30', '系统设置', 'admin/Settings/config', '\\app\\admin\\controller\\SettingsController@config', 3, 'form/index', '20', '10', '10', 'GET,PUT', '', 'group=system', 1);
 INSERT INTO `xb_admin_rule` VALUES (34, '2024-03-27 16:23:32', '2024-05-05 16:38:34', '上传设置', 'admin/Settings/selected', '\\app\\admin\\controller\\SettingsController@selected', 3, 'form/index', '20', '10', '10', 'GET,PUT', '', 'group=upload', 2);
-INSERT INTO `xb_admin_rule` VALUES (35, '2024-03-27 16:44:02', '2024-05-04 01:34:27', '插件', 'Plugins/group', NULL, 0, 'none/index', '20', '10', '10', 'GET', 'ElemeFilled', NULL, 2);
+INSERT INTO `xb_admin_rule` VALUES (35, '2024-03-27 16:44:02', '2024-05-29 11:31:13', '插件', 'plugin', '', 0, 'none/index', '20', '10', '10', 'GET', 'ElemeFilled', '', 2);
 INSERT INTO `xb_admin_rule` VALUES (46, '2024-03-27 16:47:45', '2024-04-11 20:47:57', '插件管理', 'admin/Plugins/index', '\\app\\admin\\controller\\PluginsController@index', 35, 'table/index', '20', '10', '10', 'GET', '', '', 0);
 INSERT INTO `xb_admin_rule` VALUES (47, '2024-03-27 16:47:45', '2024-03-27 16:47:45', '插件管理-表格', 'admin/Plugins/indexTable', '\\app\\admin\\controller\\PluginsController@indexTable', 46, 'none/index', '10', '10', '10', 'GET', '', '', 0);
 INSERT INTO `xb_admin_rule` VALUES (48, '2024-03-27 16:47:45', '2024-05-05 16:36:24', '插件管理-演示', 'admin/Plugins/demo', '\\app\\admin\\controller\\PluginsController@demo', 46, 'none/index', '10', '10', '10', 'GET', '', '', 0);
 INSERT INTO `xb_admin_rule` VALUES (49, '2024-03-27 16:47:45', '2024-05-14 22:57:24', '插件管理-安装', 'admin/Plugins/install', '\\app\\admin\\controller\\PluginsController@install', 46, 'none/index', '10', '10', '10', 'GET,POST', '', '', 0);
 INSERT INTO `xb_admin_rule` VALUES (50, '2024-03-27 16:47:45', '2024-05-05 16:36:36', '插件管理-卸载', 'admin/Plugins/uninstall', '\\app\\admin\\controller\\PluginsController@uninstall', 46, 'none/index', '10', '10', '10', 'DELETE', '', '', 0);
-INSERT INTO `xb_admin_rule` VALUES (155, '2024-05-05 17:12:46', '2024-05-05 17:15:37', '附件管理', 'admin/Uploadify/index', '\\app\\admin\\controller\\UploadifyController@index', 3, 'table/index', '10', '10', '10', 'GET', '', '', 999);
+INSERT INTO `xb_admin_rule` VALUES (155, '2024-05-05 17:12:46', '2024-05-29 11:31:27', '附件管理', 'admin/Uploadify/index', '\\app\\admin\\controller\\UploadifyController@index', 267, 'table/index', '10', '10', '10', 'GET', '', '', 999);
 INSERT INTO `xb_admin_rule` VALUES (156, '2024-05-05 17:12:46', '2024-05-05 17:12:46', '附件管理-表格', 'admin/Uploadify/indexTable', '\\app\\admin\\controller\\UploadifyController@indexTable', 155, 'none/index', '10', '10', '10', 'GET', '', NULL, 0);
 INSERT INTO `xb_admin_rule` VALUES (157, '2024-05-05 17:12:46', '2024-05-05 17:12:46', '附件管理-添加', 'admin/Uploadify/add', '\\app\\admin\\controller\\UploadifyController@add', 155, 'form/index', '10', '10', '10', 'GET,POST', '', '', 0);
 INSERT INTO `xb_admin_rule` VALUES (158, '2024-05-05 17:12:46', '2024-05-05 17:12:46', '附件管理-修改', 'admin/Uploadify/edit', '\\app\\admin\\controller\\UploadifyController@edit', 155, 'form/index', '10', '10', '10', 'GET,PUT', '', '', 0);
@@ -72,3 +72,10 @@ INSERT INTO `xb_admin_rule` VALUES (170, '2024-05-13 13:01:39', '2024-05-13 13:0
 INSERT INTO `xb_admin_rule` VALUES (171, '2024-05-13 13:02:46', '2024-05-13 13:02:59', '用户登录', 'admin/Cloud/login', '\\app\\admin\\controller\\CloudController@login', 169, 'none/index', '10', '10', '10', 'POST', '', '', 0);
 INSERT INTO `xb_admin_rule` VALUES (234, '2024-05-17 10:46:50', '2024-05-17 10:46:50', '插件管理-详情', 'admin/Plugins/detail', '\\app\\admin\\controller\\PluginsController@detail', 46, 'remote/index', '10', '10', '10', 'GET', '', 'vue/admin/plugins/detail', 0);
 INSERT INTO `xb_admin_rule` VALUES (266, '2024-05-20 14:45:13', '2024-05-20 14:45:13', '插件管理-配置', 'admin/Plugins/config', '\\app\\admin\\controller\\PluginsController@config', 46, 'form/index', '10', '10', '10', 'GET,PUT', '', '', 0);
+INSERT INTO `xb_admin_rule` VALUES (267, '2024-05-29 11:29:19', '2024-05-29 11:29:39', '数据', 'data', '', 0, 'none/index', '20', '10', '10', 'GET', 'Coin', '', 8888);
+INSERT INTO `xb_admin_rule` VALUES (268, '2024-05-29 11:32:43', '2024-05-29 11:32:43', '字典管理', 'admin/Dict/index', '\\app\\admin\\controller\\DictController@index', 267, 'table/index', '20', '10', '10', 'GET', '', '', 0);
+INSERT INTO `xb_admin_rule` VALUES (269, '2024-05-29 11:32:43', '2024-05-29 11:32:43', '字典管理-表格', 'admin/Dict/indexTable', '\\app\\admin\\controller\\DictController@indexTable', 268, 'none/index', '10', '10', '10', 'GET', '', NULL, 0);
+INSERT INTO `xb_admin_rule` VALUES (270, '2024-05-29 11:32:43', '2024-05-29 11:32:43', '字典管理-添加', 'admin/Dict/add', '\\app\\admin\\controller\\DictController@add', 268, 'form/index', '10', '10', '10', 'GET,POST', '', '', 0);
+INSERT INTO `xb_admin_rule` VALUES (271, '2024-05-29 11:32:43', '2024-05-29 11:32:43', '字典管理-修改', 'admin/Dict/edit', '\\app\\admin\\controller\\DictController@edit', 268, 'form/index', '10', '10', '10', 'GET,PUT', '', '', 0);
+INSERT INTO `xb_admin_rule` VALUES (272, '2024-05-29 11:32:43', '2024-05-29 11:32:43', '字典管理-删除', 'admin/Dict/del', '\\app\\admin\\controller\\DictController@del', 268, 'none/index', '10', '10', '10', 'DELETE', '', '', 0);
+INSERT INTO `xb_admin_rule` VALUES (273, '2024-05-29 15:26:15', '2024-05-29 15:38:08', '字典管理-编辑列', 'admin/Dict/rowEdit', '\\app\\admin\\controller\\DictController@rowEdit', 268, 'none/index', '10', '10', '10', 'GET,PUT', '', '', 0);

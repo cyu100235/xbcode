@@ -3,10 +3,9 @@ namespace app\admin\controller;
 
 use app\common\builder\FormBuilder;
 use app\common\builder\ListBuilder;
+use app\common\providers\DictProvider;
 use app\model\AdminRole;
 use app\common\providers\UploadProvider;
-use app\common\utils\enum\BanEnum;
-use app\common\utils\enum\BanStyle;
 use app\admin\validate\AdminValidate;
 use hg\apidoc\annotation as Apidoc;
 use Tinywan\Jwt\JwtToken;
@@ -69,8 +68,8 @@ class UploadifyController extends XbController
             'width' => 90,
             'params' => [
                 'type' => 'tags',
-                'options' => BanEnum::dict(),
-                'style' => BanStyle::labelMap('type', false),
+                'options' => DictProvider::get('banText')->dict(),
+                'style' => DictProvider::get('banStyle')->style(),
             ],
         ]);
         $data = $builder->create();
@@ -255,7 +254,7 @@ class UploadifyController extends XbController
         ]);
         $builder->addRow('state', 'radio', '用户状态', '20', [
             'col' => 12,
-            'options' => BanEnum::options()
+            'options' => DictProvider::get('banText')->options(),
         ]);
         $builder->addRow('username', 'input', '登录账号', '', [
             'col' => 12,

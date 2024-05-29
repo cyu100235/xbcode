@@ -37,8 +37,8 @@ class AdminRoleController extends XbController
             ->pageConfig()
             ->addTopButton('add', '添加', [
                 'type' => 'modal',
-                'api' => 'AdminRole/add',
-                'path' => 'AdminRole/add',
+                'api' => xbUrl('AdminRole/add'),
+                'path' => xbUrl('AdminRole/add'),
             ], [
                 'title' => '添加角色',
             ], [
@@ -46,8 +46,8 @@ class AdminRoleController extends XbController
             ])
             ->addRightButton('auth', '授权', [
                 'type' => 'modal',
-                'api' => 'AdminRole/auth',
-                'path' => 'AdminRole/auth',
+                'api' => xbUrl('AdminRole/auth'),
+                'path' => xbUrl('AdminRole/auth'),
             ], [
                 'title' => '权限设置',
             ], [
@@ -55,14 +55,14 @@ class AdminRoleController extends XbController
             ])
             ->addRightButton('edit', '修改', [
                 'type' => 'modal',
-                'api' => 'AdminRole/edit',
-                'path' => 'AdminRole/edit',
+                'api' => xbUrl('AdminRole/edit'),
+                'path' => xbUrl('AdminRole/edit'),
             ], [], [
                 'type' => 'primary',
             ])
             ->addRightButton('del', '删除', [
                 'type' => 'confirm',
-                'api' => 'AdminRole/del',
+                'api' => xbUrl('AdminRole/del'),
                 'method' => 'delete',
             ], [
                 'type' => 'error',

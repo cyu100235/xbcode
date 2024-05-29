@@ -2,7 +2,7 @@
 
 namespace app\common\providers\upload;
 
-use app\common\utils\enum\UploadFileEnum;
+use app\common\providers\DictProvider;
 use app\common\providers\ConfigProvider;
 use app\model\Upload;
 use Exception;
@@ -28,8 +28,8 @@ trait BaseUpload
         if (!$adapter) {
             $adapter = ConfigProvider::get('upload', 'selected_active');
         }
-        $where['adapter']  = $adapter;
-        $model = Upload::where($where)->find();
+        $where['adapter'] = $adapter;
+        $model            = Upload::where($where)->find();
         if ($model) {
             $model->update_at = date('Y-m-d H:i:s');
             $model->save();
@@ -38,7 +38,7 @@ trait BaseUpload
         }
         return [];
     }
-    
+
     /**
      * 获取储存目录
      * @param string $extension
@@ -48,16 +48,17 @@ trait BaseUpload
      */
     protected static function getUploadDir(string $extension)
     {
-        $uploadEnum = UploadFileEnum::toArray();
-        $dateTime   = date('Ymd');
-        foreach ($uploadEnum as $value) {
-            if (in_array($extension, $value['format'])) {
-                return "uploads/{$value['value']}/{$dateTime}";
+        $uploadFormat = DictProvider::get('uploadFileFormat')->dict();
+        $dateTime     = date('Ymd');
+        foreach ($uploadFormat as $name => $value) {
+            $format = explode(',', $value);
+            if (in_array($extension, $format)) {
+                return "uploads/{$name}/{$dateTime}";
             }
         }
         return '';
     }
-    
+
     /**
      * 获取附件库配置项
      * @throws \Exception
@@ -67,15 +68,15 @@ trait BaseUpload
      */
     public static function getConfig()
     {
-        $config = ConfigProvider::get('upload','',[]);
-        $active = $config['selected_active'] ?? 'local';
+        $config   = ConfigProvider::get('upload', '', []);
+        $active   = $config['selected_active'] ?? 'local';
         $settings = $config[$active] ?? [];
         if (empty($settings)) {
             throw new Exception('请先设置附件库上传设置');
         }
         return [
-            'active'        => $active,
-            'config'        => $config
+            'active' => $active,
+            'config' => $config
         ];
     }
 
@@ -138,13 +139,13 @@ trait BaseUpload
         $size = filesize($fullPath);
         // 组装数据
         $data = [
-            'dir_name'      => $dir_name,
-            'title'         => $info['basename'],
-            'filename'      => $info['filename'],
-            'format'        => $info['extension'],
-            'adapter'       => $drive,
-            'size'          => $size,
-            'path'          => $path,
+            'dir_name' => $dir_name,
+            'title' => $info['basename'],
+            'filename' => $info['filename'],
+            'format' => $info['extension'],
+            'adapter' => $drive,
+            'size' => $size,
+            'path' => $path,
         ];
         return self::addFileInfo($data);
     }
