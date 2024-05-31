@@ -97,7 +97,7 @@ class XbPluginCreateCommand extends Command
 <?php
 namespace plugin\\$name\\app\\controller;
 
-use app\common\XbController;
+use app\\common\\XbController;
 use support\\Request;
 
 class IndexController extends XbController
@@ -217,15 +217,16 @@ class Install
     public function install()
     {
         // 创建菜单
-        // \$this->createMenus();
+        \$this->createMenus();
         
-        // 导入SQL
-        \$sql = __DIR__ . '/data/install.sql';
+        // 导入安装SQL
+        // \$sql = __DIR__ . '/data/install.sql';
+        // MysqlProvider::importSql(\$sql);
     }
 
     /**
      * 创建菜单
-     * @return void
+     * @return bool
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
@@ -255,6 +256,7 @@ class Install
         \$menus = array_values(\$menus);
         // 批量创建子菜单
         MenuProvider::createMenus(\$pid, \$menus);
+        return true;
     }
 
     /**
@@ -275,8 +277,9 @@ class Install
      */
     public function updateBefore()
     {
-        // 导入SQL
-        \$sql = __DIR__ . '/data/update.sql';
+        // 导入更新SQL
+        // \$sql = __DIR__ . '/data/update.sql';
+        // MysqlProvider::importSql(\$sql);
     }
 
     /**
@@ -317,11 +320,32 @@ class Install
      */
     public function uninstall()
     {
-        // 删除菜单
-        MenuProvider::delMenu('');
-        // 导入SQL
-        \$sql = __DIR__ . '/data/uninstall.sql';
-        p('正在卸载');
+        // 卸载菜单数据
+        \$this->delMenu();
+
+        // 导入卸载SQL
+        // \$sql = __DIR__ . '/data/uninstall.sql';
+        // MysqlProvider::importSql(\$sql);
+    }
+
+    /**
+     * 卸载菜单数据
+     * @return void
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    protected function delMenu()
+    {
+        // 获取菜单数据
+        \$menus = config('plugin.goods.menus', []);
+        if (\$menus) {
+            // 执行倒序
+            \$menus = array_reverse(\$menus);
+            // 获取菜单KEY
+            \$keys = array_column(\$menus, 'path');
+            // 删除菜单
+            MenuProvider::delMenus(\$keys);
+        }
     }
 
     /**

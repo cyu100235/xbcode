@@ -62,7 +62,7 @@ trait MenuActionTrait
             throw new Exception('请求类型不能为空');
         }
         // 检测菜单是否已存在
-        $model = self::findMenu($data['path']);
+        $model = AdminRule::where('path', $data['path'])->find();
         if ($model) {
             return $model->id;
         }
