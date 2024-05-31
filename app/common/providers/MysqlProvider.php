@@ -146,6 +146,45 @@ class MysqlProvider
     }
 
     /**
+     * 预览表结构和数据
+     * @param string $tableName
+     * @param bool $withData
+     * @return string
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public static function tablePreviewSql(string $tableName, bool $withData = true)
+    {
+        $content = '';
+        $content .= "-- 表结构：{$tableName}\n";
+        // 获取表结构
+        $showTableInfo = Db::query("SHOW CREATE TABLE {$tableName}");
+        $sqlInfo       = $showTableInfo[0]['Create Table'] ?? '';
+        $content .= $sqlInfo . ";\n";
+        // 是否导出表数据
+        if ($withData) {
+            // 导出表数据
+            $result = Db::query("SELECT * FROM {$tableName}");
+            if (!$result) {
+                $content .= "-- {$tableName}表没有数据\n";
+            } else {
+                $content .= "-- 表数据：{$tableName}\n";
+                foreach ($result as $row) {
+                    // 输出表数据
+                    $escapedValues = array_map(function ($value) {
+                        return addslashes($value);
+                    }, $row);
+                    // 转义数据
+                    $columns = implode("','", $escapedValues);
+                    $content .= "INSERT INTO `$tableName` VALUES ('$columns');\n";
+                }
+            }
+        }
+        // 返回数据
+        return $content;
+    }
+
+    /**
      * 将mysql数据库表结构和数据导出为.sql文件
      * @param string $sqlFilePath 导出的.sql文件路径
      * @param bool $withData 是否导出表数据(默认为true)
