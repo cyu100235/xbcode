@@ -231,6 +231,11 @@ class Install
      */
     private function createMenus()
     {
+        // 获取菜单数据
+        \$menus = config('plugin.{$name}.menus', []);
+        if (empty(\$menus)) {
+            return true;
+        }
         // 创建顶级菜单
         \$data = [
             'title' => '通用',
@@ -241,11 +246,12 @@ class Install
             'icon' => 'Grid'
         ];
         \$pid  = MenuProvider::createMenu('', \$data);
+
         // 创建父级菜单
-        \$menus = config('plugin.codeGenerate.menus', []);
         \$menu  = current(\$menus);
         \$pid   = MenuProvider::createMenu(\$pid, \$menu);
         unset(\$menus[0]);
+
         \$menus = array_values(\$menus);
         // 批量创建子菜单
         MenuProvider::createMenus(\$pid, \$menus);
