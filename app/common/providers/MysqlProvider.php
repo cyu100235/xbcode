@@ -77,12 +77,12 @@ class MysqlProvider
     {
         $tableNames = self::getTableNames();
         $data       = [];
-        foreach ($tableNames as $key => $name) {
+        foreach ($tableNames as $name) {
             if (in_array($name, $ignore)) {
                 continue;
             }
-            $table      = self::getTable($name);
-            $data[$key] = [
+            $table  = self::getTable($name);
+            $data[] = [
                 'create_at' => $table['CREATE_TIME'],
                 'name' => $name,
                 'title' => $table['TABLE_COMMENT'],

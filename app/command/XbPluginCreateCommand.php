@@ -206,7 +206,6 @@ class Install
      */
     public function installBefore()
     {
-        p('安装前');
     }
     
     /**
@@ -218,11 +217,38 @@ class Install
     public function install()
     {
         // 创建菜单
-        \$data = [];
-        // MenuProvider::createMenu('',\$data);
+        // \$this->createMenus();
+        
         // 导入SQL
         \$sql = __DIR__ . '/data/install.sql';
-        p('正在安装');
+    }
+
+    /**
+     * 创建菜单
+     * @return void
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    private function createMenus()
+    {
+        // 创建顶级菜单
+        \$data = [
+            'title' => '通用',
+            'path' => 'currency',
+            'component' => 'none/index',
+            'show' => '20',
+            'methods' => 'get',
+            'icon' => 'Grid'
+        ];
+        \$pid  = MenuProvider::createMenu('', \$data);
+        // 创建父级菜单
+        \$menus = config('plugin.codeGenerate.menus', []);
+        \$menu  = current(\$menus);
+        \$pid   = MenuProvider::createMenu(\$pid, \$menu);
+        unset(\$menus[0]);
+        \$menus = array_values(\$menus);
+        // 批量创建子菜单
+        MenuProvider::createMenus(\$pid, \$menus);
     }
 
     /**
@@ -233,7 +259,6 @@ class Install
      */
     public function installAfter()
     {
-        p('安装后');
     }
 
     /**
@@ -246,7 +271,6 @@ class Install
     {
         // 导入SQL
         \$sql = __DIR__ . '/data/update.sql';
-        p('更新之前');
     }
 
     /**
@@ -257,7 +281,6 @@ class Install
      */
     public function update()
     {
-        p('正在更新');
     }
 
     /**
@@ -268,7 +291,6 @@ class Install
      */
     public function updateAfter()
     {
-        p('更新之后');
     }
 
     /**
