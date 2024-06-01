@@ -17,7 +17,7 @@ use Exception;
 class PluginBaseAction
 {
     use JsonUtil;
-    
+
     /**
      * 下载插件
      * @param string $name
@@ -26,18 +26,18 @@ class PluginBaseAction
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    protected static function downloadFile(string $name,string $version)
+    protected static function downloadFile(string $name, string $version)
     {
         // 请求云端下载
         $data   = [
-            'name'      => $name,
-            'version'   => $version
+            'name' => $name,
+            'version' => $version
         ];
         $result = HttpCloud::get('user/Plugins/download', $data);
         // 获取结果集
         $content = HttpCloud::getContent($result, false);
         // 临时插件包路径
-        $package       = base_path("runtime/plugin/") . "{$name}-{$version}.zip";
+        $package = base_path("runtime/plugin/") . "{$name}-{$version}.zip";
         // 压缩包存在则删除
         if (file_exists($package)) {
             unlink($package);
@@ -45,7 +45,7 @@ class PluginBaseAction
         // 写入文件
         file_put_contents($package, $content);
     }
-    
+
     /**
      * 解压插件
      * @param string $name
@@ -54,13 +54,13 @@ class PluginBaseAction
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    protected static function unzipFile(string $name,string $version)
+    protected static function unzipFile(string $name, string $version)
     {
         try {
             // 临时插件包路径
-            $package       = base_path("runtime/plugin/") . "{$name}-{$version}.zip";
+            $package = base_path("runtime/plugin/") . "{$name}-{$version}.zip";
             // 插件目录
-            $pluginDir       = base_path("plugin/{$name}");
+            $pluginDir = base_path("plugin/{$name}");
             // 暂停文件监控
             FrameUtil::pauseFileMonitor();
             // 检测目录不存在则创建
@@ -79,7 +79,7 @@ class PluginBaseAction
             throw $th;
         }
     }
-    
+
     /**
      * 安装依赖
      * @param string $name
@@ -89,7 +89,7 @@ class PluginBaseAction
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    protected static function installDepend(string $name,string $version, string $methodName)
+    protected static function installDepend(string $name, string $version, string $methodName)
     {
         // 获取插件依赖项
         $data = CloudSerivce::getLocalPluginDepend($name);
@@ -126,7 +126,7 @@ class PluginBaseAction
             throw $th;
         }
     }
-    
+
     /**
      * 数据安装
      * @param string $name
@@ -136,10 +136,10 @@ class PluginBaseAction
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    protected static function installData(string $name,string $version,string $methodName)
+    protected static function installData(string $name, string $version, string $methodName)
     {
         // 插件目录
-        $pluginDir       = base_path("plugin/{$name}");
+        $pluginDir = base_path("plugin/{$name}");
         try {
             // 插件类命名空间
             $class = "\\plugin\\{$name}\\Install";
@@ -149,24 +149,25 @@ class PluginBaseAction
             }
             // 上下文
             $context = null;
+            $class   = new $class;
             // 前置
             if (method_exists($class, "{$methodName}Before")) {
-                $context = call_user_func([new $class, "{$methodName}Before"]);
+                $context = call_user_func([$class, "{$methodName}Before"]);
             }
             // 插件
             if (method_exists($class, $methodName)) {
-                $context = call_user_func([new $class, $methodName], $context);
+                $context = call_user_func([$class, $methodName], $context);
             }
             // 后置
             if (method_exists($class, "{$methodName}After")) {
-                call_user_func([new $class, "{$methodName}After"], $context);
+                call_user_func([$class, "{$methodName}After"], $context);
             }
         } catch (\Throwable $th) {
             remove_dir($pluginDir);
             throw $th;
         }
     }
-    
+
     /**
      * 安装完成
      * @param string $name
@@ -175,7 +176,7 @@ class PluginBaseAction
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    protected static function installOk(string $name,string $version)
+    protected static function installOk(string $name, string $version)
     {
         // 重启框架
         FrameUtil::pcntlAlarm(1, function () {
