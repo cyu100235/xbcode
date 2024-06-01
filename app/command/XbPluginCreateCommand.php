@@ -54,6 +54,7 @@ class XbPluginCreateCommand extends Command
     {
         $base_path = base_path();
         $this->mkdir("$base_path/plugin/$name/app/controller", 0777, true);
+        $this->mkdir("$base_path/plugin/$name/app/event", 0777, true);
         $this->mkdir("$base_path/plugin/$name/app/model", 0777, true);
         $this->mkdir("$base_path/plugin/$name/app/middleware", 0777, true);
         $this->mkdir("$base_path/plugin/$name/app/view/index", 0777, true);
@@ -467,6 +468,15 @@ return [
 
 EOF;
         file_put_contents("$base/app.php", $content);
+
+        // event.php
+        $content = <<<EOF
+<?php
+// 事件文档：https://www.workerman.net/doc/webman/components/event.html
+return [];
+
+EOF;
+        file_put_contents("$base/event.php", $content);
 
         // autoload.php
         $content = <<<EOF

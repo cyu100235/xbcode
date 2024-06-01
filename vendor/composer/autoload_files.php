@@ -24,6 +24,6 @@ return array(
     '35fab96057f1bf5e7aba31a8a6d5fdde' => $vendorDir . '/topthink/think-orm/stubs/load_stubs.php',
     '66453932bc1be9fb2f910a27947d11b6' => $vendorDir . '/alibabacloud/client/src/Functions.php',
     '8af3fa7e0debc674a27a2d67e57bd6eb' => $vendorDir . '/tinywan/validate/src/helper.php',
-    '1b26ae8525ee715fa2843e294dd26ad8' => $baseDir . '/support/helpers.php',
-    '3574c599b7cd70be016d949dd5dd0180' => $baseDir . '/app/functions.php',
+    '8a6e4a6102a8d183471c39e6768172da' => $baseDir . '/support/helpers.php',
+    'a9e24353074903f324d98932e452b030' => $baseDir . '/app/functions.php',
 );

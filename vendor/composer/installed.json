@@ -3787,6 +3787,40 @@
             "install-path": "../webman/console"
         },
         {
+            "name": "webman/event",
+            "version": "v1.0.5",
+            "version_normalized": "1.0.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webman-php/event.git",
+                "reference": "b1c3f6b70fd290e48288703d59bead0e28f9fb84"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webman-php/event/zipball/b1c3f6b70fd290e48288703d59bead0e28f9fb84",
+                "reference": "b1c3f6b70fd290e48288703d59bead0e28f9fb84",
+                "shasum": ""
+            },
+            "time": "2023-12-04T09:22:12+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Webman\\Event\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Webman event plugin",
+            "support": {
+                "issues": "https://github.com/webman-php/event/issues",
+                "source": "https://github.com/webman-php/event/tree/v1.0.5"
+            },
+            "install-path": "../webman/event"
+        },
+        {
             "name": "webman/log",
             "version": "v1.1.9",
             "version_normalized": "1.1.9.0",

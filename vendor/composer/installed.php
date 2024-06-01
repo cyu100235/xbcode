@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
-        'name' => 'xbase/admin',
+        'name' => 'xiadiao/admin',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '0c921f1ac12ef27c47acfa23e4568408f7fcf4d1',
+        'reference' => 'a0fd307a1e83095679c37f221eadbe9e775aa38e',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -539,6 +539,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'webman/event' => array(
+            'pretty_version' => 'v1.0.5',
+            'version' => '1.0.5.0',
+            'reference' => 'b1c3f6b70fd290e48288703d59bead0e28f9fb84',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../webman/event',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'webman/log' => array(
             'pretty_version' => 'v1.1.9',
             'version' => '1.1.9.0',
@@ -602,10 +611,10 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
-        'xbase/admin' => array(
+        'xiadiao/admin' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '0c921f1ac12ef27c47acfa23e4568408f7fcf4d1',
+            'reference' => 'a0fd307a1e83095679c37f221eadbe9e775aa38e',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

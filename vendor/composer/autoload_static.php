@@ -25,8 +25,8 @@ class ComposerStaticInite07e252fcf63af9e26b4119020c12e84
         '35fab96057f1bf5e7aba31a8a6d5fdde' => __DIR__ . '/..' . '/topthink/think-orm/stubs/load_stubs.php',
         '66453932bc1be9fb2f910a27947d11b6' => __DIR__ . '/..' . '/alibabacloud/client/src/Functions.php',
         '8af3fa7e0debc674a27a2d67e57bd6eb' => __DIR__ . '/..' . '/tinywan/validate/src/helper.php',
-        '1b26ae8525ee715fa2843e294dd26ad8' => __DIR__ . '/../..' . '/support/helpers.php',
-        '3574c599b7cd70be016d949dd5dd0180' => __DIR__ . '/../..' . '/app/functions.php',
+        '8a6e4a6102a8d183471c39e6768172da' => __DIR__ . '/../..' . '/support/helpers.php',
+        'a9e24353074903f324d98932e452b030' => __DIR__ . '/../..' . '/app/functions.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -66,6 +66,7 @@ class ComposerStaticInite07e252fcf63af9e26b4119020c12e84
             'Webman\\ThinkOrm\\' => 16,
             'Webman\\ThinkCache\\' => 18,
             'Webman\\Log\\' => 11,
+            'Webman\\Event\\' => 13,
             'Webman\\Console\\' => 15,
             'Webman\\' => 7,
         ),
@@ -177,9 +178,9 @@ class ComposerStaticInite07e252fcf63af9e26b4119020c12e84
         ),
         'think\\' => 
         array (
-            0 => __DIR__ . '/..' . '/topthink/think-helper/src',
+            0 => __DIR__ . '/..' . '/topthink/think-cache/src',
             1 => __DIR__ . '/..' . '/topthink/think-container/src',
-            2 => __DIR__ . '/..' . '/topthink/think-cache/src',
+            2 => __DIR__ . '/..' . '/topthink/think-helper/src',
             3 => __DIR__ . '/..' . '/topthink/think-orm/src',
         ),
         'support\\' => 
@@ -217,6 +218,10 @@ class ComposerStaticInite07e252fcf63af9e26b4119020c12e84
         'Webman\\Log\\' => 
         array (
             0 => __DIR__ . '/..' . '/webman/log/src',
+        ),
+        'Webman\\Event\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/webman/event/src',
         ),
         'Webman\\Console\\' => 
         array (
@@ -320,8 +325,8 @@ class ComposerStaticInite07e252fcf63af9e26b4119020c12e84
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-message/src',
-            1 => __DIR__ . '/..' . '/psr/http-factory/src',
+            0 => __DIR__ . '/..' . '/psr/http-factory/src',
+            1 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (
