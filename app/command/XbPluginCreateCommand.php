@@ -219,10 +219,31 @@ class Install
     {
         // 创建菜单
         \$this->createMenus();
+        // 创建字典
+        \$this->createDicts();
         
         // 导入安装SQL
         // \$sql = __DIR__ . '/data/install.sql';
         // MysqlProvider::importSql(\$sql);
+    }
+
+    
+    /**
+     * 创建字典
+     * @return bool
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    private function createDicts()
+    {
+        // 获取字典数据
+        \$data = config('plugin.{$name}.dict', []);
+        if (empty(\$dicts)) {
+            return true;
+        }
+        // 批量创建字典
+        DictProvider::addDicts(\$data);
+        return true;
     }
 
     /**
@@ -323,6 +344,10 @@ class Install
     {
         // 卸载菜单数据
         \$this->delMenu();
+        
+        // 批量删除字典
+        \$dicts = config('plugin.{$name}.dict', []);
+        DictProvider::delDicts(\$dicts);
 
         // 导入卸载SQL
         // \$sql = __DIR__ . '/data/uninstall.sql';
