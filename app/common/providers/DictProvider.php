@@ -124,7 +124,7 @@ class DictProvider
         }
         $data = array_column($data, 'content', 'name');
         $data = array_map(function ($item) {
-            $content = explode("\n", $item);
+            $content = explode("|", $item);
             $content = array_map(function ($item) {
                 if (strpos($item, '=') !== false) {
                     // 如果有=号，则分割为value和label

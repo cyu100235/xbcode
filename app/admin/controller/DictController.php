@@ -131,6 +131,8 @@ class DictController extends XbController
      */
     public function index(Request $request)
     {
+        $page    = (int) $request->get('page', 1);
+        $limit   = (int) $request->get('limit', 10);
         $keyword = $request->get('keyword');
         $where   = [];
         if ($keyword) {
@@ -140,10 +142,13 @@ class DictController extends XbController
         $data  = $model
             ->where($where)
             ->order('sort asc,id desc')
-            ->paginate()
+            ->paginate([
+                'list_rows' => $limit,
+                'page' => $page,
+            ])
             ->each(function ($item) {
                 $item->preview = '<pre style="color:#13ce66;"><code>DictProvider::get(\'' . $item->name . '\')</code></pre>';
-                $item->content = str_replace("\n", '，', $item->content);
+                $item->content = str_replace("|", '，', $item->content);
             })
             ->toArray();
         return $this->successRes($data);
@@ -162,7 +167,9 @@ class DictController extends XbController
         if ($request->method() == 'POST') {
             $post = $request->post();
             xbValidate(DictValidate::class, $post, 'add');
-            $model = $this->model;
+            // 处理换行符
+            $post['content'] = str_replace("\n", "|", $post['content']);
+            $model           = $this->model;
             if (!$model->save($post)) {
                 return $this->fail('保存失败');
             }
@@ -191,9 +198,13 @@ class DictController extends XbController
         if (!$model) {
             return $this->fail('数据不存在');
         }
+        // 处理换行符转换
+        $model->content = str_replace("|", "\n", $model->content);
         if ($request->method() == 'PUT') {
             $post = $request->post();
             xbValidate(DictValidate::class, $post, 'edit');
+            // 处理换行符
+            $post['content'] = str_replace("\n", "|", $post['content']);
             if (!$model->save($post)) {
                 return $this->fail('保存失败');
             }
