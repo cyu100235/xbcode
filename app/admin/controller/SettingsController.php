@@ -6,6 +6,7 @@ use app\common\providers\ConfigProvider;
 use hg\apidoc\annotation as Apidoc;
 use support\Request;
 use app\common\XbController;
+use Webman\Event\Event;
 
 /**
  * 系统设置
@@ -40,6 +41,11 @@ class SettingsController extends XbController
             }
             // 保存配置项
             ConfigProvider::save($group, $post);
+            // 通知全局事件
+            Event::dispatch('system.setting', [
+                'group' => $group,
+                'data' => $post,
+            ]);
             // 返回结果
             return $this->success('保存成功');
         }
@@ -76,6 +82,11 @@ class SettingsController extends XbController
             }
             // 保存配置项
             ConfigProvider::save($group, $post);
+            // 通知全局事件
+            Event::dispatch('system.setting', [
+                'group' => $group,
+                'data' => $post,
+            ]);
             // 返回结果
             return $this->success('保存成功');
         }
@@ -112,6 +123,11 @@ class SettingsController extends XbController
             }
             // 保存配置项
             ConfigProvider::save($group, $post);
+            // 通知全局事件
+            Event::dispatch('system.setting', [
+                'group' => $group,
+                'data' => $post,
+            ]);
             // 返回结果
             return $this->success('保存成功');
         }

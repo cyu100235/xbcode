@@ -8,6 +8,7 @@ use app\common\utils\JsonUtil;
 use app\model\Settings;
 use support\Request;
 use Exception;
+use Webman\Event\Event;
 
 /**
  * 插件云服务
@@ -211,7 +212,7 @@ trait PluginsCloud
             return [];
         }
         // 插件状态：10未购买，20未安装，30已安装，40有更新
-        $data['plugin_state'] = '10';
+        $data['plugin_state']  = '10';
         $data['local_version'] = '';
         // 检测是否已购买
         if ($data['is_buy'] === '20') {
@@ -222,7 +223,7 @@ trait PluginsCloud
             // 已安装
             $data['plugin_state'] = '30';
             // 检测是否有更新
-            $localVersion = self::getLocalPluginVersion($data['name']);
+            $localVersion          = self::getLocalPluginVersion($data['name']);
             $data['local_version'] = $localVersion;
             if ($localVersion && version_compare($data['version'], $localVersion)) {
                 $data['plugin_state'] = '40';
@@ -231,7 +232,7 @@ trait PluginsCloud
         // 返回数据
         return $data;
     }
-    
+
     /**
      * 获取本地插件配置项
      * @param string $name
@@ -240,7 +241,7 @@ trait PluginsCloud
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public static function getLocalPluginConfig(string $name,mixed $default = [])
+    public static function getLocalPluginConfig(string $name, mixed $default = [])
     {
         $class = "\\plugin\\{$name}\\Install";
         if (!class_exists($class)) {
@@ -271,33 +272,39 @@ trait PluginsCloud
             $post = $request->post();
             foreach ($post as $field => $value) {
                 $where = [
-                    'group'     => $name,
-                    'name'      => $field,
+                    'group' => $name,
+                    'name' => $field,
                 ];
                 $model = Settings::where($where)->find();
                 if (!$model) {
-                    $model = new Settings;
+                    $model        = new Settings;
                     $model->group = $name;
                     $model->name  = $field;
                 }
-                if (!$model->save(['value'=> $value])) {
+                if (!$model->save(['value' => $value])) {
                     return self::fail('配置保存失败');
                 }
             }
+            // 通知全局事件
+            Event::dispatch('system.setting', [
+                'group' => $name,
+                'data' => $post,
+            ]);
+            // 返回结果
             return self::success('配置保存成功');
         }
-        $active  = '';
+        $active   = '';
         $template = self::getLocalPluginConfig($name);
-        $config = ConfigProvider::getOriginal($name, []);
-        $config = ConfigProvider::parseData($config);
+        $config   = ConfigProvider::getOriginal($name, []);
+        $config   = ConfigProvider::parseData($config);
         if ($template) {
             $active = current($template)['field'] ?? '';
         }
         $builder = new FormBuilder;
         $builder->initTabsActive('active', $active, [
-            'props'             => [
+            'props' => [
                 // 选项卡样式
-                'tabPosition'   => 'top',
+                'tabPosition' => 'top',
             ],
         ]);
         foreach ($template as $value) {
@@ -311,7 +318,7 @@ trait PluginsCloud
                 throw new Exception('配置项表单内容不能为空');
             }
             $children = $value['children'] ?? [];
-            $formRow = ConfigFormProvider::getFormView($children)->getBuilder()->formRule();
+            $formRow  = ConfigFormProvider::getFormView($children)->getBuilder()->formRule();
             $builder->addTab($value['field'] ?? '', $value['title'] ?? '', $formRow);
         }
         $builder->endTabs();

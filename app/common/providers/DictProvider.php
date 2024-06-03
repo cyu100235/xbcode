@@ -205,8 +205,9 @@ class DictProvider
     }
 
     /**
-     * 获取开关数据
-     * @return mixed
+     * 开关数据
+     * @param string $value 示例：10关闭，20开启
+     * @return array
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
