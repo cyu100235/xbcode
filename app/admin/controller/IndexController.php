@@ -4,11 +4,8 @@ namespace app\admin\controller;
 
 use app\common\providers\ConfigProvider;
 use app\common\providers\AppProvider;
-use app\common\providers\RouteProvider;
-use app\common\utils\FrameUtil;
 use app\common\XbController;
 use support\Request;
-use think\facade\Cache;
 
 class IndexController extends XbController
 {
@@ -30,15 +27,6 @@ class IndexController extends XbController
      */
     public function index(Request $request)
     {
-        // 检测菜单不存在
-        if (!Cache::get('admin_menus')) {
-            // 缓存菜单
-            RouteProvider::cacheMenus();
-            // 重启服务
-            FrameUtil::pcntlAlarm(2, function () {
-                FrameUtil::reload();
-            });
-        }
         // 渲染视图
         return $this->adminView();
     }
@@ -53,7 +41,7 @@ class IndexController extends XbController
     public function site(Request $request)
     {
         // 获取配置
-        $config = ConfigProvider::get('system','',[]);
+        $config = ConfigProvider::get('system', '', []);
         $config = ConfigProvider::parseData($config);
         // 返回数据
         $data = [

@@ -255,29 +255,12 @@ class Install
     private function createMenus()
     {
         // 获取菜单数据
-        \$menus = config('plugin.{$name}.menus', []);
+        \$menus = config('plugin.finance.menus', []);
         if (empty(\$menus)) {
             return true;
         }
-        // 创建顶级菜单
-        \$data = [
-            'title' => '通用',
-            'path' => 'currency',
-            'component' => 'none/index',
-            'show' => '20',
-            'methods' => 'get',
-            'icon' => 'Grid'
-        ];
-        \$pid  = MenuProvider::createMenu('', \$data);
-
-        // 创建父级菜单
-        \$menu  = current(\$menus);
-        \$pid   = MenuProvider::createMenu(\$pid, \$menu);
-        unset(\$menus[0]);
-
-        \$menus = array_values(\$menus);
-        // 批量创建子菜单
-        MenuProvider::createMenus(\$pid, \$menus);
+        // 批量创建菜单
+        MenuProvider::createMenus(\$menus);
         return true;
     }
 

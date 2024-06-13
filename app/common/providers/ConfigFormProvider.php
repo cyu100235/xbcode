@@ -43,21 +43,21 @@ class ConfigFormProvider
         if (empty($template)) {
             throw new Exception("配置模板不能为空");
         }
-        $active = current($template)['field'] ?? '';
+        $active  = current($template)['field'] ?? '';
         $builder = new FormBuilder;
         $builder->setMethod('PUT');
         $builder->initTabsActive('active', $active, [
-            'props'             => [
+            'props' => [
                 // 选项卡样式
-                'type'          => 'line',
-                'tabPosition'   => 'top',
+                'type' => 'line',
+                'tabPosition' => 'top',
             ],
         ]);
         foreach ($template as $value) {
             // 获取表单
             $formRow = self::getFormView($value['children'] ?? [])
-            ->getBuilder()
-            ->formRule();
+                ->getBuilder()
+                ->formRule();
             // 设置表单项
             $builder->addTab(
                 $value['field'],
@@ -84,7 +84,7 @@ class ConfigFormProvider
         $builder->setMethod('PUT');
         foreach ($data as $value) {
             // 虚线框不验证
-            if (!in_array($value['component'],['NDivider','x-title','XTitle'])) {
+            if (!in_array($value['component'], ['NDivider', 'x-title', 'XTitle'])) {
                 // 数据验证
                 xbValidate(SettingsValidate::class, $value);
                 // 验证扩展组件
@@ -130,7 +130,14 @@ class ConfigFormProvider
      */
     private static function getConfigTemplate(string|null $group)
     {
-        $path = base_path() . "/config/setting/{$group}.php";
+        $plugin = request()->get('plugin');
+        $path   = '';
+        if ($plugin) {
+            $path = base_path("plugin/{$plugin}/config/setting/{$group}.php");
+        }
+        if (!$path) {
+            $path = base_path("/config/setting/{$group}.php");
+        }
         if (!file_exists($path)) {
             throw new Exception("系统配置文件不存在");
         }

@@ -27,16 +27,28 @@ class DictProvider
 
     /**
      * 获取实例
-     * @param string $name
+     * @return DictProvider
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public static function instance()
+    {
+        if (!static::$_instance) {
+            static::$_instance = new DictProvider;
+        }
+        return static::$_instance;
+    }
+
+    /**
+     * 设置字典标识并得到实例
+     * @param string $name 字典标识，不传则获取全部字典数据
      * @return DictProvider
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public static function get(string $name)
     {
-        if (!static::$_instance) {
-            static::$_instance = new DictProvider;
-        }
+        self::instance();
         static::$_instance->name = $name;
         return static::$_instance;
     }
@@ -139,6 +151,27 @@ class DictProvider
                 ];
             }, $content);
             return $content;
+        }, $data);
+        return $data;
+    }
+
+    /**
+     * 获取字典选项
+     * @return array
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public function dictOptions()
+    {
+        $data = $this->getCacheDict();
+        if (empty($data)) {
+            return [];
+        }
+        $data = array_map(function ($item) {
+            return [
+                'value' => $item['name'],
+                'label' => $item['title'],
+            ];
         }, $data);
         return $data;
     }

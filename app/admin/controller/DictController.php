@@ -6,7 +6,6 @@ use app\common\builder\FormBuilder;
 use app\common\builder\ListBuilder;
 use app\common\builder\table\RowEditTrait;
 use hg\apidoc\annotation as Apidoc;
-use app\model\AdminRole;
 use app\common\XbController;
 use support\Request;
 use app\model\Dict;
@@ -77,7 +76,7 @@ class DictController extends XbController
         $builder->addRightButton('del', '删除', [
             'type' => 'confirm',
             'api' => xbUrl('Dict/del'),
-            'method' => 'delete',
+            'method' => 'DELETE',
         ], [
             'type' => 'error',
             'title' => '温馨提示',
@@ -148,7 +147,6 @@ class DictController extends XbController
             ])
             ->each(function ($item) {
                 $item->preview = '<pre style="color:#13ce66;"><code>DictProvider::get(\'' . $item->name . '\')</code></pre>';
-                $item->content = str_replace("|", '，', $item->content);
             })
             ->toArray();
         return $this->successRes($data);
@@ -231,7 +229,8 @@ class DictController extends XbController
     public function del(Request $request)
     {
         $id    = $request->post('id');
-        $model = AdminRole::where('id', $id)->find();
+        $model = $this->model;
+        $model = $model->where('id', $id)->find();
         if (!$model) {
             return $this->fail('数据不存在');
         }
@@ -263,7 +262,7 @@ class DictController extends XbController
         ]);
         $builder->addRow('content', 'textarea', '字典数据', '', [
             'resize' => 'none',
-            'rows' => 6,
+            'rows' => 15,
             'prompt' => '一行一条字典，数据示例：10=男',
         ]);
         return $builder;

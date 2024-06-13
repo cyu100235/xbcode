@@ -41,13 +41,12 @@ trait MenuActionTrait
 
     /**
      * 创建菜单
-     * @param string|int $parent
      * @param array $data
      * @return mixed
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public static function createMenu(string|int $parent, array $data)
+    public static function createMenu(array $data)
     {
         if (empty($data['title'])) {
             throw new Exception('菜单名称不能为空');
@@ -68,17 +67,14 @@ trait MenuActionTrait
         }
         // 请求类型全转大写
         $data['methods'] = strtoupper($data['methods']);
-        // 组装父级PID
+        // 获取父级PID
         $pid = 0;
-        if ($parent && is_string($parent)) {
-            $model = AdminRule::where('path', $parent)->find();
+        if (isset($data['pid']) && $data['pid']) {
+            $model = AdminRule::where('path', $data['pid'])->find();
             if (!$model) {
                 throw new Exception('父级菜单不存在');
             }
             $pid = $model->id;
-        }
-        if (is_int($parent)) {
-            $pid = $parent;
         }
         $data['pid'] = $pid;
         $model       = new AdminRule;
@@ -90,16 +86,15 @@ trait MenuActionTrait
 
     /**
      * 批量创建菜单
-     * @param int|string $parent
      * @param array $data
      * @return void
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public static function createMenus(int|string $parent, array $data)
+    public static function createMenus(array $data)
     {
         foreach ($data as $item) {
-            self::createMenu($parent, $item);
+            self::createMenu($item);
         }
     }
 

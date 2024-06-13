@@ -1,6 +1,7 @@
 <?php
 namespace app\common\providers;
 
+use app\common\middleware\PluginsMiddleware;
 use app\common\service\CloudSerivce;
 use app\common\utils\InstallUtil;
 use app\model\AdminRule;
@@ -22,12 +23,8 @@ class RouteProvider
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public static function regBaseRoute(bool $disabledDefault = true)
+    public static function regBaseRoute()
     {
-        // 禁止默认路由
-        if ($disabledDefault) {
-            Route::disableDefaultRoute();
-        }
         // 注册首页路由
         Route::get('/', 'app\controller\IndexController@index');
         // 渲染视图
@@ -76,18 +73,15 @@ class RouteProvider
             throw new Exception('请配置后台模块名称');
         }
         // 注册后台路由
-        Route::get("/{$moduleName}", 'app\admin\controller\IndexController@index');
+        Route::get("/{$moduleName}", function () use ($moduleName) {
+            return redirect("/{$moduleName}/");
+        });
         Route::get("/{$moduleName}/", 'app\admin\controller\IndexController@index');
-        $menus = Cache::get('admin_menus', []);
-        foreach ($menus as $value) {
-            if ($value['class'] && $value['path'] && $value['methods']) {
-                Route::add(
-                    $value['methods'],
-                    "/{$value['path']}",
-                    $value['class']
-                );
-            }
-        }
+        // 注册文档路由
+        Route::get("/apidoc", function () {
+            return redirect('/apidoc/');
+        });
+        Route::get("/apidoc/", 'app\controller\IndexController@apidoc');
         // 注册静态文件路由
         Route::get('/xbase/[{path:.+}]', function (Request $request, $path = '') {
             // 安全检查，避免url里 /../../../password 这样的非法访问
@@ -105,6 +99,32 @@ class RouteProvider
     }
 
     /**
+     * 注册插件路由
+     * @param string $name 插件名称
+     * @return void
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public static function regPluginRoute(string $name)
+    {
+        $data = Cache::get('admin_menus', []);
+        $data = array_filter($data, function ($item) use ($name) {
+            $keyword = "plugin\\{$name}\\";
+            return strrpos($item['class'], $keyword) !== false;
+        });
+        $data = array_values($data);
+        foreach ($data as $value) {
+            if ($value['class'] && $value['path'] && $value['methods']) {
+                Route::add(
+                    $value['methods'],
+                    "/{$value['path']}",
+                    $value['class']
+                );
+            }
+        }
+    }
+
+    /**
      * 插件中间件
      * @return string[]
      * @copyright 贵州小白基地网络科技有限公司
@@ -113,11 +133,11 @@ class RouteProvider
     public static function pluginMiddleware()
     {
         $plugins = CloudSerivce::getLocalPlugin();
-        $data = [];
+        $data    = [];
         foreach ($plugins as $value) {
             if (!empty($value['name'])) {
                 $data["plugin.{$value['name']}"] = [
-                    \app\common\middleware\PluginsMiddleware::class
+                    PluginsMiddleware::class
                 ];
             }
         }

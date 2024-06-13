@@ -214,7 +214,6 @@ class MenusController extends XbController
                 FrameUtil::pcntlAlarm(2, function () {
                     // 重启服务
                     FrameUtil::reload();
-                    p('服务重启完成...');
                 });
                 // 返回结果
                 return $this->success('添加成功');
@@ -357,7 +356,6 @@ class MenusController extends XbController
             FrameUtil::pcntlAlarm(2, function () {
                 // 重启服务
                 FrameUtil::reload();
-                p('服务重启完成...');
             });
             // 返回结果
             return $this->success('修改成功');
@@ -396,7 +394,9 @@ class MenusController extends XbController
         // 缓存路由
         RouteProvider::cacheMenus();
         // 重启服务
-        FrameUtil::reload();
+        FrameUtil::pcntlAlarm(2, function () {
+            FrameUtil::reload();
+        });
         // 返回数据
         return $this->success('删除成功');
     }
