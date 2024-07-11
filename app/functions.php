@@ -11,19 +11,16 @@
 function xbEnv(string $name = '', $default = null)
 {
     $path = base_path('.env');
-    if (!file_exists($path))
-    {
+    if (!file_exists($path)) {
         $path = base_path('.env.install');
     }
     static $config = [];
-    if (!$config)
-    {
+    if (!$config) {
         // 解析文件
         $config = @parse_ini_file($path, true) ?? [];
     }
     // 返回所有配置
-    if (!$name)
-    {
+    if (!$name) {
         return $config;
     }
     @[$one, $two] = explode('.', $name);
@@ -44,17 +41,14 @@ function xbValidate($validate, array $data, string $scene = '')
     // 实例类
     $class = new $validate;
     // 场景验证
-    if ($scene)
-    {
+    if ($scene) {
         $class->scene($scene);
     }
     $result = $class->check($data);
-    if (!$result)
-    {
-        throw new Exception((string)$class->getError(), 404);
+    if (!$result) {
+        throw new Exception((string) $class->getError(), 404);
     }
 }
-
 
 /**
  * 获取模块名称
@@ -70,34 +64,81 @@ function xbModuleName()
     $path       = $request->path();
     $data       = array_values(array_filter(explode('/', $path)));
     $moduleName = '';
-    if (count($data) >= 3)
-    {
+    if (count($data) >= 3) {
         $moduleName = $data[0] ?? '';
     }
     return $moduleName;
 }
 
 /**
- * 生成URL地址
- * @param string $url 生成地址
- * @param array $params 地址参数
- * @param bool $slash 是否带前缀斜杠
+ * 获取域名网址
+ * @param bool $full
  * @return string
  * @copyright 贵州小白基地网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
-function xbUrl(string $url = '', array $params = [], bool $slash = true)
+function xbDomain(bool $full = true)
+{
+    $request = request();
+    $url     = (string) $request->header('host', '');
+    if (strrpos($url, '127.0.0.1') !== false) {
+        $url = '';
+    }
+    if (empty($url)) {
+        $url = (string) $request->header('x-host', '');
+        $url = parse_url($url, PHP_URL_HOST);
+    }
+    if (strrpos($url, '127.0.0.1') !== false) {
+        $url = '';
+    }
+    if (empty($url)) {
+        $url = (string) $request->header('x-real-host', '');
+        $url = parse_url($url, PHP_URL_HOST);
+    }
+    if (strrpos($url, '127.0.0.1') !== false) {
+        $url = '';
+    }
+    if (empty($url)) {
+        return '';
+    }
+    if ($full) {
+        $proto  = $request->header('x-forwarded-proto', 'http');
+        $scheme = $request->header('x-scheme', 'http');
+        if ($scheme == 'https' || $proto == 'https') {
+            $proto = "https";
+        }
+        $url = "{$proto}://{$url}";
+    }
+    return $url;
+}
+
+/**
+ * 生成URL地址
+ * @param string $url 地址
+ * @param array $params 参数
+ * @param bool $slash 是否带斜杠
+ * @param bool $full 是否完整URL
+ * @return string
+ * @copyright 贵州小白基地网络科技有限公司
+ * @author 楚羽幽 cy958416459@qq.com
+ */
+function xbUrl(string $url = '', array $params = [], bool $slash = true, bool $full = false)
 {
     $moduleName = xbModuleName();
     $path       = "{$moduleName}/{$url}";
-    if ($slash)
-    {
+    if ($slash) {
         $path = "/{$path}";
     }
     if ($params) {
         // 拼接参数
         $path .= '?' . http_build_query($params);
     }
+    // 是否完整URL
+    if ($full) {
+        $domain = xbDomain();
+        $path   = $domain . $path;
+    }
+    // 返回地址
     return $path;
 }
 
@@ -113,13 +154,11 @@ function xbUrl(string $url = '', array $params = [], bool $slash = true)
  */
 function list_sort_by(array $list, string $field, $sortby = 'asc')
 {
-    if (is_array($list))
-    {
+    if (is_array($list)) {
         $refer = $resultSet = array();
         foreach ($list as $i => $data)
             $refer[$i] = &$data[$field];
-        switch ($sortby)
-        {
+        switch ($sortby) {
             case 'asc': // 正向排序
                 asort($refer);
                 break;
@@ -144,9 +183,14 @@ function list_sort_by(array $list, string $field, $sortby = 'asc')
  * @copyright 贵州小白基地网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
-function p(mixed $data)
+function p(mixed $data, string $remarks = '')
 {
     if (config('app.debug')) {
+        if ($remarks) {
+            echo '--------';
+            echo $remarks;
+            echo '--------';
+        }
         echo PHP_EOL;
         print_r($data);
         echo PHP_EOL;

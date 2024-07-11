@@ -17,37 +17,37 @@ trait JsonUtil
      */
     protected static function json(mixed $msg, mixed $code, $data = [])
     {
-        $json['msg']    = $msg;
-        $json['code']   = $code;
-        $json['data']   = $data;
+        $json['msg']  = $msg;
+        $json['code'] = $code;
+        $json['data'] = $data;
         return json($json);
     }
 
     /**
      * 返回固定JSON
      * @param array $data
-     * @return mixed
+     * @return Response
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     protected static function toData(array $data)
     {
-        if (!isset($data['msg']) || !isset($data['code']) || !isset($data['data'])){
+        if (!isset($data['msg']) || !isset($data['code']) || !isset($data['data'])) {
             throw new Exception("返回数据格式错误", 404);
-            
+
         }
-        return self::json($data['msg'],$data['code'],$data['data']);
+        return self::json($data['msg'], $data['code'], $data['data']);
     }
-    
+
     /**
      * 返回成功消息带token
      * @param string $token
      * @param string $msg
-     * @return mixed
+     * @return Response
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    protected static function successToken(string $token,string $msg = 'success')
+    protected static function successToken(string $token, string $msg = 'success')
     {
         $data['token'] = $token;
         return self::json($msg, 200, $data);
@@ -56,7 +56,7 @@ trait JsonUtil
     /**
      * 返回成功消息
      * @param mixed $msg
-     * @return mixed
+     * @return Response
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
@@ -69,7 +69,7 @@ trait JsonUtil
      * 返回成功带数据
      * @param mixed $msg
      * @param mixed $data
-     * @return mixed
+     * @return Response
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
@@ -81,7 +81,7 @@ trait JsonUtil
     /**
      * 返回成功结果
      * @param mixed $data
-     * @return mixed
+     * @return Response
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
@@ -93,7 +93,7 @@ trait JsonUtil
     /**
      * 返回失败消息
      * @param mixed $msg
-     * @return mixed
+     * @return Response
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
@@ -106,7 +106,7 @@ trait JsonUtil
      * 返回失败待状态码消息
      * @param mixed $msg
      * @param mixed $code
-     * @return mixed
+     * @return Response
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
@@ -119,11 +119,11 @@ trait JsonUtil
      * 返回失败并重定向
      * @param mixed $msg
      * @param mixed $url
-     * @return mixed
+     * @return Response
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    protected static function failRedirect(mixed $msg,mixed $url)
+    protected static function failRedirect(mixed $msg, mixed $url)
     {
         return self::json($msg, 302, ['url' => $url]);
     }
@@ -132,11 +132,11 @@ trait JsonUtil
      * 返回成功并重定向
      * @param mixed $msg
      * @param mixed $url
-     * @return mixed
+     * @return Response
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    protected static function successRedirect(mixed $msg,mixed $url)
+    protected static function successRedirect(mixed $msg, mixed $url)
     {
         return self::json($msg, 303, ['url' => $url]);
     }
@@ -144,7 +144,7 @@ trait JsonUtil
     /**
      * 无失败直接重定向
      * @param mixed $url
-     * @return mixed
+     * @return Response
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */

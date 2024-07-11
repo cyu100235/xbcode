@@ -42,7 +42,6 @@ class IndexController extends XbController
     {
         // 获取配置
         $config = ConfigProvider::get('system', '', []);
-        $config = ConfigProvider::parseData($config);
         // 返回数据
         $data = [
             'web_name' => $config['web_name'] ?? 'XB-Admin',

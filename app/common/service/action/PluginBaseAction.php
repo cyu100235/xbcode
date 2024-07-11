@@ -14,7 +14,7 @@ use Exception;
  * @copyright 贵州小白基地网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
-class PluginBaseAction
+trait PluginBaseAction
 {
     use JsonUtil;
 
@@ -26,7 +26,7 @@ class PluginBaseAction
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    protected static function downloadFile(string $name, string $version)
+    public static function downloadFile(string $name, string $version)
     {
         // 请求云端下载
         $data   = [
@@ -46,6 +46,7 @@ class PluginBaseAction
         file_put_contents($package, $content);
     }
 
+
     /**
      * 解压插件
      * @param string $name
@@ -54,7 +55,7 @@ class PluginBaseAction
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    protected static function unzipFile(string $name, string $version)
+    public static function unzip(string $name, string $version)
     {
         try {
             // 临时插件包路径
@@ -82,14 +83,14 @@ class PluginBaseAction
 
     /**
      * 安装依赖
-     * @param string $name
-     * @param string $version
-     * @param string $methodName
+     * @param string $name 插件名称
+     * @param string $version 插件版本
+     * @param string $methodName 安装install、更新update、卸载uninstall
      * @return void
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    protected static function installDepend(string $name, string $version, string $methodName)
+    public static function installDepend(string $name, string $version, string $methodName)
     {
         // 获取插件依赖项
         $data = CloudSerivce::getLocalPluginDepend($name);
@@ -98,10 +99,6 @@ class PluginBaseAction
         try {
             // 安装依赖
             foreach ($data as $plugin => $version) {
-                // 下载插件
-                self::downloadFile($plugin, $version);
-                // 解压插件
-                self::unzipFile($plugin, $version);
                 // 数据安装
                 self::installData($plugin, $version, $methodName);
             }
@@ -136,7 +133,7 @@ class PluginBaseAction
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    protected static function installData(string $name, string $version, string $methodName)
+    public static function installData(string $name, string $version, string $methodName)
     {
         // 插件目录
         $pluginDir = base_path("plugin/{$name}");
@@ -176,7 +173,7 @@ class PluginBaseAction
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    protected static function installOk(string $name, string $version)
+    public static function installOk(string $name, string $version)
     {
         // 重启框架
         FrameUtil::pcntlAlarm(1, function () {

@@ -15,38 +15,42 @@ class ConfigProvider
 {
     /**
      * 获取配置项
-     * @param string $group
-     * @param string|array $name
-     * @param mixed $default
+     * @param string $group 分组名
+     * @param string $name 配置名
+     * @param mixed $default 默认值
+     * @param array $options 额外配置
      * @return mixed
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public static function get(string $group, string|array $name = '', $default = null)
+    public static function get(string $group, string $name, mixed $default = null, array $options = [])
     {
-        $data = self::getOriginal($group);
-        // 没有配置项
+        // 选项默认值
+        $options = array_merge([
+            'parse' => true,
+            'checked' => true,
+        ], $options);
+        $data    = self::getOriginal($group);
         if (empty($data)) {
             return $default;
         }
-        // 取出指定配置项
-        if (is_array($name)) {
-            $result = [];
-            foreach ($name as $value) {
-                $result[$value] = $data[$value] ?? $default;
-            }
-            // 解析配置项键值对
-            $result = self::getConfigValue($result);
-            // 返回配置数据
-            return $result;
+        // 是否处理数据
+        if ($options['checked']) {
+            // 处理数据
+            $data = self::checkData($data);
         }
-        // 取出指定配置项
+        // 取出固定配置项
         if ($name) {
-            return $data[$name] ?? $default;
+            // 解析层级
+            $data = self::getConfigValue([$name => $data]);
+            return $data;
         }
-        // 解析配置项键值对
-        $data = self::getConfigValue($data);
-        // 返回所有配置项
+        // 是否解析
+        if ($options['parse']) {
+            // 解析层级
+            $data = self::getConfigValue($data);
+            return $data;
+        }
         return $data;
     }
 
@@ -63,7 +67,7 @@ class ConfigProvider
         foreach ($data as $field => &$value) {
             $where = [
                 'group' => $group,
-                'name'  => $field,
+                'name' => $field,
             ];
             $model = Settings::where($where)->find();
             if (!$model) {
@@ -82,7 +86,7 @@ class ConfigProvider
     }
 
     /**
-     * 获取配置项数据
+     * 解析配置项层级
      * @param array $data
      * @return array
      * @copyright 贵州小白基地网络科技有限公司
@@ -141,13 +145,13 @@ class ConfigProvider
     }
 
     /**
-     * 解析数据
+     * 处理数据
      * @param array $data
      * @return array
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public static function parseData(array $data)
+    public static function checkData(array $data)
     {
         foreach ($data as $name => $value) {
             if (is_string($value)) {

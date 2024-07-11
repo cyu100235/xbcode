@@ -1,5 +1,5 @@
 <?php
-use app\common\utils\enum\YesNoEnum;
+use app\common\providers\DictProvider;
 use FormBuilder\Factory\Elm;
 
 return [
@@ -122,7 +122,7 @@ return [
                                 'showPassword' => true
                             ])->col(12)->build(),
                         Elm::radio('qcloud.private_type', '是否私有空间', '10')
-                            ->options(YesNoEnum::options())
+                            ->options(DictProvider::get('yesNoText')->options())
                             ->col(24)
                             ->build(),
                     ],
@@ -150,7 +150,7 @@ return [
                             ],
                         ])->col(12)->build(),
                         Elm::radio('qiniu.private_type', '是否私有空间', '10')
-                            ->options(YesNoEnum::options())
+                            ->options(DictProvider::get('yesNoText')->options())
                             ->col(24)
                             ->build(),
                     ],

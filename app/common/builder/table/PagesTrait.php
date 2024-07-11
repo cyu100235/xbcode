@@ -1,6 +1,7 @@
 <?php
 
 namespace app\common\builder\table;
+
 use app\common\builder\ListBuilder;
 
 /**
@@ -25,19 +26,19 @@ trait PagesTrait
         // 当前页码
         $currentPage = (int) request()->get('page', 1);
         // 分页配置
-        $config = config('paginator',[]);
+        $config = config('paginator', []);
         // 每页数量
         $listRows                   = isset($config['listRows']) ? $config['listRows'] : 20;
         $this->pagerConfig          = array_merge([
             'currentPage' => $currentPage,
-            'pageSize'    => $listRows,
-            'total'       => 1000,
-            'pageSizes'   => [10, 15, 20, 50, 100, 200, 500, 1000],
-            'align'       => 'right',
-            'background'  => false,
-            'perfect'     => false,
-            'border'      => false,
-            'layouts'     => [
+            'pageSize' => $listRows,
+            'total' => 1000,
+            'pageSizes' => [10, 15, 20, 50, 100, 200, 500, 1000],
+            'align' => 'right',
+            'background' => true,
+            'perfect' => false,
+            'border' => false,
+            'layouts' => [
                 'PrevJump',
                 'PrevPage',
                 'Number',
@@ -50,7 +51,7 @@ trait PagesTrait
         ], $pagerConfig);
         $this->proxyConfig['props'] = array_merge([
             'result' => 'data.data',
-            'total'  => 'data.total',
+            'total' => 'data.total',
         ], $field);
         return $this;
     }

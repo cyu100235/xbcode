@@ -1,5 +1,4 @@
 <?php
+use app\common\providers\EventProvider;
 
-return [
-    
-];
+return EventProvider::init();

@@ -21,25 +21,26 @@ class UploadProvider
     use BaseUpload;
     // 使用远程文件下载并储存
     use RemoteUpload;
-    
+
     /**
      * 上传文件
      * @param \Webman\Http\UploadFile $file
      * @param int $uid
      * @param string $adapter
+     * @param bool $save
      * @return mixed
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public static function upload(UploadFile $file, int $uid = 0,string $adapter = '')
+    public static function upload(UploadFile $file, int $uid = 0, string $adapter = '', bool $save = true)
     {
         // 获取当前文件选定器
         if (!$adapter) {
             $adapter = Config::getDbConfig()['default'] ?? 'public';
         }
         // 检测文件是否已上传
-        $md5 = hash_file('md5',$file->getRealPath());
-        $data = self::getFileInfo(['md5'=> $md5], $adapter);
+        $md5  = hash_file('md5', $file->getRealPath());
+        $data = self::getFileInfo(['md5' => $md5], $adapter);
         if ($data) {
             return $data;
         }
@@ -59,26 +60,29 @@ class UploadProvider
         $info = $filesystem->path($dirName)->upload($file);
         // 如果是对象则转数组
         if (is_object($info)) {
-            $info = json_decode(json_encode($info),true);
+            $info = json_decode(json_encode($info), true);
         }
         // 保存文件信息
         $data = [
-            'uid'       => $uid,
-            'title'     => $info['origin_name'],
-            'filename'  => $info['origin_name'],
-            'md5'       => $md5,
-            'format'    => $info['extension'],
-            'adapter'   => $adapter,
-            'size'      => $info['size'],
-            'path'      => $info['file_name'],
+            'uid' => $uid,
+            'title' => $info['origin_name'],
+            'filename' => $info['origin_name'],
+            'md5' => $md5,
+            'format' => $info['extension'],
+            'adapter' => $adapter,
+            'size' => $info['size'],
+            'path' => $info['file_name'],
+            'url' => $info['file_url'],
         ];
+        if (!$save) {
+            return $data;
+        }
         if (!self::addFileInfo($data)) {
             throw new Exception('文件上传失败');
         }
-        $data['url'] = $info['file_url'];
         return $data;
     }
-    
+
     /**
      * 获取外链地址
      * @param mixed $path
@@ -97,7 +101,7 @@ class UploadProvider
         if (is_array($path)) {
             $data = [];
             foreach ($path as $key => $value) {
-                $data[$key] = self::url($value,$adapter,$default);
+                $data[$key] = self::url($value, $adapter, $default);
             }
             return $data;
         }
@@ -105,7 +109,7 @@ class UploadProvider
         $fileSystem = Storage::instance();
         // 获取文件所属驱动
         if (empty($adapter)) {
-            $adapter = Upload::where('path', $path)->value('adapter','');
+            $adapter = Upload::where('path', $path)->value('adapter', '');
         }
         // 切换驱动
         if ($adapter) {
@@ -115,7 +119,7 @@ class UploadProvider
         // 访问链接
         return $fileSystem->url($path);
     }
-    
+
     /**
      * 获取附件路径
      * @param string $path
@@ -148,7 +152,7 @@ class UploadProvider
         $data     = ltrim($parseUrl['path'], '/');
         return $data;
     }
-    
+
     /**
      * 删除文件
      * @param array|string $paths
@@ -171,7 +175,7 @@ class UploadProvider
         }
         foreach ($paths as $path) {
             // 查询附件库记录
-            $model = Upload::where('path',$path)->find();
+            $model = Upload::where('path', $path)->find();
             if (!$model) {
                 throw new Exception('文件路径参数错误');
             }

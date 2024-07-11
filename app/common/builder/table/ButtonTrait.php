@@ -149,10 +149,8 @@ trait ButtonTrait
             $button
         );
         // 别名参数处理，仅右侧按钮
-        foreach ($btnData['pageData']['aliasParams'] as $key => $value)
-        {
-            if (is_numeric($key))
-            {
+        foreach ($btnData['pageData']['aliasParams'] as $key => $value) {
+            if (is_numeric($key)) {
                 $btnData['pageData']['aliasParams'][$value] = $value;
                 unset($btnData['pageData']['aliasParams'][$key]);
             }
@@ -233,9 +231,7 @@ trait ButtonTrait
             // 按钮样式
             'button' => [],
             // type为[modal，table，remote，info]时有效
-            'message' => [
-                'title' => '温馨提示',
-            ],
+            'message' => [],
         ];
         return $data;
     }
@@ -251,8 +247,7 @@ trait ButtonTrait
     private function getModalAttrs(array &$btnData): array
     {
         // 设置模态框专有属性
-        if (in_array($btnData['pageData']['type'], ['modal', 'table', 'remote', 'info']))
-        {
+        if (in_array($btnData['pageData']['type'], ['modal', 'table', 'remote', 'info'])) {
             $btnData['message']['customStyle']['width']  = '45%';
             $btnData['message']['customStyle']['height'] = '75vh';
             $btnData['message']['closeOnClickModal']     = false;
@@ -261,8 +256,7 @@ trait ButtonTrait
             $btnData['message']['cancelButtonText']      = '取消';
         }
         // 设置确认框专有属性
-        if ($btnData['pageData']['type'] === 'confirm')
-        {
+        if ($btnData['pageData']['type'] === 'confirm') {
         }
         return $btnData;
     }

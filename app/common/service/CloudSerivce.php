@@ -1,10 +1,10 @@
 <?php
 namespace app\common\service;
 
-use app\common\service\cloud\PluginsOrderCloud;
-use app\common\service\cloud\PluginsCateCloud;
+use app\common\service\action\PluginBaseAction;
+use app\common\service\action\PluginDependAction;
 use app\common\service\cloud\PluginsCloud;
-use app\common\service\cloud\UserCloud;
+use app\common\service\cloud\PluginsUtil;
 
 /**
  * 云服务
@@ -13,8 +13,8 @@ use app\common\service\cloud\UserCloud;
  */
 class CloudSerivce
 {
-    use UserCloud;
+    use PluginsUtil;
     use PluginsCloud;
-    use PluginsOrderCloud;
-    use PluginsCateCloud;
+    use PluginBaseAction;
+    use PluginDependAction;
 }

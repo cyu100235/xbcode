@@ -1,12 +1,12 @@
 <?php
 namespace app\common\service\cloud;
-use app\common\service\CloudSerivce;
+
 use app\common\utils\JsonUtil;
 use Exception;
 use support\Request;
 
 /**
- * 插件订单云服务
+ * 插件订单
  * @copyright 贵州小白基地网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
@@ -24,22 +24,22 @@ trait PluginsOrderCloud
     public static function create(Request $request)
     {
         // 获取数据
-        $name = $request->get("name");
+        $name    = $request->get("name");
         $version = $request->get("version");
         // 参数验证
-        if (empty($name) || empty($version)){
+        if (empty($name) || empty($version)) {
             throw new Exception("参数错误");
         }
-        $data = [
+        $data   = [
             'name' => $name,
             'version' => $version
         ];
-        $result = HttpCloud::post('user/Order/create',$data)->array();
+        $result = HttpCloud::post('user/Order/create', $data)->array();
         if (empty($result)) {
             return self::fail('获取用户信息失败');
         }
         if (isset($result['code']) && $result['code'] === 12000) {
-            return self::failFul('请登录云服务',11000);
+            return self::failFul('请登录云服务', 11000);
         }
         if (isset($result['code']) && $result['code'] != 200) {
             return self::fail($result['msg'], $result['code']);
@@ -62,14 +62,14 @@ trait PluginsOrderCloud
         // 付款类型
         $pay_type = $request->get("pay_type");
         // 参数验证
-        if (empty($order_no) || empty($pay_type)){
+        if (empty($order_no) || empty($pay_type)) {
             throw new Exception("参数错误");
         }
-        $data = [
+        $data   = [
             'order_no' => $order_no,
             'pay_type' => $pay_type,
         ];
-        $result = HttpCloud::get('user/Order/unifiedOrder',$data);
+        $result = HttpCloud::get('user/Order/unifiedOrder', $data);
         // 验证数据
         $data = HttpCloud::getContent($result);
         // 返回数据

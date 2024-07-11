@@ -1,6 +1,8 @@
 APP_DEBUG = false
 APP_PORT = {APP_PORT}
 
+PLUGIN_STORE = true
+
 DEFAULT_TIMEZONE = Asia/Shanghai
 
 [DATABASE]

@@ -4,9 +4,9 @@ namespace app\admin\controller;
 use app\common\providers\ConfigFormProvider;
 use app\common\providers\ConfigProvider;
 use hg\apidoc\annotation as Apidoc;
-use support\Request;
 use app\common\XbController;
 use Webman\Event\Event;
+use support\Request;
 
 /**
  * 系统设置
@@ -28,31 +28,18 @@ class SettingsController extends XbController
         $group = $request->get('group', '');
         if ($request->method() === 'PUT') {
             $post = $request->post();
-            if (empty($group)) {
-                return $this->fail('分组参数错误');
-            }
-            // 数据验证
-            if (!empty($post['xbValidateor'])) {
-                if (!class_exists($post['xbValidateor'])) {
-                    return $this->fail('验证器不存在');
-                }
-                xbValidate($post['xbValidateor'], $post);
-                unset($post['xbValidateor']);
-            }
-            // 保存配置项
-            ConfigProvider::save($group, $post);
-            // 通知全局事件
-            Event::dispatch('system.setting', [
+            $data = [
                 'group' => $group,
                 'data' => $post,
-            ]);
+            ];
+            Event::dispatch('admin.event.SettingsEvent.config', $data);
             // 返回结果
             return $this->success('保存成功');
         }
         if (empty($group)) {
             return $this->fail('分组参数错误');
         }
-        $data     = ConfigProvider::getOriginal($group, []);
+        $data     = ConfigProvider::get($group, '', [], ['parse' => false]);
         $builder  = ConfigFormProvider::formView($group);
         $builder  = $builder->setFormData($data);
         $formView = $builder->create();
@@ -72,28 +59,18 @@ class SettingsController extends XbController
         $group = $request->get('group');
         if ($request->method() === 'PUT') {
             $post = $request->post();
-            // 数据验证
-            if (!empty($post['xbValidateor'])) {
-                if (!class_exists($post['xbValidateor'])) {
-                    return $this->fail('验证器不存在');
-                }
-                xbValidate($post['xbValidateor'], $post);
-                unset($post['xbValidateor']);
-            }
-            // 保存配置项
-            ConfigProvider::save($group, $post);
-            // 通知全局事件
-            Event::dispatch('system.setting', [
+            $data = [
                 'group' => $group,
                 'data' => $post,
-            ]);
+            ];
+            Event::dispatch('admin.event.SettingsEvent.config', $data);
             // 返回结果
             return $this->success('保存成功');
         }
         if (empty($group)) {
             return $this->fail('分组参数错误');
         }
-        $data    = ConfigProvider::getOriginal($group, []);
+        $data    = ConfigProvider::get($group, '', [], ['parse' => false]);
         $builder = ConfigFormProvider::formView($group);
         $builder->setFormData($data);
         $formView = $builder->create();
@@ -113,28 +90,18 @@ class SettingsController extends XbController
         $group = $request->get('group');
         if ($request->method() === 'PUT') {
             $post = $request->post();
-            // 数据验证
-            if (!empty($post['xbValidateor'])) {
-                if (!class_exists($post['xbValidateor'])) {
-                    return $this->fail('验证器不存在');
-                }
-                xbValidate($post['xbValidateor'], $post);
-                unset($post['xbValidateor']);
-            }
-            // 保存配置项
-            ConfigProvider::save($group, $post);
-            // 通知全局事件
-            Event::dispatch('system.setting', [
+            $data = [
                 'group' => $group,
                 'data' => $post,
-            ]);
+            ];
+            Event::dispatch('admin.event.SettingsEvent.config', $data);
             // 返回结果
             return $this->success('保存成功');
         }
         if (empty($group)) {
             return $this->fail('分组参数错误');
         }
-        $data    = ConfigProvider::getOriginal($group, []);
+        $data    = ConfigProvider::get($group, '', [], ['parse' => false]);
         $builder = ConfigFormProvider::tabsFormView($group);
         $builder->setFormData($data);
         $formView = $builder->create();

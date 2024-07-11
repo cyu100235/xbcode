@@ -3,7 +3,6 @@
 namespace app\controller;
 
 use app\common\utils\EnvironmentUtil;
-use app\common\utils\FrameUtil;
 use app\common\utils\InstallUtil;
 use app\common\XbController;
 use support\Request;
@@ -26,7 +25,7 @@ class InstallController extends XbController
     {
         return $this->adminView('app/common/view/install/index.html');
     }
-    
+
     /**
      * 安装协议
      * @param \support\Request $request
@@ -40,10 +39,10 @@ class InstallController extends XbController
         if (InstallUtil::hasInstall()) {
             return $this->success('success');
         }
-        $path = app_path('common/data/protocol.md');
+        $path    = app_path('common/data/protocol.md');
         $content = file_get_contents($path);
         return $this->successRes([
-            'content'   => $content,
+            'content' => $content,
         ]);
     }
 
@@ -57,9 +56,9 @@ class InstallController extends XbController
     public function environment(Request $request)
     {
         $data = [
-            'fun'       => EnvironmentUtil::getVerifyFun(),
-            'extra'     => EnvironmentUtil::getVerifyExtra(),
-            'dirData'   => EnvironmentUtil::getDirData()
+            'fun' => EnvironmentUtil::getVerifyFun(),
+            'extra' => EnvironmentUtil::getVerifyExtra(),
+            'dirData' => EnvironmentUtil::getDirData()
         ];
         return $this->successRes($data);
     }

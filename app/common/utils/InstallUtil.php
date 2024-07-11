@@ -253,10 +253,8 @@ class InstallUtil
         $envConfig = str_replace($str1, $str2, $envConfig);
         // 写入配置文件
         file_put_contents($envPath, $envConfig);
-        // 删除安装文件
-        @unlink(base_path('.env.install'));
         // 延迟1秒重启
-        FrameUtil::pcntlAlarm(1, function () {
+        FrameUtil::pcntlAlarm(2, function () {
             // 重启服务
             FrameUtil::reload();
         });

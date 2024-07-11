@@ -29,6 +29,8 @@ return [
             'break_reconnect' => true,
             // 关闭SQL监听日志
             'trigger_sql' => xbEnv('APP_DEBUG', true),
+            // 自定义基础查询类
+            'query' => \app\common\base\BaseQuery::class,
             // 自定义分页类
             'bootstrap' => ''
         ],
