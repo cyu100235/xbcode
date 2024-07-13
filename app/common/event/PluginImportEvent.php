@@ -1,5 +1,5 @@
 <?php
-namespace app\admin\event;
+namespace app\common\event;
 
 use Webman\Http\UploadFile;
 use app\model\Plugins;

@@ -7,7 +7,7 @@ use Webman\Http\Request;
 
 class StaticFileMiddleware implements MiddlewareInterface
 {
-    public function process(Request $request, callable $next) : Response
+    public function process(Request $request, callable $next): Response
     {
         // 禁止访问.开头的隐藏文件
         if (strpos($request->path(), '/.') !== false) {

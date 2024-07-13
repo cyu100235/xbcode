@@ -17,5 +17,6 @@
  */
 return [
     'enable' => true,
-    'middleware' => [],
+    'middleware' => [
+    ],
 ];

@@ -77,11 +77,14 @@ class RouteProvider
             return redirect("/{$moduleName}/");
         });
         Route::get("/{$moduleName}/", 'app\admin\controller\IndexController@index');
-        // 注册文档路由
-        Route::get("/apidoc", function () {
-            return redirect('/apidoc/');
-        });
-        Route::get("/apidoc/", 'app\controller\IndexController@apidoc');
+        // 是否调试模式
+        if (config('app.debug', false)) {
+            // 注册文档路由
+            Route::get("/apidoc", function () {
+                return redirect('/apidoc/');
+            });
+            Route::get("/apidoc/", 'app\controller\IndexController@apidoc');
+        }
         // 注册静态文件路由
         Route::get('/xbase/[{path:.+}]', function (Request $request, $path = '') {
             // 安全检查，避免url里 /../../../password 这样的非法访问

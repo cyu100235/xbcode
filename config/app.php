@@ -2,7 +2,7 @@
 use support\Request;
 
 return [
-    'debug' => xbEnv('APP_DEBUG', true),
+    'debug' => xbEnv('APP_DEBUG', false),
     'error_reporting' => E_ALL,
     'default_timezone' => 'Asia/Shanghai',
     'request_class' => Request::class,

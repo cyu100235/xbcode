@@ -16,10 +16,13 @@ class EventProvider
      */
     public static function init()
     {
-        // 加载普通事件
-        $paths        = glob(base_path('app/**/event/*Event.php'));
-        $pluginPaths  = glob(base_path('plugin/**/app/event/*Event.php'));
-        $appEvents    = self::load($paths);
+        // 框架文件路径
+        $paths = glob(base_path('app/**/event/*Event.php'));
+        // 插件文件路径
+        $pluginPaths = glob(base_path('plugin/**/app/event/*Event.php'));
+        // 框架事件
+        $appEvents = self::load($paths);
+        // 插件事件
         $pluginEvents = self::load($pluginPaths);
         // 加载自定义事件
         $customEvents = self::customEvent();

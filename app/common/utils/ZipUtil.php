@@ -16,15 +16,15 @@ class ZipUtil
 {
     /**
      * 执行打包
-     * @param string $zipFilePath
-     * @param string $extractTo
-     * @param array $ignoreFiles
+     * @param string $zipFilePath 打包文件路径
+     * @param string $extractTo 打包目标路径
+     * @param array $ignoreFiles 忽略文件
      * @throws \Exception
      * @return void
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public static function build(string $zipFilePath,string $extractTo,array $ignoreFiles = [])
+    public static function build(string $zipFilePath, string $extractTo, array $ignoreFiles = [])
     {
         // 开始执行打包
         if (SystemZipCmdUtil::getZipBuildCmd($zipFilePath, $extractTo)) {
@@ -37,7 +37,7 @@ class ZipUtil
                 throw new Exception('无法使用系统命令进行打包');
             }
             // 开始执行系统打包
-            SystemZipCmdUtil::zipBuild($zipFilePath, $extractTo,$ignoreFiles);
+            SystemZipCmdUtil::zipBuild($zipFilePath, $extractTo, $ignoreFiles);
         } else if (class_exists('ZipArchive')) {
             // 使用ZipArchive扩展打包
             (new PhpZipArchiveUtil)->build($zipFilePath, $extractTo, $ignoreFiles);
@@ -46,7 +46,7 @@ class ZipUtil
             (new PclZipUtil)->build($zipFilePath, $extractTo, $ignoreFiles);
         }
     }
-    
+
     /**
      * 根据路径打包所需文件
      * @param string $zipFilePath
@@ -57,7 +57,7 @@ class ZipUtil
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public static function buildFiles(string $zipFilePath,string $extractTo,array $files = [])
+    public static function buildFiles(string $zipFilePath, string $extractTo, array $files = [])
     {
         // 开始执行打包
         if (SystemZipCmdUtil::getZipBuildCmd($zipFilePath, $extractTo)) {
@@ -70,16 +70,16 @@ class ZipUtil
                 throw new Exception('无法使用系统命令进行打包');
             }
             // 开始执行系统打包
-            SystemZipCmdUtil::zipBuildFiles($zipFilePath, $extractTo,$files);
-        } else if(class_exists('ZipArchive')){
+            SystemZipCmdUtil::zipBuildFiles($zipFilePath, $extractTo, $files);
+        } else if (class_exists('ZipArchive')) {
             // 使用内置PHP扩展ZipArchive扩展打包
             (new PhpZipArchiveUtil)->buildFiles($zipFilePath, $extractTo, $files);
-        }else{
+        } else {
             // 使用pclzip扩展打包
             (new PclZipUtil)->buildFiles($zipFilePath, $extractTo, $files);
         }
     }
-    
+
     /**
      * 解压
      * @param string $zipFilePath
@@ -89,7 +89,7 @@ class ZipUtil
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public static function unzip(string $zipFilePath,string $extractTo)
+    public static function unzip(string $zipFilePath, string $extractTo)
     {
         // 检测目标目录不存在则创建
         if (!is_dir($extractTo)) {
@@ -107,7 +107,7 @@ class ZipUtil
             }
             // 开始执行系统打包
             SystemZipCmdUtil::unzipWith($zipFilePath, $extractTo);
-        } else if(class_exists('ZipArchive')) {
+        } else if (class_exists('ZipArchive')) {
             // 使用内置PHP扩展ZipArchive扩展解压
             (new PhpZipArchiveUtil)->unzip($zipFilePath, $extractTo);
         } else {

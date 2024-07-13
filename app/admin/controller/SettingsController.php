@@ -32,7 +32,7 @@ class SettingsController extends XbController
                 'group' => $group,
                 'data' => $post,
             ];
-            Event::dispatch('admin.event.SettingsEvent.config', $data);
+            Event::dispatch('common.event.SettingsEvent.config', $data);
             // 返回结果
             return $this->success('保存成功');
         }
@@ -63,7 +63,7 @@ class SettingsController extends XbController
                 'group' => $group,
                 'data' => $post,
             ];
-            Event::dispatch('admin.event.SettingsEvent.config', $data);
+            Event::dispatch('common.event.SettingsEvent.config', $data);
             // 返回结果
             return $this->success('保存成功');
         }
@@ -94,7 +94,7 @@ class SettingsController extends XbController
                 'group' => $group,
                 'data' => $post,
             ];
-            Event::dispatch('admin.event.SettingsEvent.config', $data);
+            Event::dispatch('common.event.SettingsEvent.config', $data);
             // 返回结果
             return $this->success('保存成功');
         }

@@ -1,5 +1,5 @@
 <?php
-namespace app\admin\event;
+namespace app\common\event;
 
 use app\common\providers\ConfigProvider;
 use Exception;
@@ -51,7 +51,7 @@ class SettingsEvent
         // 保存配置项
         ConfigProvider::save($post['group'], $post['data']);
         // 配置完成后事件
-        Event::dispatch('admin.event.SettingsEvent.config.success', [
+        Event::dispatch('common.event.SettingsEvent.config.success', [
             'group' => $post['group'],
             'data' => $post['data'],
         ]);

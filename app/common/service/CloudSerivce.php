@@ -4,6 +4,7 @@ namespace app\common\service;
 use app\common\service\action\PluginBaseAction;
 use app\common\service\action\PluginDependAction;
 use app\common\service\cloud\PluginsCloud;
+use app\common\service\cloud\PluginsOrderCloud;
 use app\common\service\cloud\PluginsUtil;
 
 /**
@@ -13,8 +14,14 @@ use app\common\service\cloud\PluginsUtil;
  */
 class CloudSerivce
 {
+    // 插件工具类
     use PluginsUtil;
+    // 插件相关
     use PluginsCloud;
+    // 插件订单相关
+    use PluginsOrderCloud;
+    // 插件工具相关
     use PluginBaseAction;
+    // 插件依赖相关
     use PluginDependAction;
 }

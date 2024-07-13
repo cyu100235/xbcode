@@ -62,6 +62,7 @@ class MenusController extends XbController
             ->editConfig()
             ->treeConfig([
                 'rowField' => 'id',
+                'expandAll' => false,
             ])
             ->addTopButton('add', '添加', [
                 'type' => 'modal',

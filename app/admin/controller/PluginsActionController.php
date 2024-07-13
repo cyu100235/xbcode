@@ -5,8 +5,11 @@ namespace app\admin\controller;
 use app\admin\view\PluginConfigView;
 use app\common\service\action\PluginUpdateAction;
 use app\common\service\CloudSerivce;
+use app\common\utils\ZipUtil;
 use app\common\XbController;
+use Tinywan\Jwt\JwtToken;
 use Webman\Event\Event;
+use think\facade\Cache;
 use support\Request;
 
 /**
@@ -17,6 +20,14 @@ use support\Request;
 class PluginsActionController extends XbController
 {
     /**
+     * 不需要登录的方法
+     * @var array
+     */
+    protected $noLogin = [
+        'download'
+    ];
+
+    /**
      * 导入插件
      * @param \support\Request $request
      * @return mixed
@@ -26,7 +37,7 @@ class PluginsActionController extends XbController
     public function import(Request $request)
     {
         $file = $request->file('file');
-        Event::dispatch('admin.event.PluginImportEvent.import', $file);
+        Event::dispatch('common.event.PluginImportEvent.import', $file);
         return $this->success('插件导入成功');
     }
 
@@ -37,12 +48,59 @@ class PluginsActionController extends XbController
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    # TODO:导出插件未完成
     public function export(Request $request)
     {
-        $file = $request->file('file');
-        Event::dispatch('admin.event.PluginImportEvent.import', $file);
-        return $this->success('导出插件成功');
+        $uid        = JwtToken::getCurrentId();
+        $name       = $request->get('name', '');
+        $pluginPath = base_path("plugin/{$name}/");
+        if (!is_dir($pluginPath)) {
+            return $this->fail('插件不存在');
+        }
+        $tempPath = base_path("runtime/plugin/");
+        if (!is_dir($tempPath)) {
+            mkdir($tempPath, 0755, true);
+        }
+        // 插件信息
+        $info     = CloudSerivce::getPluginInfo($name);
+        $packPath = "{$tempPath}export-{$info['name']}-{$info['version']}.zip";
+        ZipUtil::build($packPath, $pluginPath);
+        $key  = md5($packPath . $uid . time());
+        $data = [
+            'uid' => $uid,
+            'title' => $info['title'],
+            'name' => $name,
+            'version' => $info['version'],
+            'path' => $packPath,
+        ];
+        Cache::set($key, $data, 3600);
+        return $this->successRes([
+            'redirect' => xbUrl('PluginsAction/download', ['key' => $key]),
+        ]);
+    }
+
+    /**
+     * 下载插件
+     * @param \support\Request $request
+     * @return \support\Response
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public function download(Request $request)
+    {
+        $key  = $request->get('key', '');
+        $data = Cache::get($key);
+        if (empty($data)) {
+            return $this->fail('下载链接已失效');
+        }
+        if (empty($data['path'])) {
+            return $this->fail('下载连接错误');
+        }
+        if (!file_exists($data['path'])) {
+            return $this->fail('下载文件不存在');
+        }
+        $filename = "{$data['title']} {$data['name']}{$data['version']}.zip";
+        $path     = $data['path'];
+        return response()->download($path, $filename);
     }
 
     /**
@@ -56,7 +114,7 @@ class PluginsActionController extends XbController
     {
         $data         = $request->post();
         $data['step'] = $request->post('step', 'depend');
-        $result       = Event::dispatch('admin.event.PluginInstallEvent.start', $data);
+        $result       = Event::dispatch('common.event.PluginInstallEvent.start', $data);
         $data         = current($result);
         return $data;
     }
@@ -85,7 +143,7 @@ class PluginsActionController extends XbController
     {
         $data         = $request->post();
         $data['step'] = $request->post('step', 'database');
-        $result       = Event::dispatch('admin.event.PluginUnInstallEvent.start', $data);
+        $result       = Event::dispatch('common.event.PluginUnInstallEvent.start', $data);
         $data         = current($result);
         return $data;
     }
@@ -150,7 +208,7 @@ class PluginsActionController extends XbController
                 'group' => "{$group}_{$active}",
                 'data' => $post
             ];
-            Event::dispatch('admin.event.SettingsEvent.config', $data);
+            Event::dispatch('common.event.SettingsEvent.config', $data);
             // 返回结果
             return $this->success('保存成功');
         }

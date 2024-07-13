@@ -56,18 +56,21 @@ class XbPluginCreateCommand extends Command
         $this->mkdir("$base_path/plugin/$name/app/controller", 0777, true);
         $this->mkdir("$base_path/plugin/$name/app/event", 0777, true);
         $this->mkdir("$base_path/plugin/$name/app/model", 0777, true);
-        $this->mkdir("$base_path/plugin/$name/app/middleware", 0777, true);
         $this->mkdir("$base_path/plugin/$name/app/view/index", 0777, true);
         $this->mkdir("$base_path/plugin/$name/config", 0777, true);
         $this->mkdir("$base_path/plugin/$name/data/sql", 0777, true);
         $this->mkdir("$base_path/plugin/$name/public", 0777, true);
         $this->mkdir("$base_path/plugin/$name/api", 0777, true);
+        $this->mkdir("$base_path/plugin/$name/setting", 0777, true);
+        $this->mkdir("$base_path/plugin/$name/docs", 0777, true);
         $this->createFunctionsFile("$base_path/plugin/$name/app/functions.php");
         $this->createControllerFile("$base_path/plugin/$name/app/controller/IndexController.php", $name);
         $this->createViewFile("$base_path/plugin/$name/app/view/index/index.html");
         $this->createConfigFiles("$base_path/plugin/$name/config", $name);
+        $this->createSettingFiles("$base_path/plugin/$name/setting", $name);
         $this->createApiFiles("$base_path/plugin/$name", $name);
         $this->createInfoFiles("$base_path/plugin/$name", $name);
+        $this->createDocsFiles("$base_path/plugin/$name/docs", $name);
         $this->createInstallSqlFile("$base_path/plugin/$name/data/sql/install.sql");
         $this->createInstallSqlFile("$base_path/plugin/$name/data/sql/update.sql");
         $this->createInstallSqlFile("$base_path/plugin/$name/data/sql/uninstall.sql");
@@ -85,6 +88,97 @@ class XbPluginCreateCommand extends Command
         echo "Create $path\r\n";
         mkdir($path, $mode, $recursive);
         file_put_contents("$path/remarks.txt", "Create by 小白基地\n");
+    }
+
+    /**
+     * 创建文档文件
+     * @param string $path
+     * @param string $name
+     * @return void
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    protected function createDocsFiles(string $path, string $name)
+    {
+        // 接口文档
+        $content = <<<EOF
+        # 事件文档
+EOF;
+        file_put_contents("$path/events.md", $content);
+
+        // 事件文档
+        $content = <<<EOF
+        # 接口文档
+EOF;
+        file_put_contents("$path/apis.md", $content);
+
+        // 测试文档
+        $content = <<<EOF
+        # 测试文档
+EOF;
+        file_put_contents("$path/test.md", $content);
+        $content    = <<<EOF
+<?php
+return [
+    'apps' => [
+        [
+            // （必须）标题
+            'title' => '官网端',
+            // （必须）控制器目录地址
+            'path' => 'plugin\\{$name}\\app\\controller',
+            // （必须）唯一的key
+            'key' => 'home',
+        ],
+    ],
+    'docs' => [
+        [
+            'title' => '测试文档',
+            'path' => 'plugin/{$name}/docs/test',
+        ],
+    ],
+];
+EOF;
+        $pluginPath = dirname($path);
+        file_put_contents("$pluginPath/config/apidoc.php", $content);
+    }
+
+    /**
+     * 创建插件配置文件
+     * @param mixed $path
+     * @param mixed $name
+     * @return void
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    protected function createSettingFiles($path, $name)
+    {
+        $content = <<<EOF
+<?php
+return [
+    [
+        // 支持以.多层级配置
+        'field' => 'plugin_name',
+        'title' => '网站名称',
+        'value' => '',
+        'component' => 'input',
+        'extra' => [
+            'col' => 12,
+            'prompt' => '应用名称，显示在浏览器标签页',
+        ],
+    ],
+];
+EOF;
+        file_put_contents("$path/basis.php", $content);
+        $content = <<<EOF
+<?php
+return [
+    [
+        'title' => '基础配置',
+        'name' => 'basis',
+    ],
+];
+EOF;
+        file_put_contents("$path/config.php", $content);
     }
 
     /**
@@ -153,8 +247,6 @@ EOF;
  * 插件自定义函数库
  */
 
-
-
 EOF;
         file_put_contents($file, $content);
     }
@@ -173,6 +265,9 @@ EOF;
             'title' => '基础插件系统',
             'name' => $name,
             'version' => '1.0.0',
+            'desc' => '',
+            'author' => '楚羽幽',
+            'logo' => '',
             'depend' => [],
         ];
         $content = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
@@ -366,80 +461,6 @@ class Install
     public function uninstallAfter()
     {
     }
-
-    /**
-     * 设置插件配置（可不提供）
-     * @return array[]
-     * @copyright 贵州小白基地网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
-     */
-    public function config()
-    {
-        return [
-            [
-                'field' => 'baseic',
-                'title' => '基本配置',
-                'children' => [
-                    [
-                        'field' => 'baseic.web_name',
-                        'title' => '网站名称',
-                        'value' => '',
-                        'component' => 'input',
-                        'extra' => [
-                            'col' => 12,
-                            'prompt' => '应用名称，显示在浏览器标签页',
-                        ],
-                    ],
-                    [
-                        'field' => 'baseic.web_url',
-                        'title' => '网站域名',
-                        'value' => '',
-                        'component' => 'input',
-                        'extra' => [
-                            'col' => 12,
-                            'prompt' => '网站链接，以斜杠结尾，如：https://xiaobai.host/',
-                        ],
-                    ],
-                    [
-                        'field' => 'baseic.web_title',
-                        'title' => '网站标题',
-                        'value' => '',
-                        'component' => 'input',
-                        'extra' => [
-                            'col' => 12,
-                        ],
-                    ],
-                    [
-                        'field' => 'baseic.web_keywords',
-                        'title' => '网站关键字',
-                        'value' => '',
-                        'component' => 'input',
-                        'extra' => [
-                            'col' => 12,
-                        ],
-                    ],
-                    [
-                        'field' => 'baseic.web_description',
-                        'title' => '网站描述',
-                        'value' => '',
-                        'component' => 'textarea',
-                        'extra' => [
-                            'rows' => 4,
-                            'resize' => 'none',
-                            'prompt' => '请勿手动换行，字数在100字以内',
-                        ],
-                    ],
-                    [
-                        'field' => 'baseic.web_logo',
-                        'title' => '系统图标',
-                        'value' => '',
-                        'component' => 'uploadify',
-                        'extra' => [],
-                    ],
-                ],
-            ],
-        ];
-    }
 }
 EOF;
 
@@ -477,15 +498,6 @@ return [
 EOF;
         file_put_contents("$base/app.php", $content);
 
-        // event.php
-        $content = <<<EOF
-<?php
-// 事件文档：https://www.workerman.net/doc/webman/components/event.html
-return [];
-
-EOF;
-        file_put_contents("$base/event.php", $content);
-
         // autoload.php
         $content = <<<EOF
 <?php
@@ -504,15 +516,6 @@ return new Webman\\Container;
 
 EOF;
         file_put_contents("$base/container.php", $content);
-
-
-        // database.php
-        $content = <<<EOF
-<?php
-return  [];
-
-EOF;
-        file_put_contents("$base/database.php", $content);
 
         // exception.php
         $content = <<<EOF
@@ -554,12 +557,9 @@ EOF;
         // middleware.php
         $content = <<<EOF
 <?php
+use app\common\providers\MiddlewareProvider;
 
-return [
-    '' => [
-        
-    ]
-];
+return MiddlewareProvider::init('{$name}');
 
 EOF;
         file_put_contents("$base/middleware.php", $content);
@@ -590,9 +590,10 @@ EOF;
         // route.php
         $content = <<<EOF
 <?php
+use Webman\Route;
+use app\common\providers\RouteProvider;
 
-use Webman\\Route;
-
+RouteProvider::regPluginRoute('{$name}');
 
 EOF;
         file_put_contents("$base/route.php", $content);

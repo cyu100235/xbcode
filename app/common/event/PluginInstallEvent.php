@@ -1,5 +1,5 @@
 <?php
-namespace app\admin\event;
+namespace app\common\event;
 
 use app\common\service\CloudSerivce;
 use app\common\utils\JsonUtil;
@@ -7,21 +7,24 @@ use app\model\Plugins;
 use Exception;
 
 /**
- * 插件卸载事件
- * 1、卸载数据
- * 2、卸载插件
- * 3、卸载成功
+ * 插件安装
+ * 步骤如下：
+ * 1、下载更新包
+ * 2、解压更新包
+ * 3、安装依赖
+ * 4、执行数据安装
+ * 5、安装成功
  * @copyright 贵州小白基地网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
-class PluginUnInstallEvent
+class PluginInstallEvent
 {
     use JsonUtil;
 
     /**
-     * 卸载插件
-     * @param \support\Request $request
-     * @return mixed
+     * 安装插件
+     * @param string $name
+     * @return void
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
@@ -29,7 +32,7 @@ class PluginUnInstallEvent
     {
         // 参数验证
         if (empty($post['name']) || empty($post['version']) || empty($post['step'])) {
-            throw new Exception("卸载参数错误");
+            throw new Exception("插件安装参数错误");
         }
         // 临时插件包路径
         $package = base_path("runtime/plugin/") . "{$post['name']}-{$post['version']}.zip";
@@ -39,48 +42,46 @@ class PluginUnInstallEvent
             mkdir($packageDirPath, 0755, true);
         }
         if (!method_exists($this, $post['step'])) {
-            throw new Exception("卸载步骤不存在");
+            throw new Exception("插件安装步骤不存在");
         }
         // 执行转发
-        return call_user_func([self::class, $post['step']], $post);
+        return call_user_func([$this, $post['step']], $post);
     }
 
     /**
-     * 卸载数据
-     * @param array $post
-     * @return \support\Response
+     * 安装依赖
+     * @param \support\Request $request
+     * @return mixed
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    protected function database(array $post)
+    protected function depend(array $post)
     {
-        // 卸载插件数据
-        CloudSerivce::installData($post['name'], $post['version'], 'uninstall');
+        // 执行依赖安装
+        CloudSerivce::installDepend($post['name'], $post['version'], 'install');
         // 返回结果
-        return self::successFul('卸载数据完成', [
-            'url' => xbUrl('PluginsAction/uninstall'),
+        return $this->successFul('安装依赖完成...', [
+            'url' => xbUrl('PluginsAction/install'),
             'query' => [
-                'step' => 'uninstall',
+                'step' => 'database',
             ],
         ]);
     }
 
     /**
-     * 卸载目录
+     * 数据安装
      * @param array $post
-     * @return \support\Response
+     * @return mixed
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    protected function uninstall(array $post)
+    protected function database(array $post)
     {
-        // 获取数据
-        $pluginDir = base_path("plugin/{$post['name']}");
-        // 删除插件目录
-        remove_dir($pluginDir);
+        // 执行数据安装
+        CloudSerivce::installData($post['name'], $post['version'], 'install');
         // 返回结果
-        return $this->successFul('插件卸载完成', [
-            'url' => xbUrl('PluginsAction/uninstall'),
+        return $this->successFul('安装数据完成...', [
+            'url' => xbUrl('PluginsAction/install'),
             'query' => [
                 'step' => 'complete',
             ],
@@ -88,7 +89,7 @@ class PluginUnInstallEvent
     }
 
     /**
-     * 卸载完成
+     * 安装完成
      * @param array $post
      * @return \support\Response
      * @copyright 贵州小白基地网络科技有限公司
@@ -96,11 +97,11 @@ class PluginUnInstallEvent
      */
     protected function complete(array $post)
     {
-        $model = Plugins::where('name', $post['name'])->find();
-        if ($model) {
-            $model->delete();
-        }
+        // 更新安装状态
+        Plugins::where('name', $post['name'])->save([
+            'state' => '20',
+        ]);
         // 返回结果
-        return self::success('插件卸载成功');
+        return $this->success('插件安装完成');
     }
 }

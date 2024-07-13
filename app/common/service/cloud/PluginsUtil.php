@@ -2,6 +2,7 @@
 namespace app\common\service\cloud;
 
 use app\model\Plugins;
+use Exception;
 
 /**
  * 插件工具类
@@ -49,6 +50,36 @@ trait PluginsUtil
         }
         $data = array_values($data);
         return $data;
+    }
+
+    /**
+     * 获取插件信息
+     * @param string $name
+     * @return mixed
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public static function getPluginInfo(string $name)
+    {
+        $pluginPath = base_path("plugin/{$name}/");
+        if (!is_dir($pluginPath)) {
+            throw new Exception('插件不存在');
+        }
+        $infoPath = $pluginPath . 'info.json';
+        if (!is_file($infoPath)) {
+            throw new Exception('插件信息不存在');
+        }
+        $info = json_decode(file_get_contents($infoPath), true);
+        if (empty($info)) {
+            throw new Exception('插件信息错误');
+        }
+        if (empty($info['title'])) {
+            throw new Exception('插件名称错误');
+        }
+        if (empty($info['name'])) {
+            throw new Exception('插件标识错误');
+        }
+        return $info;
     }
 
     /**

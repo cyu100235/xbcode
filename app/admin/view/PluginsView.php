@@ -90,6 +90,28 @@ class PluginsView
             'type' => 'info',
             'icon' => 'Setting',
         ]);
+        $builder->addRightButton('export', '导出', [
+            'type' => 'confirm',
+            'api' => xbUrl('PluginsAction/export'),
+            'path' => xbUrl('PluginsAction/export'),
+            'method' => 'DELETE',
+            'params' => [
+                'field' => 'plugin_state',
+                'where' => 'in',
+                'value' => ['30', '40'],
+            ],
+            'aliasParams' => [
+                'name',
+                'version'
+            ],
+        ], [
+            'title' => '温馨提示',
+            'content' => '导出插件前，请自行备份数据库至插件目录',
+            'loading' => '正在导出插件...',
+        ], [
+            'type' => 'primary',
+            'icon' => 'Position',
+        ]);
         $builder->addRightButton('uninstall', '卸载', [
             'type' => 'confirm',
             'api' => xbUrl('PluginsAction/uninstall'),
