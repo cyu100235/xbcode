@@ -7,19 +7,19 @@ use Tinywan\Validate\Validate;
 class AdminValidate extends Validate
 {
     protected array $rule = [
-        'role_id'           => 'require',
-        'username'          => 'require|verifyAdd',
-        'password'          => 'require',
-        'nickname'          => 'require',
-        'avatar'            => 'require',
+        'role_id' => 'require',
+        'username' => 'require|verifyAdd',
+        'password' => 'require',
+        'nickname' => 'require',
+        'avatar' => 'require',
     ];
 
     protected array $message = [
-        'role_id.require'       => '请选择所属部门',
-        'username.require'      => '请输入登录账号',
-        'password.require'      => '请输入登录密码',
-        'nickname.require'      => '请输入用户昵称',
-        'avatar.require'        => '请上传头像',
+        'role_id.require' => '请选择所属部门',
+        'username.require' => '请输入登录账号',
+        'password.require' => '请输入登录密码',
+        'nickname.require' => '请输入用户昵称',
+        'avatar.require' => '请上传头像',
     ];
 
     /**
@@ -29,6 +29,7 @@ class AdminValidate extends Validate
      * @Email 416716328@qq.com
      * @DateTime 2023-04-30
      */
+
     public function sceneLogin()
     {
         return $this
@@ -91,8 +92,8 @@ class AdminValidate extends Validate
             'nickname',
             'avatar'
         ])
-        ->remove('role_id')
-        ->remove('username', ['verifyAdd']);
+            ->remove('role_id')
+            ->remove('username', ['verifyAdd']);
     }
 
     /**

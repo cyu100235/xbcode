@@ -29,6 +29,7 @@ class AdminController extends XbController
      */
     public function indexTable(Request $request)
     {
+        // 表格渲染
         $builder = new ListBuilder;
         $builder->addActionOptions('操作', [
             'width' => 180
@@ -95,7 +96,7 @@ class AdminController extends XbController
     public function index(Request $request)
     {
         $adminId = JwtToken::getCurrentId();
-        $data    = Admin::with(['role'])
+        $data = Admin::with(['role'])
             ->where('admin_id', $adminId)
             ->paginate()
             ->toArray();
@@ -113,7 +114,7 @@ class AdminController extends XbController
     {
         $adminId = JwtToken::getCurrentId();
         if ($request->method() == 'POST') {
-            $post             = $request->post();
+            $post = $request->post();
             $post['admin_id'] = $adminId;
 
             // 数据验证
@@ -148,7 +149,7 @@ class AdminController extends XbController
      */
     public function edit(Request $request)
     {
-        $id    = $request->get('id');
+        $id = $request->get('id');
         $model = Admin::where('id', $id)->find();
         if (!$model) {
             return $this->fail('该数据不存在');
@@ -203,7 +204,7 @@ class AdminController extends XbController
     public function info(Request $request)
     {
         $adminId = JwtToken::getCurrentId();
-        $model   = Admin::where('id', $adminId)->find();
+        $model = Admin::where('id', $adminId)->find();
         if (!$model) {
             return $this->fail('该数据不存在');
         }
@@ -222,9 +223,9 @@ class AdminController extends XbController
             }
             return $this->success('保存成功');
         }
-        $data           = $model->toArray();
+        $data = $model->toArray();
         $data['avatar'] = UploadProvider::url($data['avatar']);
-        $builder        = new FormBuilder;
+        $builder = new FormBuilder;
         $builder->addRow('username', 'input', '登录账号', '', [
             'col' => 12,
         ]);

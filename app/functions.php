@@ -196,3 +196,25 @@ function p(mixed $data, string $remarks = '')
         echo PHP_EOL;
     }
 }
+
+/**
+ * 渲染视图模板文件
+ * @param string $file
+ * @param array $data
+ * @param string $suffix
+ * @return bool|string
+ * @copyright 贵州小白基地网络科技有限公司
+ * @author 楚羽幽 cy958416459@qq.com
+ */
+function xbView(string $file, array $data = [], string $suffix = 'vue')
+{
+    $path = base_path("{$file}.{$suffix}");
+    if (!file_exists($path)) {
+        throw new Exception("视图文件不存在: {$file}", 404);
+    }
+    $content = file_get_contents($path);
+    if (!$content) {
+        throw new Exception("视图文件内容为空: {$file}", 404);
+    }
+    return $content;
+}

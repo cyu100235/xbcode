@@ -30,7 +30,7 @@ class LoginController extends XbController
      * 用户登录
      * @Apidoc\Method("POST")
      * @Apidoc\Param("username", type="string", require=true, desc="登录账户")
-     * @Apidoc\Param("password", type="string", require=true, desc="登录密码")
+     * @code \hg\apidoc\annotation\Param("password", type="string", require=true, desc="登录密码")
      * @param \support\Request $request
      * @return mixed
      * @copyright 贵州小白基地网络科技有限公司
@@ -55,21 +55,21 @@ class LoginController extends XbController
         }
         if ($model['state'] == '10') {
             throw new Exception('该用户已被冻结');
-        }        
+        }
         // 更新登录信息
-        $ip                 = $request->getRealIp();
-        $model->login_ip    = $ip;
-        $model->login_time  = date('Y-m-d H:i:s');
+        $ip                = $request->getRealIp();
+        $model->login_ip   = $ip;
+        $model->login_time = date('Y-m-d H:i:s');
         $model->save();
         // 生成令牌
         $data        = [
-            'id'    => $model['id'],
+            'id' => $model['id'],
             'state' => $model['state'],
         ];
-        $data = AuthUtil::generateToken($data);
+        $data        = AuthUtil::generateToken($data);
         $data['url'] = 'Index/index';
         // 返回数据
-        return $this->successFul('登录成功',$data);
+        return $this->successFul('登录成功', $data);
     }
 
     /**
@@ -83,7 +83,7 @@ class LoginController extends XbController
     public function user(Request $request)
     {
         try {
-            $userId = (int)JwtToken::getCurrentId();
+            $userId = (int) JwtToken::getCurrentId();
             if (empty($userId)) {
                 throw new Exception('参数错误，请重新登录');
             }
@@ -92,11 +92,11 @@ class LoginController extends XbController
                 throw new Exception('用户信息错误，请重新登录');
             }
             // 前端数据
-            $data = $user->toArray();
+            $data          = $user->toArray();
             $data['menus'] = AuthUtil::getAuthRule($userId);
             return $this->successRes($data);
         } catch (\Throwable $e) {
-            return $this->failFul($e->getMessage(),12000);
+            return $this->failFul($e->getMessage(), 12000);
         }
     }
 
@@ -110,6 +110,6 @@ class LoginController extends XbController
      */
     public function exit(Request $request)
     {
-        return $this->successFul('登录成功',[]);
+        return $this->successFul('登录成功', []);
     }
 }

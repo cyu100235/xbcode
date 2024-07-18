@@ -17,7 +17,7 @@ class Admin extends Model
     protected $hidden = [
         'password'
     ];
-    
+
     /**
      * 密码加密写入
      * @param mixed $value
@@ -30,7 +30,7 @@ class Admin extends Model
         if (!$value) {
             return false;
         }
-        return PasswordUtil::passwordHash((string)$value);;
+        return PasswordUtil::passwordHash((string) $value);
     }
 
     /**
@@ -45,7 +45,7 @@ class Admin extends Model
     {
         return UploadProvider::path($value);
     }
-    
+
     /**
      * 关联角色
      * @return \think\model\relation\HasOne

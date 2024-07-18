@@ -8,21 +8,21 @@ class ComposerStaticInite07e252fcf63af9e26b4119020c12e84
 {
     public static $files = array (
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
+        '9b552a3cc426e3287cc811caefa3cf53' => __DIR__ . '/..' . '/topthink/think-helper/src/helper.php',
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
-        '9b552a3cc426e3287cc811caefa3cf53' => __DIR__ . '/..' . '/topthink/think-helper/src/helper.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
         '253c157292f75eb38082b5acb06f3f01' => __DIR__ . '/..' . '/nikic/fast-route/src/functions.php',
         '8825ede83f2f289127722d4e842cf7e8' => __DIR__ . '/..' . '/symfony/polyfill-intl-grapheme/bootstrap.php',
         'e69f7f6ee287b969198c3c9d6777bd38' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/bootstrap.php',
+        '35fab96057f1bf5e7aba31a8a6d5fdde' => __DIR__ . '/..' . '/topthink/think-orm/stubs/load_stubs.php',
         '538ca81a9a966a6716601ecf48f4eaef' => __DIR__ . '/..' . '/opis/closure/functions.php',
         'b6b991a57620e2fb6b2f66f03fe9ddc2' => __DIR__ . '/..' . '/symfony/string/Resources/functions.php',
         'd767e4fc2dc52fe66584ab8c6684783e' => __DIR__ . '/..' . '/adbario/php-dot-notation/src/helpers.php',
         'b067bc7112e384b61c701452d53a14a8' => __DIR__ . '/..' . '/mtdowling/jmespath.php/src/JmesPath.php',
         '841780ea2e1d6545ea3a253239d59c05' => __DIR__ . '/..' . '/qiniu/php-sdk/src/Qiniu/functions.php',
         '5dd19d8a547b7318af0c3a93c8bd6565' => __DIR__ . '/..' . '/qiniu/php-sdk/src/Qiniu/Http/Middleware/Middleware.php',
-        '35fab96057f1bf5e7aba31a8a6d5fdde' => __DIR__ . '/..' . '/topthink/think-orm/stubs/load_stubs.php',
         '66453932bc1be9fb2f910a27947d11b6' => __DIR__ . '/..' . '/alibabacloud/client/src/Functions.php',
         '8af3fa7e0debc674a27a2d67e57bd6eb' => __DIR__ . '/..' . '/tinywan/validate/src/helper.php',
         '8a6e4a6102a8d183471c39e6768172da' => __DIR__ . '/../..' . '/support/helpers.php',
@@ -41,11 +41,16 @@ class ComposerStaticInite07e252fcf63af9e26b4119020c12e84
         ),
         't' => 
         array (
+            'think\\ide\\' => 10,
             'think\\' => 6,
         ),
         's' => 
         array (
             'support\\' => 8,
+        ),
+        'p' => 
+        array (
+            'phpDocumentor\\Reflection\\' => 25,
         ),
         'h' => 
         array (
@@ -63,6 +68,7 @@ class ComposerStaticInite07e252fcf63af9e26b4119020c12e84
         'W' => 
         array (
             'Workerman\\' => 10,
+            'Webmozart\\Assert\\' => 17,
             'Webman\\ThinkOrm\\' => 16,
             'Webman\\ThinkCache\\' => 18,
             'Webman\\Log\\' => 11,
@@ -108,6 +114,7 @@ class ComposerStaticInite07e252fcf63af9e26b4119020c12e84
             'Psr\\Http\\Client\\' => 16,
             'Psr\\Container\\' => 14,
             'Psr\\Cache\\' => 10,
+            'PHPStan\\PhpDocParser\\' => 21,
         ),
         'O' => 
         array (
@@ -148,6 +155,10 @@ class ComposerStaticInite07e252fcf63af9e26b4119020c12e84
             'Firebase\\JWT\\' => 13,
             'FastRoute\\' => 10,
         ),
+        'E' => 
+        array (
+            'Ergebnis\\Classy\\' => 16,
+        ),
         'D' => 
         array (
             'Doctrine\\Inflector\\' => 19,
@@ -176,16 +187,27 @@ class ComposerStaticInite07e252fcf63af9e26b4119020c12e84
         array (
             0 => __DIR__ . '/..' . '/xbai8/mysql-helper/src',
         ),
+        'think\\ide\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/topthink/think-ide-helper/src',
+        ),
         'think\\' => 
         array (
             0 => __DIR__ . '/..' . '/topthink/think-cache/src',
             1 => __DIR__ . '/..' . '/topthink/think-container/src',
             2 => __DIR__ . '/..' . '/topthink/think-helper/src',
             3 => __DIR__ . '/..' . '/topthink/think-orm/src',
+            4 => __DIR__ . '/..' . '/topthink/framework/src/think',
         ),
         'support\\' => 
         array (
             0 => __DIR__ . '/..' . '/workerman/webman-framework/src/support',
+        ),
+        'phpDocumentor\\Reflection\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
+            1 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
+            2 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
         ),
         'hg\\apidoc\\' => 
         array (
@@ -206,6 +228,10 @@ class ComposerStaticInite07e252fcf63af9e26b4119020c12e84
         'Workerman\\' => 
         array (
             0 => __DIR__ . '/..' . '/workerman/workerman',
+        ),
+        'Webmozart\\Assert\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/webmozart/assert/src',
         ),
         'Webman\\ThinkOrm\\' => 
         array (
@@ -340,6 +366,10 @@ class ComposerStaticInite07e252fcf63af9e26b4119020c12e84
         array (
             0 => __DIR__ . '/..' . '/psr/cache/src',
         ),
+        'PHPStan\\PhpDocParser\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpstan/phpdoc-parser/src',
+        ),
         'Overtrue\\Flysystem\\Qiniu\\' => 
         array (
             0 => __DIR__ . '/..' . '/overtrue/flysystem-qiniu/src',
@@ -411,6 +441,10 @@ class ComposerStaticInite07e252fcf63af9e26b4119020c12e84
         'FastRoute\\' => 
         array (
             0 => __DIR__ . '/..' . '/nikic/fast-route/src',
+        ),
+        'Ergebnis\\Classy\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/ergebnis/classy/src',
         ),
         'Doctrine\\Inflector\\' => 
         array (

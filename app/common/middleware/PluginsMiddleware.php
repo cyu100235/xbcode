@@ -27,8 +27,8 @@ class PluginsMiddleware implements MiddlewareInterface
     public function process(Request $request, callable $handler): Response
     {
         // 获取数据
-        $name = $request->plugin;
-        $config = ConfigProvider::get($name);
+        $name                  = $request->plugin;
+        $config                = ConfigProvider::get($name);
         $request->pluginConfig = $config;
         // 鉴权前置钩子
         $response = $request->method() == 'OPTIONS' ? response('', 204) : $handler($request);
