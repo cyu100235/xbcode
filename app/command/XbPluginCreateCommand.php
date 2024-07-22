@@ -102,13 +102,15 @@ class XbPluginCreateCommand extends Command
     {
         // 接口文档
         $content = <<<EOF
-        # 事件文档
+# 事件文档
+
 EOF;
         file_put_contents("$path/events.md", $content);
 
         // 事件文档
         $content = <<<EOF
-        # 接口文档
+# 接口文档
+
 EOF;
         file_put_contents("$path/apis.md", $content);
 
@@ -117,8 +119,9 @@ EOF;
         # 测试文档
 EOF;
         file_put_contents("$path/test.md", $content);
-        $content    = <<<EOF
+        $content = <<<EOF
 <?php
+
 return [
     'apps' => [
         [
@@ -154,6 +157,7 @@ EOF;
     {
         $content = <<<EOF
 <?php
+
 return [
     [
         // 支持以.多层级配置
@@ -261,7 +265,7 @@ EOF;
      */
     protected function createInfoFiles($basePath, $name)
     {
-        $data    = [
+        $data = [
             'title' => '基础插件系统',
             'name' => $name,
             'version' => '1.0.0',
