@@ -49,7 +49,7 @@ class IndexController extends XbController
             'web_logo' => $config['web_logo'] ?? '',
             'public_api_login' => xbUrl('Login/login'),
             'public_api_user' => xbUrl('Login/user'),
-            'public_api_user_edit_path' => '/XbAdmin/info',
+            'public_api_user_edit_path' => xbUrl('Admin/info'),
             'public_api_user_edit' => xbUrl('user/info'),
         ];
         $data = AppProvider::resutl($data);
