@@ -2,6 +2,7 @@
 
 namespace app\common\providers;
 
+use app\common\utils\FrameUtil;
 use app\model\Settings;
 use app\model\Upload;
 use Exception;
@@ -30,7 +31,7 @@ class ConfigProvider
             'parse' => true,
             'checked' => true,
         ], $options);
-        $data    = self::getOriginal($group);
+        $data = self::getOriginal($group);
         if (empty($data)) {
             return $default;
         }
@@ -71,8 +72,8 @@ class ConfigProvider
             ];
             $model = Settings::where($where)->find();
             if (!$model) {
-                $model        = new Settings;
-                $model->name  = $field;
+                $model = new Settings;
+                $model->name = $field;
                 $model->group = $group;
             }
             // 检测是否文件
@@ -83,6 +84,9 @@ class ConfigProvider
                 throw new Exception('保存失败');
             }
         }
+        FrameUtil::pcntlAlarm(2, function () {
+            FrameUtil::reload();
+        });
     }
 
     /**
@@ -98,8 +102,8 @@ class ConfigProvider
         foreach ($data as $field => $value) {
             if (strrpos($field, '.') !== false) {
                 // 解析层级键值
-                $dataField   = explode('.', $field);
-                $resutil     = self::createNestedArray($dataField, $value);
+                $dataField = explode('.', $field);
+                $resutil = self::createNestedArray($dataField, $value);
                 $configValue = array_merge_recursive($configValue, $resutil);
             } else {
                 $configValue[$field] = $value;
@@ -118,7 +122,7 @@ class ConfigProvider
      */
     protected static function createNestedArray(array $data, mixed $config)
     {
-        $data2   = [];
+        $data2 = [];
         $current = &$data2;
         foreach ($data as $field) {
             $current = &$current[$field];
@@ -157,7 +161,7 @@ class ConfigProvider
             if (is_string($value)) {
                 // 是否附件
                 if (Upload::where('path', $value)->count()) {
-                    $url         = UploadProvider::url($value);
+                    $url = UploadProvider::url($value);
                     $data[$name] = $url;
                 }
             }

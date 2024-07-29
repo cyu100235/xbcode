@@ -39,7 +39,7 @@ class UploadProvider
             $adapter = Config::getDbConfig()['default'] ?? 'public';
         }
         // 检测文件是否已上传
-        $md5  = hash_file('md5', $file->getRealPath());
+        $md5 = hash_file('md5', $file->getRealPath());
         $data = self::getFileInfo(['md5' => $md5], $adapter);
         if ($data) {
             return $data;
@@ -113,7 +113,7 @@ class UploadProvider
         }
         // 切换驱动
         if ($adapter) {
-            $adapter    = Config::$platform[$adapter] ?? 'public';
+            $adapter = Config::$platform[$adapter] ?? 'public';
             $fileSystem = $fileSystem->adapter($adapter);
         }
         // 访问链接
@@ -141,7 +141,7 @@ class UploadProvider
                     throw new Exception('URL地址不合法');
                 }
                 $parseUrl = parse_url($value);
-                $data[]   = ltrim($parseUrl['path'], '/');
+                $data[] = ltrim($parseUrl['path'], '/');
             }
             return $data;
         }
@@ -149,7 +149,7 @@ class UploadProvider
             throw new Exception('URL地址不合法');
         }
         $parseUrl = parse_url($url);
-        $data     = ltrim($parseUrl['path'], '/');
+        $data = ltrim($parseUrl['path'], '/');
         return $data;
     }
 
