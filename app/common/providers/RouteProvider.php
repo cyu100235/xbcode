@@ -43,7 +43,7 @@ class RouteProvider
             }
             // 文件
             $installPath = app_path('common/view/install');
-            $file        = "{$installPath}/assets/{$path}";
+            $file = "{$installPath}/assets/{$path}";
             if (!is_file($file)) {
                 return response('<h1>404 Not Found</h1>', 404);
             }
@@ -93,7 +93,7 @@ class RouteProvider
             }
             // 文件
             $installPath = app_path('common/view/admin');
-            $file        = "{$installPath}/xbase/{$path}";
+            $file = "{$installPath}/xbase/{$path}";
             if (!is_file($file)) {
                 return response('<h1>404 Not Found</h1>', 404);
             }
@@ -136,7 +136,7 @@ class RouteProvider
     public static function pluginMiddleware()
     {
         $plugins = CloudSerivce::getLocalPlugin();
-        $data    = [];
+        $data = [];
         foreach ($plugins as $value) {
             if (!empty($value['name'])) {
                 $data["plugin.{$value['name']}"] = [

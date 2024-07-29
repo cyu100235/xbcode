@@ -116,7 +116,8 @@ EOF;
 
         // 测试文档
         $content = <<<EOF
-        # 测试文档
+# 测试文档
+
 EOF;
         file_put_contents("$path/test.md", $content);
         $content = <<<EOF
@@ -175,6 +176,7 @@ EOF;
         file_put_contents("$path/basis.php", $content);
         $content = <<<EOF
 <?php
+
 return [
     [
         'title' => '基础配置',
@@ -290,6 +292,8 @@ EOF;
 namespace plugin\\$name;
 
 use app\common\providers\MenuProvider;
+use app\common\providers\MysqlProvider;
+use app\common\providers\MysqlProvider;
 
 /**
  * 插件安装卸载类
@@ -322,8 +326,10 @@ class Install
         \$this->createDicts();
         
         // 导入安装SQL
-        // \$sql = __DIR__ . '/data/install.sql';
-        // MysqlProvider::importSql(\$sql);
+        \$sql = __DIR__ . '/data/sql/install.sql';
+        if (file_exists(\$sql)) {
+            MysqlProvider::importSql(\$sql);
+        }
     }
 
     
@@ -382,8 +388,10 @@ class Install
     public function updateBefore()
     {
         // 导入更新SQL
-        // \$sql = __DIR__ . '/data/update.sql';
-        // MysqlProvider::importSql(\$sql);
+        \$sql = __DIR__ . '/data/sql/update.sql';
+        if (file_exists(\$sql)) {
+            MysqlProvider::importSql(\$sql);
+        }
     }
 
     /**
@@ -432,8 +440,10 @@ class Install
         DictProvider::delDicts(\$dicts);
 
         // 导入卸载SQL
-        // \$sql = __DIR__ . '/data/uninstall.sql';
-        // MysqlProvider::importSql(\$sql);
+        \$sql = __DIR__ . '/data/sql/uninstall.sql';
+        if (file_exists(\$sql)) {
+            MysqlProvider::importSql(\$sql);
+        }
     }
 
     /**
