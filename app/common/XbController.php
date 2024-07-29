@@ -43,7 +43,7 @@ class XbController
     protected function adminView(string $file = '')
     {
         if (!$file) {
-            $file = '/app/common/view/admin/index.html';
+            $file = '/runtime/admin-view/index.html';
         }
         // 获取视图内容
         $path = base_path($file);

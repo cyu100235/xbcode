@@ -23,7 +23,7 @@ class InstallController extends XbController
      */
     public function index(Request $request)
     {
-        return $this->adminView('app/common/view/install/index.html');
+        return $this->adminView('runtime/install-view/index.html');
     }
 
     /**
@@ -39,7 +39,7 @@ class InstallController extends XbController
         if (InstallUtil::hasInstall()) {
             return $this->success('success');
         }
-        $path    = app_path('common/data/protocol.md');
+        $path = app_path('common/data/protocol.md');
         $content = file_get_contents($path);
         return $this->successRes([
             'content' => $content,
