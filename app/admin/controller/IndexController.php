@@ -4,6 +4,7 @@ namespace app\admin\controller;
 
 use app\common\providers\ConfigProvider;
 use app\common\providers\AppProvider;
+use app\common\providers\RouteProvider;
 use app\common\XbController;
 use support\Request;
 
@@ -21,12 +22,20 @@ class IndexController extends XbController
     /**
      * 渲染后台视图
      * @param \support\Request $request
-     * @return string
+     * @return \support\Response
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public function index(Request $request)
     {
+        $path = $request->path();
+        if (!str_ends_with($path, '/')) {
+            return redirect("{$path}/");
+        }
+        // 下载后台视图
+        if (!RouteProvider::downloadView('admin-view')) {
+            throw new \Exception('下载后台视图失败');
+        }
         // 渲染视图
         return $this->adminView();
     }

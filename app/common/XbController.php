@@ -36,24 +36,18 @@ class XbController
     /**
      * 渲染系统视图
      * @param string $file
-     * @return string
+     * @throws \Exception
+     * @return \support\Response
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     protected function adminView(string $file = '')
     {
         if (!$file) {
-            $file = '/runtime/admin-view/index.html';
+            $file = 'runtime/admin-view/index.html';
         }
         // 获取视图内容
         $path = base_path($file);
-        if (!file_exists($path)) {
-            throw new \Exception("未找到系统视图资源文件：{$path}\n");
-        }
-        $content = file_get_contents($path);
-        if (!$content) {
-            throw new \Exception('系统视图资源文件内容为空');
-        }
-        return (string) $content;
+        return response()->withFile($path);
     }
 }

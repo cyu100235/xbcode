@@ -26,10 +26,7 @@ class IndexController extends XbController
         if (!InstallUtil::hasInstall()) {
             return redirect('/install/');
         }
-        // 获取模块名称
-        $moduleName = config('admin.module_name', 'admin');
-        // 渲染视图
-        return redirect("/{$moduleName}/");
+        return view('index/index');
     }
 
     /**
@@ -42,18 +39,5 @@ class IndexController extends XbController
     public function welcome(Request $request)
     {
         return view('index/welcome');
-    }
-
-    /**
-     * 渲染文档视图
-     * @param \support\Request $request
-     * @return \support\Response
-     * @copyright 贵州小白基地网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
-     */
-    public function apidoc(Request $request)
-    {
-        $path = public_path('apidoc/index.html');
-        return response()->withFile($path);
     }
 }

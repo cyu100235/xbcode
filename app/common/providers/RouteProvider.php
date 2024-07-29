@@ -4,6 +4,7 @@ namespace app\common\providers;
 use app\common\middleware\PluginsMiddleware;
 use app\common\service\CloudSerivce;
 use app\common\utils\InstallUtil;
+use app\common\utils\ZipUtil;
 use yzh52521\EasyHttp\Http;
 use app\model\AdminRule;
 use think\facade\Cache;
@@ -26,49 +27,26 @@ class RouteProvider
      */
     public static function regBaseRoute()
     {
-        // 注册安装路由
-        self::registerInstallView();
         // 检测路由类型
         if (!InstallUtil::hasInstall()) {
             // 安装进行
             Route::post('/install/install', 'app\controller\InstallController@install');
+            // 注册文件路由
+            Route::get('/install/assets/[{path:.+}]', function (Request $request, $path = '') {
+                $project = 'install-view';
+                $file = "assets/{$path}";
+                $path = base_path("runtime/{$project}/{$file}");
+                if (!file_exists($path)) {
+                    return response('<h1>local file 404 Not Found</h1>', 404);
+                }
+                return response()->withFile($path);
+            });
         } else {
-            // 是否调试模式
-            if (config('app.debug', false)) {
-                // 注册文档路由
-                Route::get("/apidoc", function () {
-                    return redirect('/apidoc/');
-                });
-                Route::get("/apidoc/", 'app\controller\IndexController@apidoc');
-            }
             // 注册后台路由
             self::registerAdminView();
+            // 注册文档路由
+            self::registerApidocView();
         }
-    }
-
-    /**
-     * 注册安装视图路由
-     * @return void
-     * @copyright 贵州小白基地网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
-     */
-    private static function registerInstallView()
-    {
-        $installPath = base_path('runtime/install-view/index.html');
-        $project = 'install-view';
-        if (!file_exists($installPath)) {
-            $file = 'index.html';
-            self::downloadFile($project, $file);
-        }
-        // 注册文件路由
-        Route::get('/install/assets/[{path:.+}]', function (Request $request, $path = '') use ($project) {
-            $file = "assets/{$path}";
-            if (!self::downloadFile($project, $file)) {
-                return response('<h1>remote file 404 Not Found</h1>', 404);
-            }
-            $path = base_path("runtime/{$project}/{$file}");
-            return response()->withFile($path);
-        });
     }
 
     /**
@@ -84,49 +62,84 @@ class RouteProvider
         if (!$moduleName) {
             throw new Exception('请配置后台模块名称');
         }
-        // 注册后台路由
-        Route::get("/{$moduleName}", function () use ($moduleName) {
-            return redirect("/{$moduleName}/");
-        });
-        Route::get("/{$moduleName}/", 'app\admin\controller\IndexController@index');
-        // 注册后台资源路由
         $project = 'admin-view';
         // 注册静态文件路由
         Route::get('/xbase/[{path:.+}]', function (Request $request, $path = '') use ($project) {
             $file = "xbase/{$path}";
-            if (!self::downloadFile($project, $file)) {
-                return response('<h1>remote file 404 Not Found</h1>', 404);
-            }
             $path = base_path("runtime/{$project}/{$file}");
+            if (!file_exists($path)) {
+                return response('<h1>local file 404 Not Found</h1>', 404);
+            }
             return response()->withFile($path);
         });
     }
 
     /**
-     * 下载文件
+     * 注册文档视图路由
+     * @return void
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    private static function registerApidocView()
+    {
+        $project = 'apidoc-view';
+        // 注册静态文件路由
+        $data = [
+            'config.js',
+            'style.css',
+            'favicon.ico',
+            'utils/md5.js',
+        ];
+        foreach ($data as $file) {
+            Route::get("/apidoc/{$file}", function (Request $request, $path = '') use ($project, $file) {
+                $path = base_path("runtime/{$project}/{$file}");
+                if (!file_exists($path)) {
+                    return response('<h1>local file 404 Not Found</h1>', 404);
+                }
+                return response()->withFile($path);
+            });
+        }
+        // 注册其他静态资源
+        Route::get('/apidoc/assets/[{path:.+}]', function (Request $request, $path = '') use ($project) {
+            $file = "assets/{$path}";
+            $path = base_path("runtime/{$project}/{$file}");
+            if (!file_exists($path)) {
+                return response('<h1>local file 404 Not Found</h1>', 404);
+            }
+            return response()->withFile($path);
+        });
+    }
+
+    /**
+     * 下载视图文件
      * @param string $project
-     * @param string $path
      * @return bool
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    private static function downloadFile(string $project, string $path)
+    public static function downloadView(string $project)
     {
-        $runPath = base_path("runtime/{$project}/{$path}");
-        // 判断文件是否存在
-        if (!file_exists($runPath)) {
-            $baseUrl = "http://view.xiaobai.host/{$project}";
-            $url = "{$baseUrl}/{$path}";
-            $result = Http::get($url);
+        $filename = "{$project}.zip";
+        $dirPath = base_path("runtime/{$project}");
+        $filePath = "{$dirPath}/{$filename}";
+        if (!file_exists("{$dirPath}/index.html")) {
+            // 创建目录
+            if (!is_dir($dirPath)) {
+                mkdir($dirPath, 0777, true);
+            }
+            // 下载文件
+            $baseUrl = "http://view.xiaobai.host/{$filename}";
+            $result = Http::get($baseUrl);
             $content = $result->body();
             if (!$content) {
                 return false;
             }
-            $dirPath = dirname($runPath);
-            if (!is_dir($dirPath)) {
-                mkdir($dirPath, 0755, true);
-            }
-            file_put_contents($runPath, $content);
+            // 写入文件
+            file_put_contents($filePath, $content);
+            // 解压文件
+            ZipUtil::unzip($filePath, $dirPath);
+            // 删除压缩包
+            unlink($filePath);
         }
         return true;
     }

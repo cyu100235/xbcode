@@ -2,6 +2,7 @@
 
 namespace app\controller;
 
+use app\common\providers\RouteProvider;
 use app\common\utils\EnvironmentUtil;
 use app\common\utils\InstallUtil;
 use app\common\XbController;
@@ -23,6 +24,10 @@ class InstallController extends XbController
      */
     public function index(Request $request)
     {
+        if (!InstallUtil::hasInstall()) {
+            // 下载安装视图
+            RouteProvider::downloadView('install-view');
+        }
         return $this->adminView('runtime/install-view/index.html');
     }
 
