@@ -24,7 +24,9 @@ class PluginsView
             'type' => 'upload',
             'api' => xbUrl('PluginsAction/import'),
             'path' => xbUrl('PluginsAction/import'),
-        ], [], [
+        ], [
+            'accept' => '.zip',
+        ], [
             'type' => 'success',
         ]);
         $builder->addRightButton('install', '安装', [
