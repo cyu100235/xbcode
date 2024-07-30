@@ -13,14 +13,14 @@ use Exception;
 use Tinywan\Jwt\JwtToken;
 
 /**
- * 角色管理
+ * 部门管理
  * @copyright 贵州小白基地网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
 class AdminRoleController extends XbController
 {
     /**
-     * 角色列表-表格
+     * 部门列表-表格
      * @Apidoc\Method ("GET")
      * @param \support\Request $request
      * @return mixed
@@ -30,7 +30,7 @@ class AdminRoleController extends XbController
     public function indexTable(Request $request)
     {
         $builder = new ListBuilder;
-        $data    = $builder
+        $data = $builder
             ->addActionOptions('操作', [
                 'width' => 230
             ])
@@ -40,7 +40,11 @@ class AdminRoleController extends XbController
                 'api' => xbUrl('AdminRole/add'),
                 'path' => xbUrl('AdminRole/add'),
             ], [
-                'title' => '添加角色',
+                'title' => '添加部门',
+                'customStyle' => [
+                    'width' => '20%',
+                    'height' => '35vh',
+                ],
             ], [
                 'type' => 'primary'
             ])
@@ -57,7 +61,13 @@ class AdminRoleController extends XbController
                 'type' => 'modal',
                 'api' => xbUrl('AdminRole/edit'),
                 'path' => xbUrl('AdminRole/edit'),
-            ], [], [
+            ], [
+                'title' => '修改部门',
+                'customStyle' => [
+                    'width' => '20%',
+                    'height' => '35vh',
+                ],
+            ], [
                 'type' => 'primary',
             ])
             ->addRightButton('del', '删除', [
@@ -67,21 +77,21 @@ class AdminRoleController extends XbController
             ], [
                 'type' => 'error',
                 'title' => '温馨提示',
-                'content' => '是否确认删除该数据',
+                'content' => '是否确认删除该数据？',
             ], [
                 'type' => 'danger',
             ])
             ->addColumn('create_at', '创建时间', [
                 'width' => 160,
             ])
-            ->addColumn('title', '角色名称')
+            ->addColumn('title', '部门名称')
             ->addColumn('rule', '拥有权限')
             ->create();
         return $this->successRes($data);
     }
 
     /**
-     * 角色列表
+     * 部门列表
      * @Apidoc\Method ("GET")
      * @param \support\Request $request
      * @return mixed
@@ -91,15 +101,15 @@ class AdminRoleController extends XbController
     public function index(Request $request)
     {
         $adminId = JwtToken::getCurrentId();
-        $where   = [
+        $where = [
             'admin_id' => $adminId,
         ];
-        $data    = AdminRole::where($where)->paginate()->toArray();
+        $data = AdminRole::where($where)->paginate()->toArray();
         return $this->successRes($data);
     }
 
     /**
-     * 添加角色
+     * 添加部门
      * @Apidoc\Method ("GET,POST")
      * @param \support\Request $request
      * @return mixed
@@ -109,15 +119,15 @@ class AdminRoleController extends XbController
     public function add(Request $request)
     {
         if ($request->method() == 'POST') {
-            $post    = $request->post();
+            $post = $request->post();
             $adminId = JwtToken::getCurrentId();
             if (empty($post['title'])) {
-                return $this->fail('角色名称不能为空');
+                return $this->fail('部门名称不能为空');
             }
             $post['admin_id'] = $adminId;
             // 默认权限
             $post['rule'] = MenuProvider::getDefaultRule();
-            $model        = new AdminRole;
+            $model = new AdminRole;
             if (!$model->save($post)) {
                 return $this->fail('保存失败');
             }
@@ -128,7 +138,7 @@ class AdminRoleController extends XbController
     }
 
     /**
-     * 修改角色
+     * 修改部门
      * @Apidoc\Method ("GET,PUT")
      * @param \support\Request $request
      * @return mixed
@@ -137,7 +147,7 @@ class AdminRoleController extends XbController
      */
     public function edit(Request $request)
     {
-        $id    = $request->get('id');
+        $id = $request->get('id');
         $model = AdminRole::where('id', $id)->find();
         if (!$model) {
             return $this->fail('数据不存在');
@@ -145,7 +155,7 @@ class AdminRoleController extends XbController
         if ($request->method() == 'PUT') {
             $post = $request->post();
             if (empty($post['title'])) {
-                return $this->fail('角色名称不能为空');
+                return $this->fail('部门名称不能为空');
             }
             if (!$model->save($post)) {
                 return $this->fail('保存失败');
@@ -160,7 +170,7 @@ class AdminRoleController extends XbController
     }
 
     /**
-     * 删除角色
+     * 删除部门
      * @Apidoc\Method ("GET")
      * @param \support\Request $request
      * @return mixed
@@ -169,16 +179,16 @@ class AdminRoleController extends XbController
      */
     public function del(Request $request)
     {
-        $id    = $request->post('id');
+        $id = $request->post('id');
         $model = AdminRole::where('id', $id)->find();
         if (!$model) {
             return $this->fail('数据不存在');
         }
         if ($model->is_system == '20') {
-            throw new Exception('系统角色无法删除');
+            throw new Exception('系统部门无法删除');
         }
         if (Admin::where('role_id', $id)->find()) {
-            throw new Exception('该角色下存在管理员，无法删除');
+            throw new Exception('该部门下存在管理员，无法删除');
         }
         if (!$model->delete()) {
             return $this->fail('删除失败');
@@ -187,7 +197,7 @@ class AdminRoleController extends XbController
     }
 
     /**
-     * 角色授权
+     * 部门授权
      * @Apidoc\Method ("GET,PUT")
      * @param \support\Request $request
      * @return mixed
@@ -196,17 +206,17 @@ class AdminRoleController extends XbController
      */
     public function auth(Request $request)
     {
-        $id    = $request->get('id');
+        $id = $request->get('id');
         $model = AdminRole::where('id', $id)->find();
         if (!$model) {
-            return $this->fail('角色不存在');
+            return $this->fail('部门不存在');
         }
         if ($request->method() === 'PUT') {
             $post = $request->post();
             if (empty($post['rule'])) {
                 return $this->fail('规则授权错误');
             }
-            $rules       = $post['rule'];
+            $rules = $post['rule'];
             $model->rule = array_values(array_filter($rules));
             if (!$model->save()) {
                 return parent::fail('保存失败');
@@ -230,7 +240,7 @@ class AdminRoleController extends XbController
         // 渲染页面
         $builder = new FormBuilder;
         $builder->setMethod('PUT');
-        $builder->addRow('title', 'input', '角色名称', '', [
+        $builder->addRow('title', 'input', '部门名称', '', [
             'disabled' => true
         ]);
         $builder->addRow('rule', 'tree', '权限授权', [], [
@@ -257,7 +267,7 @@ class AdminRoleController extends XbController
     private function formView()
     {
         $builder = new FormBuilder;
-        $builder->addRow('title', 'input', '角色名称');
+        $builder->addRow('title', 'input', '部门名称');
         return $builder;
     }
 
@@ -272,7 +282,7 @@ class AdminRoleController extends XbController
     private function getAuthRule(array $rule): array
     {
         $data = [];
-        $i    = 0;
+        $i = 0;
         foreach ($rule as $value) {
             // 默认选选中
             $disabled = $value['is_default'] === '20' ? true : false;
@@ -281,8 +291,8 @@ class AdminRoleController extends XbController
             if ($value['path']) {
                 $label .= "（{$value['path']}）";
             }
-            $data[$i]['title']    = $label;
-            $data[$i]['value']    = $value['path'];
+            $data[$i]['title'] = $label;
+            $data[$i]['value'] = $value['path'];
             $data[$i]['disabled'] = $disabled;
             if ($value['children']) {
                 $data[$i]['children'] = $this->getAuthRule($value['children']);

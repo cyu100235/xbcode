@@ -28,16 +28,4 @@ class IndexController extends XbController
         }
         return view('index/index');
     }
-
-    /**
-     * 渲染欢迎视图
-     * @param \support\Request $request
-     * @return \support\Response
-     * @copyright 贵州小白基地网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
-     */
-    public function welcome(Request $request)
-    {
-        return view('index/welcome');
-    }
 }

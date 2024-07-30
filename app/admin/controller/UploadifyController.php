@@ -61,7 +61,7 @@ class UploadifyController extends XbController
                 'type' => 'image',
             ],
         ]);
-        $builder->addColumn('role.title', '所属角色');
+        $builder->addColumn('role.title', '所属部门');
         $builder->addColumn('login_ip', '最近登录IP');
         $builder->addColumn('login_time', '最近登录时间');
         $builder->addColumnEle('state', '当前状态', [
@@ -86,7 +86,7 @@ class UploadifyController extends XbController
     public function index(Request $request)
     {
         $adminId = JwtToken::getCurrentId();
-        $data    = Admin::with(['role'])
+        $data = Admin::with(['role'])
             ->where('admin_id', $adminId)
             ->paginate()
             ->toArray();
@@ -104,7 +104,7 @@ class UploadifyController extends XbController
     {
         $adminId = JwtToken::getCurrentId();
         if ($request->method() == 'POST') {
-            $post             = $request->post();
+            $post = $request->post();
             $post['admin_id'] = $adminId;
 
             // 数据验证
@@ -139,7 +139,7 @@ class UploadifyController extends XbController
      */
     public function edit(Request $request)
     {
-        $id    = $request->get('id');
+        $id = $request->get('id');
         $model = Admin::where('id', $id)->find();
         if (!$model) {
             return $this->fail('该数据不存在');
@@ -194,7 +194,7 @@ class UploadifyController extends XbController
     public function info(Request $request)
     {
         $adminId = JwtToken::getCurrentId();
-        $model   = Admin::where('id', $adminId)->find();
+        $model = Admin::where('id', $adminId)->find();
         if (!$model) {
             return $this->fail('该数据不存在');
         }
@@ -213,9 +213,9 @@ class UploadifyController extends XbController
             }
             return $this->success('保存成功');
         }
-        $data           = $model->toArray();
+        $data = $model->toArray();
         $data['avatar'] = UploadProvider::url($data['avatar']);
-        $builder        = new FormBuilder;
+        $builder = new FormBuilder;
         $builder->addRow('username', 'input', '登录账号', '', [
             'col' => 12,
         ]);
@@ -248,7 +248,7 @@ class UploadifyController extends XbController
     {
         $adminId = (int) JwtToken::getCurrentId();
         $builder = new FormBuilder;
-        $builder->addRow('role_id', 'select', '所属角色', '', [
+        $builder->addRow('role_id', 'select', '所属部门', '', [
             'col' => 12,
             'options' => AdminRole::getOptions((int) $adminId)
         ]);

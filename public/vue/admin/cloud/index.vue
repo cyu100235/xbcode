@@ -15,9 +15,7 @@ export default {
     },
     methods: {
         async getUser() {
-            const data = await this.$http.useGet('admin/Cloud/index').catch((err) => {
-                return err
-            })
+            const data = await this.$http.useGet('admin/Cloud/index')
             if (data?.code === 11000) {
                 this.$emit("update:closeWin");
                 this.$useRemote('/vue/admin/cloud/login', {}, {

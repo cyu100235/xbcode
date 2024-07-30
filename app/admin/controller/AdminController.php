@@ -71,7 +71,7 @@ class AdminController extends XbController
                 'type' => 'image',
             ],
         ]);
-        $builder->addColumn('role.title', '所属角色');
+        $builder->addColumn('role.title', '所属部门');
         $builder->addColumn('login_ip', '最近登录IP');
         $builder->addColumn('login_time', '最近登录时间');
         $builder->addColumnEle('state', '当前状态', [
@@ -258,7 +258,7 @@ class AdminController extends XbController
     {
         $adminId = (int) JwtToken::getCurrentId();
         $builder = new FormBuilder;
-        $builder->addRow('role_id', 'select', '所属角色', '', [
+        $builder->addRow('role_id', 'select', '所属部门', '', [
             'col' => 12,
             'options' => AdminRole::getOptions((int) $adminId)
         ]);

@@ -1,10 +1,15 @@
+# 是否开启调试模式
 APP_DEBUG = false
+# 框架服务端口
 APP_PORT = {APP_PORT}
 
+# 是否开启商店与版本更新
 PLUGIN_STORE = true
 
+# 设置系统时区
 DEFAULT_TIMEZONE = Asia/Shanghai
 
+# 数据库配置
 [DATABASE]
 TYPE = {TYPE}
 HOSTNAME = {HOSTNAME}
@@ -15,9 +20,11 @@ HOSTPORT = {HOSTPORT}
 CHARSET = utf8mb4
 PREFIX = {PREFIX}
 
+# 缓存配置
 [CACHE]
 TYPE = file
 
+# REDIS配置
 [REDIS]
 HOST = {REDIS_HOST}
 PORT = {REDIS_PORT}

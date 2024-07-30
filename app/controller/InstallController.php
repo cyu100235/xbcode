@@ -28,7 +28,7 @@ class InstallController extends XbController
             // 下载安装视图
             RouteProvider::downloadView('install-view');
         }
-        return $this->adminView('runtime/install-view/index.html');
+        return $this->adminView('runtime/install-view/index');
     }
 
     /**

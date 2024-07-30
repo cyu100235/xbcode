@@ -18,7 +18,7 @@ use Webman\Session\RedisClusterSessionHandler;
 
 return [
 
-    'type' => xbEnv('CACHE.TYPE', 'redis'), // or redis or redis_cluster
+    'type' => xbEnv('CACHE.TYPE', 'file'), // or redis or redis_cluster
 
     'handler' => FileSessionHandler::class,
 
@@ -43,21 +43,21 @@ return [
     ],
 
     'session_name' => 'PHPSID',
-    
+
     'auto_update_timestamp' => false,
 
-    'lifetime' => 7*24*60*60,
+    'lifetime' => 7 * 24 * 60 * 60,
 
-    'cookie_lifetime' => 365*24*60*60,
+    'cookie_lifetime' => 365 * 24 * 60 * 60,
 
     'cookie_path' => '/',
 
     'domain' => '',
-    
+
     'http_only' => true,
 
     'secure' => false,
-    
+
     'same_site' => '',
 
     'gc_probability' => [1, 1000],

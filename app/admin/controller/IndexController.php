@@ -5,6 +5,7 @@ namespace app\admin\controller;
 use app\common\providers\ConfigProvider;
 use app\common\providers\AppProvider;
 use app\common\providers\RouteProvider;
+use app\common\utils\FrameUtil;
 use app\common\XbController;
 use support\Request;
 
@@ -53,7 +54,7 @@ class IndexController extends XbController
         $config = ConfigProvider::get('system', '', []);
         // 返回数据
         $data = [
-            'web_name' => $config['web_name'] ?? 'XB-Admin',
+            'web_name' => $config['web_name'] ?? 'XBase',
             'web_title' => '后台登录',
             'web_logo' => $config['web_logo'] ?? '',
             'public_api_login' => xbUrl('Login/login'),
@@ -75,6 +76,26 @@ class IndexController extends XbController
     public function clear(Request $request)
     {
         return $this->successRes('清除缓存成功');
+    }
+
+    /**
+     * 重启系统
+     * @param \support\Request $request
+     * @return \support\Response
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public function restart(Request $request)
+    {
+        $state = $request->post('state', '');
+        if (empty($state)) {
+            return $this->fail('参数错误');
+        }
+        if ($state === 'checked') {
+            return $this->success('检测成功');
+        }
+        FrameUtil::reload();
+        return $this->success('重启系统成功');
     }
 
     /**

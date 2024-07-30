@@ -3,7 +3,7 @@ CREATE TABLE `xb_admin`  (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT COMMENT '序号',
   `create_at` datetime NULL DEFAULT NULL COMMENT '创建时间',
   `update_at` datetime NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `role_id` int(11) NULL DEFAULT NULL COMMENT '所属角色',
+  `role_id` int(11) NULL DEFAULT NULL COMMENT '所属部门',
   `admin_id` int(11) NULL DEFAULT 0 COMMENT '上级管理员ID',
   `username` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '登录账户',
   `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '用户密码',

@@ -3,7 +3,7 @@
 namespace app\model;
 
 use app\common\Model;
-use app\providers\UploadProvider;
+use app\common\providers\UploadProvider;
 use app\common\utils\PasswordUtil;
 
 /**
@@ -47,7 +47,7 @@ class Admin extends Model
     }
 
     /**
-     * 关联角色
+     * 关联部门
      * @return \think\model\relation\HasOne
      * @copyright 贵州小白基地网络科技有限公司
      * @Email cy958416459@qq.com
@@ -59,7 +59,7 @@ class Admin extends Model
     }
 
     /**
-     * 关联角色权限
+     * 关联部门权限
      * @return \think\model\relation\HasOne
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com

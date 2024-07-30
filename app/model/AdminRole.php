@@ -12,7 +12,7 @@ class AdminRole extends Model
     protected $jsonAssoc = true;
 
     /**
-     * 获取管理员旗下角色
+     * 获取管理员旗下部门
      * @param int $admin_id
      * @return array
      * @copyright 贵州小白基地网络科技有限公司

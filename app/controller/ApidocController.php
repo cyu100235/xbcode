@@ -28,6 +28,6 @@ class ApidocController extends XbController
         if (!RouteProvider::downloadView('apidoc-view')) {
             throw new \Exception('下载文档视图失败');
         }
-        return $this->adminView('runtime/apidoc-view/index.html');
+        return $this->adminView('runtime/apidoc-view/index');
     }
 }
