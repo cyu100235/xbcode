@@ -26,12 +26,6 @@ class MenusController extends XbController
     use RowEditTrait;
 
     /**
-     * 菜单模型
-     * @var AdminRule
-     */
-    protected $model;
-
-    /**
      * 初始化
      * @return void
      * @copyright 贵州小白基地网络科技有限公司
@@ -40,7 +34,6 @@ class MenusController extends XbController
     protected function init()
     {
         parent::init();
-        $this->model = new AdminRule;
     }
 
     /**
@@ -156,9 +149,7 @@ class MenusController extends XbController
      */
     public function index(Request $request)
     {
-        $model = $this->model;
-        $data = $model
-            ->order('sort asc,id asc')
+        $data = AdminRule::order('sort asc,id asc')
             ->select();
         return $this->successRes($data);
     }
@@ -184,7 +175,7 @@ class MenusController extends XbController
             // 开启事务
             Db::startTrans();
             try {
-                $model = $this->model;
+                $model = new AdminRule;
                 if (!$model->save($post)) {
                     return $this->fail('添加失败');
                 }
@@ -221,8 +212,7 @@ class MenusController extends XbController
     public function edit(Request $request)
     {
         $id = $request->get('id');
-        $model = $this->model;
-        $model = $model->find((int) $id);
+        $model = AdminRule::find((int) $id);
         if (!$model) {
             return $this->fail('数据不存在');
         }
@@ -267,9 +257,8 @@ class MenusController extends XbController
      */
     public function del(Request $request)
     {
-        $id = $request->post('id');
-        $model = $this->model;
-        $model = $model->find((int) $id);
+        $id = (int)$request->post('id');
+        $model = AdminRule::find((int) $id);
         if (!$model) {
             return $this->fail('数据不存在');
         }
@@ -298,9 +287,8 @@ class MenusController extends XbController
      */
     public function resources(Request $request)
     {
-        $id = $request->get('id');
-        $model = $this->model;
-        $menu = $model->find((int) $id);
+        $id = (int)$request->get('id');
+        $menu = AdminRule::find($id);
         if (!$menu) {
             return $this->fail('数据不存在');
         }
@@ -311,6 +299,7 @@ class MenusController extends XbController
                 return $this->fail('请选择路由资源');
             }
             foreach ($data as $menuData) {
+                $model = new AdminRule;
                 if (!$model->save($menuData)) {
                     return $this->fail('生成资源菜单失败');
                 }
@@ -372,7 +361,7 @@ class MenusController extends XbController
                 ['pid', '=', $id],
                 ['path', '=', "{$fullPath}"],
             ];
-            $findData = $model->where($where)->find();
+            $findData = AdminRule::where($where)->find();
             if ($findData) {
                 $item['disabled'] = true;
             }
