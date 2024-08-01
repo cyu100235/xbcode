@@ -310,8 +310,10 @@ class MenusController extends XbController
             if (empty($data)) {
                 return $this->fail('请选择路由资源');
             }
-            if (!$model->insertAll($data)) {
-                return $this->fail('生成资源菜单失败');
+            foreach ($data as $menuData) {
+                if (!$model->save($menuData)) {
+                    return $this->fail('生成资源菜单失败');
+                }
             }
             // 缓存路由
             RouteProvider::cacheMenus();
