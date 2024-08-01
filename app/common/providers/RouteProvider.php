@@ -27,20 +27,20 @@ class RouteProvider
      */
     public static function regBaseRoute()
     {
+        // 注册静态文件路由
+        Route::get('/install/assets/[{path:.+}]', function (Request $request, $path = '') {
+            $project = 'install-view';
+            $file = "assets/{$path}";
+            $path = base_path("runtime/{$project}/{$file}");
+            if (!file_exists($path)) {
+                return response('<h1>local file 404 Not Found</h1>', 404);
+            }
+            return response()->withFile($path);
+        });
         // 检测路由类型
         if (!InstallUtil::hasInstall()) {
             // 安装进行
             Route::post('/install/install', 'app\controller\InstallController@install');
-            // 注册文件路由
-            Route::get('/install/assets/[{path:.+}]', function (Request $request, $path = '') {
-                $project = 'install-view';
-                $file = "assets/{$path}";
-                $path = base_path("runtime/{$project}/{$file}");
-                if (!file_exists($path)) {
-                    return response('<h1>local file 404 Not Found</h1>', 404);
-                }
-                return response()->withFile($path);
-            });
         } else {
             // 注册后台路由
             self::registerAdminView();

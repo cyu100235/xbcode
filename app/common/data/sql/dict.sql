@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS `xb_dict`;
 CREATE TABLE `xb_dict`  (
   `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `create_at` datetime NULL DEFAULT NULL,
