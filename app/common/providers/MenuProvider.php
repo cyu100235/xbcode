@@ -24,7 +24,7 @@ class MenuProvider
      */
     public static function getDefaultRule()
     {
-        $data = self::getMenus(['is_default'=> '20'])->column('path');
+        $data = self::getMenus(['is_default' => '20'])->column('path');
         return $data;
     }
 
@@ -55,6 +55,16 @@ class MenuProvider
     {
         foreach ($data as &$menu) {
             $menu['show'] = $menu['is_show'] === '20' ? true : false;
+            // 设置菜单路径
+            $pluginName = '';
+            $moduleName = '';
+            if (!empty($menu['plugin_name'])) {
+                $pluginName = "{$menu['plugin_name']}/";
+            }
+            if (!empty($menu['module_name'])) {
+                $moduleName = "{$menu['module_name']}/";
+            }
+            $menu['path'] = "{$pluginName}{$moduleName}{$menu['path']}";
         }
         // 重新排序
         $data = list_sort_by($data, 'sort', 'asc');
@@ -86,7 +96,7 @@ class MenuProvider
         // 解析菜单数据
         return self::parseMenusData($menus);
     }
-    
+
     /**
      * 解析菜单数据
      * @param array $menus
@@ -127,7 +137,7 @@ class MenuProvider
             $data[] = $menuData;
             // 递归处理子级菜单
             if (isset($value['children']) && !empty($value['children'])) {
-                $data = array_merge($data, self::parseMenusData($value['children'], [], $id, $id+1));
+                $data = array_merge($data, self::parseMenusData($value['children'], [], $id, $id + 1));
                 $id = end($data)['id'];
             }
             $id++;

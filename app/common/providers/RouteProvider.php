@@ -155,18 +155,31 @@ class RouteProvider
     {
         $data = Cache::get('admin_menus', []);
         $data = array_filter($data, function ($item) use ($name) {
-            $keyword = "plugin\\{$name}\\";
-            return strrpos($item['class'], $keyword) !== false;
+            return $name === $item['plugin_name'] && strrpos($item['path'], '/') !== false;
         });
         $data = array_values($data);
+        // 获取控制器后缀
+        $suffix = config('route.controller_suffix', 'Controller');
         foreach ($data as $value) {
-            if ($value['class'] && $value['path'] && $value['methods']) {
-                Route::add(
-                    $value['methods'],
-                    "/{$value['path']}",
-                    $value['class']
-                );
+            $module_name = '';
+            $moduleName = '';
+            $path = $value['path'];
+            $class = explode('/', $path);
+            if (count($class) < 1) {
+                throw new Exception('路由配置错误');
             }
+            $classPath = "{$class[0]}{$suffix}@{$class[1]}";
+            if ($value['module_name']) {
+                $module_name = "{$value['module_name']}/";
+                $moduleName = "{$value['module_name']}\\";
+            }
+            $path = "/app/{$value['plugin_name']}/{$module_name}{$value['path']}";
+            $class = "\\plugin\\{$value['plugin_name']}\\app\\{$moduleName}controller\\{$classPath}";
+            Route::add(
+                $value['methods'],
+                $path,
+                $class
+            );
         }
     }
 

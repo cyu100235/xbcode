@@ -11,35 +11,37 @@ use Tinywan\Validate\Validate;
 class MenusValidate extends Validate
 {
     protected array $rule = [
-        'title'         => 'require',
-        'pid'           => 'require',
-        'component'     => 'require|verifyComponet',
-        'path'          => 'require',
-        'method'        => 'require',
+        'title' => 'require',
+        'pid' => 'require',
+        'path' => 'require',
+        'component' => 'require|verifyComponet',
+        'methods' => 'require',
     ];
 
     protected array $message = [
-        'title.require'     => '请输入菜单名称',
-        'pid.require'       => '请选择父级菜单',
-        'path.require'      => '请输入菜单路由',
-        'method.require'    => '请选择请求类型',
+        'title.require' => '请输入菜单名称',
+        'pid.require' => '请选择父级菜单',
+        'path.require' => '请输入路由地址',
+        'methods.require' => '请选择请求类型',
     ];
 
     protected array $scene = [
-        'add'  => [
-            'pid',
+        'add' => [
             'title',
+            'pid',
             'component',
             'path',
+            'methods',
         ],
         'edit' => [
-            'pid',
             'title',
+            'pid',
             'component',
             'path',
+            'methods',
         ],
     ];
-    
+
     /**
      * 根据组件选择数据验证
      * @param mixed $value

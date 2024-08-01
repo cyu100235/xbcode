@@ -20,7 +20,7 @@ class AppProvider
         $toolbar = "/vue/{$moduleName}/toolbar";
         // 返回数据
         $data = [
-            'web_name' => $data['web_name'] ?? 'XB-Admin',
+            'web_name' => $data['web_name'] ?? 'XBase',
             'web_title' => $data['web_title'] ?? '后台登录',
             'web_desc' => $data['web_desc'] ?? '',
             'login_desc' => $data['login_desc'] ?? '',

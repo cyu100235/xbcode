@@ -1,6 +1,8 @@
 <?php
 namespace app\common\utils;
+
 use process\Monitor;
+use support\Log;
 use Workerman\Timer;
 use Workerman\Worker;
 
@@ -11,7 +13,7 @@ use Workerman\Worker;
  */
 class FrameUtil
 {
-     /**
+    /**
      * 获取某个composer包的版本
      * @param string $package
      * @return mixed|string
@@ -33,14 +35,14 @@ class FrameUtil
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public static function pcntlAlarm(int $second,callable $callback)
+    public static function pcntlAlarm(int $second, callable $callback)
     {
         // 设置延迟执行回调
         pcntl_signal(SIGALRM, $callback);
         // 设置延迟执行时间
         pcntl_alarm($second);
     }
-    
+
     /**
      * 平滑启动
      * @return bool
@@ -50,18 +52,23 @@ class FrameUtil
     public static function reload()
     {
         if (function_exists('posix_kill')) {
+            // 所有子进程重启
             try {
                 posix_kill(posix_getppid(), SIGUSR1);
                 return true;
-            } catch (\Throwable $e) {}
+            } catch (\Throwable $e) {
+                Log::error("平滑启动失败：" . $e->getMessage());
+                return false;
+            }
         } else {
+            // 重启当前子进程
             Timer::add(1, function () {
                 Worker::stopAll();
             });
         }
         return false;
     }
-    
+
     /**
      * 暂停文件监控
      * @return void
@@ -74,7 +81,7 @@ class FrameUtil
             Monitor::pause();
         }
     }
-    
+
     /**
      * 恢复文件监控
      * @return void
