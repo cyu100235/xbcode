@@ -59,7 +59,7 @@ class MenuProvider
             $pluginName = '';
             $moduleName = '';
             if (!empty($menu['plugin_name'])) {
-                $pluginName = "{$menu['plugin_name']}/";
+                $pluginName = "app/{$menu['plugin_name']}/";
             }
             if (!empty($menu['module_name'])) {
                 $moduleName = "{$menu['module_name']}/";
