@@ -1,11 +1,11 @@
 <?php
 namespace app\common\utils;
 
-use Exception;
 use process\Monitor;
-use support\Log;
 use Workerman\Timer;
 use Workerman\Worker;
+use support\Log;
+use Exception;
 
 /**
  * 框架工具类
@@ -112,6 +112,9 @@ class FrameUtil
         // 获取端口号
         preg_match('/127.0.0.1:(.*);/', $content, $matches);
         $port = $matches[1] ?? '';
+        if (empty($port)) {
+            throw new Exception('端口号获取失败');
+        }
         return $port;
     }
 }
