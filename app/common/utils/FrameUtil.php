@@ -1,6 +1,7 @@
 <?php
 namespace app\common\utils;
 
+use Exception;
 use process\Monitor;
 use support\Log;
 use Workerman\Timer;
@@ -93,5 +94,24 @@ class FrameUtil
         if (method_exists(Monitor::class, 'resume')) {
             Monitor::resume();
         }
+    }
+
+    /**
+     * 获取服务端口
+     * @return string
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public static function getServerPort()
+    {
+        $path = base_path('nginx.rewrite');
+        if (!file_exists($path)) {
+            throw new Exception('nginx.rewrite文件不存在');
+        }
+        $content = file_get_contents($path);
+        // 获取端口号
+        preg_match('/127.0.0.1:(.*);/', $content, $matches);
+        $port = $matches[1] ?? '';
+        return $port;
     }
 }

@@ -1,10 +1,10 @@
 <?php
 namespace app\common\utils;
 
-use Exception;
-use support\Request;
+use app\common\providers\MysqlProvider;
 use think\facade\Cache;
-use xbai8\MysqlHelper;
+use support\Request;
+use Exception;
 
 /**
  * 安装工具类
@@ -18,24 +18,18 @@ class InstallUtil
     /**
      * 缓存安装数据
      * @param \support\Request $request
-     * @return void
+     * @throws \Exception
+     * @return \support\Response
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public function cache(Request $request)
     {
         $database = $request->post('database');
-        $redis    = $request->post('redis');
-        $site     = $request->post('site');
-        $port     = xbEnv('APP_PORT');
+        $redis = $request->post('redis');
+        $site = $request->post('site');
         if (empty($database) || empty($site)) {
             return $this->fail('参数错误');
-        }
-        if (!file_exists(base_path('.env.install'))) {
-            return $this->fail('.env.install安装文件不存在');
-        }
-        if (!$port) {
-            return $this->fail('系统端口号获取失败');
         }
         if (empty($database['host'])) {
             return $this->fail('请输入主机地址');
@@ -53,7 +47,7 @@ class InstallUtil
             return $this->fail('请输入数据库端口');
         }
         try {
-            $dsn    = "mysql:host={$database['host']};dbname={$database['database']};port={$database['port']};";
+            $dsn = "mysql:host={$database['host']};dbname={$database['database']};port={$database['port']};";
             $params = [
                 \PDO::MYSQL_ATTR_INIT_COMMAND => "set names utf8mb4",
                 \PDO::ATTR_EMULATE_PREPARES => false,
@@ -116,7 +110,7 @@ class InstallUtil
     public function structure(Request $request)
     {
         // 数据库连接
-        $total    = $request->get('total', 0);
+        $total = $request->get('total', 0);
         $database = Cache::get('install_database');
         if (empty($database)) {
             return $this->fail('获取安装数据库配置失败');
@@ -134,18 +128,10 @@ class InstallUtil
         if (!$sqlFile) {
             return $this->fail('获取SQL文件失败');
         }
-        // 实例操作类
-        $mysql = new MysqlHelper(
-            $database['username'],
-            $database['password'],
-            $database['database'],
-            $database['host'],
-            $database['port'],
-            $database['prefix'],
-            $database['charset']
-        );
-        // 导入SQL文件
-        $mysql->importSqlFile($sqlFile, $database['prefix'], 'xb_');
+        // 连接数据库
+        MysqlProvider::connect($database);
+        // 导入sql
+        MysqlProvider::importSql($sqlFile, 'xb_', $database['prefix']);
         // 获取数据表名称
         $installName = str_replace(['php_', 'xb_',], '', basename($sqlFile, '.sql'));
         // 返回成功
@@ -164,37 +150,31 @@ class InstallUtil
      */
     public function database(Request $request)
     {
-        $site     = Cache::get('install_site');
+        $site = Cache::get('install_site');
         $database = Cache::get('install_database');
-        // 实例操作类
-        $mysql    = new MysqlHelper(
-            $database['username'],
-            $database['password'],
-            $database['database'],
-            $database['host'],
-            $database['port'],
-            $database['prefix'],
-            $database['charset']
-        );
-        $connect  = $mysql->getConnect();
+        if (empty($site) || empty($database)) {
+            return $this->fail('获取安装站点配置失败');
+        }
+        // 连接数据库
+        MysqlProvider::connect($database);
         $dateTime = date('Y-m-d H:i:s');
         // 写入站点名称
-        $connect->query("INSERT INTO `{$database['prefix']}settings` (`create_at`,`update_at`,`name`, `value`,`group`) VALUES ('{$dateTime}','{$dateTime}','web_name', '{$site['web_name']}','system')");
-        $connect->query("INSERT INTO `{$database['prefix']}settings` (`create_at`,`update_at`,`name`, `value`,`group`) VALUES ('{$dateTime}','{$dateTime}','web_url', '{$site['web_url']}','system')");
-        $connect->query("INSERT INTO `{$database['prefix']}settings` (`create_at`,`update_at`,`name`, `value`,`group`) VALUES ('{$dateTime}','{$dateTime}','web_title', '站点标题','system')");
-        $connect->query("INSERT INTO `{$database['prefix']}settings` (`create_at`,`update_at`,`name`, `value`,`group`) VALUES ('{$dateTime}','{$dateTime}','web_keywords', '站点关键词','system')");
-        $connect->query("INSERT INTO `{$database['prefix']}settings` (`create_at`,`update_at`,`name`, `value`,`group`) VALUES ('{$dateTime}','{$dateTime}','web_description', '站点描述','system')");
-        $connect->query("INSERT INTO `{$database['prefix']}settings` (`create_at`,`update_at`,`name`, `value`,`group`) VALUES ('{$dateTime}','{$dateTime}','web_logo', '','system')");
+        MysqlProvider::query("INSERT INTO `{$database['prefix']}settings` (`create_at`,`update_at`,`name`, `value`,`group`) VALUES ('{$dateTime}','{$dateTime}','web_name', '{$site['web_name']}','system')");
+        MysqlProvider::query("INSERT INTO `{$database['prefix']}settings` (`create_at`,`update_at`,`name`, `value`,`group`) VALUES ('{$dateTime}','{$dateTime}','web_url', '{$site['web_url']}','system')");
+        MysqlProvider::query("INSERT INTO `{$database['prefix']}settings` (`create_at`,`update_at`,`name`, `value`,`group`) VALUES ('{$dateTime}','{$dateTime}','web_title', '站点标题','system')");
+        MysqlProvider::query("INSERT INTO `{$database['prefix']}settings` (`create_at`,`update_at`,`name`, `value`,`group`) VALUES ('{$dateTime}','{$dateTime}','web_keywords', '站点关键词','system')");
+        MysqlProvider::query("INSERT INTO `{$database['prefix']}settings` (`create_at`,`update_at`,`name`, `value`,`group`) VALUES ('{$dateTime}','{$dateTime}','web_description', '站点描述','system')");
+        MysqlProvider::query("INSERT INTO `{$database['prefix']}settings` (`create_at`,`update_at`,`name`, `value`,`group`) VALUES ('{$dateTime}','{$dateTime}','web_logo', '','system')");
 
         // 写入上传配置
         $webUrl = rtrim($site['web_url'], '/');
-        $connect->query("INSERT INTO `{$database['prefix']}settings` (`create_at`,`update_at`,`name`, `value`,`group`) VALUES ('{$dateTime}','{$dateTime}','active', 'public','upload')");
-        $connect->query("INSERT INTO `{$database['prefix']}settings` (`create_at`,`update_at`,`name`, `value`,`group`) VALUES ('{$dateTime}','{$dateTime}','public.root', 'uploads','upload')");
-        $connect->query("INSERT INTO `{$database['prefix']}settings` (`create_at`,`update_at`,`name`, `value`,`group`) VALUES ('{$dateTime}','{$dateTime}','public.url', '{$webUrl}','upload')");
+        MysqlProvider::query("INSERT INTO `{$database['prefix']}settings` (`create_at`,`update_at`,`name`, `value`,`group`) VALUES ('{$dateTime}','{$dateTime}','active', 'public','upload')");
+        MysqlProvider::query("INSERT INTO `{$database['prefix']}settings` (`create_at`,`update_at`,`name`, `value`,`group`) VALUES ('{$dateTime}','{$dateTime}','public.root', 'uploads','upload')");
+        MysqlProvider::query("INSERT INTO `{$database['prefix']}settings` (`create_at`,`update_at`,`name`, `value`,`group`) VALUES ('{$dateTime}','{$dateTime}','public.url', '{$webUrl}','upload')");
 
         // 写入管理员
         $site['password'] = PasswordUtil::passwordHash($site['password']);
-        $connect->query("INSERT INTO `{$database['prefix']}admin` (`create_at`,`update_at`,`role_id`, `username`,`password`,`state`,`nickname`,`is_system`) VALUES ('{$dateTime}','{$dateTime}','1','{$site['username']}','{$site['password']}','20','楚羽幽','20');");
+        MysqlProvider::query("INSERT INTO `{$database['prefix']}admin` (`create_at`,`update_at`,`role_id`, `username`,`password`,`state`,`nickname`,`is_system`) VALUES ('{$dateTime}','{$dateTime}','1','{$site['username']}','{$site['password']}','20','楚羽幽','20');");
 
         // 安装数据完成
         return $this->successFul('安装表数据完成...', [
@@ -212,17 +192,17 @@ class InstallUtil
     public function config(Request $request)
     {
         // 获取参数
-        $redis    = Cache::get('install_redis');
+        $redis = Cache::get('install_redis');
         $database = Cache::get('install_database');
         // 读取模板文件
         $envTplPath = app_path('common/data/env.tpl');
-        $envPath    = base_path('/.env');
+        $envPath = base_path('/.env');
         // 读取配置文件
         $envConfig = file_get_contents($envTplPath);
         // 获取端口号
-        $port = xbEnv('APP_PORT');
+        $port = FrameUtil::getServerPort();
         // 替换配置文件参数
-        $str1      = [
+        $str1 = [
             "{APP_PORT}",
             "{TYPE}",
             "{HOSTNAME}",
@@ -236,7 +216,7 @@ class InstallUtil
             "{REDIS_PASSWD}",
             "{REDIS_PREFIX}"
         ];
-        $str2      = [
+        $str2 = [
             $port,
             $database['type'],
             $database['host'],

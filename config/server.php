@@ -1,11 +1,12 @@
 <?php
+use app\common\utils\FrameUtil;
+
 return [
-    'listen' => 'http://0.0.0.0:' . xbEnv('APP_PORT', 39600),
+    'listen' => 'http://0.0.0.0:' . FrameUtil::getServerPort(),
     'transport' => 'tcp',
     'context' => [],
     'name' => 'xbase',
-    // 'count' => cpu_count() * 4,
-    'count' => 1,
+    'count' => cpu_count() * 4,
     'user' => '',
     'group' => '',
     'reusePort' => false,

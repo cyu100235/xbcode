@@ -12,6 +12,50 @@ use Exception;
 class MysqlProvider
 {
     /**
+     * 动态连接数据库
+     * @param array $config
+     * @return void
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public static function connect(array $config)
+    {
+        // 获取数据库配置
+        $thinkorm = config('thinkorm');
+        // 合并数据库配置至thinkorm
+        $database = $thinkorm['connections']['mysql'];
+        $thinkorm['connections']['mysql'] = array_merge($database, $config);
+        // 合并数据库总配置
+        $config = array_merge($thinkorm, $config);
+        // 设置数据库配置
+        Db::setConfig($config);
+    }
+
+    /**
+     * 执行SQL获取结果
+     * @param string $sql
+     * @return array
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public static function query(string $sql)
+    {
+        return Db::query($sql);
+    }
+
+    /**
+     * 执行SQL语句
+     * @param string $sql
+     * @return int
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public static function execute(string $sql)
+    {
+        return Db::execute($sql);
+    }
+
+    /**
      * 获取数据库所有表名
      * @return array
      * @copyright 贵州小白基地网络科技有限公司
@@ -76,12 +120,12 @@ class MysqlProvider
     public static function getTableList(array $ignore = [])
     {
         $tableNames = self::getTableNames();
-        $data       = [];
+        $data = [];
         foreach ($tableNames as $name) {
             if (in_array($name, $ignore)) {
                 continue;
             }
-            $table  = self::getTable($name);
+            $table = self::getTable($name);
             $data[] = [
                 'create_at' => $table['CREATE_TIME'],
                 'name' => $name,
@@ -159,7 +203,7 @@ class MysqlProvider
         $content .= "-- 表结构：{$tableName}\n";
         // 获取表结构
         $showTableInfo = Db::query("SHOW CREATE TABLE {$tableName}");
-        $sqlInfo       = $showTableInfo[0]['Create Table'] ?? '';
+        $sqlInfo = $showTableInfo[0]['Create Table'] ?? '';
         $content .= $sqlInfo . ";\n";
         // 是否导出表数据
         if ($withData) {
@@ -212,7 +256,7 @@ class MysqlProvider
             fwrite($outputFile, "-- 表结构：$tableName\n");
             // 获取表结构
             $showTableInfo = Db::query("SHOW CREATE TABLE {$tableName}");
-            $sqlInfo       = $showTableInfo[0]['Create Table'] ?? '';
+            $sqlInfo = $showTableInfo[0]['Create Table'] ?? '';
             fwrite($outputFile, $sqlInfo . ";\n");
 
             if ($withData) {

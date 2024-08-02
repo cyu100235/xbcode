@@ -11,9 +11,6 @@
 function xbEnv(string $name = '', $default = null)
 {
     $path = base_path('.env');
-    if (!file_exists($path)) {
-        $path = base_path('.env.install');
-    }
     static $config = [];
     if (!$config) {
         // 解析文件
@@ -61,8 +58,8 @@ function xbModuleName()
 {
     $request = request();
     // 设置总后台路由格式
-    $path       = $request->path();
-    $data       = array_values(array_filter(explode('/', $path)));
+    $path = $request->path();
+    $data = array_values(array_filter(explode('/', $path)));
     $moduleName = '';
     if (count($data) >= 3) {
         $moduleName = $data[0] ?? '';
@@ -80,7 +77,7 @@ function xbModuleName()
 function xbDomain(bool $full = true)
 {
     $request = request();
-    $url     = (string) $request->header('host', '');
+    $url = (string) $request->header('host', '');
     if (strrpos($url, '127.0.0.1') !== false) {
         $url = '';
     }
@@ -102,7 +99,7 @@ function xbDomain(bool $full = true)
         return '';
     }
     if ($full) {
-        $proto  = $request->header('x-forwarded-proto', 'http');
+        $proto = $request->header('x-forwarded-proto', 'http');
         $scheme = $request->header('x-scheme', 'http');
         if ($scheme == 'https' || $proto == 'https') {
             $proto = "https";
@@ -125,7 +122,7 @@ function xbDomain(bool $full = true)
 function xbUrl(string $url = '', array $params = [], bool $slash = true, bool $full = false)
 {
     $moduleName = xbModuleName();
-    $path       = "{$moduleName}/{$url}";
+    $path = "{$moduleName}/{$url}";
     if ($slash) {
         $path = "/{$path}";
     }
@@ -136,7 +133,7 @@ function xbUrl(string $url = '', array $params = [], bool $slash = true, bool $f
     // 是否完整URL
     if ($full) {
         $domain = xbDomain();
-        $path   = $domain . $path;
+        $path = $domain . $path;
     }
     // 返回地址
     return $path;

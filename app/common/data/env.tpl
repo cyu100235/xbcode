@@ -1,7 +1,5 @@
 # 是否开启调试模式
 APP_DEBUG = false
-# 框架服务端口
-APP_PORT = {APP_PORT}
 
 # 是否开启商店与版本更新
 PLUGIN_STORE = true
