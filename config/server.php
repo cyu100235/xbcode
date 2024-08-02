@@ -6,7 +6,7 @@ return [
     'transport' => 'tcp',
     'context' => [],
     'name' => 'xbase',
-    'count' => cpu_count() * 4,
+    'count' => cpu_count() * 2,
     'user' => '',
     'group' => '',
     'reusePort' => false,
