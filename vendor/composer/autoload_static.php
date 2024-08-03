@@ -25,8 +25,8 @@ class ComposerStaticInite07e252fcf63af9e26b4119020c12e84
         '35fab96057f1bf5e7aba31a8a6d5fdde' => __DIR__ . '/..' . '/topthink/think-orm/stubs/load_stubs.php',
         '66453932bc1be9fb2f910a27947d11b6' => __DIR__ . '/..' . '/alibabacloud/client/src/Functions.php',
         '8af3fa7e0debc674a27a2d67e57bd6eb' => __DIR__ . '/..' . '/tinywan/validate/src/helper.php',
-        '8a6e4a6102a8d183471c39e6768172da' => __DIR__ . '/../..' . '/support/helpers.php',
-        'a9e24353074903f324d98932e452b030' => __DIR__ . '/../..' . '/app/functions.php',
+        '968321603380b83b0156a768dfbe4e44' => __DIR__ . '/../..' . '/support/helpers.php',
+        '384fe7f7f6580239fbf091e055d29476' => __DIR__ . '/../..' . '/app/functions.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -34,10 +34,6 @@ class ComposerStaticInite07e252fcf63af9e26b4119020c12e84
         array (
             'yzh52521\\WebmanLock\\' => 20,
             'yzh52521\\EasyHttp\\' => 18,
-        ),
-        'x' => 
-        array (
-            'xbai8\\' => 6,
         ),
         't' => 
         array (
@@ -171,10 +167,6 @@ class ComposerStaticInite07e252fcf63af9e26b4119020c12e84
         'yzh52521\\EasyHttp\\' => 
         array (
             0 => __DIR__ . '/..' . '/yzh52521/easyhttp/src',
-        ),
-        'xbai8\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/xbai8/mysql-helper/src',
         ),
         'think\\' => 
         array (

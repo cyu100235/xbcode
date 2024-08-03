@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "00d943245680e8cbd6c0245cf5b2f378",
+    "content-hash": "ae94c419564ff54c60a219daf9fb095c",
     "packages": [
         {
             "name": "adbario/php-dot-notation",
@@ -3912,52 +3912,6 @@
                 "source": "https://github.com/xaboy/form-builder"
             },
             "time": "2021-02-25T03:51:14+00:00"
-        },
-        {
-            "name": "xbai8/mysql-helper",
-            "version": "1.0.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/xbai8/mysql-helper.git",
-                "reference": "f6fc0f25144b94235a8e364f1594bce601bea5bb"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/xbai8/mysql-helper/zipball/f6fc0f25144b94235a8e364f1594bce601bea5bb",
-                "reference": "f6fc0f25144b94235a8e364f1594bce601bea5bb",
-                "shasum": ""
-            },
-            "require": {
-                "ext-mysqli": "*",
-                "php": ">=8.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "xbai8\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "authors": [
-                {
-                    "name": "楚羽幽",
-                    "email": "cy958416459@qq.com"
-                }
-            ],
-            "description": "一个便捷的MySQL导入导出的助手类库。 a mysql import and export helper library.",
-            "keywords": [
-                "export",
-                "helper",
-                "import",
-                "mysql",
-                "php",
-                "xiaobai"
-            ],
-            "support": {
-                "issues": "https://github.com/xbai8/mysql-helper/issues",
-                "source": "https://github.com/xbai8/mysql-helper/tree/1.0.3"
-            },
-            "time": "2024-02-03T09:31:36+00:00"
         },
         {
             "name": "yzh52521/easyhttp",

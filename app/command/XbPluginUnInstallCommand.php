@@ -7,7 +7,13 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use app\model\Plugins;
 
+/**
+ * 卸载小白插件
+ * @copyright 贵州小白基地网络科技有限公司
+ * @author 楚羽幽 cy958416459@qq.com
+ */
 class XbPluginUnInstallCommand extends Command
 {
     protected static $defaultName = 'xb-plugin:uninstall';
@@ -41,6 +47,16 @@ class XbPluginUnInstallCommand extends Command
         }
         // 获取插件本地版本
         $version = CloudSerivce::getLocalPluginVersion($name);
+        // 检测插件是否存在
+        $plugin = Plugins::where(['name' => $name])->find();
+        if (!$plugin) {
+            $output->writeln("<error>{$name} Plugin does not exist or has not been imported</error>");
+            return self::FAILURE;
+        }
+        if ($plugin['state'] == '10') {
+            $output->writeln("<error>{$name} Plugin has been uninstalled</error>");
+            return self::FAILURE;
+        }
         // 执行数据安装
         self::installData($name, $version, 'uninstall');
         // 安装完成
@@ -60,14 +76,12 @@ class XbPluginUnInstallCommand extends Command
      */
     protected static function installData(string $name, string $version, string $methodName)
     {
-        // 插件目录
-        $pluginDir = base_path("plugin/{$name}");
         try {
             // 插件类命名空间
             $class = "\\plugin\\{$name}\\Install";
             // 检测类是否存在
             if (!class_exists($class)) {
-                throw new \Exception("安装类错误：{$class}");
+                throw new \Exception("插件卸载失败：{$class}");
             }
             // 上下文
             $context = null;
@@ -83,6 +97,8 @@ class XbPluginUnInstallCommand extends Command
             if (method_exists($class, "{$methodName}After")) {
                 call_user_func([new $class, "{$methodName}After"], $context);
             }
+            // 设置插件已卸载
+            Plugins::where(['name' => $name])->save(['state' => '10']);
         } catch (\Throwable $th) {
             throw $th;
         }

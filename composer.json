@@ -37,7 +37,6 @@
     "tinywan/validate": "^1.0",
     "tinywan/jwt": "^1.9",
     "webman/log": "^1.1",
-    "xbai8/mysql-helper": "^1.0",
     "xaboy/form-builder": "2.0.19",
     "webman/think-cache": "^1.0",
     "webman/event": "^1.0"

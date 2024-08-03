@@ -77,7 +77,7 @@ trait MenuActionTrait
             $pid = $model->id;
         }
         $data['pid'] = $pid;
-        $model       = new AdminRule;
+        $model = new AdminRule;
         if (!$model->save($data)) {
             throw new Exception('创建菜单失败');
         }
@@ -95,6 +95,72 @@ trait MenuActionTrait
     {
         foreach ($data as $item) {
             self::createMenu($item);
+        }
+    }
+
+    /**
+     * 创建资源菜单
+     * @param array $parent 父级菜单数据
+     * @param array $data 资源菜单数据
+     * @throws \Exception
+     * @return void
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public static function createResponse(array $parent, array $data)
+    {
+        if (empty($parent['path'])) {
+            throw new Exception('父级菜单路由不能为空');
+        }
+        $parentPathFull = explode('/', $parent['path']);
+        if (empty($parentPathFull[0])) {
+            throw new Exception('父级菜单路由格式错误');
+        }
+        $parentPath = $parentPathFull[0];
+        if (empty($parent['component'])) {
+            throw new Exception('父级菜单组件不能为空');
+        }
+        if ($parent['component'] !== 'table/index') {
+            throw new Exception('父级菜单组件必须是表格组件');
+        }
+        if (empty($data)) {
+            throw new Exception('资源菜单数据不能为空');
+        }
+        $pid = $parent['id'] ?? '';
+        if (empty($pid)) {
+            $pidModel = self::findMenu($parent['path']);
+            if (!$pidModel) {
+                throw new Exception('父级菜单不存在');
+            }
+            $pid = $pidModel['id'];
+        }
+        $response = array_column(self::resourcesOption(), null, 'value');
+        foreach ($data as $method) {
+            if (!isset($response[$method])) {
+                continue;
+            }
+            // 获取资源
+            $res = $response[$method];
+            // 拼接数据
+            $menu = [
+                'pid' => $pid,
+                'plugin_name' => $parent['plugin_name'],
+                'module_name' => $parent['module_name'],
+                'is_show' => '10',
+                'is_default' => '10',
+                'is_system' => '10',
+                'icon' => '',
+                'sort' => '0',
+                'params' => '',
+            ];
+            $menu['title'] = "{$parent['title']}-{$res['label']}";
+            $menu['component'] = $res['component'];
+            $menu['path'] = "{$parentPath}/{$res['value']}";
+            $menu['methods'] = $res['methods'];
+            $model = new AdminRule;
+            if (!$model->save($menu)) {
+                throw new Exception("生成资源菜单失败");
+            }
         }
     }
 
@@ -170,5 +236,52 @@ trait MenuActionTrait
             throw new Exception('菜单不存在');
         }
         return $model;
+    }
+
+    /**
+     * 获取资源选项
+     * @return array
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public static function resourcesOption()
+    {
+        return [
+            [
+                'label' => '添加',
+                'value' => 'add',
+                'disabled' => false,
+                'methods' => 'GET,POST',
+                'component' => 'form/index',
+            ],
+            [
+                'label' => '修改',
+                'value' => 'edit',
+                'disabled' => false,
+                'methods' => 'GET,PUT',
+                'component' => 'form/index',
+            ],
+            [
+                'label' => '删除',
+                'value' => 'del',
+                'disabled' => false,
+                'methods' => 'GET,DELETE',
+                'component' => 'none/index',
+            ],
+            [
+                'label' => '表格',
+                'value' => 'Table',
+                'disabled' => false,
+                'methods' => 'GET',
+                'component' => 'none/index',
+            ],
+            [
+                'label' => '修改列',
+                'value' => 'rowEdit',
+                'disabled' => false,
+                'methods' => 'GET,PUT',
+                'component' => 'none/index',
+            ],
+        ];
     }
 }

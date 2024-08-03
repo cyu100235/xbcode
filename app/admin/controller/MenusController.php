@@ -1,19 +1,19 @@
 <?php
 namespace app\admin\controller;
 
-use app\admin\validate\MenusValidate;
 use app\admin\view\MenuView;
 use app\common\builder\FormBuilder;
 use app\common\builder\table\RowEditTrait;
 use app\common\providers\DictProvider;
+use app\common\providers\MenuProvider;
 use app\common\providers\RouteProvider;
 use app\common\utils\FrameUtil;
 use hg\apidoc\annotation as Apidoc;
 use app\common\builder\ListBuilder;
+use app\common\XbController;
+use Webman\Event\Event;
 use app\model\AdminRule;
 use support\Request;
-use app\common\XbController;
-use think\facade\Db;
 
 /**
  * 菜单管理
@@ -26,6 +26,12 @@ class MenusController extends XbController
     use RowEditTrait;
 
     /**
+     * 模型
+     * @var 
+     */
+    protected $model;
+
+    /**
      * 初始化
      * @return void
      * @copyright 贵州小白基地网络科技有限公司
@@ -34,6 +40,7 @@ class MenusController extends XbController
     protected function init()
     {
         parent::init();
+        $this->model = new AdminRule;
     }
 
     /**
@@ -167,33 +174,10 @@ class MenusController extends XbController
         if ($request->method() === 'POST') {
             // 获取数据
             $post = $request->post();
-            // 数据验证
-            xbValidate(MenusValidate::class, $post, 'add');
-            // 获取父级ID
-            $post['pid'] = is_array($post['pid']) ? end($post['pid']) : $post['pid'];
-            $post['methods'] = implode(',', $post['methods']);
-            // 开启事务
-            Db::startTrans();
-            try {
-                $model = new AdminRule;
-                if (!$model->save($post)) {
-                    return $this->fail('添加失败');
-                }
-                // 提交事务
-                Db::commit();
-                // 缓存路由
-                RouteProvider::cacheMenus();
-                // 延迟重启
-                FrameUtil::pcntlAlarm(2, function () {
-                    // 重启服务
-                    FrameUtil::reload();
-                });
-                // 返回结果
-                return $this->success('添加成功');
-            } catch (\Throwable $e) {
-                Db::rollback();
-                return $this->fail($e->getMessage());
-            }
+            // 事件处理
+            Event::dispatch('common.event.MenuEvent.add', $post);
+            // 返回结果
+            return $this->success('添加成功');
         }
         $builder = MenuView::formView();
         $builder->setMethod('POST');
@@ -219,22 +203,8 @@ class MenusController extends XbController
         if ($request->method() === 'PUT') {
             // 获取数据
             $post = $request->post();
-            // 数据验证
-            xbValidate(MenusValidate::class, $post, 'edit');
-            // 获取父级ID
-            $post['pid'] = is_array($post['pid']) ? end($post['pid']) : $post['pid'];
-            $post['methods'] = implode(',', $post['methods']);
-            // 保存数据
-            if (!$model->save($post)) {
-                return $this->fail('修改失败');
-            }
-            // 缓存路由
-            RouteProvider::cacheMenus();
-            // 延迟重启
-            FrameUtil::pcntlAlarm(2, function () {
-                // 重启服务
-                FrameUtil::reload();
-            });
+            // 事件处理
+            Event::dispatch('common.event.MenuEvent.edit', $post);
             // 返回结果
             return $this->success('修改成功');
         }
@@ -257,23 +227,9 @@ class MenusController extends XbController
      */
     public function del(Request $request)
     {
-        $id = (int)$request->post('id');
-        $model = AdminRule::find((int) $id);
-        if (!$model) {
-            return $this->fail('数据不存在');
-        }
-        if ($model['is_system'] === '20') {
-            return $this->fail('系统菜单不允许删除');
-        }
-        if (!$model->delete()) {
-            return $this->fail('删除失败');
-        }
-        // 缓存路由
-        RouteProvider::cacheMenus();
-        // 重启服务
-        FrameUtil::pcntlAlarm(2, function () {
-            FrameUtil::reload();
-        });
+        $id = (int) $request->post('id');
+        // 事件处理
+        Event::dispatch('common.event.MenuEvent.del', ['id' => $id]);
         // 返回数据
         return $this->success('删除成功');
     }
@@ -287,23 +243,18 @@ class MenusController extends XbController
      */
     public function resources(Request $request)
     {
-        $id = (int)$request->get('id');
+        $id = (int) $request->get('id');
         $menu = AdminRule::find($id);
         if (!$menu) {
             return $this->fail('数据不存在');
         }
         if ($request->method() === 'POST') {
             $post = $request->post('result', []);
-            $data = $this->getMenusChildren($post, $menu->toArray());
-            if (empty($data)) {
+            if (empty($post)) {
                 return $this->fail('请选择路由资源');
             }
-            foreach ($data as $menuData) {
-                $model = new AdminRule;
-                if (!$model->save($menuData)) {
-                    return $this->fail('生成资源菜单失败');
-                }
-            }
+            // 创建资源菜单
+            MenuProvider::createResponse($menu->toArray(), $post);
             // 缓存路由
             RouteProvider::cacheMenus();
             // 重启服务
@@ -313,33 +264,7 @@ class MenusController extends XbController
             // 返回数据
             return $this->success('生成资源菜单成功');
         }
-        $options = [
-            [
-                'label' => '添加',
-                'value' => 'add',
-                'disabled' => false,
-            ],
-            [
-                'label' => '修改',
-                'value' => 'edit',
-                'disabled' => false,
-            ],
-            [
-                'label' => '删除',
-                'value' => 'del',
-                'disabled' => false,
-            ],
-            [
-                'label' => '表格',
-                'value' => 'Table',
-                'disabled' => false,
-            ],
-            [
-                'label' => '修改列',
-                'value' => 'rowEdit',
-                'disabled' => false,
-            ],
-        ];
+        $options = MenuProvider::resourcesOption();
         foreach ($options as &$item) {
             // 检测是否表格
             if ($menu['component'] != 'table/index') {
@@ -369,74 +294,9 @@ class MenusController extends XbController
         $builder = new FormBuilder;
         $builder->setMethod('POST');
         $builder->addRow('result', 'checkbox', '资源菜单', [], [
-            'options' => $options
+            'options' => $options,
         ]);
         $data = $builder->create();
         return $this->successRes($data);
-    }
-
-    /**
-     * 获取子级菜单数据
-     * @param array $children
-     * @param array $post
-     * @param mixed $parentId
-     * @return array|object
-     * @copyright 贵州小白基地网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
-     */
-    private function getMenusChildren(array $children, array $parent)
-    {
-        if (empty($children)) {
-            return [];
-        }
-        $data = [];
-        foreach ($children as $value) {
-            // 删除多余字符串
-            $parentPath = str_replace('/index', '', $parent['path']);
-            $item = [
-                'pid' => $parent['id'],
-                'plugin_name' => $parent['plugin_name'],
-                'module_name' => $parent['module_name'],
-                'is_show' => '10',
-                'is_default' => '10',
-                'is_system' => '10',
-                'icon' => '',
-                'sort' => '0',
-                'params' => '',
-            ];
-            // 添加
-            if ($value === 'add') {
-                $item['title'] = "{$parent['title']}-添加";
-                $item['component'] = 'form/index';
-                $item['path'] = "{$parentPath}/add";
-                $item['methods'] = 'GET,POST';
-                array_push($data, $item);
-            }
-            // 修改
-            if ($value === 'edit') {
-                $item['title'] = "{$parent['title']}-修改";
-                $item['component'] = 'form/index';
-                $item['path'] = "{$parentPath}/edit";
-                $item['methods'] = 'GET,PUT';
-                array_push($data, $item);
-            }
-            // 删除
-            if ($value === 'del') {
-                $item['title'] = "{$parent['title']}-删除";
-                $item['component'] = 'none/index';
-                $item['path'] = "{$parentPath}/del";
-                $item['methods'] = 'DELETE';
-                array_push($data, $item);
-            }
-            // 表格列
-            if ($value === 'rowEdit') {
-                $item['title'] = "{$parent['title']}-修改列";
-                $item['component'] = 'none/index';
-                $item['path'] = "{$parentPath}/rowEdit";
-                $item['methods'] = 'GET,POST,PUT,DELETE';
-                array_push($data, $item);
-            }
-        }
-        return $data;
     }
 }

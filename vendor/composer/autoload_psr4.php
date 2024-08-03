@@ -8,7 +8,6 @@ $baseDir = dirname($vendorDir);
 return array(
     'yzh52521\\WebmanLock\\' => array($vendorDir . '/yzh52521/webman-lock/src'),
     'yzh52521\\EasyHttp\\' => array($vendorDir . '/yzh52521/easyhttp/src'),
-    'xbai8\\' => array($vendorDir . '/xbai8/mysql-helper/src'),
     'think\\' => array($vendorDir . '/topthink/think-cache/src', $vendorDir . '/topthink/think-container/src', $vendorDir . '/topthink/think-helper/src', $vendorDir . '/topthink/think-orm/src'),
     'support\\' => array($vendorDir . '/workerman/webman-framework/src/support'),
     'hg\\apidoc\\' => array($vendorDir . '/hg/apidoc/src'),

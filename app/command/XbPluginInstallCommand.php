@@ -7,7 +7,13 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use app\model\Plugins;
 
+/**
+ * 安装小白插件
+ * @copyright 贵州小白基地网络科技有限公司
+ * @author 楚羽幽 cy958416459@qq.com
+ */
 class XbPluginInstallCommand extends Command
 {
     protected static $defaultName = 'xb-plugin:install';
@@ -41,6 +47,11 @@ class XbPluginInstallCommand extends Command
         }
         // 获取插件本地版本
         $version = CloudSerivce::getLocalPluginVersion($name);
+        // 检测插件是否已安装
+        if (CloudSerivce::checkPluginInstall($name)) {
+            $output->writeln("<error>{$name} Plugin Installed</error>");
+            return self::FAILURE;
+        }
         // 执行数据安装
         self::installData($name, $version, 'install');
         // 安装完成
@@ -60,14 +71,12 @@ class XbPluginInstallCommand extends Command
      */
     protected static function installData(string $name, string $version, string $methodName)
     {
-        // 插件目录
-        $pluginDir = base_path("plugin/{$name}");
         try {
             // 插件类命名空间
             $class = "\\plugin\\{$name}\\Install";
             // 检测类是否存在
             if (!class_exists($class)) {
-                throw new \Exception("安装类错误：{$class}");
+                throw new \Exception("插件安装失败：{$class}");
             }
             // 上下文
             $context = null;
@@ -83,8 +92,9 @@ class XbPluginInstallCommand extends Command
             if (method_exists($class, "{$methodName}After")) {
                 call_user_func([new $class, "{$methodName}After"], $context);
             }
+            // 设置插件已安装
+            Plugins::where(['name' => $name])->save(['state' => '20']);
         } catch (\Throwable $th) {
-            remove_dir($pluginDir);
             throw $th;
         }
     }

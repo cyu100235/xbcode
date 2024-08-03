@@ -7,13 +7,21 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * 创建小白插件
+ * @copyright 贵州小白基地网络科技有限公司
+ * @author 楚羽幽 cy958416459@qq.com
+ */
 class XbPluginCreateCommand extends Command
 {
     protected static $defaultName = 'xb-plugin:create';
     protected static $defaultDescription = 'Xb Plugin Create';
 
     /**
+     * 配置命令
      * @return void
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
      */
     protected function configure()
     {
@@ -21,9 +29,12 @@ class XbPluginCreateCommand extends Command
     }
 
     /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
+     * 执行命令
+     * @param \Symfony\Component\Console\Input\InputInterface $input
+     * @param \Symfony\Component\Console\Output\OutputInterface $output
      * @return int
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -58,6 +69,7 @@ class XbPluginCreateCommand extends Command
         $this->mkdir("$base_path/plugin/$name/app/model", 0777, true);
         $this->mkdir("$base_path/plugin/$name/app/view/index", 0777, true);
         $this->mkdir("$base_path/plugin/$name/config", 0777, true);
+        $this->mkdir("$base_path/plugin/$name/data/config", 0777, true);
         $this->mkdir("$base_path/plugin/$name/data/sql", 0777, true);
         $this->mkdir("$base_path/plugin/$name/public", 0777, true);
         $this->mkdir("$base_path/plugin/$name/api", 0777, true);
@@ -74,6 +86,8 @@ class XbPluginCreateCommand extends Command
         $this->createInstallSqlFile("$base_path/plugin/$name/data/sql/install.sql");
         $this->createInstallSqlFile("$base_path/plugin/$name/data/sql/update.sql");
         $this->createInstallSqlFile("$base_path/plugin/$name/data/sql/uninstall.sql");
+        $this->createMenuTplFile("$base_path/plugin/$name/data/config/menus.php");
+        $this->createDictTplFile("$base_path/plugin/$name/data/config/dict.php");
     }
 
     /**
@@ -160,17 +174,17 @@ EOF;
 <?php
 
 return [
-    [
-        // 支持以.多层级配置
-        'field' => 'plugin_name',
-        'title' => '网站名称',
-        'value' => '',
-        'component' => 'input',
-        'extra' => [
-            'col' => 12,
-            'prompt' => '应用名称，显示在浏览器标签页',
-        ],
-    ],
+    // 支持以.多层级配置
+    // [
+    //     'field' => 'plugin_name',
+    //     'title' => '网站名称',
+    //     'value' => '',
+    //     'component' => 'input',
+    //     'extra' => [
+    //         'col' => 12,
+    //         'prompt' => '应用名称，显示在浏览器标签页',
+    //     ],
+    // ],
 ];
 EOF;
         file_put_contents("$path/basis.php", $content);
@@ -178,10 +192,10 @@ EOF;
 <?php
 
 return [
-    [
-        'title' => '基础配置',
-        'name' => 'basis',
-    ],
+    // [
+    //     'title' => '基础配置',
+    //     'name' => 'basis',
+    // ],
 ];
 EOF;
         file_put_contents("$path/config.php", $content);
@@ -271,9 +285,9 @@ EOF;
             'title' => '基础插件系统',
             'name' => $name,
             'version' => '1.0.0',
-            'desc' => '',
+            'desc' => '插件的简短描述',
             'author' => '楚羽幽',
-            'logo' => '',
+            'logo' => '插件的logo，可以是图片地址',
             'depend' => [],
         ];
         $content = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
@@ -293,7 +307,7 @@ namespace plugin\\$name;
 
 use app\common\providers\MenuProvider;
 use app\common\providers\MysqlProvider;
-use app\common\providers\MysqlProvider;
+use app\common\providers\DictProvider;
 
 /**
  * 插件安装卸载类
@@ -310,15 +324,17 @@ class Install
      */
     public function installBefore()
     {
+        // 可以自己实现安装之前的业务逻辑...
     }
     
     /**
      * 安装
+     * @param mixed \$context 从<安装前>返回的上下文
      * @return void
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public function install()
+    public function install(mixed \$context)
     {
         // 创建菜单
         \$this->createMenus();
@@ -330,53 +346,19 @@ class Install
         if (file_exists(\$sql)) {
             MysqlProvider::importSql(\$sql);
         }
-    }
-
-    
-    /**
-     * 创建字典
-     * @return bool
-     * @copyright 贵州小白基地网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
-     */
-    private function createDicts()
-    {
-        // 获取字典数据
-        \$data = config('plugin.{$name}.dict', []);
-        if (empty(\$dicts)) {
-            return true;
-        }
-        // 批量创建字典
-        DictProvider::addDicts(\$data);
-        return true;
-    }
-
-    /**
-     * 创建菜单
-     * @return bool
-     * @copyright 贵州小白基地网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
-     */
-    private function createMenus()
-    {
-        // 获取菜单数据
-        \$menus = config('plugin.finance.menus', []);
-        if (empty(\$menus)) {
-            return true;
-        }
-        // 批量创建菜单
-        MenuProvider::createMenus(\$menus);
-        return true;
+        // 有其他业务逻辑可以在这个方法里面继续写
     }
 
     /**
      * 安装后
+     * @param mixed \$context 从<安装>返回的上下文
      * @return void
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public function installAfter()
+    public function installAfter(mixed \$context)
     {
+        // 可以自己实现安装之后的业务逻辑...
     }
 
     /**
@@ -400,7 +382,7 @@ class Install
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public function update()
+    public function update(mixed \$context)
     {
     }
 
@@ -410,7 +392,7 @@ class Install
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public function updateAfter()
+    public function updateAfter(mixed \$context)
     {
     }
 
@@ -430,39 +412,19 @@ class Install
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public function uninstall()
+    public function uninstall(mixed \$context)
     {
         // 卸载菜单数据
         \$this->delMenu();
         
         // 批量删除字典
-        \$dicts = config('plugin.{$name}.dict', []);
+        \$dicts = config('plugin.{$name}.tpldata.dict', []);
         DictProvider::delDicts(\$dicts);
 
         // 导入卸载SQL
         \$sql = __DIR__ . '/data/sql/uninstall.sql';
         if (file_exists(\$sql)) {
             MysqlProvider::importSql(\$sql);
-        }
-    }
-
-    /**
-     * 卸载菜单数据
-     * @return void
-     * @copyright 贵州小白基地网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
-     */
-    protected function delMenu()
-    {
-        // 获取菜单数据
-        \$menus = config('plugin.goods.menus', []);
-        if (\$menus) {
-            // 执行倒序
-            \$menus = array_reverse(\$menus);
-            // 获取菜单KEY
-            \$keys = array_column(\$menus, 'path');
-            // 删除菜单
-            MenuProvider::delMenus(\$keys);
         }
     }
 
@@ -475,6 +437,62 @@ class Install
     public function uninstallAfter()
     {
     }
+    
+    /**
+     * 创建字典
+     * @return bool
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    private function createDicts()
+    {
+        // 获取字典数据
+        \$data = config('plugin.{$name}.tpldata.dict', []);
+        if (empty(\$dicts)) {
+            return true;
+        }
+        // 批量创建字典
+        DictProvider::addDicts(\$data);
+        return true;
+    }
+
+    /**
+     * 创建菜单
+     * @return bool
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    private function createMenus()
+    {
+        // 获取菜单数据
+        \$menus = config('plugin.{$name}.tpldata.menus', []);
+        if (empty(\$menus)) {
+            return true;
+        }
+        // 批量创建菜单
+        MenuProvider::createMenus(\$menus);
+        return true;
+    }
+
+    /**
+     * 删除菜单数据
+     * @return void
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    protected function delMenu(mixed \$context)
+    {
+        // 获取菜单数据
+        \$menus = config('plugin.{$name}.tpldata.menus', []);
+        if (\$menus) {
+            // 执行倒序
+            \$menus = array_reverse(\$menus);
+            // 获取菜单KEY
+            \$keys = array_column(\$menus, 'path');
+            // 删除菜单
+            MenuProvider::delMenus(\$keys);
+        }
+    }
 }
 EOF;
 
@@ -483,7 +501,11 @@ EOF;
     }
 
     /**
+     * 创建SQL文件
+     * @param mixed $file
      * @return void
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
      */
     protected function createInstallSqlFile($file)
     {
@@ -491,9 +513,64 @@ EOF;
     }
 
     /**
-     * @param $base
-     * @param $name
+     * 创建菜单模板配置文件
+     * @param string $file
      * @return void
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    protected function createMenuTplFile(string $file)
+    {
+        $content = <<<EOF
+<?php
+
+return [
+    // 示例数据
+    // [
+    //     'title' => '菜单名称',
+    //     'plugin_name' => 'foo',
+    //     'module_name' => 'admin',
+    //     'path' => 'Code/index',
+    //     'component' => 'table/index',
+    //     'is_show' => '20',
+    //     'methods' => 'get',
+    // ],
+];
+EOF;
+        file_put_contents($file, $content);
+    }
+
+    /**
+     * 创建字典模板配置文件
+     * @param string $file
+     * @return void
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    protected function createDictTplFile(string $file)
+    {
+        $content = <<<EOF
+<?php
+
+return [
+    // 示例数据
+    // [
+    //     'title' => '是否启用',
+    //     'name' => 'stateEnum',
+    //     'content' => "10=禁用|20=启用",
+    // ],
+];
+EOF;
+        file_put_contents($file, $content);
+    }
+
+    /**
+     * 创建配置文件
+     * @param mixed $base
+     * @param mixed $name
+     * @return void
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
      */
     protected function createConfigFiles($base, $name)
     {
@@ -665,6 +742,23 @@ return [];
 EOF;
         file_put_contents("$base/thinkorm.php", $content);
 
-    }
+        // settings.php
+        $content = <<<EOF
+<?php
+use \app\common\utils\DirUtil;
+return DirUtil::getDirFileData(dirname(__DIR__).'setting', ['config.php']);
 
+EOF;
+        file_put_contents("$base/settings.php", $content);
+
+        // tpldata.php
+        $content = <<<EOF
+<?php
+use \app\common\utils\DirUtil;
+return DirUtil::getDirFileData(dirname(__DIR__).'/data/config', ['config.php']);
+
+EOF;
+        file_put_contents("$base/tpldata.php", $content);
+
+    }
 }

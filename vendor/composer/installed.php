@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
-        'name' => 'xiadiao/admin',
+        'name' => 'xbcode/xbase',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'eac214ae49eefe637b27e303450e2efb0e450608',
+        'reference' => '0dba1c55cc366a28524b9922d3471e94e8a73f32',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -602,19 +602,10 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
-        'xbai8/mysql-helper' => array(
-            'pretty_version' => '1.0.3',
-            'version' => '1.0.3.0',
-            'reference' => 'f6fc0f25144b94235a8e364f1594bce601bea5bb',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../xbai8/mysql-helper',
-            'aliases' => array(),
-            'dev_requirement' => false,
-        ),
-        'xiadiao/admin' => array(
+        'xbcode/xbase' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'eac214ae49eefe637b27e303450e2efb0e450608',
+            'reference' => '0dba1c55cc366a28524b9922d3471e94e8a73f32',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
