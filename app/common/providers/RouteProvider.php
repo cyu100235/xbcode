@@ -44,9 +44,25 @@ class RouteProvider
         } else {
             // 注册后台路由
             self::registerAdminView();
+            // 注册插件路由
+            self::registerPluginRouter();
             // 注册文档路由
             self::registerApidocView();
         }
+    }
+
+    /**
+     * 注册插件路由
+     * @return void
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    private static function registerPluginRouter()
+    {
+        $controller = \app\admin\controller\SettingsController::class;
+        Route::any('/app/{plugin}/Setting/config/{name}', [$controller, 'config']);
+        Route::any('/app/{plugin}/Setting/selected/{name}', [$controller, 'selected']);
+        Route::any('/app/{plugin}/Setting/tabs/{name}', [$controller, 'tabs']);
     }
 
     /**

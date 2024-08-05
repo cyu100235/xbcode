@@ -3,7 +3,6 @@ namespace app\admin\view;
 
 use app\common\providers\ConfigProvider;
 use app\common\builder\FormBuilder;
-use Exception;
 
 /**
  * 插件视图
@@ -20,30 +19,20 @@ class PluginConfigView
      */
     public static function config()
     {
-        $name           = request()->get('name', '');
-        $configRootPath = base_path("plugin/{$name}/setting/");
-        $configPath     = "{$configRootPath}config.php";
-        if (!file_exists($configPath)) {
-            throw new Exception('配置文件不存在');
-        }
-        $data = require $configPath;
-        if (empty($data)) {
-            throw new Exception('配置文件为空');
-        }
-        if (!is_array($data)) {
-            throw new Exception('配置文件格式错误');
-        }
-        $active  = current($data)['name'] ?? '';
+        $name = request()->get('name', '');
+        // 获取插件配置
+        $data = config("plugin.{$name}.settings.config", []);
+        // 获取配置选中
+        $active = current($data)['name'] ?? '';
         $builder = new FormBuilder;
         $builder->initTabsActive('active', $active);
         // 遍历配置
         foreach ($data as $value) {
-            $formViewPath = "{$configRootPath}{$value['name']}.php";
-            if (!file_exists($formViewPath)) {
+            // 获取子配置数据
+            $formView = config("plugin.{$name}.settings.{$value['name']}", []);
+            if (empty($formView)) {
                 continue;
             }
-            // 获取配置数据
-            $formView = require $formViewPath;
             // 获取配置JSON
             $builder2 = self::getFormView($formView);
             // 查询配置数据

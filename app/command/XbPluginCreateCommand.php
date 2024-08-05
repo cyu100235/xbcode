@@ -746,7 +746,8 @@ EOF;
         $content = <<<EOF
 <?php
 use \app\common\utils\DirUtil;
-return DirUtil::getDirFileData(dirname(__DIR__).'setting', ['config.php']);
+
+return DirUtil::getDirFileData(dirname(__DIR__).'setting');
 
 EOF;
         file_put_contents("$base/settings.php", $content);
@@ -755,7 +756,7 @@ EOF;
         $content = <<<EOF
 <?php
 use \app\common\utils\DirUtil;
-return DirUtil::getDirFileData(dirname(__DIR__).'/data/config', ['config.php']);
+return DirUtil::getDirFileData(dirname(__DIR__).'/data/config');
 
 EOF;
         file_put_contents("$base/tpldata.php", $content);

@@ -1,6 +1,8 @@
 <?php
 namespace app\common\utils;
 
+use Exception;
+
 /**
  * 目录工具类
  * @copyright 贵州小白基地网络科技有限公司
@@ -41,6 +43,30 @@ class DirUtil
             $path = str_replace($dirPath, '', $value);
             $name = str_replace(".php", '', $path);
             $data[$name] = $temp;
+        }
+        return $data;
+    }
+
+    /**
+     * 获取PHP文件内容
+     * @param string $file
+     * @param mixed $default
+     * @throws \Exception
+     * @return array
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public static function getFileContent(string $file, mixed $default = null)
+    {
+        if (!file_exists($file)) {
+            throw new Exception('文件不存在');
+        }
+        $data = include $file;
+        if (empty($data)) {
+            throw new Exception('文件内容为空');
+        }
+        if (!is_array($data)) {
+            throw new Exception('文件格式错误');
         }
         return $data;
     }

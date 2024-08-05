@@ -17,10 +17,10 @@ class MiddlewareProvider
      */
     public static function init(string $plugin)
     {
-        $sitePath  = base_path();
-        $appPath   = "{$sitePath}/plugin/{$plugin}/app/**/middleware.php";
+        $sitePath = base_path();
+        $appPath = "{$sitePath}/plugin/{$plugin}/app/**/middleware.php";
         $middFiles = glob($appPath);
-        $middPath  = "{$sitePath}/plugin/{$plugin}/app/middleware.php";
+        $middPath = "{$sitePath}/plugin/{$plugin}/app/middleware.php";
         if (file_exists($middPath)) {
             $middFiles[] = $middPath;
         }
@@ -34,7 +34,7 @@ class MiddlewareProvider
             $name = str_replace('/app', '', $name);
             $name = str_replace('/', '.', $name);
             // 获取中间件文件
-            $midd        = require $value;
+            $midd = require $value;
             $data[$name] = $midd;
         }
         return $data;

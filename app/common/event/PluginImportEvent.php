@@ -42,27 +42,8 @@ class PluginImportEvent
             throw new Exception('插件缺少信息文件');
         }
         $info = json_decode($json, true);
-        if (!isset($info['title'])) {
-            throw new Exception('插件信息缺少名称');
-        }
-        if (!isset($info['name'])) {
-            throw new Exception('插件信息缺少标识');
-        }
-        if (!isset($info['version'])) {
-            throw new Exception('插件信息缺少版本');
-        }
-        if (!isset($info['depend'])) {
-            throw new Exception('插件信息缺少依赖');
-        }
-        if (empty($info['depend']) || !is_array($info['depend'])) {
-            $info['depend'] = [];
-        }
-        if (!isset($info['author']) || empty($info['author'])) {
-            throw new Exception('插件信息缺少作者');
-        }
-        if (!isset($info['logo']) || empty($info['logo'])) {
-            $info['logo'] = '';
-        }
+        // 检查插件信息
+        $this->dataCheck($info);
         // 创建插件目录
         $pluginDir = base_path("plugin/{$info['name']}");
         if (!is_dir($pluginDir)) {
@@ -84,9 +65,43 @@ class PluginImportEvent
             'version' => $info['version'],
             'author' => $info['author'],
             'logo' => $info['logo'],
+            'state' => '10',
         ];
         if (!$model->save($data)) {
             throw new Exception('插件信息保存失败');
+        }
+    }
+
+    /**
+     * 检查插件信息
+     * @param array $info
+     * @throws \Exception
+     * @return void
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    private function dataCheck(array &$info)
+    {
+        if (!isset($info['title'])) {
+            throw new Exception('插件信息缺少名称');
+        }
+        if (!isset($info['name'])) {
+            throw new Exception('插件信息缺少标识');
+        }
+        if (!isset($info['version'])) {
+            throw new Exception('插件信息缺少版本');
+        }
+        if (!isset($info['depend'])) {
+            throw new Exception('插件信息缺少依赖');
+        }
+        if (empty($info['depend']) || !is_array($info['depend'])) {
+            $info['depend'] = [];
+        }
+        if (!isset($info['author']) || empty($info['author'])) {
+            throw new Exception('插件信息缺少作者');
+        }
+        if (!isset($info['logo']) || empty($info['logo'])) {
+            $info['logo'] = '';
         }
     }
 }

@@ -50,8 +50,8 @@ class PluginsActionController extends XbController
      */
     public function export(Request $request)
     {
-        $uid        = JwtToken::getCurrentId();
-        $name       = $request->get('name', '');
+        $uid = JwtToken::getCurrentId();
+        $name = $request->get('name', '');
         $pluginPath = base_path("plugin/{$name}/");
         if (!is_dir($pluginPath)) {
             return $this->fail('插件不存在');
@@ -61,10 +61,10 @@ class PluginsActionController extends XbController
             mkdir($tempPath, 0755, true);
         }
         // 插件信息
-        $info     = CloudSerivce::getPluginInfo($name);
+        $info = CloudSerivce::getPluginInfo($name);
         $packPath = "{$tempPath}export-{$info['name']}-{$info['version']}.zip";
         ZipUtil::build($packPath, $pluginPath);
-        $key  = md5($packPath . $uid . time());
+        $key = md5($packPath . $uid . time());
         $data = [
             'uid' => $uid,
             'title' => $info['title'],
@@ -87,7 +87,7 @@ class PluginsActionController extends XbController
      */
     public function download(Request $request)
     {
-        $key  = $request->get('key', '');
+        $key = $request->get('key', '');
         $data = Cache::get($key);
         if (empty($data)) {
             return $this->fail('下载链接已失效');
@@ -99,7 +99,7 @@ class PluginsActionController extends XbController
             return $this->fail('下载文件不存在');
         }
         $filename = "{$data['title']} {$data['name']}{$data['version']}.zip";
-        $path     = $data['path'];
+        $path = $data['path'];
         return response()->download($path, $filename);
     }
 
@@ -112,10 +112,10 @@ class PluginsActionController extends XbController
      */
     public function install(Request $request)
     {
-        $data         = $request->post();
+        $data = $request->post();
         $data['step'] = $request->post('step', 'depend');
-        $result       = Event::dispatch('common.event.PluginInstallEvent.start', $data);
-        $data         = current($result);
+        $result = Event::dispatch('common.event.PluginInstallEvent.start', $data);
+        $data = current($result);
         return $data;
     }
 
@@ -141,10 +141,10 @@ class PluginsActionController extends XbController
      */
     public function uninstall(Request $request)
     {
-        $data         = $request->post();
+        $data = $request->post();
         $data['step'] = $request->post('step', 'database');
-        $result       = Event::dispatch('common.event.PluginUnInstallEvent.start', $data);
-        $data         = current($result);
+        $result = Event::dispatch('common.event.PluginUnInstallEvent.start', $data);
+        $data = current($result);
         return $data;
     }
 
@@ -184,9 +184,9 @@ class PluginsActionController extends XbController
     # TODO:插件详情未完成
     public function detail(Request $request)
     {
-        $name    = $request->get('name', '');
+        $name = $request->get('name', '');
         $version = $request->get('version', '');
-        $data    = CloudSerivce::pluginDetail($name, $version);
+        $data = CloudSerivce::pluginDetail($name, $version);
         return $this->successRes($data);
     }
 
@@ -200,8 +200,8 @@ class PluginsActionController extends XbController
     public function config(Request $request)
     {
         if ($request->method() === 'PUT') {
-            $group  = $request->get('name', '');
-            $post   = $request->post();
+            $group = $request->get('name', '');
+            $post = $request->post();
             $active = $post['active'];
             unset($post['active']);
             $data = [
@@ -212,9 +212,13 @@ class PluginsActionController extends XbController
             // 返回结果
             return $this->success('保存成功');
         }
-        $builder = PluginConfigView::config();
-        $builder->setMethod('PUT');
-        $data = $builder->create();
+        try {
+            $builder = PluginConfigView::config();
+            $builder->setMethod('PUT');
+            $data = $builder->create();
+        } catch (\Throwable $th) {
+            return $this->fail($th->getMessage());
+        }
         return $this->successRes($data);
     }
 
