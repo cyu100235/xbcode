@@ -57,7 +57,11 @@ function xbValidate($validate, array $data, string $scene = '')
 function xbModuleName()
 {
     $request = request();
-    // 设置总后台路由格式
+    // 插件模块
+    if ($request->plugin) {
+        return "app/{$request->plugin}";
+    }
+    // 总后台模块
     $path = $request->path();
     $data = array_values(array_filter(explode('/', $path)));
     $moduleName = '';

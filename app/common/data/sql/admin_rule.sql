@@ -22,7 +22,7 @@ CREATE TABLE `xb_admin_rule`  (
 INSERT INTO `xb_admin_rule` VALUES (1, '2024-03-27 15:57:10', '2024-05-29 11:30:40', '首页', '', 'admin', 'home', 0, 'none/index', '20', '20', '20', 'GET', 'HomeFilled', '', 1);
 INSERT INTO `xb_admin_rule` VALUES (2, '2024-03-27 15:57:58', '2024-07-22 16:50:10', '权限', '', 'admin', 'auth', 0, 'none/index', '20', '10', '10', 'GET', 'Connection', '', 8888);
 INSERT INTO `xb_admin_rule` VALUES (3, '2024-03-27 15:58:24', '2024-05-29 11:31:02', '系统', '', 'admin', 'setting', 0, 'none/index', '20', '10', '10', 'GET', 'Setting', '', 9999);
-INSERT INTO `xb_admin_rule` VALUES (5, '2024-03-27 16:00:15', '2024-05-05 16:27:19', '工作台', '', 'admin', 'Index/index', 1, 'remote/index', '20', '20', '20', 'GET', '', 'vue/admin/welcome', 0);
+INSERT INTO `xb_admin_rule` VALUES (5, '2024-03-27 16:00:15', '2024-08-06 00:41:04', '工作台', '', 'admin', 'Index/index', 1, 'vue/index', '20', '20', '20', 'GET', '', '', 0);
 INSERT INTO `xb_admin_rule` VALUES (6, '2024-03-27 16:00:53', '2024-03-27 17:19:43', '系统登录', '', 'admin', 'Login/login', 1, 'none/index', '10', '20', '20', 'POST', '', NULL, 0);
 INSERT INTO `xb_admin_rule` VALUES (7, '2024-03-27 16:01:30', '2024-05-05 16:24:13', '获取应用信息', '', 'admin', 'Index/site', 1, 'none/index', '10', '20', '20', 'GET', '', '', 0);
 INSERT INTO `xb_admin_rule` VALUES (8, '2024-03-27 16:02:06', '2024-03-27 17:20:43', '获取管理员信息', '', 'admin', 'Login/user', 1, 'none/index', '10', '20', '20', 'GET', '', NULL, 0);

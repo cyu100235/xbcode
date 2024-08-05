@@ -6,7 +6,7 @@ return [
     'transport' => 'tcp',
     'context' => [],
     'name' => 'xbase',
-    'count' => cpu_count() * 2,
+    'count' => cpu_count() * xbEnv('WORKER_COUNT', 1),
     'user' => '',
     'group' => '',
     'reusePort' => false,

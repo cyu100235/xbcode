@@ -203,6 +203,7 @@ class MenusController extends XbController
         if ($request->method() === 'PUT') {
             // 获取数据
             $post = $request->post();
+            $post['id'] = $id;
             // 事件处理
             Event::dispatch('common.event.MenuEvent.edit', $post);
             // 返回结果

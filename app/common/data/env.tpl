@@ -1,6 +1,9 @@
 # 是否开启调试模式
 APP_DEBUG = false
 
+# CPU倍数
+WORKER_COUNT = 1
+
 # 是否开启商店与版本更新
 PLUGIN_STORE = true
 

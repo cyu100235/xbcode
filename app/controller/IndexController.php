@@ -2,6 +2,7 @@
 
 namespace app\controller;
 
+use app\common\providers\SlotProvider;
 use app\common\utils\InstallUtil;
 use app\common\XbController;
 use support\Request;
@@ -26,6 +27,6 @@ class IndexController extends XbController
         if (!InstallUtil::hasInstall()) {
             return redirect('/install/');
         }
-        return view('index/index');
+        return SlotProvider::trigger('index.index');
     }
 }

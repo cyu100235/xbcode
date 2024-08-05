@@ -5,6 +5,7 @@ namespace app\admin\controller;
 use app\common\providers\ConfigProvider;
 use app\common\providers\AppProvider;
 use app\common\providers\RouteProvider;
+use app\common\providers\SlotProvider;
 use app\common\utils\FrameUtil;
 use app\common\XbController;
 use support\Request;
@@ -29,16 +30,30 @@ class IndexController extends XbController
      */
     public function index(Request $request)
     {
+        if ($request->get('t')) {
+            return $this->welcome();
+        }
         $path = $request->path();
         if (!str_ends_with($path, '/')) {
             return redirect("{$path}/");
         }
         // 下载后台视图
         if (!RouteProvider::downloadView('admin-view')) {
-            throw new \Exception('下载后台视图失败');
+            return $this->fail('下载后台视图失败');
         }
         // 渲染视图
         return $this->adminView();
+    }
+    
+    /**
+     * 欢迎页面
+     * @return mixed
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    private function welcome()
+    {
+        return SlotProvider::trigger('admin.index');
     }
 
     /**
