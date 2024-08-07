@@ -2,6 +2,7 @@
 
 namespace app\common\builder;
 
+use app\common\builder\form\ControlTrait;
 use app\common\builder\form\DividerTrait;
 use app\common\builder\form\FormValidateTrait;
 use app\common\builder\form\RowTrait;
@@ -17,10 +18,11 @@ use FormBuilder\Form;
 class FormBuilder extends Form
 {
     use DividerTrait,
-    FormValidateTrait,
-    RowTrait,
-    TabsFormTrait;
-    
+        FormValidateTrait,
+        RowTrait,
+        ControlTrait,
+        TabsFormTrait;
+
     /**
      * 表单对象
      * @var Form
@@ -38,7 +40,7 @@ class FormBuilder extends Form
     protected $redirect = '';
 
     // 额外配置
-    protected $extraConfig       = [
+    protected $extraConfig = [
         'submitBtn' => [
             'type' => 'primary',
             'content' => '提交',
@@ -56,7 +58,7 @@ class FormBuilder extends Form
             ]
         ]
     ];
-    
+
     /**
      * 构造函数
      * @copyright 贵州小白基地网络科技有限公司
@@ -64,12 +66,12 @@ class FormBuilder extends Form
      */
     public function __construct()
     {
-        $url            = request()->path();
+        $url = request()->path();
         // 处理URL
-        $url            = ltrim($url, '/');
-        $rule           = [];
-        $config         = [];
-        $this->builder  = Form::elm($url, $rule, $config);
+        $url = ltrim($url, '/');
+        $rule = [];
+        $config = [];
+        $this->builder = Form::elm($url, $rule, $config);
     }
 
     /**
@@ -154,14 +156,14 @@ class FormBuilder extends Form
      */
     public function create(): array
     {
-        $apiUrl                       = $this->builder->getAction();
-        $method                       = $this->builder->getMethod();
-        $this->data['http']['api']    = $apiUrl;
+        $apiUrl = $this->builder->getAction();
+        $method = $this->builder->getMethod();
+        $this->data['http']['api'] = $apiUrl;
         $this->data['http']['method'] = $method;
-        $this->data['config']         = $this->builder->formConfig();
-        $this->data['extraConfig']    = $this->extraConfig;
-        $this->data['formRule']       = $this->builder->formRule();
-        $this->data['redirect']       = $this->redirect;
+        $this->data['config'] = $this->builder->formConfig();
+        $this->data['extraConfig'] = $this->extraConfig;
+        $this->data['formRule'] = $this->builder->formRule();
+        $this->data['redirect'] = $this->redirect;
         return $this->data;
     }
 

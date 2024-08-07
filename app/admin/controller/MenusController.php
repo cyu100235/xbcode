@@ -54,95 +54,110 @@ class MenusController extends XbController
     public function indexTable(Request $request)
     {
         $builder = new ListBuilder;
-        $data = $builder
-            ->addActionOptions('操作', [
-                'width' => 200,
-            ])
-            ->editConfig()
-            ->treeConfig([
-                'rowField' => 'id',
-                'expandAll' => false,
-            ])
-            ->addTopButton('add', '添加菜单', [
-                'type' => 'modal',
-                'api' => xbUrl('Menus/add'),
-                'path' => xbUrl('Menus/add'),
-            ], [
-                'title' => '添加菜单',
-            ], [
-                'type' => 'primary',
-            ])
-            ->addRightButton('resources', '资源', [
-                'type' => 'modal',
-                'api' => xbUrl('Menus/resources'),
-                'path' => xbUrl('Menus/resources'),
-            ], [
-                'title' => '生成资源菜单',
-            ], [
-                'type' => 'success',
-                'icon' => 'Promotion',
-            ])
-            ->addRightButton('edit', '修改', [
-                'type' => 'modal',
-                'api' => xbUrl('Menus/edit'),
-                'path' => xbUrl('Menus/edit'),
-            ], [
-                'title' => '修改菜单',
-            ], [
-                'type' => 'primary',
-                'icon' => 'Edit',
-            ])
-            ->addRightButton('del', '删除', [
-                'type' => 'confirm',
-                'api' => xbUrl('Menus/del'),
-                'method' => 'delete',
-            ], [
-                'type' => 'error',
-                'title' => '温馨提示',
-                'content' => '是否确认删除该数据？',
-            ], [
-                'type' => 'danger',
-                'icon' => 'Close',
-            ])
-            ->addColumn('title', '菜单名称', [
-                'treeNode' => true,
-            ])
-            ->addColumn('path', '路由地址')
-            ->addColumn('methods', '请求类型', [
-                'width' => 180,
-            ])
-            ->addColumnEle('icon', '菜单图标', [
-                'width' => 80,
-                'params' => [
-                    'type' => 'icons',
-                ],
-            ])
-            ->addColumnEle('is_show', '是否显示', [
-                'width' => 100,
-                'params' => [
-                    'type' => 'switch',
-                    'api' => xbUrl('Menus/rowEdit'),
-                    'unchecked' => DictProvider::get('yesNoText')->switch('10'),
-                    'checked' => DictProvider::get('yesNoText')->switch('20'),
-                ],
-            ])
-            ->addColumnEle('component', '组件类型', [
-                'width' => 120,
-                'params' => [
-                    'type' => 'tags',
-                    'options' => DictProvider::get('componentText')->dict(),
-                    'style' => DictProvider::get('componentStyle')->style(),
-                ],
-            ])
-            ->addColumnEdit('sort', '排序', [
-                'width' => 80,
-                'params' => [
-                    'type' => 'input',
-                    'api' => xbUrl('Menus/rowEdit'),
-                    'min' => 0,
-                ],
-            ])
-            ->create();
+        $builder->addActionOptions('操作', [
+            'width' => 200,
+        ]);
+        $builder->editConfig();
+        $builder->treeConfig([
+            'rowField' => 'id',
+            'expandAll' => false,
+        ]);
+        $builder->addTopButton('add', '添加菜单', [
+            'type' => 'modal',
+            'api' => xbUrl('Menus/add'),
+            'path' => xbUrl('Menus/add'),
+        ], [
+            'title' => '添加菜单',
+            'customStyle' => [
+                'width' => '550px',
+                'height' => '75vh',
+            ],
+        ], [
+            'type' => 'primary',
+        ]);
+        $builder->addRightButton('resources', '资源', [
+            'type' => 'modal',
+            'api' => xbUrl('Menus/resources'),
+            'path' => xbUrl('Menus/resources'),
+        ], [
+            'title' => '生成资源菜单',
+        ], [
+            'type' => 'success',
+            'icon' => 'Promotion',
+        ]);
+        $builder->addRightButton('edit', '修改', [
+            'type' => 'modal',
+            'api' => xbUrl('Menus/edit'),
+            'path' => xbUrl('Menus/edit'),
+        ], [
+            'title' => '修改菜单',
+            'customStyle' => [
+                'width' => '550px',
+                'height' => '75vh',
+            ],
+        ], [
+            'type' => 'primary',
+            'icon' => 'Edit',
+        ]);
+        $builder->addRightButton('del', '删除', [
+            'type' => 'confirm',
+            'api' => xbUrl('Menus/del'),
+            'method' => 'delete',
+        ], [
+            'type' => 'error',
+            'title' => '温馨提示',
+            'content' => '是否确认删除该数据？',
+        ], [
+            'type' => 'danger',
+            'icon' => 'Close',
+        ]);
+        $builder->addColumn('title', '菜单名称', [
+            'treeNode' => true,
+        ]);
+        $builder->addColumn('path', '路由地址');
+        $builder->addColumnEle('type', '菜单类型', [
+            'width' => 120,
+            'params' => [
+                'type' => 'tags',
+                'options' => DictProvider::get('menuTypeText')->dict(),
+                'style' => DictProvider::get('menuTypeStyle')->style(),
+            ],
+        ]);
+        $builder->addColumn('methods', '请求类型', [
+            'width' => 180,
+        ]);
+        $builder->addColumnEle('icon', '菜单图标', [
+            'width' => 80,
+            'params' => [
+                'type' => 'icons',
+            ],
+        ]);
+        $builder->addColumnEle('is_show', '是否显示', [
+            'width' => 100,
+            'params' => [
+                'type' => 'switch',
+                'api' => xbUrl('Menus/rowEdit'),
+                'unchecked' => DictProvider::get('yesNoText')->switch('10'),
+                'checked' => DictProvider::get('yesNoText')->switch('20'),
+            ],
+        ]);
+        $builder->addColumnEle('component', '组件类型', [
+            'width' => 120,
+            'params' => [
+                'type' => 'tags',
+                'options' => DictProvider::get('componentText')->dict(),
+                'style' => DictProvider::get('componentStyle')->style(),
+            ],
+        ]);
+        $builder->addColumnEdit('sort', '排序', [
+            'width' => 80,
+            'params' => [
+                'type' => 'input',
+                'api' => xbUrl('Menus/rowEdit'),
+                'min' => 0,
+            ],
+        ]);
+        $data = $builder->create();
         return $this->successRes($data);
     }
 

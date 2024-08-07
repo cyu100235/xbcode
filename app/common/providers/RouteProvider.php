@@ -2,6 +2,7 @@
 namespace app\common\providers;
 
 use app\common\middleware\PluginsMiddleware;
+use app\admin\middleware\AuthMiddleware;
 use app\common\service\CloudSerivce;
 use app\common\utils\InstallUtil;
 use app\common\utils\ZipUtil;
@@ -210,11 +211,14 @@ class RouteProvider
         $plugins = CloudSerivce::getLocalPlugin();
         $data = [];
         foreach ($plugins as $value) {
-            if (!empty($value['name'])) {
-                $data["plugin.{$value['name']}"] = [
-                    PluginsMiddleware::class
-                ];
-            }
+            // 插件中间件
+            $data["plugin.{$value['name']}"] = [
+                PluginsMiddleware::class
+            ];
+            // 插件后台中间件
+            $data["plugin.{$value['name']}.admin"] = [
+                AuthMiddleware::class
+            ];
         }
         return $data;
     }

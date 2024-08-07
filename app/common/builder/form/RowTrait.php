@@ -5,6 +5,7 @@ namespace app\common\builder\form;
 use app\common\builder\FormBuilder;
 use FormBuilder\Factory\Elm;
 use FormBuilder\Driver\CustomComponent;
+use FormBuilder\Form;
 
 /**
  * 表单行
@@ -13,6 +14,12 @@ use FormBuilder\Driver\CustomComponent;
  */
 trait RowTrait
 {
+    /**
+     * 表单对象
+     * @var Form
+     */
+    private $builder;
+
     /**
      * 添加表单行元素
      * @param string $field
@@ -51,7 +58,7 @@ trait RowTrait
                 $prompt['props']['text'] = $promptData;
             }
             // 插入组件
-            $component->appendRule('suffix',$prompt);
+            $component->appendRule('suffix', $prompt);
         }
         // 设置组件属性
         foreach ($extra as $componentType => $componentValue) {

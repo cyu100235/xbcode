@@ -56,6 +56,7 @@ class AdminRoleController extends XbController
                 'title' => '权限设置',
             ], [
                 'type' => 'warning',
+                'icon' => 'Promotion',
             ])
             ->addRightButton('edit', '修改', [
                 'type' => 'modal',
@@ -69,6 +70,7 @@ class AdminRoleController extends XbController
                 ],
             ], [
                 'type' => 'primary',
+                'icon' => 'Edit',
             ])
             ->addRightButton('del', '删除', [
                 'type' => 'confirm',
@@ -80,6 +82,7 @@ class AdminRoleController extends XbController
                 'content' => '是否确认删除该数据？',
             ], [
                 'type' => 'danger',
+                'icon' => 'Close',
             ])
             ->addColumn('create_at', '创建时间', [
                 'width' => 160,
