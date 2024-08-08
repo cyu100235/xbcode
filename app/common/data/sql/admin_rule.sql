@@ -83,7 +83,7 @@ INSERT INTO `xb_admin_rule` VALUES (272, '2024-05-29 11:32:43', '2024-05-29 11:3
 INSERT INTO `xb_admin_rule` VALUES (273, '2024-05-29 15:26:15', '2024-05-29 15:38:08', '字典管理-编辑列', '30', '', 'admin', 'Dict/rowEdit', 268, 'none/index', '10', '10', '10', 'GET,PUT', '', '', 0);
 INSERT INTO `xb_admin_rule` VALUES (274, '2024-07-08 15:02:57', '2024-07-08 15:04:06', '插件管理-导入', '30', '', 'admin', 'PluginsAction/import', 46, 'none/index', '10', '10', '10', 'POST', '', '', 0);
 INSERT INTO `xb_admin_rule` VALUES (275, '2024-07-08 15:03:48', '2024-07-08 15:04:18', '插件管理-导出', '30', '', 'admin', 'PluginsAction/export', 46, 'none/index', '10', '10', '10', 'DELETE', '', '', 0);
-INSERT INTO `xb_admin_rule` VALUES (276, '2024-07-13 16:04:53', '2024-07-13 16:04:58', '用户', '10', '', 'admin', 'user', 0, 'none/index', '20', '10', '10', 'GET', 'UserFilled', '', 3);
+INSERT INTO `xb_admin_rule` VALUES (276, '2024-07-13 16:04:53', '2024-07-13 16:04:58', '用户', '10', '', 'admin', 'user', 0, 'none/index', '20', '10', '10', 'GET', 'UserFilled', '', 10);
 INSERT INTO `xb_admin_rule` VALUES (277, '2024-07-13 16:05:48', '2024-07-13 16:05:48', '用户管理', '20', '', 'admin', 'User/index', 276, 'table/index', '20', '10', '10', 'GET', '', '', 0);
 INSERT INTO `xb_admin_rule` VALUES (278, '2024-07-13 16:05:48', '2024-07-13 16:05:48', '用户管理-表格', '30', '', 'admin', 'User/indexTable', 277, 'none/index', '10', '10', '10', 'GET', '', NULL, 0);
 INSERT INTO `xb_admin_rule` VALUES (279, '2024-07-13 16:05:48', '2024-07-13 16:05:48', '用户管理-添加', '30', '', 'admin', 'User/add', 277, 'form/index', '10', '10', '10', 'GET,POST', '', '', 0);

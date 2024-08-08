@@ -116,7 +116,8 @@ trait MenuActionTrait
         if (empty($parentPathFull[0])) {
             throw new Exception('父级菜单路由格式错误');
         }
-        $parentPath = $parentPathFull[0];
+        $controller = $parentPathFull[0] ?? '';
+        $action = $parentPathFull[1] ?? '';
         if (empty($parent['component'])) {
             throw new Exception('父级菜单组件不能为空');
         }
@@ -155,8 +156,12 @@ trait MenuActionTrait
             ];
             $menu['title'] = "{$parent['title']}-{$res['label']}";
             $menu['component'] = $res['component'];
-            $menu['path'] = "{$parentPath}/{$res['value']}";
+            $menu['path'] = "{$controller}/{$res['value']}";
             $menu['methods'] = $res['methods'];
+            // 检测是否表格
+            if ($res['value'] === 'Table') {
+                $menu['path'] = "{$controller}/{$action}{$res['value']}";
+            }
             $model = new AdminRule;
             if (!$model->save($menu)) {
                 throw new Exception("生成资源菜单失败");
@@ -269,17 +274,17 @@ trait MenuActionTrait
                 'component' => 'none/index',
             ],
             [
-                'label' => '表格',
-                'value' => 'Table',
-                'disabled' => false,
-                'methods' => 'GET',
-                'component' => 'none/index',
-            ],
-            [
                 'label' => '修改列',
                 'value' => 'rowEdit',
                 'disabled' => false,
                 'methods' => 'GET,PUT',
+                'component' => 'none/index',
+            ],
+            [
+                'label' => '表格',
+                'value' => 'Table',
+                'disabled' => false,
+                'methods' => 'GET',
                 'component' => 'none/index',
             ],
         ];

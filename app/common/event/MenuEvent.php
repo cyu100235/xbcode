@@ -5,6 +5,7 @@ use app\admin\validate\MenusValidate;
 use app\common\providers\RouteProvider;
 use app\common\utils\FrameUtil;
 use app\model\AdminRule;
+use think\facade\Db;
 use Webman\Event\Event;
 use Exception;
 
@@ -118,9 +119,25 @@ class MenuEvent
         if ($model['is_system'] === '20') {
             throw new Exception('系统菜单不允许删除');
         }
+        // 查询子菜单
+        $childIds = AdminRule::where('pid', $model['id'])->column('id');
+        // 转换数据
         $data = $model->toArray();
-        if (!$model->delete()) {
-            throw new Exception('删除失败');
+        // 启动事务
+        Db::startTrans();
+        try {
+            // 批量删除子菜单
+            AdminRule::destroy($childIds);
+            // 删除主菜单
+            if (!$model->delete()) {
+                throw new Exception('删除失败');
+            }
+            // 提交事务
+            Db::commit();
+        } catch (\Throwable $th) {
+            // 回滚事务
+            Db::rollback();
+            throw $th;
         }
         // 缓存路由
         RouteProvider::cacheMenus();

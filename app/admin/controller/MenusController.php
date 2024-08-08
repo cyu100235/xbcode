@@ -106,7 +106,7 @@ class MenusController extends XbController
         ], [
             'type' => 'error',
             'title' => '温馨提示',
-            'content' => '是否确认删除该数据？',
+            'content' => '子菜单也会将其删除，是否确认删除该数据？',
         ], [
             'type' => 'danger',
             'icon' => 'Close',
