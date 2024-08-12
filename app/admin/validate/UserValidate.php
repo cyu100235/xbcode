@@ -74,7 +74,6 @@ class UserValidate extends Validate
                 'username',
                 'password',
                 'nickname',
-                'avatar',
             ]);
     }
 
@@ -92,7 +91,6 @@ class UserValidate extends Validate
                 'username',
                 'password',
                 'nickname',
-                'avatar',
             ])
             ->remove('username', ['verifyunique'])
             ->remove('password', ['require']);

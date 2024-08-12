@@ -20,8 +20,17 @@ return [
         'auto_url' => [
             // 字母规则，lcfirst=首字母小写；ucfirst=首字母大写；
             'letter_rule' => "ucfirst",
-            // url前缀
-            'prefix' => "",
+            // 自定义规则
+            'custom' => function ($path, $method) {
+                // 处理路径
+                $path = str_replace('\\', '/', $path);
+                $path = str_replace('plugin/', '', $path);
+                $path = str_replace('app/', '', $path);
+                $path = str_replace('controller/', '', $path);
+                $path = str_replace('Controller', '', $path);
+                // 拼接路由
+                return "/app/{$path}/{$method}";
+            },
         ],
         // （选配）是否自动注册路由
         'auto_register_routes' => false,

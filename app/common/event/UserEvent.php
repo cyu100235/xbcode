@@ -24,6 +24,13 @@ class UserEvent
     {
         // 数据验证
         xbValidate(UserValidate::class, $post, 'usernameRegister');
+        $model = new User;
+        if (!$model->save($post)) {
+            throw new Exception('添加失败');
+        }
+        $user = $model->toArray();
+        $data = array_merge($post, $user);
+        Event::dispatch('common.event.UserEvent.UsernameRegister.success', $data);
     }
 
     /**
@@ -37,6 +44,13 @@ class UserEvent
     {
         // 数据验证
         xbValidate(UserValidate::class, $post, 'smsRegister');
+        $model = new User;
+        if (!$model->save($post)) {
+            throw new Exception('添加失败');
+        }
+        $user = $model->toArray();
+        $data = array_merge($post, $user);
+        Event::dispatch('common.event.UserEvent.SmsRegister.success', $data);
     }
 
     /**
@@ -54,7 +68,8 @@ class UserEvent
         if (!$model->save($post)) {
             throw new Exception('添加失败');
         }
-        $data = $model->toArray();
+        $user = $model->toArray();
+        $data = array_merge($post, $user);
         Event::dispatch('common.event.UserEvent.add.success', $data);
     }
 
@@ -77,7 +92,8 @@ class UserEvent
         if (!$model->save($post)) {
             throw new Exception('编辑失败');
         }
-        $data = $model->toArray();
+        $user = $model->toArray();
+        $data = array_merge($post, $user);
         Event::dispatch('common.event.UserEvent.edit.success', $data);
     }
 
@@ -97,7 +113,8 @@ class UserEvent
         if (!$model) {
             throw new Exception('该用户未注册');
         }
-        $data = $model->toArray();
+        $user = $model->toArray();
+        $data = array_merge($post, $user);
         if (!$model->delete()) {
             throw new Exception('删除失败');
         }
