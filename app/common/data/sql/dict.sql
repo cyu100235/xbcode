@@ -8,7 +8,7 @@ CREATE TABLE `xb_dict`  (
   `content` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '数据',
   `sort` int(11) NULL DEFAULT 0 COMMENT '排序',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 16 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统-字典数据' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '系统-字典数据' ROW_FORMAT = DYNAMIC;
 
 INSERT INTO `xb_dict` VALUES (1, '2024-05-29 14:37:04', '2024-05-29 14:44:04', '封禁状态-文字', 'banText', '10=封禁\n|20=正常', 0);
 INSERT INTO `xb_dict` VALUES (2, '2024-05-29 14:37:34', '2024-06-01 14:52:40', '封禁状态-样式', 'banStyle', '10=error|20=success', 0);
@@ -25,3 +25,5 @@ INSERT INTO `xb_dict` VALUES (12, '2024-05-29 15:08:38', '2024-06-01 14:50:33', 
 INSERT INTO `xb_dict` VALUES (13, '2024-05-29 15:09:14', '2024-06-01 14:50:31', '附加类型-格式', 'uploadFileFormat', 'image=jpg,jpeg,png,gif|video=mp4,avi,rmvb,mkv,flv|doc=doc,docx,xls,xlsx,ppt,pptx,pdf,txt|audio=mp3,wav,flac,ape,alac|font=ttf,otf,woff,woff2|zip=zip,rar,7z,tar,gz,bz2', 0);
 INSERT INTO `xb_dict` VALUES (14, '2024-05-29 15:12:19', '2024-06-01 14:50:25', '是否状态-文字', 'yesNoText', '10=否|20=是', 0);
 INSERT INTO `xb_dict` VALUES (15, '2024-05-29 15:12:46', '2024-06-01 14:50:00', '是否状态-样式', 'yesNoStyle', '10=danger|20=success', 0);
+INSERT INTO `xb_dict` VALUES (16, '2024-08-06 15:31:39', '2024-08-06 15:31:39', '菜单类型', 'menuTypeText', '10=目录|20=菜单|30=按钮', 0);
+INSERT INTO `xb_dict` VALUES (17, '2024-08-06 17:42:27', '2024-08-06 17:49:33', '菜单类型-样式', 'menuTypeStyle', '10=|20=success|30=warning', 0);

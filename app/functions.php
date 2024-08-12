@@ -144,6 +144,21 @@ function xbUrl(string $url = '', array $params = [], bool $slash = true, bool $f
 }
 
 /**
+ * 生成路径地址
+ * @param string $path
+ * @return string
+ * @copyright 贵州小白基地网络科技有限公司
+ * @author 楚羽幽 cy958416459@qq.com
+ */
+function xbPath(string $path)
+{
+    $moduleName = xbModuleName();
+    $moduleName = str_replace('app/', 'plugin/', $moduleName);
+    $path       = "{$moduleName}/{$path}";
+    return $path;
+}
+
+/**
  * 对查询结果集进行排序
  * asc正向排序 desc逆向排序 nat自然排序
  * @param array $list

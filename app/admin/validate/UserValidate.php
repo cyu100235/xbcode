@@ -7,26 +7,26 @@ use Tinywan\Validate\Validate;
 class UserValidate extends Validate
 {
     protected array $rule = [
-        'id' => 'require',
-        'username' => 'require|alphaNum|length:4,15|verifyunique',
-        'scode' => 'require|length:4,6',
+        'id'       => 'require',
+        'username' => 'require|alphaNum|length:4,20|verifyunique',
+        'scode'    => 'require|length:4,6',
         'password' => 'require|length:4,20',
         'nickname' => 'require|length:2,10',
-        'avatar' => 'require',
+        'avatar'   => 'require',
     ];
 
     protected array $message = [
-        'id.require' => '缺少ID参数',
-        'username.require' => '请输入用户名',
+        'id.require'        => '缺少ID参数',
+        'username.require'  => '请输入用户名',
         'username.alphaNum' => '用户名必须是字母和数字',
-        'username.length' => '用户名长度必须在4-15位之间',
-        'scode.require' => '请输入验证码',
-        'scode.length' => '验证码长度必须在4-6位之间',
-        'password.require' => '请输入登录密码',
-        'password.length' => '登录密码长度必须在4-20位之间',
-        'nickname.require' => '请输入用户昵称',
-        'nickname.length' => '用户昵称长度必须在2-10位之间',
-        'avatar.require' => '请选择或上传用户头像',
+        'username.length'   => '用户名长度必须在4-20位之间',
+        'scode.require'     => '请输入验证码',
+        'scode.length'      => '验证码长度必须在4-6位之间',
+        'password.require'  => '请输入登录密码',
+        'password.length'   => '登录密码长度必须在4-20位之间',
+        'nickname.require'  => '请输入用户昵称',
+        'nickname.length'   => '用户昵称长度必须在2-10位之间',
+        'avatar.require'    => '请选择或上传用户头像',
     ];
 
     /**

@@ -2,6 +2,7 @@
 
 namespace app\common\providers;
 
+use Shopwwi\WebmanFilesystem\Storage as BaseStorage;
 use app\common\providers\upload\BaseUpload;
 use app\common\providers\upload\Config;
 use app\common\providers\upload\RemoteUpload;
@@ -39,7 +40,7 @@ class UploadProvider
             $adapter = Config::getDbConfig()['default'] ?? 'public';
         }
         // 检测文件是否已上传
-        $md5 = hash_file('md5', $file->getRealPath());
+        $md5  = hash_file('md5', $file->getRealPath());
         $data = self::getFileInfo(['md5' => $md5], $adapter);
         if ($data) {
             return $data;
@@ -64,21 +65,47 @@ class UploadProvider
         }
         // 保存文件信息
         $data = [
-            'uid' => $uid,
-            'title' => $info['origin_name'],
+            'uid'      => $uid,
+            'title'    => $info['origin_name'],
             'filename' => $info['origin_name'],
-            'md5' => $md5,
-            'format' => $info['extension'],
-            'adapter' => $adapter,
-            'size' => $info['size'],
-            'path' => $info['file_name'],
-            'url' => $info['file_url'],
+            'md5'      => $md5,
+            'format'   => $info['extension'],
+            'adapter'  => $adapter,
+            'size'     => $info['size'],
+            'path'     => $info['file_name'],
+            'url'      => $info['file_url'],
         ];
         if (!$save) {
             return $data;
         }
         if (!self::addFileInfo($data)) {
             throw new Exception('文件上传失败');
+        }
+        return $data;
+    }
+
+
+
+    /**
+     * 临时上传文件
+     * @param \Webman\Http\UploadFile $file
+     * @return mixed
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public static function tempUpload(UploadFile $file)
+    {
+        // 实例SDK
+        /** @var BaseStorage */
+        $filesystem = Storage::instance();
+        // 切换驱动
+        $filesystem = $filesystem->adapter('public');
+        // 上传文件
+        $dirName = 'uploads/temp';
+        $data    = $filesystem->path($dirName)->upload($file);
+        // 如果是对象则转数组
+        if (is_object($data)) {
+            $data = json_decode(json_encode($data), true);
         }
         return $data;
     }
@@ -113,7 +140,7 @@ class UploadProvider
         }
         // 切换驱动
         if ($adapter) {
-            $adapter = Config::$platform[$adapter] ?? 'public';
+            $adapter    = Config::$platform[$adapter] ?? 'public';
             $fileSystem = $fileSystem->adapter($adapter);
         }
         // 访问链接
@@ -141,7 +168,7 @@ class UploadProvider
                     throw new Exception('URL地址不合法');
                 }
                 $parseUrl = parse_url($value);
-                $data[] = ltrim($parseUrl['path'], '/');
+                $data[]   = ltrim($parseUrl['path'], '/');
             }
             return $data;
         }
@@ -149,7 +176,7 @@ class UploadProvider
             throw new Exception('URL地址不合法');
         }
         $parseUrl = parse_url($url);
-        $data = ltrim($parseUrl['path'], '/');
+        $data     = ltrim($parseUrl['path'], '/');
         return $data;
     }
 
