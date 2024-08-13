@@ -1,6 +1,8 @@
 <?php
 namespace app\common\providers;
 
+use Exception;
+
 /**
  * 文档服务提供者
  * @copyright 贵州小白基地网络科技有限公司
@@ -36,7 +38,7 @@ class DocsProvider
             }
             $item = [
                 'title' => $info['title'],
-                'key' => $name,
+                'key'   => $name,
                 'items' => $config['apps'],
             ];
             if (empty($config['apps'])) {
@@ -48,8 +50,8 @@ class DocsProvider
             $data = [
                 [
                     'title' => '默认应用',
-                    'path' => 'app\\controller',
-                    'key' => 'home'
+                    'path'  => 'app\\controller',
+                    'key'   => 'home'
                 ],
             ];
         }
@@ -73,18 +75,27 @@ class DocsProvider
             // 插件名称
             $name = basename($pluginPath);
             // 插件信息
-            $info    = self::pluginInfo($name);
+            $info = self::pluginInfo($name);
+            if (empty($info['title'])) {
+                throw new Exception("Plugin {$name} title not exists");
+            }
+            if (empty($info['name'])) {
+                throw new Exception("Plugin {$name} name not exists");
+            }
+            if (empty($info['version'])) {
+                throw new Exception("Plugin {$name} version not exists");
+            }
             $data    = [
                 [
                     'title' => "{$info['title']}-事件文档",
-                    'path' => "plugin/{$name}/docs/events",
+                    'path'  => "plugin/{$name}/docs/events",
                 ],
             ];
             $apiPath = "{$pluginPath}/docs/apis.md";
             if (file_exists($apiPath)) {
                 $data[] = [
                     'title' => "{$info['title']}-接口文档",
-                    'path' => "plugin/{$name}/docs/apis",
+                    'path'  => "plugin/{$name}/docs/apis",
                 ];
             }
             // 检测是否存在配置文档

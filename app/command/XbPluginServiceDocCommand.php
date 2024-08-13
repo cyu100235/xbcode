@@ -8,17 +8,17 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * 事件文档命令
+ * 服务接口文档命令
  * @copyright 贵州小白基地网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
-class XbPluginEventDocCommand extends Command
+class XbPluginServiceDocCommand extends Command
 {
     // 命令名称
-    protected static $defaultName = 'xb-plugin:event-doc';
+    protected static $defaultName = 'xb-plugin:service-doc';
 
     // 命令描述
-    protected static $defaultDescription = 'Xb Plugin event doc';
+    protected static $defaultDescription = 'Xb Plugin service doc';
 
     /**
      * 配置
@@ -29,7 +29,7 @@ class XbPluginEventDocCommand extends Command
     protected function configure()
     {
         $this->addArgument('name', InputArgument::REQUIRED, 'Xb plugin name');
-        $this->addArgument('class', InputArgument::OPTIONAL, 'Xb plugin event class');
+        $this->addArgument('class', InputArgument::OPTIONAL, 'Xb plugin class');
     }
 
     /**
@@ -54,10 +54,10 @@ class XbPluginEventDocCommand extends Command
         }
         $className = $input->getArgument('class');
         if ($className) {
-            // 生成事件文档类
+            // 生成指定服务接口类
             $this->generateClass($input, $output);
         } else {
-            // 生成事件文档
+            // 生成服务接口文档
             $this->generateDoc($input, $output);
         }
         // 返回结果
@@ -65,7 +65,7 @@ class XbPluginEventDocCommand extends Command
     }
 
     /**
-     * 生成事件文档类
+     * 生成服务接口类
      * @param \Symfony\Component\Console\Input\InputInterface $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      * @return void
@@ -76,31 +76,26 @@ class XbPluginEventDocCommand extends Command
     {
         $pluginName = $input->getArgument('name');
         $className  = $input->getArgument('class');
-        $template = base_path('app/common/data/template/PluginEvent.tpl');
+        $template = base_path('app/common/data/template/PluginService.tpl');
         if (!file_exists($template)) {
             $output->writeln("<error>Template file not exists</error>");
             return;
         }
         $className = ucfirst($className);
-        $className = "{$className}Event";
-        $path = base_path("plugin/{$pluginName}/app/event/{$className}.php");
+        $path = base_path("plugin/{$pluginName}/service/{$className}.php");
         if (file_exists($path)) {
             $output->writeln("<error>File {$path} already exists</error>");
             return;
-        }
-        $dirPath = dirname($path);
-        if (!is_dir($dirPath)) {
-            mkdir($dirPath, 0755, true);
         }
         $content = file_get_contents($template);
         $content = str_replace('{PLUGIN_NAME}', $pluginName, $content);
         $content = str_replace('{CLASS_NAME}', $className, $content);
         file_put_contents($path, $content);
-        $output->writeln("<info>Generate Plugin {$pluginName} event {$className} success</info>");
+        $output->writeln("<info>Generate Plugin {$pluginName} service {$className} success</info>");
     }
 
     /**
-     * 生成事件文档
+     * 生成服务接口文档
      * @param \Symfony\Component\Console\Input\InputInterface $input
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      * @return void
@@ -110,12 +105,13 @@ class XbPluginEventDocCommand extends Command
     protected function generateDoc(InputInterface $input, OutputInterface $output)
     {
         $name = $input->getArgument('name');
-        $data = $this->getEvents($name);
+        $data = $this->getApis($name);
         // 生成文档
-        $content = "# 事件文档\n\n";
+        $content = "# 服务接口文档\n\n";
         foreach ($data as $class) {
             // 生成类标题
-            $content .= "## {$class['title']}\n\n";
+            $content .= "## 服务类名：{$class['title']}\n\n";
+            $content .= "### 命名空间：{$class['namespace']}\n\n";
             // 类描述
             if ($class['desc']) {
                 $content .= "{$class['desc']}\n\n";
@@ -125,25 +121,34 @@ class XbPluginEventDocCommand extends Command
             }
             foreach ($class['methods'] as $method) {
                 // 方法名称
-                $content .= "### {$method['title']}\n\n";
-                $content .= "#### 方法名称 {$method['name']}\n\n";
-                // 调用方式
-                $content .= "#### 调用方式\n\n``` php \n\n// 事件名称 shop.event.GoodsEvent.add\n\n// 调用代码（同步方式）\nEvent::dispatch('shop.event.GoodsEvent.add', \$data);\n\n// 调用代码（异步方式）\nEvent::emit('shop.event.GoodsEvent.add', \$data);\n\n\n```\n\n";
+                $content .= "## {$method['title']}\n\n";
+                $content .= "### {$method['name']}\n\n";
                 // 方法描述
                 if ($method['desc']) {
                     $content .= "{$method['desc']}\n\n";
                 }
+                // 调用方式
+                $content .= "#### 调用方式\n\n";
+                $content .= "```php\n\n";
+                $content .= "\\{$class['namespace']}::{$method['name']}(";
+                $params  = [];
+                foreach ($method['params'] as $val) {
+                    $params[] = "{$val['type']} \${$val['name']}";
+                }
+                $content .= implode(", ", $params);
+                $content .= ");\n";
+                $content .= "\n```\n\n";
                 // 拼接参数
                 $content .= "#### 方法参数\n\n";
-                $content .= "| 参数名 | 必填 | 说明 | 类型 | 默认值  |";
+                $content .= "| 参数名 | 说明 | 类型 | 默认值  |";
                 $content .= "\n";
-                $content .= "| ----- | ----- | ----- | ----- | ----- |";
+                $content .= "| ----- | ----- | ----- | ----- |";
                 $content .= "\n";
                 foreach ($method['params'] as $val) {
-                    $require = $val['require'] ? '是' : '否';
-                    $content .= "|{$val['name']}|{$require}|{$val['desc']}|{$val['type']}|{$val['default']}|\n";
+                    $default = $val['default'] ?? '';
+                    $content .= "| {$val['name']} | {$val['desc']} | {$val['type']} | {$default} |\r\n";
                 }
-                $content .= "\n";
+                $content .= "\n\n\n";
             }
         }
         // 保存文档
@@ -151,8 +156,8 @@ class XbPluginEventDocCommand extends Command
         if (!is_dir($path)) {
             mkdir($path, 0755, true);
         }
-        file_put_contents($path . '/events.md', $content);
-        $output->writeln("<info>Generate Plugin {$name} event docs success</info>");
+        file_put_contents($path . '/apis.md', $content);
+        $output->writeln("<info>Generate Plugin {$name} api docs success</info>");
     }
 
     /**
@@ -162,63 +167,132 @@ class XbPluginEventDocCommand extends Command
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    protected function getEvents(string $name)
+    protected function getApis(string $name)
     {
-        $data = glob(base_path("plugin/{$name}/app/event/*Event.php"));
-        if (empty($data)) {
+        $apis = glob(base_path("plugin/{$name}/service/*.php"));
+        if (empty($apis)) {
             return [];
         }
-        $config = config('plugin.hg.apidoc.app');
         $i      = 0;
-        $events = [];
-        foreach ($data as $path) {
+        $data   = [];
+        $config = config('plugin.hg.apidoc.app.apidoc', []);
+        foreach ($apis as $path) {
             $fileName = basename($path, '.php');
-            $class    = "plugin\\{$name}\\app\\event\\{$fileName}";
+            $class    = "plugin\\{$name}\\service\\{$fileName}";
             if (!class_exists($class)) {
                 continue;
             }
             // 反射类
             $refClass = new \ReflectionClass($class);
             // 类注释
-            $classText  = ParseAnnotation::parseTextAnnotation($refClass);
+            $classText = ParseAnnotation::parseTextAnnotation($refClass);
+            // 类标题
             $classTitle = $classText[0] ?? $class;
             unset($classText[0]);
-            $events[$i]['title']     = $classTitle;
-            $events[$i]['name']      = $fileName;
-            $events[$i]['namespace'] = $class;
-            $events[$i]['desc']      = implode("，", $classText);
-            $events[$i]['methods']   = [];
+            $data[$i]['title']     = $classTitle;
+            $data[$i]['name']      = $fileName;
+            $data[$i]['namespace'] = $class;
+            $data[$i]['desc']      = implode("，", $classText);
+            $data[$i]['methods']   = [];
             // 获取类方法
-            $methods = $refClass->getMethods();
+            $methods = $refClass->getMethods(\ReflectionMethod::IS_PUBLIC | \ReflectionMethod::IS_STATIC);
             foreach ($methods as $methodRef) {
+                // 必须是公共方法同时是静态方法
+                if (!$methodRef->isPublic() || !$methodRef->isStatic()) {
+                    continue;
+                }
                 // 反射方法
                 $refMethod = $refClass->getMethod($methodRef->name);
                 // 方法注释
-                $methodText = ParseAnnotation::parseTextAnnotation($refMethod);
-                // 方法参数
-                $classAnnotations = (new ParseAnnotation($config))->getMethodAnnotation($refMethod);
-                if (empty($classAnnotations)) {
+                $methodText = ParseAnnotation::parseTextAnnotation($refMethod, true);
+                if (empty($methodText)) {
                     continue;
                 }
-                $methodTitle = $methodText[0] ?? '未知方法';
+                // 方法注解
+                $classAnnotations = (new ParseAnnotation($config))->getMethodAnnotation($refMethod);
+                if (empty($classAnnotations)) {
+                    // 自定义注解
+                    $classAnnotations = $this->parseMethodAnnotation($methodText);
+                }
+                $description = $this->description($methodText);
+                $methodTitle = $methodText[0] ?? '未知方法标题';
                 $methodName  = $methodRef->name;
-                unset($methodText[0]);
-                $methodDesc = implode("\n", $methodText);
-                $params     = $classAnnotations['param'] ?? [];
-                $params     = $this->is_array_2d($params) ? $params : [$params];
-                $returned   = $classAnnotations['returned'] ?? [];
-                $returned   = $this->is_array_2d($returned) ? $returned : [$returned];
+                $params      = $classAnnotations['param'] ?? [];
+                $params      = $this->is_array_2d($params) ? $params : [$params];
+                $returned    = $classAnnotations['returned'] ?? [];
+                $returned    = $this->is_array_2d($returned) ? $returned : [$returned];
                 // 保存数据
-                $events[$i]['methods'][] = [
-                    'title' => $methodTitle,
-                    'name' => $methodName,
-                    'desc' => $methodDesc,
+                $data[$i]['methods'][] = [
+                    'title'  => $methodTitle,
+                    'name'   => $methodName,
+                    'desc'   => $description,
                     'params' => $params,
                 ];
             }
             $i++;
         }
-        return $events;
+        return $data;
+    }
+
+    /**
+     * 获取描述
+     * @param array $data
+     * @return string
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    private function description(array $data)
+    {
+        $temp = '';
+        foreach ($data as $str) {
+            if (strpos($str, '@') !== false) {
+                break;
+            }
+            $temp = $str;
+        }
+        return $temp;
+    }
+
+    /**
+     * 解析方法注解
+     * @param array $params
+     * @return array
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    private function parseMethodAnnotation(array $params)
+    {
+        if (empty($params)) {
+            return [];
+        }
+        unset($params[0]);
+        // 方法参数
+        $data = [];
+        foreach ($params as $methodAttr) {
+            // 解析参数
+            if (strpos($methodAttr, '@param') !== false) {
+                $attrs = str_replace('@param ', '', $methodAttr);
+                $attrs = explode(' ', $attrs);
+                if (empty($attrs)) {
+                    continue;
+                }
+                $tempType   = $attrs[0] ?? '';
+                $tempName   = $attrs[1] ?? '';
+                $tempName   = str_replace('$', '', $tempName);
+                $methodDesc = '';
+                if (!empty($attrs[2])) {
+                    $methodDesc = $attrs[2];
+                }
+                $data[] = [
+                    'type' => $tempType,
+                    'name' => $tempName,
+                    'desc' => $methodDesc,
+                ];
+            }
+        }
+        return [
+            'param' => $data
+        ];
     }
 
     /**

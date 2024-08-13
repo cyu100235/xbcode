@@ -31,8 +31,8 @@ class RouteProvider
         // 注册静态文件路由
         Route::get('/install/assets/[{path:.+}]', function (Request $request, $path = '') {
             $project = 'install-view';
-            $file = "assets/{$path}";
-            $path = base_path("runtime/{$project}/{$file}");
+            $file    = "assets/{$path}";
+            $path    = base_path("runtime/{$project}/{$file}");
             if (!file_exists($path)) {
                 return response('<h1>local file 404 Not Found</h1>', 404);
             }
@@ -137,7 +137,7 @@ class RouteProvider
     public static function downloadView(string $project)
     {
         $filename = "{$project}.zip";
-        $dirPath = base_path("runtime/{$project}");
+        $dirPath  = base_path("runtime/{$project}");
         $filePath = "{$dirPath}/{$filename}";
         if (!file_exists("{$dirPath}/index.html")) {
             // 创建目录
@@ -146,7 +146,7 @@ class RouteProvider
             }
             // 下载文件
             $baseUrl = "http://view.xiaobai.host/{$filename}";
-            $result = Http::get($baseUrl);
+            $result  = Http::get($baseUrl);
             $content = $result->body();
             if (!$content) {
                 return false;
@@ -179,18 +179,18 @@ class RouteProvider
         $suffix = config('route.controller_suffix', 'Controller');
         foreach ($data as $value) {
             $module_name = '';
-            $moduleName = '';
-            $path = $value['path'];
-            $class = explode('/', $path);
+            $moduleName  = '';
+            $path        = $value['path'];
+            $class       = explode('/', $path);
             if (count($class) < 1) {
                 throw new Exception('路由配置错误');
             }
             $classPath = "{$class[0]}{$suffix}@{$class[1]}";
             if ($value['module_name']) {
                 $module_name = "{$value['module_name']}/";
-                $moduleName = "{$value['module_name']}\\";
+                $moduleName  = "{$value['module_name']}\\";
             }
-            $path = "/app/{$value['plugin_name']}/{$module_name}{$value['path']}";
+            $path  = "/app/{$value['plugin_name']}/{$module_name}{$value['path']}";
             $class = "\\plugin\\{$value['plugin_name']}\\app\\{$moduleName}controller\\{$classPath}";
             Route::add(
                 $value['methods'],
@@ -209,15 +209,11 @@ class RouteProvider
     public static function pluginMiddleware()
     {
         $plugins = CloudSerivce::getLocalPlugin();
-        $data = [];
+        $data    = [];
         foreach ($plugins as $value) {
             // 插件中间件
             $data["plugin.{$value['name']}"] = [
                 PluginsMiddleware::class
-            ];
-            // 插件后台中间件
-            $data["plugin.{$value['name']}.admin"] = [
-                AuthMiddleware::class
             ];
         }
         return $data;

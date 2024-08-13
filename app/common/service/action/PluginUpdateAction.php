@@ -17,7 +17,7 @@ use Exception;
  * @copyright 贵州小白基地网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
-class PluginUpdateAction
+class PluginUpdateAction extends PluginAction
 {
     use JsonUtil;
 
@@ -31,8 +31,8 @@ class PluginUpdateAction
     public static function start(Request $request)
     {
         // 获取数据
-        $step = $request->post('step', 'download');
-        $name = $request->post("name");
+        $step    = $request->post('step', 'download');
+        $name    = $request->post("name");
         $version = $request->post("version");
         // 参数验证
         if (empty($name) || empty($version)) {
@@ -62,12 +62,12 @@ class PluginUpdateAction
      */
     protected static function download(Request $request)
     {
-        $name = $request->post("name");
+        $name    = $request->post("name");
         $version = $request->post("version");
         parent::downloadFile($name, $version);
         // 返回结果
         return self::successFul('下载插件成功', [
-            'url' => xbUrl('Plugins/update'),
+            'url'   => xbUrl('Plugins/update'),
             'query' => [
                 'step' => 'delPluginDir',
             ],
@@ -84,13 +84,13 @@ class PluginUpdateAction
     protected static function delPluginDir(Request $request)
     {
         // 获取数据
-        $name = $request->post("name");
-        $pluginDir       = base_path("plugin/{$name}");
+        $name      = $request->post("name");
+        $pluginDir = base_path("plugin/{$name}");
         // 删除插件目录
         remove_dir($pluginDir);
         // 返回结果
         return self::successFul('删除插件目录完成', [
-            'url' => xbUrl('Plugins/update'),
+            'url'   => xbUrl('Plugins/update'),
             'query' => [
                 'step' => 'unzip',
             ],
@@ -107,12 +107,12 @@ class PluginUpdateAction
     protected static function unzip(Request $request)
     {
         // 获取数据
-        $name = $request->post("name");
+        $name    = $request->post("name");
         $version = $request->post("version");
         parent::unzipFile($name, $version);
         // 返回结果
         return self::successFul('解压插件完成', [
-            'url' => xbUrl('Plugins/update'),
+            'url'   => xbUrl('Plugins/update'),
             'query' => [
                 'step' => 'database',
             ],
@@ -129,18 +129,18 @@ class PluginUpdateAction
     protected static function database(Request $request)
     {
         // 获取数据
-        $name = $request->post("name");
+        $name    = $request->post("name");
         $version = $request->post("version");
         parent::installData($name, $version, 'update');
         // 返回结果
         return self::successFul('数据安装完成', [
-            'url' => xbUrl('Plugins/update'),
+            'url'   => xbUrl('Plugins/update'),
             'query' => [
                 'step' => 'complete',
             ],
         ]);
     }
-    
+
     /**
      * 更新完成
      * @param \support\Request $request
@@ -151,7 +151,7 @@ class PluginUpdateAction
     protected static function complete(Request $request)
     {
         // 获取插件名称
-        $name = $request->post("name");
+        $name    = $request->post("name");
         $version = $request->post("version");
         parent::installOk($name, $version);
         // 返回结果
