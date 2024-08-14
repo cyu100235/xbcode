@@ -37,11 +37,11 @@ class DirUtil
         $data = [];
         foreach ($dirs as $value) {
             $temp = include $value;
+            $path = str_replace($dirPath, '', $value);
+            $name = str_replace(".php", '', $path);
             if (empty($temp)) {
-                continue;
+                $temp = [];
             }
-            $path        = str_replace($dirPath, '', $value);
-            $name        = str_replace(".php", '', $path);
             $data[$name] = $temp;
         }
         return $data;

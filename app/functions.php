@@ -224,7 +224,12 @@ function p(mixed $data, string $remarks = '')
  */
 function xbView(string $file, array $data = [], string $suffix = 'vue')
 {
-    $path = base_path("{$file}.{$suffix}");
+    $path = base_path($file);
+    if (strrpos($file, '/plugin/') !== false) {
+        $path = $file;
+    }
+    // 拼接后缀
+    $path = "{$path}.{$suffix}";
     if (!file_exists($path)) {
         throw new Exception("视图文件不存在: {$file}", 404);
     }

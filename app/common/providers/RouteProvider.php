@@ -63,12 +63,10 @@ class RouteProvider
         // 控制器
         $control = \app\admin\controller\SettingsController::class;
         $methods = ['GET', 'PUT'];
-        // 配置路由
+        // 插件配置路由
         Route::add($methods, '/app/{plugin}/Settings/config[/{group}]', [$control, 'config']);
-        // 选中配置路由
-        Route::add($methods, '/app/{plugin}/Settings/selected[/{group}]', [$control, 'selected']);
-        // tabs配置路由
-        Route::add($methods, '/app/{plugin}/Settings/tabs[/{group}]', [$control, 'tabs']);
+        // 系统配置路由
+        Route::add($methods, '/admin/Settings/config[/{group}]', [$control, 'config']);
     }
 
     /**
@@ -150,7 +148,7 @@ class RouteProvider
                 mkdir($dirPath, 0777, true);
             }
             // 下载文件
-            $baseUrl = "http://view.xiaobai.host/{$filename}";
+            $baseUrl = "https://xbcode.net/download/{$filename}";
             $result  = Http::get($baseUrl);
             $content = $result->body();
             if (!$content) {
@@ -190,9 +188,6 @@ class RouteProvider
             if (strrpos($path, 'Settings/') !== false) {
                 continue;
             }
-            // if (self::registerPluginConfigRoute($value)) {
-            //     continue;
-            // }
             $class = explode('/', $path);
             if (count($class) < 1) {
                 throw new Exception('路由配置错误');
@@ -210,36 +205,6 @@ class RouteProvider
                 $class
             );
         }
-    }
-    private static function registerPluginConfigRoute(array $data)
-    {
-        // 配置项控制器
-        $configControl = \app\admin\controller\SettingsController::class;
-        $path          = $data['path'] ?? '';
-        $group         = basename($path);
-        $path          = str_replace("/{$group}", '', $path);
-        $methods       = $data['methods'];
-        if (!is_array($data['methods'])) {
-            $methods = explode(',', $data['methods']);
-        }
-        // 路由地址
-        $routePath = "/app/{$data['plugin_name']}/{$path}/{group}";
-        // config配置项路由
-        if (strrpos($path, 'Settings/config') !== false) {
-            Route::add($methods, $routePath, [$configControl, 'config']);
-            return true;
-        }
-        // selected配置项路由
-        if (strrpos($path, 'Settings/selected') !== false) {
-            Route::add($methods, $routePath, [$configControl, 'selected']);
-            return true;
-        }
-        // tabs配置项路由
-        if (strrpos($path, 'Settings/tabs') !== false) {
-            Route::add($methods, $routePath, [$configControl, 'tabs']);
-            return true;
-        }
-        return false;
     }
 
     /**

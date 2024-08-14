@@ -34,6 +34,7 @@ class XbPluginCreateCommand extends Command
         'data/config'    => '数据模板目录',
         'data/sql'       => 'SQL目录',
         'public'         => '公共目录',
+        'public/vue'     => 'vue视图目录',
         'service'        => '接口服务目录',
         'setting'        => '设置目录',
         'docs'           => '文档目录',
@@ -60,6 +61,7 @@ class XbPluginCreateCommand extends Command
         'config/redis.php',
         'config/route.php',
         'config/settings.php',
+        'config/slot.php',
         'config/static.php',
         'config/thinkorm.php',
         'config/tpldata.php',
@@ -75,6 +77,7 @@ class XbPluginCreateCommand extends Command
         'docs/events.md',
         'docs/apis.md',
         'docs/test.md',
+        'public/vue/welcome.vue',
     ];
 
     /**
@@ -175,7 +178,7 @@ class XbPluginCreateCommand extends Command
         $dirPath  = dirname($path);
         $fileName = basename($path);
         // 文件名后缀
-        $suffix = ['.php', '.html', '.md', '.sql', '.json'];
+        $suffix = ['.php', '.html', '.md', '.sql', '.json','.vue'];
         // 去除后缀
         $fileName = str_replace($suffix, '', $fileName);
         // 模板路径
