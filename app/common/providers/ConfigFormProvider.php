@@ -15,14 +15,16 @@ class ConfigFormProvider
 {
     /**
      * 获取配置表单
-     * @param string $group
-     * @return FormBuilder
-     * @author 贵州小白基地网络科技有限公司
+     * @param string|null $plugin
+     * @param string|null $group
+     * @throws \Exception
+     * @return \app\common\builder\FormBuilder
      * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
      */
-    public static function formView(string|null $group): FormBuilder
+    public static function formView(string|null $plugin, string|null $group): FormBuilder
     {
-        $template = self::getConfigTemplate($group);
+        $template = self::getConfigTemplate($plugin, $group);
         if (empty($template)) {
             throw new Exception("配置模板不能为空");
         }
@@ -32,14 +34,16 @@ class ConfigFormProvider
 
     /**
      * 获取选项卡配置表单
+     * @param string|null $plugin
      * @param string|null $group
+     * @throws \Exception
      * @return FormBuilder
-     * @author 贵州小白基地网络科技有限公司
      * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
      */
-    public static function tabsFormView(string|null $group)
+    public static function tabsFormView(string|null $plugin, string|null $group)
     {
-        $template = self::getConfigTemplate($group);
+        $template = self::getConfigTemplate($plugin, $group);
         if (empty($template)) {
             throw new Exception("配置模板不能为空");
         }
@@ -49,7 +53,7 @@ class ConfigFormProvider
         $builder->initTabsActive('active', $active, [
             'props' => [
                 // 选项卡样式
-                'type' => 'line',
+                'type'        => 'line',
                 'tabPosition' => 'top',
             ],
         ]);
@@ -74,9 +78,10 @@ class ConfigFormProvider
     /**
      * 获取表单规则
      * @param array $data
-     * @return FormBuilder
-     * @author 贵州小白基地网络科技有限公司
+     * @throws \Exception
+     * @return \app\common\builder\FormBuilder
      * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
      */
     public static function getFormView(array $data): FormBuilder
     {
@@ -128,20 +133,29 @@ class ConfigFormProvider
      * @author 贵州小白基地网络科技有限公司
      * @copyright 贵州小白基地网络科技有限公司
      */
-    private static function getConfigTemplate(string|null $group)
+    private static function getConfigTemplate(string|null $plugin, string|null $group)
     {
-        $plugin = request()->get('plugin');
-        $path   = '';
+        if (empty($plugin)) {
+            $plugin = request()->get('plugin');
+        }
+        if (empty($plugin)) {
+            $plugin = request()->plugin;
+        }
+        if (empty($plugin) && strrpos(request()->path(), '/app/') !== false) {
+            $plugin = explode('/', request()->path())[2] ?? '';
+        }
         if ($plugin) {
-            $path = base_path("plugin/{$plugin}/config/setting/{$group}.php");
+            // 获取插件配置
+            $config = config("plugin.{$plugin}.settings.{$group}", []);
+            // 设置插件名称
+            request()->plugin = $plugin;
+        } else {
+            // 获取系统配置
+            $config = config("setting.{$group}", []);
         }
-        if (!$path) {
-            $path = base_path("/config/setting/{$group}.php");
+        if (empty($config)) {
+            throw new Exception("配置模板数据获取失败");
         }
-        if (!file_exists($path)) {
-            throw new Exception("系统配置文件不存在");
-        }
-        $config = require $path;
         return $config;
     }
 }

@@ -45,25 +45,30 @@ class RouteProvider
         } else {
             // 注册后台路由
             self::registerAdminView();
-            // 注册插件路由
-            self::registerPluginRouter();
+            // 注册设置路由
+            self::regSettingsRouter();
             // 注册文档路由
-            self::registerApidocView();
+            self::regApidocView();
         }
     }
 
     /**
-     * 注册插件路由
+     * 注册设置路由
      * @return void
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    private static function registerPluginRouter()
+    private static function regSettingsRouter()
     {
-        $controller = \app\admin\controller\SettingsController::class;
-        Route::any('/app/{plugin}/Setting/config/{name}', [$controller, 'config']);
-        Route::any('/app/{plugin}/Setting/selected/{name}', [$controller, 'selected']);
-        Route::any('/app/{plugin}/Setting/tabs/{name}', [$controller, 'tabs']);
+        // 控制器
+        $control = \app\admin\controller\SettingsController::class;
+        $methods = ['GET', 'PUT'];
+        // 配置路由
+        Route::add($methods, '/app/{plugin}/Settings/config[/{group}]', [$control, 'config']);
+        // 选中配置路由
+        Route::add($methods, '/app/{plugin}/Settings/selected[/{group}]', [$control, 'selected']);
+        // tabs配置路由
+        Route::add($methods, '/app/{plugin}/Settings/tabs[/{group}]', [$control, 'tabs']);
     }
 
     /**
@@ -97,7 +102,7 @@ class RouteProvider
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    private static function registerApidocView()
+    private static function regApidocView()
     {
         $project = 'apidoc-view';
         // 注册静态文件路由
@@ -181,7 +186,14 @@ class RouteProvider
             $module_name = '';
             $moduleName  = '';
             $path        = $value['path'];
-            $class       = explode('/', $path);
+            // 配置项路由
+            if (strrpos($path, 'Settings/') !== false) {
+                continue;
+            }
+            // if (self::registerPluginConfigRoute($value)) {
+            //     continue;
+            // }
+            $class = explode('/', $path);
             if (count($class) < 1) {
                 throw new Exception('路由配置错误');
             }
@@ -199,6 +211,36 @@ class RouteProvider
             );
         }
     }
+    private static function registerPluginConfigRoute(array $data)
+    {
+        // 配置项控制器
+        $configControl = \app\admin\controller\SettingsController::class;
+        $path          = $data['path'] ?? '';
+        $group         = basename($path);
+        $path          = str_replace("/{$group}", '', $path);
+        $methods       = $data['methods'];
+        if (!is_array($data['methods'])) {
+            $methods = explode(',', $data['methods']);
+        }
+        // 路由地址
+        $routePath = "/app/{$data['plugin_name']}/{$path}/{group}";
+        // config配置项路由
+        if (strrpos($path, 'Settings/config') !== false) {
+            Route::add($methods, $routePath, [$configControl, 'config']);
+            return true;
+        }
+        // selected配置项路由
+        if (strrpos($path, 'Settings/selected') !== false) {
+            Route::add($methods, $routePath, [$configControl, 'selected']);
+            return true;
+        }
+        // tabs配置项路由
+        if (strrpos($path, 'Settings/tabs') !== false) {
+            Route::add($methods, $routePath, [$configControl, 'tabs']);
+            return true;
+        }
+        return false;
+    }
 
     /**
      * 插件中间件
@@ -214,6 +256,10 @@ class RouteProvider
             // 插件中间件
             $data["plugin.{$value['name']}"] = [
                 PluginsMiddleware::class
+            ];
+            // 插件后台中间件
+            $data["plugin.{$value['name']}.admin"] = [
+                AuthMiddleware::class
             ];
         }
         return $data;

@@ -19,18 +19,20 @@ class SettingsController extends XbController
      * 配置表单
      * @Apidoc\Method ("GET,PUT")
      * @param \support\Request $request
-     * @return mixed
-     * @author 贵州小白基地网络科技有限公司
+     * @param string $group
+     * @return \support\Response
      * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
      */
-    public function config(Request $request)
+    public function config(Request $request, string $plugin = '', string $group = '')
     {
-        $group = $request->get('group', '');
+        $plugin = $request->get('plugin', $plugin);
+        $group  = $request->get('group', $group);
         if ($request->method() === 'PUT') {
             $post = $request->post();
             $data = [
                 'group' => $group,
-                'data' => $post,
+                'data'  => $post,
             ];
             Event::dispatch('common.event.SettingsEvent.config', $data);
             // 返回结果
@@ -40,28 +42,30 @@ class SettingsController extends XbController
             return $this->fail('分组参数错误');
         }
         $data     = ConfigProvider::get($group, '', [], ['parse' => false]);
-        $builder  = ConfigFormProvider::formView($group);
+        $builder  = ConfigFormProvider::formView($plugin, $group);
         $builder  = $builder->setFormData($data);
         $formView = $builder->create();
         return $this->successRes($formView);
     }
 
     /**
-     * 条件显示配置项
+     * 选中配置表单
      * @Apidoc\Method ("GET,PUT")
      * @param \support\Request $request
-     * @return mixed
-     * @author 贵州小白基地网络科技有限公司
+     * @param string $group
+     * @return \support\Response
      * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
      */
-    public function selected(Request $request)
+    public function selected(Request $request, string $plugin = '', string $group = '')
     {
-        $group = $request->get('group');
+        $plugin = $request->get('plugin', $plugin);
+        $group  = $request->get('group', $group);
         if ($request->method() === 'PUT') {
             $post = $request->post();
             $data = [
                 'group' => $group,
-                'data' => $post,
+                'data'  => $post,
             ];
             Event::dispatch('common.event.SettingsEvent.config', $data);
             // 返回结果
@@ -71,7 +75,7 @@ class SettingsController extends XbController
             return $this->fail('分组参数错误');
         }
         $data    = ConfigProvider::get($group, '', [], ['parse' => false]);
-        $builder = ConfigFormProvider::formView($group);
+        $builder = ConfigFormProvider::formView($plugin, $group);
         $builder->setFormData($data);
         $formView = $builder->create();
         return $this->successRes($formView);
@@ -81,18 +85,20 @@ class SettingsController extends XbController
      * 选项卡配置表单
      * @Apidoc\Method ("GET,PUT")
      * @param \support\Request $request
-     * @return mixed
-     * @author 贵州小白基地网络科技有限公司
+     * @param string $group
+     * @return \support\Response
      * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
      */
-    public function tabs(Request $request)
+    public function tabs(Request $request, string $plugin = '', string $group = '')
     {
-        $group = $request->get('group');
+        $plugin = $request->get('plugin', $plugin);
+        $group  = $request->get('group', $group);
         if ($request->method() === 'PUT') {
             $post = $request->post();
             $data = [
                 'group' => $group,
-                'data' => $post,
+                'data'  => $post,
             ];
             Event::dispatch('common.event.SettingsEvent.config', $data);
             // 返回结果
@@ -102,7 +108,7 @@ class SettingsController extends XbController
             return $this->fail('分组参数错误');
         }
         $data    = ConfigProvider::get($group, '', [], ['parse' => false]);
-        $builder = ConfigFormProvider::tabsFormView($group);
+        $builder = ConfigFormProvider::tabsFormView($plugin, $group);
         $builder->setFormData($data);
         $formView = $builder->create();
         return $this->successRes($formView);

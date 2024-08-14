@@ -40,8 +40,8 @@ class DirUtil
             if (empty($temp)) {
                 continue;
             }
-            $path = str_replace($dirPath, '', $value);
-            $name = str_replace(".php", '', $path);
+            $path        = str_replace($dirPath, '', $value);
+            $name        = str_replace(".php", '', $path);
             $data[$name] = $temp;
         }
         return $data;
