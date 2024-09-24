@@ -67,7 +67,6 @@ class LoginController extends XbController
             'state' => $model['state'],
         ];
         $data        = AuthUtil::generateToken($data);
-        $data['url'] = 'Index/index';
         // 返回数据
         return $this->successFul('登录成功', $data);
     }

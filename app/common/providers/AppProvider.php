@@ -20,12 +20,20 @@ class AppProvider
         $toolbar = "/vue/{$moduleName}/toolbar";
         // 返回数据
         $data = [
+            // 站点名称
             'web_name' => $data['web_name'] ?? 'XBase',
+            // 站点标题
             'web_title' => $data['web_title'] ?? '后台登录',
+            // 站点描述
             'web_desc' => $data['web_desc'] ?? '',
+            // 登录页描述
             'login_desc' => $data['login_desc'] ?? '',
+            // 站点logo
             'web_logo' => $data['web_logo'] ?? '',
+            // 版本信息
             'version' => $data['version'] ?? '1.0.0',
+            // 跳转地址
+            'workbench' => xbUrl('Index/index'),
             // 版权token
             'empower_token' => $data['empower_token'] ?? '',
             // 版权私钥
