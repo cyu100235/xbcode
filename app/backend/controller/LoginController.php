@@ -92,13 +92,19 @@ class LoginController extends XbController
         $model->login_ip   = $ip;
         $model->login_time = date('Y-m-d H:i:s');
         $model->save();
+        // 生成令牌
+        $data = [
+            'id' => $model['id'],
+            'username' => $model['username'],
+            'state' => $model['state'],
+            'is_system' => $model['is_system'],
+        ];
+        $data = TokenUtil::create($data);
         // 增加登录日志
         $query             = $post;
         $query['password'] = '******';
         $query             = is_array($query) ? json_encode($query, 256) : $query;
-        $result            = $request->rawBody();
-        $result            = empty($result) ? '' : $result;
-        $result            = is_array($result) ? json_encode($result, 256) : $result;
+        $result            = json_encode($data, 256);
         $taskData          = [
             'type' => '20',
             'admin_id' => $model['id'],
@@ -111,14 +117,6 @@ class LoginController extends XbController
             'result' => $result,
         ];
         QueueProvider::addAsync('backend_log', $taskData, '', 10);
-        // 生成令牌
-        $data = [
-            'id' => $model['id'],
-            'username' => $model['username'],
-            'state' => $model['state'],
-            'is_system' => $model['is_system'],
-        ];
-        $data = TokenUtil::create($data);
         // 返回数据
         return $this->successFul('登录成功', $data);
     }
