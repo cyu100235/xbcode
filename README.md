@@ -5,13 +5,13 @@
 </div>
 
 <div align="center" >
-    <a href="https://xiaobai.host/">
+    <a href="https://xbcode.net/">
         <img src="https://img.shields.io/badge/license-Apache%202-blue.svg" />
     </a>
-    <a href="https://xiaobai.host/">
+    <a href="https://xbcode.net/">
         <img src="https://img.shields.io/badge/Edition-4.5-blue.svg" />
     </a>
-     <a href="https://xiaobai.host/">
+     <a href="https://xbcode.net/">
         <img src="https://img.shields.io/badge/Download-150m-red.svg" />
     </a>
 </div>
@@ -55,40 +55,39 @@ xbase 是一套基于最新技术的研发的渐进式页面渲染框架，支�
 ### 🍎 运行环境
 
 ```
-Nignx
+Nignx（必须）
 PHP 8.0（必须）
 MySQL >= 5.7（必须）
 Redis
 Swoole4 or Swoole5
 ```
 
-> 温馨提示：虚拟空间不支持，推荐使用 bt 宝塔面板，服务器推荐阿里云 ecs 或腾讯云 cvm 云服务器，不建议使用windows服务器。
+> <p>温馨提示：</p>虚拟空间不支持，推荐使用 bt 宝塔面板，服务器推荐阿里云 ecs 或腾讯云 cvm 云服务器
 
 ### 🔨宝塔安装（推荐使用）
 ```
-1、码云或官网下载代码
-2、宝塔-其他占点-新增通用项目
-3、复制根目录下的nginx.rewrite内容到站点伪静态
-4、将代码上传至站点根目录
-5、修改nginx.rewrite中的 127.0.0.1 端口（必须公网可访问）
-6、终端输入 php webman start 运行
-7、然后访问http://域名:端口号，进入安装流程
+1、官网订单内下载项目代码
+2、宝塔 - 网站 - PHP项目 - 添加站点 - 选择异步项目
+3、填写绑定域名 - 填写数据库创建 - 填写启动命令：php webman start 点击《确定》
+4、复制项目代码根目录下的nginx.rewrite内容到刚才创建的站点伪静态（必须确保该内容中的端口未被占用）
+5、将项目代码上传至站点根目录
+6、访问域名进行安装
 ```
 
 ### 🔨其他安装（待完善...）
 
 ### 官方导航
 
-[官网](https://xiaobai.host/) |
-[在线体验](https://demo.xiaobai.host/admin/) |
-[开发文档](https://doc.xiaobai.host/) |
-[插件市场](https://xiaobai.host/plugins)
+[官网](https://xbcode.net/) |
+[在线体验](https://demo.xbcode.net/admin/) |
+[开发文档](https://doc.xbcode.net/) |
+[插件市场](https://xbcode.net/plugins)
 
 ### ⚡ 系统演示
 
 ![后台界面](https://xbase-1256522594.cos.ap-chongqing.myqcloud.com/demo.png)
 
-系统演示： http://demo.xiaobai.host/admin 账号：admin 密码：123456
+系统演示： http://demo.xbcode.net/admin 账号：admin 密码：123456
 
 ---
 ###  📸 特别鸣谢
@@ -116,23 +115,11 @@ Swoole4 or Swoole5
 
 本项目包含的第三方源码和二进制文件之版权信息另行标注。
 
-版权所有Copyright © 2018-2023 by 小白基地 (https://xiaobai.host)
+版权所有Copyright © 2018-2023 by 小白基地 (https://www.xbcode.net)
 
 All rights reserved。
 
-xhadmin® 商标和著作权所有者为贵州小白基地网络科技有限公司。
-
----
-
-### 🍻 贡献代码
-
-<p style="padding:10px;"  width="90%">
-
-1. 欢迎提交 [pull request](https://gitee.com/xiaobai88/xbase-pro/pulls)，注意对应提交对应 `dev` 分支
-
-2. 欢迎提交 [issue](https://gitee.com/xiaobai88/xbase-pro/issues)，请写清楚遇到问题的原因、开发环境、复显步骤。
-
-</p>
+xbcode 商标和著作权所有者为贵州小白基地网络科技有限公司。
 
 感谢每一位贡献代码的朋友。
 
