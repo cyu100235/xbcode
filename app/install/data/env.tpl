@@ -18,9 +18,9 @@ DB_CHARSET_CI = utf8mb4_general_ci
 DB_PREFIX = {PREFIX}
 
 # 缓存类型
-CACHE_TYPE = file
+CACHE_TYPE = redis
 
-# Redis配置
+# redis配置
 REDIS_HOST = {REDIS_HOST}
 REDIS_PORT = {REDIS_PORT}
 REDIS_PASSWORD = {REDIS_PASSWD}
