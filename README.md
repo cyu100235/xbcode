@@ -79,7 +79,7 @@ Swoole4 or Swoole5
 
 ### 官方导航
 
-[官网](https://xbcode.net/) |
+[小白基地官网](https://xbcode.net/) |
 [在线体验](https://demo.xbcode.net/admin/) |
 [开发文档](https://doc.xbcode.net/) |
 [插件市场](https://xbcode.net/plugins)
