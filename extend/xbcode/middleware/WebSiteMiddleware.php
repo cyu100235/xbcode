@@ -71,12 +71,15 @@ class WebSiteMiddleware implements MiddlewareInterface
      */
     private function checkedLocalPluginAuth(Request $request)
     {
+        // 获取插件名称
+        $pluginName = $request->plugin;
+        if (empty($pluginName)) {
+            return;
+        }
         // 获取站点插件字典
         $webPluginsDict = $this->getWebPluginsDict();
         // 获取站点ID
         $webSiteId = $request->saas_appid;
-        // 获取插件名称
-        $pluginName = $request->plugin;
         // 获取授权插件信息
         $key = "{$pluginName}_{$webSiteId}";
         $plugin = $webPluginsDict[$key] ?? null;

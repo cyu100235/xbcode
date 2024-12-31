@@ -1,16 +1,16 @@
 <?php
 namespace app\backend\controller;
 
+use support\Request;
 use app\model\Admin;
 use app\model\AdminRole;
+use xbcode\XbController;
+use Tinywan\Jwt\JwtToken;
+use xbcode\utils\PasswdUtil;
 use app\validate\AdminValidate;
 use xbcode\builder\FormBuilder;
 use xbcode\builder\ListBuilder;
 use xbcode\builder\table\attrs\RowEditTrait;
-use xbcode\utils\PasswdUtil;
-use Tinywan\Jwt\JwtToken;
-use xbcode\XbController;
-use support\Request;
 
 /**
  * 管理员管理
@@ -287,6 +287,7 @@ class AdminController extends XbController
             'prompt' => '请上传用户头像',
             'props' => [
                 'type' => 'image',
+                'isUpload' => true,
             ],
         ]);
         $builder->setFormData($formData);

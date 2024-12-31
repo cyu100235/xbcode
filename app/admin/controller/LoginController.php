@@ -1,17 +1,17 @@
 <?php
 namespace app\admin\controller;
 
-use app\model\AdminRule;
+use Exception;
+use support\Request;
 use app\model\WebAdmin;
-use app\validate\WebAdminValidate;
+use app\model\AdminRule;
+use xbcode\XbController;
 use Tinywan\Jwt\JwtToken;
-use xbcode\providers\MenuProvider;
+use xbcode\utils\TokenUtil;
 use xbcode\utils\PasswdUtil;
 use xbcode\providers\AppProvider;
-use xbcode\utils\TokenUtil;
-use xbcode\XbController;
-use support\Request;
-use Exception;
+use app\validate\WebAdminValidate;
+use xbcode\providers\MenuProvider;
 
 /**
  * 登录控制器
@@ -56,7 +56,7 @@ class LoginController extends XbController
             return $this->fail('登录账号错误');
         }
         // 验证登录密码
-        $password = PasswdUtil::create($post['password']);
+        $password  = PasswdUtil::create($post['password']);
         $originPwd = (string) $model['password'];
         if ($password !== $originPwd) {
             return $this->fail('登录密码错误');
@@ -70,16 +70,18 @@ class LoginController extends XbController
         $model->login_time = date('Y-m-d H:i:s');
         $model->save();
         // 生成令牌
-        $data        = [
-            'id'       => $model['id'],
+        $data = [
+            'id' => $model['id'],
             'username' => $model['username'],
-            'state'    => $model['state'],
+            'state' => $model['state'],
+            'is_system' => $model['is_system'],
         ];
-        $data        = TokenUtil::create($data);
+        $data = TokenUtil::create($data);
+        // 增加登录日志
         // 返回数据
         return $this->successFul('登录成功', $data);
     }
-    
+
     /**
      * 获取用户信息
      * @return \support\Response
@@ -98,7 +100,7 @@ class LoginController extends XbController
                 throw new Exception('用户错误，请重新登录');
             }
             // 前端数据
-            $data          = $user->toArray();
+            $data = $user->toArray();
             return $this->successRes($data);
         } catch (\Throwable $e) {
             return $this->failFul($e->getMessage(), 12000);
@@ -116,8 +118,8 @@ class LoginController extends XbController
         $where = [
             ['plugin', '<>', ''],
         ];
-        $data = AdminRule::where($where)->order('sort asc')->select()->toArray();
-        $data = MenuProvider::parseMenu($data, true);
+        $data  = AdminRule::where($where)->order('sort asc')->select()->toArray();
+        $data  = MenuProvider::parseMenu($data, true);
         return $this->successRes($data);
     }
 }

@@ -13,20 +13,25 @@ $middlewares = [];
 $middlewares['@'] = [
     // 跨域中间件
     \xbcode\middleware\CrossMiddleware::class,
-    // 授权服务中间件
-    \xbcode\middleware\ServerMiddleware::class,
+    // 授权服务检查中间件
+    \xbcode\middleware\ServerAuthMiddleware::class,
     // 静态文件中间件
     \xbcode\middleware\StaticFileMiddleware::class,
     // 安装检测中间件
     \xbcode\middleware\InstallMiddleware::class,
 ];
-// 主项目默认模块中间件
-$middlewares['index'] = [
+// 主项目总后台模块中间件
+$middlewares['backend'] = [
+    // 授权服务跳转中间件
+    \xbcode\middleware\ServerRedirectMiddleware::class,
+];
+// 主项目子后台模块中间件
+$middlewares['admin'] = [
     // 租户站点中间件
     \xbcode\middleware\WebSiteMiddleware::class,
 ];
-// 主项目后台模块中间件
-$middlewares['admin'] = [
+// 主项目默认模块中间件
+$middlewares['index'] = [
     // 租户站点中间件
     \xbcode\middleware\WebSiteMiddleware::class,
 ];

@@ -5,17 +5,19 @@ use Exception;
 use support\Cache;
 use Webman\Http\Request;
 use Webman\Http\Response;
-use xbcode\service\xbcode\XbBaseService;
 use xbcode\trait\JsonTrait;
 use Webman\MiddlewareInterface;
 use xbcode\service\xbcode\SiteService;
+use xbcode\service\xbcode\XbBaseService;
 
 /**
- * 授权服务中间件
+ * 授权服务跳转中间件
+ * 没有授权则跳转到授权页面
+ * 仅限主项目总后台模块使用
  * @copyright 贵州小白基地网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
-class ServerMiddleware implements MiddlewareInterface
+class ServerRedirectMiddleware implements MiddlewareInterface
 {
     // 引入JsonTrait
     use JsonTrait;
