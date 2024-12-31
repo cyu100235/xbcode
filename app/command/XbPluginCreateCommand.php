@@ -24,6 +24,7 @@ class XbPluginCreateCommand extends Command
     protected static $dirRemarks = [
         'api'               => "接口目录\n主要与其他插件对接，非网络请求接口",
         'app'               => '应用目录',
+        'app/queue'         => '队列任务目录',
         'app/controller'    => '控制器目录',
         'app/event'         => '事件目录',
         'app/model'         => '模型目录',
@@ -47,6 +48,7 @@ class XbPluginCreateCommand extends Command
         'api/Install.php',
         'app/functions.php',
         'app/controller/IndexController.php',
+        'app/queue/DemoQueue.php',
         'app/view/index/index.html',
         'config/apidoc.php',
         'config/app.php',

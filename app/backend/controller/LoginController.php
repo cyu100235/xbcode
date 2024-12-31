@@ -4,7 +4,6 @@ namespace app\backend\controller;
 use Exception;
 use support\Request;
 use app\model\Admin;
-use xbcode\providers\QueueProvider;
 use xbcode\XbController;
 use app\model\AdminRule;
 use Tinywan\Jwt\JwtToken;
@@ -15,6 +14,7 @@ use xbcode\providers\AppProvider;
 use Webman\Captcha\PhraseBuilder;
 use Webman\Captcha\CaptchaBuilder;
 use xbcode\providers\MenuProvider;
+use xbcode\providers\QueueProvider;
 
 /**
  * 登录控制器
