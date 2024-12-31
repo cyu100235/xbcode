@@ -21,6 +21,7 @@ class AdminLog extends Model
     public static function addLog(array $data)
     {
         $result = [
+            'type' => $data['type'] ?? '10',
             'admin_id' => $data['admin_id'] ?? 0,
             'admin_name' => $data['admin_name'] ?? '',
             'real_ip' => $data['real_ip'] ?? '',

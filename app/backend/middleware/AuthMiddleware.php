@@ -164,6 +164,7 @@ class AuthMiddleware implements MiddlewareInterface
             $result = is_array($result) ? json_encode($result) : $result;
             // 添加日志至队列
             $taskData = [
+                'type' => '10',
                 'admin_id' => $adminId,
                 'admin_name' => $adminName,
                 'real_ip' => $realIp,

@@ -4,6 +4,7 @@ namespace app\backend\controller;
 use Exception;
 use support\Request;
 use app\model\Admin;
+use xbcode\providers\QueueProvider;
 use xbcode\XbController;
 use app\model\AdminRule;
 use Tinywan\Jwt\JwtToken;
@@ -91,6 +92,25 @@ class LoginController extends XbController
         $model->login_ip   = $ip;
         $model->login_time = date('Y-m-d H:i:s');
         $model->save();
+        // 增加登录日志
+        $query             = $post;
+        $query['password'] = '******';
+        $query             = is_array($query) ? json_encode($query, 256) : $query;
+        $result            = $request->rawBody();
+        $result            = empty($result) ? '' : $result;
+        $result            = is_array($result) ? json_encode($result, 256) : $result;
+        $taskData          = [
+            'type' => '20',
+            'admin_id' => $model['id'],
+            'admin_name' => $model['username'],
+            'real_ip' => $request->getRealIp(true),
+            'path' => trim(ltrim($request->path(), '/'), '/'),
+            'method' => $request->method(),
+            'title' => '用户登录',
+            'query' => $query,
+            'result' => $result,
+        ];
+        QueueProvider::addAsync('backend_log', $taskData, '', 10);
         // 生成令牌
         $data = [
             'id' => $model['id'],

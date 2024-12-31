@@ -17,9 +17,9 @@ CREATE TABLE `xb_admin_rule`  (
   `params` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '菜单参数',
   `sort` int(11) NOT NULL DEFAULT 100 COMMENT '菜单排序（值越大，越靠后）',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '后台菜单' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 423 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '后台菜单' ROW_FORMAT = DYNAMIC;
 INSERT INTO `xb_admin_rule` VALUES (2, '2024-03-27 15:57:58', '2024-11-30 12:29:09', '权限管理', '10', '', 'Auth', 0, 'none/index', '20', '10', '10', 'GET', 'TeamOutlined', '', 8888);
-INSERT INTO `xb_admin_rule` VALUES (3, '2024-03-27 15:58:24', '2024-10-20 00:17:28', '系统设置', '10', '', 'Setting', 0, 'none/index', '20', '20', '10', 'GET', 'Setting', '', 9999);
+INSERT INTO `xb_admin_rule` VALUES (3, '2024-03-27 15:58:24', '2025-01-01 04:59:11', '系统设置', '10', '', 'Setting', 0, 'none/index', '20', '10', '10', 'GET', 'Setting', '', 9999);
 INSERT INTO `xb_admin_rule` VALUES (5, '2024-03-27 16:00:15', '2024-11-30 12:32:55', '工作台', '20', '', 'workbench', 0, 'remote/index', '20', '20', '20', 'GET', 'DashboardOutlined', 'backend/Index/workbench', 0);
 INSERT INTO `xb_admin_rule` VALUES (6, '2024-03-27 16:00:53', '2024-10-20 00:31:46', '系统登录', '30', '', 'backend/Login/login', 5, 'none/index', '10', '20', '20', 'POST', '', '', 0);
 INSERT INTO `xb_admin_rule` VALUES (7, '2024-03-27 16:01:30', '2024-10-20 00:31:58', '获取应用信息', '30', '', 'backend/Index/site', 5, 'none/index', '10', '20', '20', 'GET', '', '', 0);
@@ -119,3 +119,6 @@ INSERT INTO `xb_admin_rule` VALUES (416, '2024-12-31 02:26:02', '2024-12-31 02:2
 INSERT INTO `xb_admin_rule` VALUES (417, '2024-12-31 02:26:02', '2024-12-31 02:26:02', '站点插件-修改', '30', '', 'backend/WebPlugin/edit', 415, 'form/index', '10', '10', '10', 'GET,PUT', '', '', 0);
 INSERT INTO `xb_admin_rule` VALUES (418, '2024-12-31 02:26:02', '2024-12-31 02:26:02', '站点插件-删除', '30', '', 'backend/WebPlugin/del', 415, 'none/index', '10', '10', '10', 'GET,DELETE', '', '', 0);
 INSERT INTO `xb_admin_rule` VALUES (419, '2024-12-31 02:26:02', '2024-12-31 02:26:02', '站点插件-表格', '30', '', 'backend/WebPlugin/indexTable', 415, 'none/index', '10', '10', '10', 'GET', '', '', 0);
+INSERT INTO `xb_admin_rule` VALUES (420, '2025-01-01 02:41:56', '2025-01-01 02:41:56', '获取菜单', '30', '', 'backend/Login/menus', 5, 'none/index', '10', '20', '20', 'GET', '', '', 100);
+INSERT INTO `xb_admin_rule` VALUES (421, '2025-01-01 04:58:25', '2025-01-01 04:58:37', '系统日志', '20', '', 'backend/AdminLog/index', 3, 'table/index', '20', '10', '10', 'GET', '', '', 7);
+INSERT INTO `xb_admin_rule` VALUES (422, '2025-01-01 04:58:47', '2025-01-01 04:58:47', '系统日志-表格', '30', '', 'backend/AdminLog/indexTable', 421, 'none/index', '10', '10', '10', 'GET', '', '', 0);
