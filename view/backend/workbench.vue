@@ -21,11 +21,11 @@
                     <div class="item">
                         <div class="label">获取渠道</div>
                         <div class="value buttons">
-                            <el-button type="primary" size="small">
-                                官网
+                            <el-button @click="hanldUrl('http://www.xbcode.net')" type="primary" size="small">
+                                官网市场
                             </el-button>
-                            <el-button type="danger" size="small">
-                                gitee
+                            <el-button @click="hanldUrl('http://doc.xbcode.net/useal/introduce')" type="danger" size="small">
+                                使用文档
                             </el-button>
                         </div>
                     </div>
@@ -458,8 +458,15 @@ export default {
             saleEcharts.setOption(option)
         },
         // 跳转页面
-        hanldUrl(path) {
-            this.$router.push(path)
+        hanldUrl(url) {
+            // 检测是否链接
+            if (url.includes('http') || url.includes('https')) {
+                window.open(url)
+                return
+            }
+            this.$router.push({
+                path: url
+            })
         },
         // 忽略版本更新
         ignoreUpdate() {

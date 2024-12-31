@@ -20,6 +20,17 @@ class IndexController extends XbController
     protected $server = [
         'index',
         'site',
+        'workbench',
+    ];
+
+    /**
+     * 客户端无需登录的方法
+     * @var array
+     */
+    protected $noLogin = [
+        'index',
+        'site',
+        'workbench',
     ];
 
     /**

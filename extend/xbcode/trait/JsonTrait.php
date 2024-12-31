@@ -43,19 +43,20 @@ trait JsonTrait
         }
         return self::json($data['msg'], $data['code'], $data['data']);
     }
-
+    
     /**
      * 返回成功消息带token
+     * @param int $code
      * @param string $token
      * @param string $msg
      * @return Response
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    protected static function successToken(string $token, string $msg = 'success')
+    protected static function successToken(int $code, string $token, string $msg = 'success')
     {
         $data['token'] = $token;
-        return self::json($msg, 200, $data);
+        return self::json($msg, $code, $data);
     }
 
     /**

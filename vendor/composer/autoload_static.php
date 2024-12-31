@@ -50,9 +50,12 @@ class ComposerStaticInit36db3d91b6ceb9404e632f09a492d0c5
         ),
         'W' => 
         array (
+            'Workerman\\Redis\\' => 16,
+            'Workerman\\RedisQueue\\' => 21,
             'Workerman\\Crontab\\' => 18,
             'Workerman\\' => 10,
             'Webman\\ThinkOrm\\' => 16,
+            'Webman\\RedisQueue\\' => 18,
             'Webman\\Log\\' => 11,
             'Webman\\Console\\' => 15,
             'Webman\\Captcha\\' => 15,
@@ -152,6 +155,14 @@ class ComposerStaticInit36db3d91b6ceb9404e632f09a492d0c5
         array (
             0 => __DIR__ . '/../..' . '/app',
         ),
+        'Workerman\\Redis\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/workerman/redis/src',
+        ),
+        'Workerman\\RedisQueue\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/workerman/redis-queue/src',
+        ),
         'Workerman\\Crontab\\' => 
         array (
             0 => __DIR__ . '/..' . '/workerman/crontab/src',
@@ -163,6 +174,10 @@ class ComposerStaticInit36db3d91b6ceb9404e632f09a492d0c5
         'Webman\\ThinkOrm\\' => 
         array (
             0 => __DIR__ . '/..' . '/webman/think-orm/src',
+        ),
+        'Webman\\RedisQueue\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/webman/redis-queue/src',
         ),
         'Webman\\Log\\' => 
         array (
@@ -342,6 +357,7 @@ class ComposerStaticInit36db3d91b6ceb9404e632f09a492d0c5
     public static $classMap = array (
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'Ip2Region' => __DIR__ . '/..' . '/zoujingli/ip2region/Ip2Region.php',
         'JsonException' => __DIR__ . '/..' . '/symfony/polyfill-php73/Resources/stubs/JsonException.php',
         'Normalizer' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/Resources/stubs/Normalizer.php',
         'PclZip' => __DIR__ . '/..' . '/pclzip/pclzip/pclzip.lib.php',
@@ -349,6 +365,7 @@ class ComposerStaticInit36db3d91b6ceb9404e632f09a492d0c5
         'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
         'UnhandledMatchError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
         'ValueError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',
+        'XdbSearcher' => __DIR__ . '/..' . '/zoujingli/ip2region/XdbSearcher.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

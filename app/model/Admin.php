@@ -3,6 +3,7 @@
 namespace app\model;
 
 use xbcode\Model;
+use xbcode\utils\PasswdUtil;
 use xbcode\providers\FileProvider;
 
 class Admin extends Model
@@ -44,6 +45,21 @@ class Admin extends Model
     {
         if ($value) {
             $value = FileProvider::url($value);
+        }
+        return $value;
+    }
+
+    /**
+     * 设置密码
+     * @param mixed $value
+     * @return mixed
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    protected function setPasswordAttr($value)
+    {
+        if ($value) {
+            $value = PasswdUtil::create($value);
         }
         return $value;
     }

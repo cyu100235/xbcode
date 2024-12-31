@@ -4,7 +4,6 @@ namespace app\backend\controller;
 use Exception;
 use support\Request;
 use app\model\Admin;
-use Webman\Captcha\PhraseBuilder;
 use xbcode\XbController;
 use app\model\AdminRule;
 use Tinywan\Jwt\JwtToken;
@@ -12,6 +11,7 @@ use xbcode\utils\TokenUtil;
 use xbcode\utils\PasswdUtil;
 use app\validate\AdminValidate;
 use xbcode\providers\AppProvider;
+use Webman\Captcha\PhraseBuilder;
 use Webman\Captcha\CaptchaBuilder;
 use xbcode\providers\MenuProvider;
 
@@ -31,6 +31,15 @@ class LoginController extends XbController
         'captcha',
         'user',
         'menus',
+    ];
+
+    /**
+     * 无需登录的方法
+     * @var array
+     */
+    protected $noLogin = [
+        'login',
+        'captcha',
     ];
 
     /**
@@ -87,6 +96,7 @@ class LoginController extends XbController
             'id' => $model['id'],
             'username' => $model['username'],
             'state' => $model['state'],
+            'is_system' => $model['is_system'],
         ];
         $data = TokenUtil::create($data);
         // 返回数据

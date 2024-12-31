@@ -54,7 +54,8 @@ class UserService extends XbBaseService
             throw new Exception('登录失败');
         }
         // 保存登录信息
-        Cache::set('xb_server_token', $result['data']['access_token']);
+        $key = XbBaseService::getServiceTokenName();
+        Cache::set($key, $result['data']['access_token']);
         // 返回数据
         return $result;
     }

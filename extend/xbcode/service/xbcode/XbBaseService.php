@@ -25,10 +25,21 @@ class XbBaseService
     protected static $cacheTime = 600;
 
     /**
-     * 用户登录缓存KEY
-     * @var string
+     * 获取服务缓存KEY
+     * @return string
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
      */
-    protected static $tokenKey = 'xb_server_token';
+    public static function getServiceTokenName()
+    {
+        // 服务器IP地址
+        $serviceIp = file_get_contents('http://ifconfig.me/ip');
+        // 当前域名
+        $domain = request()->host();
+        // 保存登录信息KEY
+        $key = "xb_token_host_{$domain}_ip_{$serviceIp}";
+        return $key;
+    }
 
     /**
      * 获取请求对象
@@ -48,19 +59,20 @@ class XbBaseService
             'X-Requested-With' => 'XMLHttpRequest',
         ];
         // 是否携带token
-        $token = Cache::get(self::$tokenKey);
+        $keyName = self::getServiceTokenName();
+        $token   = Cache::get($keyName);
         if ($token) {
             $headers['Authorization'] = "Bearer {$token}";
         }
         $server->withHeaders($headers);
         // 设置响应拦截器
-        $server->withResponseMiddleware(function (ResponseInterface $response) {
+        $server->withResponseMiddleware(function (ResponseInterface $response) use ($keyName) {
             // 获取响应数据
             $result = $response->getBody()->getContents();
-            $data = json_decode($result, true);
+            $data   = json_decode($result, true);
             // 用户登录已过期
             if (isset($data['code']) && $data['code'] == 401) {
-                Cache::delete(self::$tokenKey);
+                Cache::delete($keyName);
             }
             return $response;
         });

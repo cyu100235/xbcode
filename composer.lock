@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a0346f62e5f54bc9826e7a504f1e106f",
+    "content-hash": "8e1828a554fe6f4fb86b9d4aa5981e4e",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -2226,6 +2226,27 @@
             "time": "2024-10-25T02:23:03+00:00"
         },
         {
+            "name": "webman/redis-queue",
+            "version": "v1.3.2",
+            "dist": {
+                "type": "zip",
+                "url": "https://mirrors.tencent.com/repository/composer/webman/redis-queue/v1.3.2/webman-redis-queue-v1.3.2.zip",
+                "reference": "80b9ddca0405bbb6d02e6b368e8036b3b1a13814",
+                "shasum": ""
+            },
+            "require": {
+                "workerman/redis-queue": "^1.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Webman\\RedisQueue\\": "./src"
+                }
+            },
+            "description": "Redis message queue plugin for webman.",
+            "time": "2024-04-03T02:00:20+00:00"
+        },
+        {
             "name": "webman/think-orm",
             "version": "v1.1.6",
             "dist": {
@@ -2284,6 +2305,58 @@
                 "crontab"
             ],
             "time": "2022-10-17T01:59:19+00:00"
+        },
+        {
+            "name": "workerman/redis",
+            "version": "v2.0.3",
+            "dist": {
+                "type": "zip",
+                "url": "https://mirrors.tencent.com/repository/composer/workerman/redis/v2.0.3/workerman-redis-v2.0.3.zip",
+                "reference": "4e910d4b0c2f2101a1f8dbd28be79fd864f7aab8",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7",
+                "workerman/workerman": "^4.1.0||^5.0.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Workerman\\Redis\\": "./src"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "homepage": "http://www.workerman.net",
+            "time": "2024-08-01T03:38:26+00:00"
+        },
+        {
+            "name": "workerman/redis-queue",
+            "version": "v1.2.0",
+            "dist": {
+                "type": "zip",
+                "url": "https://mirrors.tencent.com/repository/composer/workerman/redis-queue/v1.2.0/workerman-redis-queue-v1.2.0.zip",
+                "reference": "7b6aee70d69e5c9427c0411d85f8398027831b42",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0",
+                "workerman/redis": "^1.0||^2.0",
+                "workerman/workerman": ">=4.0.20"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Workerman\\RedisQueue\\": "./src"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Message queue system written in PHP based on workerman and backed by Redis.",
+            "homepage": "http://www.workerman.net",
+            "time": "2024-02-28T07:00:03+00:00"
         },
         {
             "name": "workerman/webman-framework",
@@ -2457,6 +2530,42 @@
                 "phphttp"
             ],
             "time": "2023-11-14T05:49:02+00:00"
+        },
+        {
+            "name": "zoujingli/ip2region",
+            "version": "v2.0.6",
+            "dist": {
+                "type": "zip",
+                "url": "https://mirrors.tencent.com/repository/composer/zoujingli/ip2region/v2.0.6/zoujingli-ip2region-v2.0.6.zip",
+                "reference": "66895178be204521e9f5ae9df0ea502893ee53b2",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "Ip2Region.php",
+                    "XdbSearcher.php"
+                ]
+            },
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Anyon",
+                    "email": "zoujingli@qq.com",
+                    "homepage": "https://thinkadmin.top"
+                }
+            ],
+            "description": "Ip2Region for PHP",
+            "homepage": "https://github.com/zoujingli/Ip2Region",
+            "keywords": [
+                "Ip2Region"
+            ],
+            "time": "2024-08-02T01:01:01+00:00"
         }
     ],
     "packages-dev": [],

@@ -204,9 +204,11 @@ class AdminController extends XbController
             }
             return $this->success('保存成功');
         }
+        $formData = $model->toArray();
+        unset($formData['password']);
         $builder = $this->formView();
         $builder->setMethod('PUT');
-        $builder->setData($model);
+        $builder->setFormData($formData);
         $data = $builder->create();
         return $this->successRes($data);
     }

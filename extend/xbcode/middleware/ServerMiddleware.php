@@ -5,6 +5,7 @@ use Exception;
 use support\Cache;
 use Webman\Http\Request;
 use Webman\Http\Response;
+use xbcode\service\xbcode\XbBaseService;
 use xbcode\trait\JsonTrait;
 use Webman\MiddlewareInterface;
 use xbcode\service\xbcode\SiteService;
@@ -75,7 +76,8 @@ class ServerMiddleware implements MiddlewareInterface
             return;
         }
         // 验证是否已登录
-        $token = Cache::get('xb_server_token');
+        $key   = XbBaseService::getServiceTokenName();
+        $token = Cache::get($key);
         if (empty($token)) {
             throw new Exception('');
         }

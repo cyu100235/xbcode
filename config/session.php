@@ -13,9 +13,9 @@ return [
         'redis' => [
             'host' => xbEnv('REDIS_HOST', '127.0.0.1'),
             'port' => xbEnv('REDIS_PORT', 6379),
-            'auth' => '',
+            'auth' => xbEnv('REDIS_PASSWORD', ''),
             'timeout' => 2,
-            'database' => '',
+            'database' => xbEnv('REDIS_DB', ''),
             'prefix' => 'redis_session_',
         ],
         'redis_cluster' => [

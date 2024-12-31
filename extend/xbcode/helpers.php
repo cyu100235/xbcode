@@ -197,6 +197,7 @@ if (!function_exists('xbPathInfo')) {
     function xbPathInfo($path)
     {
         $path = trim($path, '/');
+        $path = ltrim($path, '/');
         $path = explode('/', $path);
         $path = array_filter($path);
         $path = array_values($path);

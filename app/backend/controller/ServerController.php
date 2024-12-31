@@ -36,6 +36,10 @@ class ServerController extends XbController
         'version',
         'authorize',
     ];
+    protected $noLogin = [
+        'version',
+        'plugins',
+    ];
 
     /**
      * 授权登录
