@@ -13,10 +13,16 @@ use Psr\Http\Message\ResponseInterface;
 class XbBaseService
 {
     /**
-     * 接口地址
+     * 生产环境接口地址
      * @var string
      */
-    private static $url = 'http://server.dev.xbcode.net/api/';
+    private static $url = 'https://www.xbcode.net/api/';
+
+    /**
+     * 开发环境接口地址
+     * @var string
+     */
+    private static $devUrl = 'http://server.dev.xbcode.net/api/';
 
     /**
      * 数据缓存时间(单位:秒)
@@ -49,8 +55,10 @@ class XbBaseService
      */
     protected static function request()
     {
+        // 获取请求地址
+        $url = env('APP_DEBUG_SERVER', false) ? self::$devUrl : self::$url;
         // 获取请求对象
-        $server = Http::withHost(self::$url);
+        $server = Http::withHost($url);
         // 设置JSON请求
         $server->asJson();
         // 组装请求头
