@@ -269,7 +269,7 @@ class ParseApiDetail
             // 注解了不使用全局响应
             $mergeParams = [];
         }else if (!empty($currentApp['responses']) && !empty($currentApp['responses'][$paramType])){
-            $mergeParams = $currentApp['params'][$paramType];
+            $mergeParams = $currentApp['responses'][$paramType];
         }else if(!empty($config['responses']) && !empty($config['responses'][$paramType])){
             $mergeParams = $config['responses'][$paramType];
         }
@@ -332,7 +332,7 @@ class ParseApiDetail
             // 注解了不使用全局响应
             $mergeParams = [];
         }else if (!empty($currentApp['responses']) && !empty($currentApp['responses'][$paramType])){
-            $mergeParams = $currentApp['params'][$paramType];
+            $mergeParams = $currentApp['responses'][$paramType];
         }else if(!empty($config['responses']) && !empty($config['responses'][$paramType])){
             $mergeParams = $config['responses'][$paramType];
         }
@@ -373,7 +373,7 @@ class ParseApiDetail
         // 默认method
         if (!empty($methodInfo['method'])) {
             $apiMethods = Helper::handleApiMethod($methodInfo['method']);
-            $methodInfo['method'] = count($apiMethods)==1?$apiMethods[0]:$apiMethods;
+            $methodInfo['method'] = count($apiMethods)===1?$apiMethods[0]:$apiMethods;
         }else{
             $methodInfo['method'] = !empty($config['default_method']) ? strtoupper($config['default_method']) : '*';
         }
@@ -481,6 +481,20 @@ class ParseApiDetail
                 }
             }
             $data['children'] = $childrenData;
+        }else if(!empty($data) && empty($data['name']) && is_int(Helper::arrayKeyFirst($data))){
+            $childrenData = [];
+            foreach ($data as $child) {
+                $paramItem=$this->handleAnnotationsParamItem($child,$field);
+
+                if ($paramItem!==false){
+                    if (!empty($paramItem) && is_array($paramItem) && Helper::arrayKeyFirst($paramItem)===0){
+                        $childrenData = Helper::arrayMergeAndUnique("name",$childrenData,$paramItem);
+                    }else{
+                        $childrenData[] = $paramItem;
+                    }
+                }
+            }
+            $data = $childrenData;
         }
         if (!empty($data['type']) && $data['type'] === 'tree' ) {
             // 类型为tree的

@@ -1,139 +1,70 @@
-<div align="center">
+<div style="padding:18px;max-width: 1024px;margin:0 auto;background-color:#fff;color:#333">
+<h1>webman</h1>
 
-基于**渐进式快速开发框架**快速创建属于你自己的系统
+基于<a href="https://www.workerman.net" target="__blank">workerman</a>开发的超高性能PHP框架
+
+
+<h1>学习</h1>
+
+<ul>
+  <li>
+    <a href="https://www.workerman.net/webman" target="__blank">主页 / Home page</a>
+  </li>
+  <li>
+    <a href="https://webman.workerman.net" target="__blank">文档 / Document</a>
+  </li>
+  <li>
+    <a href="https://www.workerman.net/doc/webman/install.html" target="__blank">安装 / Install</a>
+  </li>
+  <li>
+    <a href="https://www.workerman.net/questions" target="__blank">问答 / Questions</a>
+  </li>
+  <li>
+    <a href="https://www.workerman.net/apps" target="__blank">市场 / Apps</a>
+  </li>
+  <li>
+    <a href="https://www.workerman.net/sponsor" target="__blank">赞助 / Sponsors</a>
+  </li>
+  <li>
+    <a href="https://www.workerman.net/doc/webman/thanks.html" target="__blank">致谢 / Thanks</a>
+  </li>
+</ul>
+
+<div style="float:left;padding-bottom:30px;">
+
+  <h1>赞助商</h1>
+
+  <h4>特别赞助</h4>
+  <a href="https://www.crmeb.com/?form=workerman" target="__blank">
+    <img src="https://www.workerman.net/img/sponsors/6429/20230719111500.svg" width="200">
+  </a>
+
+  <h4>铂金赞助</h4>
+  <a href="https://www.fadetask.com/?from=workerman" target="__blank"><img src="https://www.workerman.net/img/sponsors/1/20230719084316.png" width="200"></a>
+  <a href="https://www.yilianyun.net/?from=workerman" target="__blank" style="margin-left:20px;"><img src="https://www.workerman.net/img/sponsors/6218/20230720114049.png" width="200"></a>
+
 
 </div>
 
-<div align="center" >
-    <a href="https://xiaobai.host/">
-        <img src="https://img.shields.io/badge/license-Apache%202-blue.svg" />
-    </a>
-    <a href="https://xiaobai.host/">
-        <img src="https://img.shields.io/badge/Edition-4.5-blue.svg" />
-    </a>
-     <a href="https://xiaobai.host/">
-        <img src="https://img.shields.io/badge/Download-150m-red.svg" />
-    </a>
+
+<div style="float:left;padding-bottom:30px;clear:both">
+
+  <h1>请作者喝咖啡</h1>
+
+<img src="https://www.workerman.net/img/wx_donate.png" width="200">
+<img src="https://www.workerman.net/img/ali_donate.png" width="200">
+<br>
+<b>如果您觉得webman对您有所帮助，欢迎捐赠。</b>
+
+
 </div>
 
-####
+
+<div style="clear: both">
+<h1>LICENSE</h1>
+The webman is open-sourced software licensed under the MIT.
+</div>
+
+</div>
 
 
-### 🌈框架介绍
-
-xbase 是一套基于最新技术的研发的渐进式页面渲染框架，支持在线升级和安装插件，拥有良好的开发框架、成熟稳定的技术解决方案、提供丰富的扩展功能。为开发者赋能，助力企业发展，致力于打造最受欢迎的渐进式快速开发框架。
-
-### ☘ 交流群
-
-为了让xbase框架能快速成长，欢迎加入开发者交流群，群内除技术相关话题以外禁止任何广告行为，在你加入群聊之前请先考虑清楚
-
-### ☘ 功能特性
-
-- [√] 基于Webman内核
-- [√] 基于Webman应用插件化系统
-- [√] 插件在线安装和升级
-- [√] 自定义远程组件（定制化页面）
-- [√] 渐进式动态渲染（表格、表单、远程组件）
-- [√] 低耦合的插件化系统
-- [√] 全局附件库
-- [√] 自动免费授权
-- [√] 小程序、网页、APP等
-- [√] 表格Excel导出
-- [√] 自定义任务队列
-- [√] 部门权限管理（支持数据权限）
-- [×] 一键CURD代码
-- [×] 更多功能正在加紧中...
-
-
-### 🍚系统亮点
-
-```
-· 框架为动态渲染技术，因此并无前端文件，用户端可选择任何前端技术。
-· 如无特殊页面，无需编写一行前端代码，即可完成插件开发，助你开发效率提升10倍不止。
-```
-
-### 🍎 运行环境
-
-```
-Nignx
-PHP 8.0（必须）
-MySQL >= 5.7（必须）
-Redis
-Swoole4 or Swoole5
-```
-
-> 温馨提示：虚拟空间不支持，推荐使用 bt 宝塔面板，服务器推荐阿里云 ecs 或腾讯云 cvm 云服务器，不建议使用windows服务器。
-
-### 🔨宝塔安装（推荐使用）
-```
-1、码云或官网下载代码
-2、宝塔-其他占点-新增通用项目
-3、复制根目录下的nginx.rewrite内容到站点伪静态
-4、将代码上传至站点根目录
-5、修改nginx.rewrite中的 127.0.0.1 端口（必须公网可访问）
-6、终端输入 php webman start 运行
-7、然后访问http://域名:端口号，进入安装流程
-```
-
-### 🔨其他安装（待完善...）
-
-### 官方导航
-
-[官网](https://xiaobai.host/) |
-[在线体验](https://demo.xiaobai.host/admin/) |
-[开发文档](https://doc.xiaobai.host/) |
-[插件市场](https://xiaobai.host/plugins)
-
-### ⚡ 系统演示
-
-![后台界面](https://xbase-1256522594.cos.ap-chongqing.myqcloud.com/demo.png)
-
-系统演示： http://demo.xiaobai.host/admin 账号：admin 密码：123456
-
----
-###  📸 特别鸣谢
-
-排名不分先后，感谢这些软件的开发者：webman、vxe-table、form-create、iview、vue、mysql、redis、uniapp、echarts、tree-table-vue、swiper、element-ui等，如有遗漏请联系我！
-
----
-###  🎬 开发团队
-产品：楚羽幽
-
-文档：下次一定
-
-
----
-###  📺 使用须知
-1、允许用于个人学习、毕业设计、教学案例、公益事业、商业使用；
-
-2、如果商用必须保留版权信息，请自觉遵守，如需去除版权需购买商业授权；
-
-3、禁止将本项目的代码和资源进行任何形式的出售，产生的一切任何后果责任由侵权者自负。
-
-
----
-###  💾 版权信息
-
-本项目包含的第三方源码和二进制文件之版权信息另行标注。
-
-版权所有Copyright © 2018-2023 by 小白基地 (https://xiaobai.host)
-
-All rights reserved。
-
-xhadmin® 商标和著作权所有者为贵州小白基地网络科技有限公司。
-
----
-
-### 🍻 贡献代码
-
-<p style="padding:10px;"  width="90%">
-
-1. 欢迎提交 [pull request](https://gitee.com/xiaobai88/xbase-pro/pulls)，注意对应提交对应 `dev` 分支
-
-2. 欢迎提交 [issue](https://gitee.com/xiaobai88/xbase-pro/issues)，请写清楚遇到问题的原因、开发环境、复显步骤。
-
-</p>
-
-感谢每一位贡献代码的朋友。
-
-如果对您有帮助，您可以点右上角 💘Star💘支持

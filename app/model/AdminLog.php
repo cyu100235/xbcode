@@ -2,7 +2,7 @@
 
 namespace app\model;
 
-use app\common\Model;
+use xbcode\Model;
 
 class AdminLog extends Model
 {

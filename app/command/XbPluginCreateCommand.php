@@ -1,5 +1,4 @@
 <?php
-
 namespace app\command;
 
 use Exception;
@@ -23,21 +22,21 @@ class XbPluginCreateCommand extends Command
      * @var array
      */
     protected static $dirRemarks = [
-        'app'            => '应用目录',
-        'app/controller' => '控制器目录',
-        'app/event'      => '事件目录',
-        'app/model'      => '模型目录',
-        'app/view'       => '视图目录',
-        'app/view/index' => '首页视图目录',
-        'config'         => '配置目录',
-        'data'           => '数据目录',
-        'data/config'    => '数据模板目录',
-        'data/sql'       => 'SQL目录',
-        'public'         => '公共目录',
-        'public/vue'     => 'vue视图目录',
-        'service'        => '接口服务目录',
-        'setting'        => '设置目录',
-        'docs'           => '文档目录',
+        'api'               => "接口目录\n主要与其他插件对接，非网络请求接口",
+        'app'               => '应用目录',
+        'app/controller'    => '控制器目录',
+        'app/event'         => '事件目录',
+        'app/model'         => '模型目录',
+        'app/view'          => '视图目录',
+        'app/view/index'    => '首页视图目录',
+        'config'            => '配置目录',
+        'data'              => '数据目录',
+        'data/config'       => '数据模板目录',
+        'data/sql'          => 'SQL目录',
+        'public'            => '公共目录',
+        'view'              => 'view视图目录',
+        'setting'           => '设置目录',
+        'docs'              => '文档目录',
     ];
 
     /**
@@ -45,8 +44,7 @@ class XbPluginCreateCommand extends Command
      * @var array
      */
     protected static $files = [
-        'Install.php',
-        'info.json',
+        'api/Install.php',
         'app/functions.php',
         'app/controller/IndexController.php',
         'app/view/index/index.html',
@@ -60,11 +58,9 @@ class XbPluginCreateCommand extends Command
         'config/process.php',
         'config/redis.php',
         'config/route.php',
-        'config/settings.php',
         'config/slot.php',
         'config/static.php',
         'config/thinkorm.php',
-        'config/tpldata.php',
         'config/translation.php',
         'config/view.php',
         'data/sql/install.sql',
@@ -73,12 +69,7 @@ class XbPluginCreateCommand extends Command
         'data/config/menus.php',
         'data/config/dict.php',
         'setting/basis.php',
-        'setting/select.php',
-        'setting/tabs.php',
-        'docs/events.md',
-        'docs/apis.md',
-        'docs/test.md',
-        'public/vue/welcome.vue',
+        'view/workbench.vue',
     ];
 
     /**
@@ -102,7 +93,7 @@ class XbPluginCreateCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $name = $input->getArgument('name');
+        $name = (string)$input->getArgument('name');
         $output->writeln("Create Xb Plugin $name");
 
         if (strpos($name, '/') !== false) {
@@ -118,15 +109,15 @@ class XbPluginCreateCommand extends Command
         $this->createAll($name);
         return self::SUCCESS;
     }
-
+    
     /**
      * 创建所有文件
-     * @param mixed $name
+     * @param string $name
      * @return void
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    protected function createAll($name)
+    protected function createAll(string $name)
     {
         try {
             $base_path = base_path();
@@ -175,15 +166,14 @@ class XbPluginCreateCommand extends Command
      */
     protected function createFile(string $path, string $name)
     {
+        // 站点根路径
         $basePath = base_path();
-        $dirPath  = dirname($path);
-        $fileName = basename($path);
-        // 文件名后缀
+        // 文件后缀
         $suffix = ['.php', '.html', '.md', '.sql', '.json','.vue'];
         // 去除后缀
-        $fileName = str_replace($suffix, '', $fileName);
+        $fileName = str_replace($suffix, '', $path);
         // 模板路径
-        $tplPath = "/app/common/data/plugin/{$dirPath}/{$fileName}.tpl";
+        $tplPath = "/extend/xbcode/data/plugin/{$fileName}.tpl";
         // 完整模板路径
         $tplFullPath = "{$basePath}{$tplPath}";
         if (!file_exists($tplFullPath)) {

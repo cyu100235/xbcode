@@ -1,0 +1,93 @@
+<?php
+
+namespace xbcode\providers;
+
+use xbcode\providers\upload\Driver;
+use xbcode\providers\upload\UploadTrait;
+use app\model\Upload;
+use Exception;
+
+/**
+ * 附件服务类
+ * @copyright 贵州小白基地网络科技有限公司
+ * @author 楚羽幽 cy958416459@qq.com
+ */
+class UploadProvider
+{
+    // 上传辅助类
+    use UploadTrait;
+
+    /**
+     * 上传文件
+     * @param string $name 文件表单名称
+     * @param int $cid 分类ID
+     * @param int $uid 用户ID
+     * @param string $adapter 上传适配器
+     * @return Upload
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public static function upload(string $name = 'file',int $cid = 0, int $uid = 0, string $adapter = '')
+    {
+        try {
+            // 1.获取上传适配器
+            if (empty($adapter)) {
+                $adapter = ConfigProvider::get('upload', 'active', 'local');
+            }
+            // 2.获取上传配置
+            $config = [
+                'default' => $adapter,
+                'engine' => ConfigProvider::get('upload', '', '', ['json' => true]),
+            ];
+            // 3.获取上传文件信息
+            $driver = new Driver($config);
+            $driver->setUploadFile($name);
+            $fileName = $driver->getFileName();
+            $fileInfo = $driver->getFileInfo();
+            $ext      = $fileInfo['ext'] ?? '';
+            $md5 = md5_file($fileInfo['realPath']);
+            // 4.检测文件是否已存在
+            $where = [
+                'md5' => $md5,
+                'cid' => $cid,
+                'uid' => $uid,
+                'adapter' => $config['default'],
+            ];
+            $file = Upload::where($where)->find();
+            if ($file) {
+                $file->update_at = date('Y-m-d H:i:s');
+                $file->save();
+                return $file;
+            }
+            // 5.上传文件
+            $saveDir = self::getUploadPath($ext);
+            $saveDir = "{$saveDir}/{$fileName}";
+            if (!$driver->upload($saveDir)) {
+                throw new Exception($driver->getError());
+            }
+            // 6.处理文件信息
+            if (strlen($fileInfo['name']) > 128) {
+                $temp             = substr($fileInfo['name'], 0, 123);
+                $nameEnd          = substr($fileInfo['name'], strlen($fileInfo['name']) - 5, strlen($fileInfo['name']));
+                $fileInfo['name'] = $temp . $nameEnd;
+            }
+            // 7.保存文件信息
+            $file = Upload::create([
+                'cid' => $cid,
+                'uid' => $uid,
+                'title' => $fileInfo['name'],
+                'name' => $fileInfo['name'],
+                'md5' => $md5,
+                'size' => $fileInfo['size'],
+                'format' => $ext,
+                'adapter' => $config['default'],
+                'uri' => $saveDir,
+                'url' => FileProvider::url($saveDir),
+            ]);
+            // 8.返回文件信息
+            return $file;
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+}

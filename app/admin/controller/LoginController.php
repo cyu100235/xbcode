@@ -1,38 +1,29 @@
 <?php
 namespace app\admin\controller;
 
-use app\admin\validate\LoginValidate;
-use app\model\Admin;
-use app\common\utils\AuthUtil;
-use app\common\utils\PasswordUtil;
-use hg\apidoc\annotation as Apidoc;
-use app\common\XbController;
+use app\model\AdminRule;
+use app\model\WebAdmin;
+use app\validate\WebAdminValidate;
+use Tinywan\Jwt\JwtToken;
+use xbcode\providers\MenuProvider;
+use xbcode\utils\PasswdUtil;
+use xbcode\providers\AppProvider;
+use xbcode\utils\TokenUtil;
+use xbcode\XbController;
 use support\Request;
 use Exception;
-use Tinywan\Jwt\JwtToken;
 
 /**
- * 管理员登录
+ * 登录控制器
  * @copyright 贵州小白基地网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
 class LoginController extends XbController
 {
     /**
-     * 无需登录方法
-     * @var array
-     */
-    protected $noLogin = [
-        'login'
-    ];
-
-    /**
      * 用户登录
-     * @Apidoc\Method("POST")
-     * @Apidoc\Param("username", type="string", require=true, desc="登录账户")
-     * @code \hg\apidoc\annotation\Param("password", type="string", require=true, desc="登录密码")
      * @param \support\Request $request
-     * @return mixed
+     * @return \support\Response
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
@@ -42,57 +33,72 @@ class LoginController extends XbController
         $post = $request->post();
 
         // 数据验证
-        xbValidate(LoginValidate::class, $post);
+        xbValidate(WebAdminValidate::class, $post, 'login');
+
+        // 是否开启验证码
+        $isVcode = AppProvider::get()['public_api']['captcha'] ?? '';
+        if ($isVcode) {
+            // 验证码效验
+            $captcha = $post['vcode'] ?? '';
+            if (empty($captcha)) {
+                return $this->fail('请填写验证码');
+            }
+            $captcha = strtolower($captcha);
+            $session = $request->session()->get('captcha');
+            if ($captcha !== $session) {
+                return $this->fail('验证码错误');
+            }
+        }
 
         // 查询数据
-        $model = Admin::with(['role'])->where('username', $post['username'])->find();
+        $model = WebAdmin::where('username', $post['username'])->find();
         if (!$model) {
-            throw new Exception('登录账号错误');
+            return $this->fail('登录账号错误');
         }
         // 验证登录密码
-        if (!PasswordUtil::passwordVerify((string) $post['password'], (string) $model['password'])) {
-            throw new Exception('登录密码错误');
+        $password = PasswdUtil::create($post['password']);
+        $originPwd = (string) $model['password'];
+        if ($password !== $originPwd) {
+            return $this->fail('登录密码错误');
         }
         if ($model['state'] == '10') {
-            throw new Exception('该用户已被冻结');
+            return $this->fail('该用户已被冻结');
         }
         // 更新登录信息
-        $ip                = $request->getRealIp();
+        $ip                = $request->getLocalIp();
         $model->login_ip   = $ip;
         $model->login_time = date('Y-m-d H:i:s');
         $model->save();
         // 生成令牌
         $data        = [
-            'id' => $model['id'],
-            'state' => $model['state'],
+            'id'       => $model['id'],
+            'username' => $model['username'],
+            'state'    => $model['state'],
         ];
-        $data        = AuthUtil::generateToken($data);
+        $data        = TokenUtil::create($data);
         // 返回数据
         return $this->successFul('登录成功', $data);
     }
-
+    
     /**
      * 获取用户信息
-     * @Apidoc\Method ("GET")
-     * @param \support\Request $request
-     * @return mixed
+     * @return \support\Response
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public function user(Request $request)
+    public function user()
     {
         try {
             $userId = (int) JwtToken::getCurrentId();
             if (empty($userId)) {
                 throw new Exception('参数错误，请重新登录');
             }
-            $user = Admin::with(['role'])->where('id', $userId)->find();
+            $user = WebAdmin::where('id', $userId)->find();
             if (empty($user)) {
-                throw new Exception('用户信息错误，请重新登录');
+                throw new Exception('用户错误，请重新登录');
             }
             // 前端数据
             $data          = $user->toArray();
-            $data['menus'] = AuthUtil::getAuthRule($userId);
             return $this->successRes($data);
         } catch (\Throwable $e) {
             return $this->failFul($e->getMessage(), 12000);
@@ -100,15 +106,18 @@ class LoginController extends XbController
     }
 
     /**
-     * 退出登录
-     * @Apidoc\Method ("GET")
-     * @param \support\Request $request
-     * @return mixed
+     * 获取用户菜单
+     * @return \support\Response
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public function exit(Request $request)
+    public function menus()
     {
-        return $this->successFul('登录成功', []);
+        $where = [
+            ['plugin', '<>', ''],
+        ];
+        $data = AdminRule::where($where)->order('sort asc')->select()->toArray();
+        $data = MenuProvider::parseMenu($data, true);
+        return $this->successRes($data);
     }
 }

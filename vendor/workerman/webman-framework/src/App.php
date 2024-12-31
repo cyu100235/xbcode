@@ -18,6 +18,9 @@ namespace Webman;
 use Closure;
 use Exception;
 use FastRoute\Dispatcher;
+use Illuminate\Database\Eloquent\Model;
+use support\exception\PageNotFoundException;
+use think\Model as ThinkModel;
 use InvalidArgumentException;
 use Monolog\Logger;
 use Psr\Container\ContainerExceptionInterface;
@@ -28,6 +31,10 @@ use ReflectionException;
 use ReflectionFunction;
 use ReflectionFunctionAbstract;
 use ReflectionMethod;
+use support\exception\BusinessException;
+use support\exception\MissingInputException;
+use support\exception\RecordNotFoundException;
+use support\exception\InputTypeException;
 use Throwable;
 use Webman\Exception\ExceptionHandler;
 use Webman\Exception\ExceptionHandlerInterface;
@@ -40,7 +47,6 @@ use Workerman\Worker;
 use function array_merge;
 use function array_pop;
 use function array_reduce;
-use function array_reverse;
 use function array_splice;
 use function array_values;
 use function class_exists;
@@ -49,19 +55,17 @@ use function count;
 use function current;
 use function end;
 use function explode;
-use function file_get_contents;
 use function get_class_methods;
 use function gettype;
 use function implode;
-use function in_array;
 use function is_a;
 use function is_array;
 use function is_dir;
 use function is_file;
+use function is_numeric;
 use function is_string;
 use function key;
 use function method_exists;
-use function next;
 use function ob_get_clean;
 use function ob_start;
 use function pathinfo;
@@ -129,6 +133,7 @@ class App
      * @param TcpConnection|mixed $connection
      * @param Request|mixed $request
      * @return null
+     * @throws Throwable
      */
     public function onMessage($connection, $request)
     {
@@ -142,19 +147,22 @@ class App
                 return null;
             }
 
+            $status = 200;
             if (
                 static::unsafeUri($connection, $path, $request) ||
                 static::findFile($connection, $path, $key, $request) ||
-                static::findRoute($connection, $path, $key, $request)
+                static::findRoute($connection, $path, $key, $request, $status)
             ) {
                 return null;
             }
 
             $controllerAndAction = static::parseControllerAction($path);
             $plugin = $controllerAndAction['plugin'] ?? static::getPluginByPath($path);
-            if (!$controllerAndAction || Route::hasDisableDefaultRoute($plugin)) {
+            if (!$controllerAndAction || Route::isDefaultRouteDisabled($plugin, $controllerAndAction['app'] ?: '*') ||
+                Route::isDefaultRouteDisabled($controllerAndAction['controller']) ||
+                Route::isDefaultRouteDisabled([$controllerAndAction['controller'], $controllerAndAction['action']])) {
                 $request->plugin = $plugin;
-                $callback = static::getFallback($plugin);
+                $callback = static::getFallback($plugin, $status);
                 $request->app = $request->controller = $request->action = '';
                 static::send($connection, $callback($request), $request);
                 return null;
@@ -181,6 +189,7 @@ class App
     {
         static::$worker = $worker;
         Http::requestClass(static::$requestClass);
+        Context::init();
     }
 
     /**
@@ -208,13 +217,15 @@ class App
     {
         if (
             !$path ||
-            strpos($path, '..') !== false ||
+            $path[0] !== '/' ||
+            strpos($path, '/../') !== false ||
+            substr($path, -3) === '/..' ||
             strpos($path, "\\") !== false ||
             strpos($path, "\0") !== false
         ) {
-            $callback = static::getFallback();
+            $callback = static::getFallback('', 400);
             $request->plugin = $request->app = $request->controller = $request->action = '';
-            static::send($connection, $callback($request), $request);
+            static::send($connection, $callback($request, 400), $request);
             return true;
         }
         return false;
@@ -223,18 +234,17 @@ class App
     /**
      * GetFallback.
      * @param string $plugin
+     * @param int $status
      * @return Closure
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     * @throws ReflectionException
      */
-    protected static function getFallback(string $plugin = ''): Closure
+    protected static function getFallback(string $plugin = '', int $status = 404): Closure
     {
-        // when route, controller and action not found, try to use Route::fallback
-        return Route::getFallback($plugin) ?: function () {
-            try {
-                $notFoundContent = file_get_contents(static::$publicPath . '/404.html');
-            } catch (Throwable $e) {
-                $notFoundContent = '404 Not Found';
-            }
-            return new Response(404, [], $notFoundContent);
+        // When route, controller and action not found, try to use Route::fallback
+        return Route::getFallback($plugin, $status) ?: function () {
+            throw new PageNotFoundException();
         };
     }
 
@@ -250,11 +260,17 @@ class App
             $app = $request->app ?: '';
             $plugin = $request->plugin ?: '';
             $exceptionConfig = static::config($plugin, 'exception');
-            $defaultException = $exceptionConfig[''] ?? ExceptionHandler::class;
+            $appExceptionConfig = static::config("", 'exception');
+            if (!isset($exceptionConfig['']) && isset($appExceptionConfig['@'])) {
+                //如果插件没有配置自己的异常处理器并且配置了全局@异常处理器 则使用全局异常处理器
+                $defaultException = $appExceptionConfig['@'] ?? ExceptionHandler::class;
+            } else {
+                $defaultException = $exceptionConfig[''] ?? ExceptionHandler::class;
+            }
             $exceptionHandlerClass = $exceptionConfig[$app] ?? $defaultException;
 
             /** @var ExceptionHandlerInterface $exceptionHandler */
-            $exceptionHandler = static::container($plugin)->make($exceptionHandlerClass, [
+            $exceptionHandler = (static::container($plugin) ?? static::container(''))->make($exceptionHandlerClass, [
                 'logger' => static::$logger,
                 'debug' => static::config($plugin, 'app.debug')
             ]);
@@ -263,7 +279,7 @@ class App
             $response->exception($e);
             return $response;
         } catch (Throwable $e) {
-            $response = new Response(500, [], static::config($plugin ?? '', 'app.debug') ? (string)$e : $e->getMessage());
+            $response = new Response(500, [], static::config($plugin ?? '', 'app.debug', true) ? (string)$e : $e->getMessage());
             $response->exception($e);
             return $response;
         }
@@ -274,7 +290,7 @@ class App
      * @param string $plugin
      * @param string $app
      * @param $call
-     * @param array|null $args
+     * @param array $args
      * @param bool $withGlobalMiddleware
      * @param RouteObject|null $route
      * @return callable
@@ -282,9 +298,8 @@ class App
      * @throws NotFoundExceptionInterface
      * @throws ReflectionException
      */
-    protected static function getCallback(string $plugin, string $app, $call, array $args = null, bool $withGlobalMiddleware = true, RouteObject $route = null)
+    public static function getCallback(string $plugin, string $app, $call, array $args = [], bool $withGlobalMiddleware = true, ?RouteObject $route = null)
     {
-        $args = $args === null ? null : array_values($args);
         $middlewares = [];
         if ($route) {
             $routeMiddlewares = $route->getMiddleware();
@@ -292,14 +307,16 @@ class App
                 $middlewares[] = [$className, 'process'];
             }
         }
-        $middlewares = array_merge($middlewares, Middleware::getMiddleware($plugin, $app, $withGlobalMiddleware));
+        $isController = is_array($call) && is_string($call[0]);
+        $middlewares = array_merge($middlewares, Middleware::getMiddleware($plugin, $app, $isController ? $call[0] : '', $withGlobalMiddleware));
 
+        $container = static::container($plugin) ?? static::container('');
         foreach ($middlewares as $key => $item) {
             $middleware = $item[0];
             if (is_string($middleware)) {
-                $middleware = static::container($plugin)->get($middleware);
+                $middleware = $container->get($middleware);
             } elseif ($middleware instanceof Closure) {
-                $middleware = call_user_func($middleware, static::container($plugin));
+                $middleware = call_user_func($middleware, $container);
             }
             if (!$middleware instanceof MiddlewareInterface) {
                 throw new InvalidArgumentException('Not support middleware type');
@@ -308,30 +325,31 @@ class App
         }
 
         $needInject = static::isNeedInject($call, $args);
-        if (is_array($call) && is_string($call[0])) {
+        $anonymousArgs = array_values($args);
+        if ($isController) {
             $controllerReuse = static::config($plugin, 'app.controller_reuse', true);
             if (!$controllerReuse) {
                 if ($needInject) {
-                    $call = function ($request, ...$args) use ($call, $plugin) {
-                        $call[0] = static::container($plugin)->make($call[0]);
+                    $call = function ($request) use ($call, $plugin, $args, $container) {
+                        $call[0] = $container->make($call[0]);
                         $reflector = static::getReflector($call);
-                        $args = static::resolveMethodDependencies($plugin, $request, $args, $reflector);
+                        $args = array_values(static::resolveMethodDependencies($container, $request, array_merge($request->all(), $args), $reflector));
                         return $call(...$args);
                     };
                     $needInject = false;
                 } else {
-                    $call = function ($request, ...$args) use ($call, $plugin) {
-                        $call[0] = static::container($plugin)->make($call[0]);
-                        return $call($request, ...$args);
+                    $call = function ($request, ...$anonymousArgs) use ($call, $plugin, $container) {
+                        $call[0] = $container->make($call[0]);
+                        return $call($request, ...$anonymousArgs);
                     };
                 }
             } else {
-                $call[0] = static::container($plugin)->get($call[0]);
+                $call[0] = $container->get($call[0]);
             }
         }
 
         if ($needInject) {
-            $call = static::resolveInject($plugin, $call);
+            $call = static::resolveInject($plugin, $call, $args);
         }
 
         if ($middlewares) {
@@ -343,13 +361,9 @@ class App
                         return static::exceptionResponse($e, $request);
                     }
                 };
-            }, function ($request) use ($call, $args) {
+            }, function ($request) use ($call, $anonymousArgs) {
                 try {
-                    if ($args === null) {
-                        $response = $call($request);
-                    } else {
-                        $response = $call($request, ...$args);
-                    }
+                    $response = $call($request, ...$anonymousArgs);
                 } catch (Throwable $e) {
                     return static::exceptionResponse($e, $request);
                 }
@@ -362,11 +376,11 @@ class App
                 return $response;
             });
         } else {
-            if ($args === null) {
+            if (!$anonymousArgs) {
                 $callback = $call;
             } else {
-                $callback = function ($request) use ($call, $args) {
-                    return $call($request, ...$args);
+                $callback = function ($request) use ($call, $anonymousArgs) {
+                    return $call($request, ...$anonymousArgs);
                 };
             }
         }
@@ -377,14 +391,15 @@ class App
      * ResolveInject.
      * @param string $plugin
      * @param array|Closure $call
+     * @param $args
      * @return Closure
      * @see Dependency injection through reflection information
      */
-    protected static function resolveInject(string $plugin, $call): Closure
+    protected static function resolveInject(string $plugin, $call, $args): Closure
     {
-        return function (Request $request, ...$args) use ($plugin, $call) {
+        return function (Request $request) use ($plugin, $call, $args) {
             $reflector = static::getReflector($call);
-            $args = static::resolveMethodDependencies($plugin, $request, $args, $reflector);
+            $args = array_values(static::resolveMethodDependencies(static::container($plugin), $request, array_merge($request->all(), $args), $reflector));
             return $call(...$args);
         };
     }
@@ -392,16 +407,15 @@ class App
     /**
      * Check whether inject is required.
      * @param $call
-     * @param $args
+     * @param array $args
      * @return bool
      * @throws ReflectionException
      */
-    protected static function isNeedInject($call, $args): bool
+    protected static function isNeedInject($call, array &$args): bool
     {
         if (is_array($call) && !method_exists($call[0], $call[1])) {
             return false;
         }
-        $args = $args ?: [];
         $reflector = static::getReflector($call);
         $reflectionParameters = $reflector->getParameters();
         if (!$reflectionParameters) {
@@ -410,20 +424,57 @@ class App
         $firstParameter = current($reflectionParameters);
         unset($reflectionParameters[key($reflectionParameters)]);
         $adaptersList = ['int', 'string', 'bool', 'array', 'object', 'float', 'mixed', 'resource'];
+        $keys = [];
+        $needInject = false;
         foreach ($reflectionParameters as $parameter) {
-            if ($parameter->hasType() && !in_array($parameter->getType()->getName(), $adaptersList)) {
-                return true;
+            $parameterName = $parameter->name;
+            $keys[] = $parameterName;
+            if ($parameter->hasType()) {
+                $typeName = $parameter->getType()->getName();
+                if (!in_array($typeName, $adaptersList)) {
+                    $needInject = true;
+                    continue;
+                }
+                if (!array_key_exists($parameterName, $args)) {
+                    $needInject = true;
+                    continue;
+                }
+                switch ($typeName) {
+                    case 'int':
+                    case 'float':
+                        if (!is_numeric($args[$parameterName])) {
+                            return true;
+                        }
+                        $args[$parameterName] = $typeName === 'int' ? (int)$args[$parameterName]: (float)$args[$parameterName];
+                        break;
+                    case 'bool':
+                        $args[$parameterName] = (bool)$args[$parameterName];
+                        break;
+                    case 'array':
+                    case 'object':
+                        if (!is_array($args[$parameterName])) {
+                            return true;
+                        }
+                        $args[$parameterName] = $typeName === 'array' ? $args[$parameterName] : (object)$args[$parameterName];
+                        break;
+                    case 'string':
+                    case 'mixed':
+                    case 'resource':
+                        break;
+                }
             }
         }
-        if (!$firstParameter->hasType()) {
-            return count($args) > count($reflectionParameters);
+        if (array_keys($args) !== $keys) {
+            return true;
         }
-
-        if (!is_a(static::$requestClass, $firstParameter->getType()->getName())) {
+        if (!$firstParameter->hasType()) {
+            return $firstParameter->getName() !== 'request';
+        }
+        if (!is_a(static::$requestClass, $firstParameter->getType()->getName(), true)) {
             return true;
         }
 
-        return false;
+        return $needInject;
     }
 
     /**
@@ -442,56 +493,90 @@ class App
 
     /**
      * Return dependent parameters
-     * @param string $plugin
+     * @param ContainerInterface $container
      * @param Request $request
-     * @param array $args
+     * @param array $inputs
      * @param ReflectionFunctionAbstract $reflector
      * @return array
+     * @throws BusinessException
+     * @throws ReflectionException
      */
-    protected static function resolveMethodDependencies(string $plugin, Request $request, array $args, ReflectionFunctionAbstract $reflector): array
+    protected static function resolveMethodDependencies(ContainerInterface $container, Request $request, array $inputs, ReflectionFunctionAbstract $reflector): array
     {
-        // Specification parameter information
-        $args = array_values($args);
         $parameters = [];
-        // An array of reflection classes for loop parameters, with each $parameter representing a reflection object of parameters
         foreach ($reflector->getParameters() as $parameter) {
-            // Parameter quota consumption
-            if ($parameter->hasType()) {
-                $name = $parameter->getType()->getName();
-                switch ($name) {
-                    case 'int':
-                    case 'string':
-                    case 'bool':
-                    case 'array':
-                    case 'object':
-                    case 'float':
-                    case 'mixed':
-                    case 'resource':
-                        goto _else;
-                    default:
-                        if (is_a($request, $name)) {
-                            //Inject Request
-                            $parameters[] = $request;
-                        } else {
-                            $parameters[] = static::container($plugin)->make($name);
-                        }
-                        break;
-                }
-            } else {
-                _else:
-                // The variable parameter
-                if (null !== key($args)) {
-                    $parameters[] = current($args);
+            $parameterName = $parameter->name;
+            $type = $parameter->getType();
+            $typeName = $type ? $type->getName() : null;
+
+            if ($typeName && is_a($request, $typeName)) {
+                $parameters[$parameterName] = $request;
+                continue;
+            }
+
+            if (!array_key_exists($parameterName, $inputs)) {
+                if (!$parameter->isDefaultValueAvailable()) {
+                    if (!$typeName || !class_exists($typeName)) {
+                        throw (new MissingInputException())->setData([
+                            'parameter' => $parameterName,
+                        ]);
+                    }
                 } else {
-                    // Indicates whether the current parameter has a default value.  If yes, return true
-                    $parameters[] = $parameter->isDefaultValueAvailable() ? $parameter->getDefaultValue() : null;
+                    $parameters[$parameterName] = $parameter->getDefaultValue();
+                    continue;
                 }
-                // Quota of consumption variables
-                next($args);
+            }
+
+            switch ($typeName) {
+                case 'int':
+                case 'float':
+                    if (!is_numeric($inputs[$parameterName])) {
+                        throw (new InputTypeException())->setData([
+                            'parameter' => $parameterName,
+                            'exceptType' => $typeName,
+                            'actualType' => gettype($inputs[$parameterName]),
+                        ]);
+                    }
+                    $parameters[$parameterName] = $typeName === 'float' ? (float)$inputs[$parameterName] :  (int)$inputs[$parameterName];
+                    break;
+                case 'bool':
+                    $parameters[$parameterName] = (bool)$inputs[$parameterName];
+                    break;
+                case 'array':
+                case 'object':
+                    if (!is_array($inputs[$parameterName])) {
+                        throw (new InputTypeException())->setData([
+                            'parameter' => $parameterName,
+                            'exceptType' => $typeName,
+                            'actualType' => gettype($inputs[$parameterName]),
+                        ]);
+                    }
+                    $parameters[$parameterName] = $typeName === 'object' ? (object)$inputs[$parameterName] : $inputs[$parameterName];
+                    break;
+                case 'string':
+                case 'mixed':
+                case 'resource':
+                case null:
+                    $parameters[$parameterName] = $inputs[$parameterName];
+                    break;
+                default:
+                    $subInputs = isset($inputs[$parameterName]) && is_array($inputs[$parameterName]) ? $inputs[$parameterName] : [];
+                    if (is_a($typeName, Model::class, true) || is_a($typeName, ThinkModel::class, true)) {
+                        $parameters[$parameterName] = $container->make($typeName, [
+                            'attributes' => $subInputs,
+                            'data' => $subInputs
+                        ]);
+                        break;
+                    }
+                    if (is_array($subInputs) && $constructor = (new ReflectionClass($typeName))->getConstructor()) {
+                        $parameters[$parameterName] = $container->make($typeName, static::resolveMethodDependencies($container, $request, $subInputs, $constructor));
+                    } else {
+                        $parameters[$parameterName] = $container->make($typeName);
+                    }
+                    break;
             }
         }
 
-        // Returns the result of parameters replacement
         return $parameters;
     }
 
@@ -528,21 +613,23 @@ class App
      * @param TcpConnection $connection
      * @param string $path
      * @param string $key
-     * @param Request|mixed $request
+     * @param $request
+     * @param $status
      * @return bool
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
-     * @throws ReflectionException
+     * @throws ReflectionException|Throwable
      */
-    protected static function findRoute(TcpConnection $connection, string $path, string $key, $request): bool
+    protected static function findRoute(TcpConnection $connection, string $path, string $key, $request, &$status): bool
     {
         $routeInfo = Route::dispatch($request->method(), $path);
         if ($routeInfo[0] === Dispatcher::FOUND) {
+            $status = 200;
             $routeInfo[0] = 'route';
             $callback = $routeInfo[1]['callback'];
             $route = clone $routeInfo[1]['route'];
             $app = $controller = $action = '';
-            $args = !empty($routeInfo[2]) ? $routeInfo[2] : null;
+            $args = !empty($routeInfo[2]) ? $routeInfo[2] : [];
             if ($args) {
                 $route->setParams($args);
             }
@@ -560,6 +647,7 @@ class App
             static::send($connection, $callback($request), $request);
             return true;
         }
+        $status = $routeInfo[0] === Dispatcher::METHOD_NOT_ALLOWED ? 405 : 404;
         return false;
     }
 
@@ -568,7 +656,7 @@ class App
      * @param TcpConnection $connection
      * @param string $path
      * @param string $key
-     * @param Request|mixed $request
+     * @param $request
      * @return bool
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
@@ -620,7 +708,7 @@ class App
                 return $callback($request);
             }
             return (new Response())->file($file);
-        }, null, false), '', '', '', '', null]);
+        }, [], false), '', '', '', '', null]);
         [$callback, $request->plugin, $request->app, $request->controller, $request->action, $request->route] = static::$callbacks[$key];
         static::send($connection, $callback($request), $request);
         return true;
@@ -629,7 +717,7 @@ class App
     /**
      * Send.
      * @param TcpConnection|mixed $connection
-     * @param mixed $response
+     * @param mixed|Response $response
      * @param Request|mixed $request
      * @return void
      */
@@ -639,6 +727,7 @@ class App
         Context::destroy();
         if (($keepAlive === null && $request->protocolVersion() === '1.1')
             || $keepAlive === 'keep-alive' || $keepAlive === 'Keep-Alive'
+            || (is_a($response, Response::class) && $response->getHeader('Transfer-Encoding') === 'chunked')
         ) {
             $connection->send($response);
             return;
@@ -654,7 +743,7 @@ class App
      */
     protected static function parseControllerAction(string $path)
     {
-        $path = str_replace('-', '', $path);
+        $path = str_replace(['-', '//'], ['', '/'], $path);
         static $cache = [];
         if (isset($cache[$path])) {
             return $cache[$path];
@@ -706,7 +795,6 @@ class App
         foreach ($map as $item) {
             $map[] = $item . '\\index';
         }
-
         foreach ($map as $controllerClass) {
             // Remove xx\xx\controller
             if (substr($controllerClass, -11) === '\\controller') {
@@ -768,6 +856,7 @@ class App
             $found = false;
             foreach ($dirs as $name) {
                 $path = "$basePath/$name";
+
                 if (is_dir($path) && strtolower($name) === $pathSection) {
                     $basePath = $path;
                     $found = true;
@@ -847,7 +936,11 @@ class App
         if ($tmp[0] !== 'app') {
             return '';
         }
-        return $tmp[1] ?? '';
+        $plugin = $tmp[1] ?? '';
+        if ($plugin && !static::config('', "plugin.$plugin.app")) {
+            return '';
+        }
+        return $plugin;
     }
 
     /**
@@ -905,10 +998,10 @@ class App
      * Config.
      * @param string $plugin
      * @param string $key
-     * @param $default
-     * @return array|mixed|null
+     * @param mixed $default
+     * @return mixed
      */
-    protected static function config(string $plugin, string $key, $default = null)
+    protected static function config(string $plugin, string $key, mixed $default = null)
     {
         return Config::get($plugin ? "plugin.$plugin.$key" : $key, $default);
     }

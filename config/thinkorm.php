@@ -1,38 +1,36 @@
 <?php
-
+// 数据库配置
 return [
-    'default' => xbEnv('DATABASE.TYPE', 'mysql'),
+    'default' => 'mysql',
     'connections' => [
         'mysql' => [
             // 数据库类型
-            'type' => xbEnv('DATABASE.TYPE', 'mysql'),
+            'type' => 'mysql',
             // 服务器地址
-            'hostname' => xbEnv('DATABASE.HOSTNAME', '127.0.0.1'),
+            'hostname' => xbEnv('DB_HOST', '127.0.0.1'),
             // 数据库名
-            'database' => xbEnv('DATABASE.DATABASE', 'xbase'),
+            'database' => xbEnv('DB_NAME', ''),
             // 数据库用户名
-            'username' => xbEnv('DATABASE.USERNAME', 'root'),
+            'username' => xbEnv('DB_USER', ''),
             // 数据库密码
-            'password' => xbEnv('DATABASE.PASSWORD', ''),
+            'password' => xbEnv('DB_PASS', ''),
             // 数据库连接端口
-            'hostport' => xbEnv('DATABASE.HOSTPORT', '3306'),
+            'hostport' => xbEnv('DB_PORT', '3306'),
             // 数据库连接参数
             'params' => [
                 // 连接超时3秒
                 \PDO::ATTR_TIMEOUT => 3,
             ],
             // 数据库编码默认采用utf8
-            'charset' => xbEnv('DATABASE.CHARSET', 'utf8mb4'),
+            'charset' => xbEnv('DB_CHARSET', 'utf8mb4'),
             // 数据库表前缀
-            'prefix' => xbEnv('DATABASE.PREFIX', 'xb_'),
+            'prefix' => xbEnv('DB_PREFIX', 'xb_'),
             // 断线重连
             'break_reconnect' => true,
-            // 关闭SQL监听日志
-            'trigger_sql' => xbEnv('APP_DEBUG', true),
             // 自定义基础查询类
-            'query' => \app\common\base\BaseQuery::class,
+            'query' => \xbcode\model\BaseQuery::class,
             // 自定义分页类
-            'bootstrap' => ''
+            'bootstrap' =>  '',
         ],
     ],
 ];

@@ -1,8 +1,11 @@
+/backup/*
+/runtime
 /.idea
 /.vscode
+php-cli.ini
 *.log
 .env
-.env2
 /tests/tmp
 /tests/.phpunit.result.cache
-php-cli.ini
+/public/.well-known
+/public/uploads/*

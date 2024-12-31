@@ -17,6 +17,7 @@
  */
 return [
     'enable' => true,
-    'middleware' => [
+    'middleware' => [     // Static file Middleware
+        //app\middleware\StaticFile::class,
     ],
 ];

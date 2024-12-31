@@ -1,5 +1,5 @@
 <?php
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace hg\apidoc\parses;
 
@@ -19,7 +19,7 @@ class ParseAnnotation
     public function __construct($config)
     {
         $this->parser = new AnnotationReader();
-        if (!empty($config['ignored_annitation'])) {
+        if (!empty($config['ignored_annitation'])){
             foreach ($config['ignored_annitation'] as $item) {
                 AnnotationReader::addGlobalIgnoredName($item);
             }
@@ -31,7 +31,7 @@ class ParseAnnotation
      * @param $isAll bool 是否获取全部，true则将带@开头的注释也包含
      * @return array|false
      */
-    public static function parseTextAnnotation($refMethod, $isAll = false): array
+    public static function parseTextAnnotation($refMethod,$isAll=false): array
     {
         $annotation = $refMethod->getDocComment();
         if (empty($annotation)) {
@@ -39,13 +39,13 @@ class ParseAnnotation
         }
         if (preg_match('#^/\*\*(.*)\*/#s', $annotation, $comment) === false)
             return [];
-        $comment = trim($comment[1]);
+        $comment = trim($comment [1]);
         if (preg_match_all('#^\s*\*(.*)#m', $comment, $lines) === false)
             return [];
         $data = [];
         foreach ($lines[1] as $line) {
             $line = trim($line);
-            if (!empty($line) && ($isAll === true || ($isAll === false && strpos($line, '@') !== 0))) {
+            if (!empty ($line) && ($isAll===true || ($isAll===false && strpos($line, '@') !== 0))) {
                 $data[] = $line;
             }
         }
@@ -57,8 +57,7 @@ class ParseAnnotation
      * @param $path
      * @return string
      */
-    protected function getClassName($path)
-    {
+    protected function getClassName($path){
         $NameArr = explode("\\", $path);
         $name    = lcfirst($NameArr[count($NameArr) - 1]);
         return $name;
@@ -69,45 +68,48 @@ class ParseAnnotation
      * @param $attrList
      * @return array
      */
-    protected function getParameters($attrList)
-    {
+    protected function getParameters($attrList){
         $attrs = [];
         foreach ($attrList as $item) {
             $value = "";
             if ($item instanceof ReflectionAttribute) {
-                $name   = $this->getClassName($item->getName());
+                $attributeName = $item->getName();
+                if (strpos($attributeName, 'apidoc') === false){
+                    continue;
+                }
+                $name    = $this->getClassName($attributeName);
                 $params = $item->getArguments();
-                if (!empty($params)) {
-                    if (is_array($params) && !empty($params[0]) && is_string($params[0]) && count($params) === 1) {
+                if (!empty($params)){
+                    if (is_array($params) && !empty($params[0]) && is_string($params[0]) && count($params)===1){
                         $value = $params[0];
-                    } else {
-                        if (!empty($params[0])) {
+                    }else{
+                        if (isset($params[0])){
                             $paramObj = [];
-                            foreach ($params as $k => $value) {
-                                $key            = $k === 0 ? 'name' : $k;
-                                $paramObj[$key] = $value;
+                            foreach ($params as $k=>$value) {
+                                $key = $k===0?'name':$k;
+                                $paramObj[$key]=$value;
                             }
-                        } else {
+                        }else{
                             $paramObj = $params;
                         }
                         $value = $paramObj;
                     }
                 }
-            } else {
-                $name     = $this->getClassName(get_class($item));
+            }else{
+                $name    = $this->getClassName(get_class($item));
                 $valueObj = Helper::objectToArray($item);
-                if (array_key_exists('name', $valueObj) && count($valueObj) === 1) {
-                    $value = $valueObj['name'] === null ? true : $valueObj['name'];
-                } else {
+                if (array_key_exists('name',$valueObj) && count($valueObj)===1){
+                    $value = $valueObj['name']===null?true: $valueObj['name'];
+                }else{
                     $value = $valueObj;
                 }
             }
-            if (!empty($attrs[$name]) && is_array($attrs[$name]) && Helper::arrayKeyFirst($attrs[$name]) === 0) {
-                $attrs[$name][] = $value;
-            } else if (!empty($attrs[$name])) {
-                $attrs[$name] = [$attrs[$name], $value];
-            } else {
-                $attrs[$name] = $value;
+            if (!empty($attrs[$name]) && is_array($attrs[$name]) && Helper::arrayKeyFirst($attrs[$name])===0){
+                $attrs[$name][]=$value;
+            }else if(!empty($attrs[$name])){
+                $attrs[$name] = [$attrs[$name],$value];
+            }else{
+                $attrs[$name]=$value;
             }
         }
         return $attrs;
@@ -118,15 +120,14 @@ class ParseAnnotation
      * @param ReflectionMethod $refMethod
      * @return array
      */
-    public function getClassAnnotation($refClass)
-    {
-        if (method_exists($refClass, 'getAttributes')) {
+    public function getClassAnnotation($refClass){
+        if (method_exists($refClass,'getAttributes')){
             $attributes = $refClass->getAttributes();
-        } else {
+        }else{
             $attributes = [];
         }
         $readerAttributes = $this->parser->getClassAnnotations($refClass);
-        return $this->getParameters(array_merge($attributes, $readerAttributes));
+        return $this->getParameters(array_merge($attributes,$readerAttributes));
     }
 
     /**
@@ -134,15 +135,14 @@ class ParseAnnotation
      * @param ReflectionMethod $refMethod
      * @return array
      */
-    public function getMethodAnnotation(ReflectionMethod $refMethod)
-    {
-        if (method_exists($refMethod, 'getAttributes')) {
+    public function getMethodAnnotation(ReflectionMethod $refMethod){
+        if (method_exists($refMethod,'getAttributes')){
             $attributes = $refMethod->getAttributes();
-        } else {
+        }else{
             $attributes = [];
         }
         $readerAttributes = $this->parser->getMethodAnnotations($refMethod);
-        return $this->getParameters(array_merge($attributes, $readerAttributes));
+        return $this->getParameters(array_merge($attributes,$readerAttributes));
     }
 
     /**
@@ -150,15 +150,14 @@ class ParseAnnotation
      * @param $property
      * @return array
      */
-    public function getPropertyAnnotation($property)
-    {
-        if (method_exists($property, 'getAttributes')) {
+    public function getPropertyAnnotation($property){
+        if (method_exists($property,'getAttributes')){
             $attributes = $property->getAttributes();
-        } else {
+        }else{
             $attributes = [];
         }
         $readerAttributes = $this->parser->getPropertyAnnotations($property);
-        return $this->getParameters(array_merge($attributes, $readerAttributes));
+        return $this->getParameters(array_merge($attributes,$readerAttributes));
     }
 
     /**
@@ -166,28 +165,27 @@ class ParseAnnotation
      * @param $propertyTextAnnotations
      * @return array
      */
-    protected static function parsesPropertyTextAnnotation($propertyTextAnnotations)
-    {
+    protected static function parsesPropertyTextAnnotation($propertyTextAnnotations){
         $varLine = "";
         foreach ($propertyTextAnnotations as $item) {
-            if (strpos($item, '@var') !== false) {
+            if (strpos($item, '@var') !== false){
                 $varLine = $item;
                 break;
             }
         }
         $type = "";
         $desc = "";
-        if ($varLine) {
+        if ($varLine){
             $varLineArr = preg_split('/\\s+/', $varLine);
-            $type       = !empty($varLineArr[1]) ? $varLineArr[1] : "";
-            $desc       = !empty($varLineArr[2]) ? $varLineArr[2] : "";
+            $type = !empty($varLineArr[1])?$varLineArr[1]:"";
+            $desc = !empty($varLineArr[2])?$varLineArr[2]:"";
         }
-        if (empty($desc) && strpos($propertyTextAnnotations[0], '@var') === false) {
+        if (empty($desc) && strpos($propertyTextAnnotations[0], '@var') === false){
             $desc = $propertyTextAnnotations[0];
         }
         return [
-            'type' => $type,
-            'desc' => $desc,
+            'type'=>$type,
+            'desc'=>$desc,
         ];
     }
 
@@ -196,26 +194,25 @@ class ParseAnnotation
      * @param $classReflect
      * @return array
      */
-    public function getClassPropertiesy($classReflect)
-    {
+    public function getClassPropertiesy($classReflect){
         $publicProperties = $classReflect->getProperties(\ReflectionProperty::IS_PUBLIC);
-        $arr              = [];
+        $arr=[];
         foreach ($publicProperties as $property) {
-            $propertyAnnotations = $this->getPropertyAnnotation($property);
-            $item                = [];
-            if (!empty($propertyAnnotations['property'])) {
-                // 有apidoc注解
-                $arr[] = $propertyAnnotations['property'];
-                continue;
-            }
-            $propertyTextAnnotations = self::parseTextAnnotation($property, true);
-            if (empty($propertyTextAnnotations)) {
-                // 无注释
-                continue;
-            }
-            $textAnnotationsParams         = static::parsesPropertyTextAnnotation($propertyTextAnnotations);
-            $textAnnotationsParams['name'] = $property->getName();
-            $arr[]                         = $textAnnotationsParams;
+              $propertyAnnotations = $this->getPropertyAnnotation($property);
+              $item = [];
+              if (!empty($propertyAnnotations['property'])){
+                  // 有apidoc注解
+                  $arr[] = $propertyAnnotations['property'];
+                  continue;
+              }
+              $propertyTextAnnotations = self::parseTextAnnotation($property,true);
+              if (empty($propertyTextAnnotations)){
+                  // 无注释
+                  continue;
+              }
+              $textAnnotationsParams=static::parsesPropertyTextAnnotation($propertyTextAnnotations);
+              $textAnnotationsParams['name'] =$property->getName();
+              $arr[]=$textAnnotationsParams;
         }
         return $arr;
     }

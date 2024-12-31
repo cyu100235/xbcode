@@ -16,6 +16,9 @@ class ThinkOrm implements Bootstrap
     public static function start($worker)
     {
         $config = config('thinkorm');
+        if (!$config) {
+            return;
+        }
         // 配置
         Db::setConfig($config);
         // 维持mysql心跳
@@ -40,7 +43,7 @@ class ThinkOrm implements Bootstrap
                 }
                 foreach ($instances as $connection) {
                     /* @var \think\db\connector\Mysql $connection */
-                    if (in_array($connection->getConfig('type'), ['mysql', 'oracle', 'sqlsrv'])) {
+                    if (in_array($connection->getConfig('type'), ['mysql', 'oracle', 'sqlsrv']) && method_exists($connection, 'getPdo') && $connection->getPdo()) {
                         try {
                             $connection->query('select 1');
                         } catch (Throwable $e) {}

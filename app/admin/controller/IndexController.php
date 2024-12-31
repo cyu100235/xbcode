@@ -1,28 +1,19 @@
 <?php
-
 namespace app\admin\controller;
 
-use app\common\providers\ConfigProvider;
-use app\common\providers\AppProvider;
-use app\common\providers\RouteProvider;
-use app\common\providers\SlotProvider;
-use app\common\utils\FrameUtil;
-use app\common\XbController;
 use support\Request;
+use xbcode\providers\AppProvider;
+use xbcode\XbController;
 
+/**
+ * 首页控制器
+ * @copyright 贵州小白基地网络科技有限公司
+ * @author 楚羽幽 cy958416459@qq.com
+ */
 class IndexController extends XbController
 {
     /**
-     * 无需登录方法
-     * @var array
-     */
-    protected $noLogin = [
-        'index',
-        'site'
-    ];
-
-    /**
-     * 渲染后台视图
+     * 首页视图
      * @param \support\Request $request
      * @return \support\Response
      * @copyright 贵州小白基地网络科技有限公司
@@ -30,110 +21,35 @@ class IndexController extends XbController
      */
     public function index(Request $request)
     {
-        if ($request->get('t')) {
-            return $this->welcome();
-        }
         $path = $request->path();
         if (!str_ends_with($path, '/')) {
             return redirect("{$path}/");
         }
-        // 下载后台视图
-        if (!RouteProvider::downloadView('admin-view')) {
-            return $this->fail('下载后台视图失败');
-        }
-        // 渲染视图
-        return $this->adminView();
-    }
-    
-    /**
-     * 欢迎页面
-     * @return mixed
-     * @copyright 贵州小白基地网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
-     */
-    private function welcome()
-    {
-        return SlotProvider::trigger('admin.index');
+        return $this->view('public/backend/index', 'html');
     }
 
     /**
-     * 应用入口
-     * @param \support\Request $request
-     * @return mixed
-     * @copyright 贵州小白基地网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
-     */
-    public function site(Request $request)
-    {
-        // 获取配置
-        $config = ConfigProvider::get('system', '', []);
-        // 返回数据
-        $data = [
-            'web_name' => $config['web_name'] ?? 'XBase',
-            'web_title' => '后台登录',
-            'web_logo' => $config['web_logo'] ?? '',
-            'public_api_login' => xbUrl('Login/login'),
-            'public_api_user' => xbUrl('Login/user'),
-            'public_api_user_edit_path' => xbUrl('Admin/info'),
-            'public_api_user_edit' => xbUrl('user/info'),
-        ];
-        $data = AppProvider::resutl($data);
-        return $this->successRes($data);
-    }
-
-    /**
-     * 清除缓存
-     * @param \support\Request $request
-     * @return mixed
-     * @copyright 贵州小白基地网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
-     */
-    public function clear(Request $request)
-    {
-        return $this->successRes('清除缓存成功');
-    }
-
-    /**
-     * 重启系统
+     * 站点信息
      * @param \support\Request $request
      * @return \support\Response
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public function restart(Request $request)
+    public function site(Request $request)
     {
-        $state = $request->post('state', '');
-        if (empty($state)) {
-            return $this->fail('参数错误');
-        }
-        if ($state === 'checked') {
-            return $this->success('检测成功');
-        }
-        FrameUtil::reload();
-        return $this->success('重启系统成功');
+        $data = AppProvider::get();
+        return $this->successRes($data);
     }
 
     /**
-     * 锁定屏幕
+     * 工作台视图
      * @param \support\Request $request
-     * @return mixed
+     * @return \support\Response
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public function lock(Request $request)
+    public function workbench(Request $request)
     {
-        return $this->successRes('锁定屏幕');
-    }
-
-    /**
-     * 解锁屏幕
-     * @param \support\Request $request
-     * @return mixed
-     * @copyright 贵州小白基地网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
-     */
-    public function unlock(Request $request)
-    {
-        return $this->successRes('解锁屏幕');
+        return $this->view('view/admin/workbench');
     }
 }

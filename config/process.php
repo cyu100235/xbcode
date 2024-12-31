@@ -1,29 +1,37 @@
 <?php
-/**
- * This file is part of webman.
- *
- * Licensed under The MIT License
- * For full copyright and license information, please see the MIT-LICENSE.txt
- * Redistributions of files must retain the above copyright notice.
- *
- * @author    walkor<walkor@workerman.net>
- * @copyright walkor<walkor@workerman.net>
- * @link      http://www.workerman.net/
- * @license   http://www.opensource.org/licenses/mit-license.php MIT License
- */
+use support\Log;
+use support\Request;
+use app\process\Http;
 
 global $argv;
 
 return [
+    'xbcode' => [
+        'handler' => Http::class,
+        'listen' => 'http://0.0.0.0:'.xbEnv('APP_PORT', 39800),
+        'count' => cpu_count() * xbEnv('APP_CPU_LIMIT', 1),
+        'user' => '',
+        'group' => '',
+        'reusePort' => false,
+        'eventLoop' => '',
+        'context' => [],
+        'constructor' => [
+            'requestClass' => Request::class,
+            'logger' => Log::channel('default'),
+            'appPath' => app_path(),
+            'publicPath' => public_path()
+        ]
+    ],
     // File update detection and automatic reload
     'monitor' => [
-        'handler' => process\Monitor::class,
+        'handler' => app\process\Monitor::class,
         'reloadable' => false,
         'constructor' => [
             // Monitor these directories
             'monitorDir' => array_merge([
                 app_path(),
                 config_path(),
+                base_path() . '/extend',
                 base_path() . '/process',
                 base_path() . '/support',
                 base_path() . '/resource',
@@ -38,5 +46,8 @@ return [
                 'enable_memory_monitor' => DIRECTORY_SEPARATOR === '/',
             ]
         ]
-    ]
+    ],
+    'task'  => [
+        'handler'  => \app\process\Task::class
+    ],
 ];
