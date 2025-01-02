@@ -4,11 +4,11 @@ namespace app\backend\controller;
 use support\Request;
 use app\model\WebRole;
 use app\model\WebAdmin;
-use app\validate\WebAdminValidate;
+use xbcode\XbController;
 use xbcode\builder\FormBuilder;
 use xbcode\builder\ListBuilder;
+use app\validate\WebAdminValidate;
 use xbcode\builder\table\attrs\RowEditTrait;
-use xbcode\XbController;
 
 /**
  * 站点管理员
@@ -84,6 +84,10 @@ class WebAdminController extends XbController
             'api' => xbUrl('WebAdmin/del'),
             'path' => xbUrl('WebAdmin/del'),
             'method' => 'DELETE',
+            'params' => [
+                'field' => 'is_system',
+                'value' => '10'
+            ],
         ], [
             'type' => 'error',
             'title' => '温馨提示',
