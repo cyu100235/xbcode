@@ -9,7 +9,7 @@ CREATE TABLE `xb_dict_data`  (
   `sort` int(11) NULL DEFAULT 0 COMMENT '数据排序',
   `state` enum('10','20') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '20' COMMENT '数据状态',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 104 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '字典数据' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '字典数据' ROW_FORMAT = DYNAMIC;
 INSERT INTO `xb_dict_data` VALUES (25, '2024-12-02 04:52:16', '2024-12-02 04:52:54', 24, '阿里云', 'aliyun', 0, '20');
 INSERT INTO `xb_dict_data` VALUES (26, '2024-12-02 04:52:43', '2024-12-02 04:54:36', 24, '腾讯云', 'qcloud', 0, '20');
 INSERT INTO `xb_dict_data` VALUES (27, '2024-12-02 06:13:00', '2024-12-02 06:13:00', 9, '已禁用', '10', 0, '20');
@@ -17,11 +17,11 @@ INSERT INTO `xb_dict_data` VALUES (28, '2024-12-02 06:13:19', '2024-12-02 06:13:
 INSERT INTO `xb_dict_data` VALUES (29, '2024-12-02 06:14:11', '2024-12-02 06:14:11', 16, '目录', '10', 0, '20');
 INSERT INTO `xb_dict_data` VALUES (30, '2024-12-02 06:14:19', '2024-12-02 06:14:19', 16, '菜单', '20', 0, '20');
 INSERT INTO `xb_dict_data` VALUES (31, '2024-12-02 06:14:26', '2024-12-02 06:14:26', 16, '按钮', '30', 0, '20');
-INSERT INTO `xb_dict_data` VALUES (32, '2024-12-02 06:18:46', '2024-12-02 06:18:46', 3, '不使用组件', 'none/index', 0, '20');
-INSERT INTO `xb_dict_data` VALUES (33, '2024-12-02 06:19:00', '2024-12-02 06:24:17', 3, '表单组件', 'form/index', 0, '20');
-INSERT INTO `xb_dict_data` VALUES (34, '2024-12-02 06:19:22', '2024-12-02 06:19:43', 3, '表格组件', 'table/index', 0, '20');
-INSERT INTO `xb_dict_data` VALUES (35, '2024-12-02 06:19:37', '2024-12-02 06:19:37', 3, '侧边表格', 'table/sidebar', 0, '20');
-INSERT INTO `xb_dict_data` VALUES (36, '2024-12-02 06:19:56', '2024-12-02 06:19:56', 3, '远程组件', 'remote/index', 0, '20');
+INSERT INTO `xb_dict_data` VALUES (32, '2024-12-02 06:18:46', '2025-01-03 04:03:41', 3, '不使用组件', 'none/index', 2, '20');
+INSERT INTO `xb_dict_data` VALUES (33, '2024-12-02 06:19:00', '2025-01-03 04:04:07', 3, '表单组件', 'form/index', 4, '20');
+INSERT INTO `xb_dict_data` VALUES (34, '2024-12-02 06:19:22', '2025-01-03 04:03:59', 3, '表格组件', 'table/index', 3, '20');
+INSERT INTO `xb_dict_data` VALUES (35, '2024-12-02 06:19:37', '2025-01-03 04:04:14', 3, '侧边表格', 'table/sidebar', 5, '20');
+INSERT INTO `xb_dict_data` VALUES (36, '2024-12-02 06:19:56', '2025-01-03 04:04:20', 3, '远程组件', 'remote/index', 6, '20');
 INSERT INTO `xb_dict_data` VALUES (37, '2024-12-02 17:00:47', '2024-12-02 17:04:33', 17, 'warning', '10', 0, '20');
 INSERT INTO `xb_dict_data` VALUES (38, '2024-12-02 17:00:56', '2024-12-02 17:04:44', 17, 'success', '20', 0, '20');
 INSERT INTO `xb_dict_data` VALUES (39, '2024-12-02 17:01:06', '2024-12-02 17:04:49', 17, 'danger', '30', 0, '20');
@@ -89,3 +89,4 @@ INSERT INTO `xb_dict_data` VALUES (100, '2024-12-02 19:53:34', '2024-12-02 19:53
 INSERT INTO `xb_dict_data` VALUES (101, '2024-12-02 19:53:40', '2024-12-02 19:53:40', 23, '开启', '20', 0, '20');
 INSERT INTO `xb_dict_data` VALUES (102, '2024-12-06 17:55:49', '2024-12-13 01:36:59', 25, '未使用', '10', 1, '20');
 INSERT INTO `xb_dict_data` VALUES (103, '2024-12-06 17:55:54', '2024-12-13 01:37:01', 25, '使用中', '20', 0, '20');
+INSERT INTO `xb_dict_data` VALUES (104, '2025-01-03 03:53:53', '2025-01-03 04:06:30', 3, '工作台', 'workbench/index', 1, '20');

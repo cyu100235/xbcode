@@ -8,7 +8,7 @@ CREATE TABLE `xb_dict_tag`  (
   `sort` int(11) NULL DEFAULT 0 COMMENT '排序',
   `state` enum('10','20') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '20' COMMENT '状态',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 26 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '字典标签' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '字典标签' ROW_FORMAT = DYNAMIC;
 INSERT INTO `xb_dict_tag` VALUES (1, '2024-05-29 14:37:04', '2024-12-02 06:23:31', '封禁状态文字', 'banText', 0, '20');
 INSERT INTO `xb_dict_tag` VALUES (2, '2024-05-29 14:37:34', '2024-12-02 06:23:26', '封禁状态样式', 'banStyle', 0, '20');
 INSERT INTO `xb_dict_tag` VALUES (3, '2024-05-29 14:40:12', '2024-12-02 06:23:17', '组件类型文字', 'componentText', 0, '20');

@@ -8,7 +8,7 @@ CREATE TABLE `xb_admin_rule`  (
   `plugin` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '插件名称',
   `path` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '菜单地址',
   `pid` int(11) NOT NULL COMMENT '父级ID',
-  `component` enum('none/index','table/index','table/sidebar','form/index','remote/index') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'none/index' COMMENT '组件类型',
+  `component` enum('none/index','table/index','table/sidebar','form/index','remote/index','workbench/index') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'none/index' COMMENT '组件类型',
   `is_show` enum('10','20') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '10' COMMENT '是否显示：10否，20是',
   `is_default` enum('10','20') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '10' COMMENT '是否默认：10否，20是',
   `is_system` enum('10','20') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '10' COMMENT '是否系统：10否，20是',
@@ -20,14 +20,11 @@ CREATE TABLE `xb_admin_rule`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 423 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '后台菜单' ROW_FORMAT = DYNAMIC;
 INSERT INTO `xb_admin_rule` VALUES (2, '2024-03-27 15:57:58', '2024-11-30 12:29:09', '权限管理', '10', '', 'Auth', 0, 'none/index', '20', '10', '10', 'GET', 'TeamOutlined', '', 8888);
 INSERT INTO `xb_admin_rule` VALUES (3, '2024-03-27 15:58:24', '2025-01-01 04:59:11', '系统设置', '10', '', 'Setting', 0, 'none/index', '20', '10', '10', 'GET', 'Setting', '', 9999);
-INSERT INTO `xb_admin_rule` VALUES (5, '2024-03-27 16:00:15', '2024-11-30 12:32:55', '工作台', '20', '', 'workbench', 0, 'remote/index', '20', '20', '20', 'GET', 'DashboardOutlined', 'backend/Index/workbench', 0);
+INSERT INTO `xb_admin_rule` VALUES (5, '2024-03-27 16:00:15', '2025-01-03 05:11:56', '工作台', '20', '', 'workbench', 0, 'remote/index', '20', '20', '20', 'GET', 'DashboardOutlined', 'backend/Index/workbench', 0);
 INSERT INTO `xb_admin_rule` VALUES (6, '2024-03-27 16:00:53', '2024-10-20 00:31:46', '系统登录', '30', '', 'backend/Login/login', 5, 'none/index', '10', '20', '20', 'POST', '', '', 0);
 INSERT INTO `xb_admin_rule` VALUES (7, '2024-03-27 16:01:30', '2024-10-20 00:31:58', '获取应用信息', '30', '', 'backend/Index/site', 5, 'none/index', '10', '20', '20', 'GET', '', '', 0);
 INSERT INTO `xb_admin_rule` VALUES (8, '2024-03-27 16:02:06', '2024-10-20 00:32:10', '获取管理员信息', '30', '', 'backend/Login/user', 5, 'none/index', '10', '20', '20', 'GET', '', '', 0);
 INSERT INTO `xb_admin_rule` VALUES (9, '2024-03-27 16:03:11', '2024-10-20 00:32:18', '退出登录', '30', '', 'backend/Login/exit', 5, 'none/index', '10', '20', '20', 'DELETE', '', '', 0);
-INSERT INTO `xb_admin_rule` VALUES (10, '2024-03-27 16:03:38', '2024-10-20 00:32:27', '清除缓存', '30', '', 'backend/Index/clear', 5, 'remote/index', '10', '20', '20', 'DELETE', '', 'vue/admin/clear', 0);
-INSERT INTO `xb_admin_rule` VALUES (11, '2024-03-27 16:04:09', '2024-10-20 00:32:35', '锁定屏幕', '30', '', 'backend/Index/lock', 5, 'none/index', '10', '20', '20', 'DELETE', '', '', 0);
-INSERT INTO `xb_admin_rule` VALUES (12, '2024-03-27 16:04:25', '2024-10-20 00:32:43', '解除锁定', '30', '', 'backend/Index/unlock', 5, 'none/index', '10', '20', '20', 'DELETE', '', '', 0);
 INSERT INTO `xb_admin_rule` VALUES (16, '2024-03-27 16:18:18', '2024-11-25 19:50:32', '账号管理', '20', '', 'backend/Admin/index', 2, 'table/index', '20', '10', '10', 'GET', '', '', 0);
 INSERT INTO `xb_admin_rule` VALUES (17, '2024-03-27 16:18:18', '2024-03-27 16:18:18', '账号管理-表格', '30', '', 'backend/Admin/indexTable', 16, 'none/index', '10', '10', '10', 'GET', '', '', 0);
 INSERT INTO `xb_admin_rule` VALUES (18, '2024-03-27 16:18:18', '2024-05-05 16:37:03', '账号管理-添加', '30', '', 'backend/Admin/add', 16, 'form/index', '10', '10', '10', 'GET,POST', '', '', 0);
@@ -100,7 +97,7 @@ INSERT INTO `xb_admin_rule` VALUES (397, '2024-12-13 01:22:02', '2024-12-13 01:2
 INSERT INTO `xb_admin_rule` VALUES (398, '2024-12-13 01:22:02', '2024-12-13 01:22:02', '字典数据-修改列', '30', '', 'backend/DictData/rowEdit', 394, 'none/index', '10', '10', '10', 'GET,PUT', '', '', 0);
 INSERT INTO `xb_admin_rule` VALUES (399, '2024-12-13 01:22:02', '2024-12-13 01:22:02', '字典数据-表格', '30', '', 'backend/DictData/indexTable', 394, 'none/index', '10', '10', '10', 'GET', '', '', 0);
 INSERT INTO `xb_admin_rule` VALUES (400, '2024-12-13 03:01:23', '2024-12-13 03:01:43', '站点管理-下载', '30', '', 'backend/WebExtra/download', 277, 'none/index', '10', '10', '10', 'GET', '', '', 11);
-INSERT INTO `xb_admin_rule` VALUES (401, '2024-12-13 04:08:12', '2024-12-13 04:47:00', '工作台', '20', 'xbcode', 'workbench', 0, 'remote/index', '20', '20', '20', 'GET', 'Monitor', 'admin/Index/workbench', 1);
+INSERT INTO `xb_admin_rule` VALUES (401, '2024-12-13 04:08:12', '2025-01-03 05:09:35', '工作台', '20', 'xbcode', 'workbench', 0, 'workbench/index', '20', '20', '20', 'GET', 'Monitor', 'admin/Index/workbench', 1);
 INSERT INTO `xb_admin_rule` VALUES (402, '2024-12-13 04:48:30', '2024-12-13 04:48:36', '插件管理', '10', '', 'Plugins', 0, 'none/index', '20', '10', '10', 'GET', 'ElemeFilled', '', 5);
 INSERT INTO `xb_admin_rule` VALUES (403, '2024-12-13 04:49:42', '2024-12-27 21:34:05', '插件列表', '20', '', 'backend/Plugins/index', 402, 'table/index', '20', '10', '10', 'GET', '', '', 100);
 INSERT INTO `xb_admin_rule` VALUES (404, '2024-12-26 06:20:50', '2024-12-26 06:20:50', '系统更新', '10', '', 'update', 3, 'none/index', '20', '10', '10', 'GET', '', '', 100);
