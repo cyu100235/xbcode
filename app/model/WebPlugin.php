@@ -21,13 +21,21 @@ class WebPlugin extends Model
      */
     public static function getWebAuthPluginAll(bool $force = false)
     {
-        $key = 'xb_web_auth_plugin';
-        $data    = Cache::get($key);
+        $key  = 'xb_web_auth_plugin';
+        $data = Cache::get($key);
         if ($data && !$force) {
             return $data;
         }
         // 获取授权插件
-        $data = self::select()->toArray();
+        $where = [
+            'plugins.state' => '20',
+        ];
+        $data  = self::alias('site')
+            ->join('plugins', 'plugins.name=site.name')
+            ->where($where)
+            ->field('site.*')
+            ->select()
+            ->toArray();
         // 设置授权插件缓存
         Cache::set($key, $data, 600);
         // 返回数据
@@ -43,7 +51,7 @@ class WebPlugin extends Model
      */
     public static function getWebAuthPlugin(bool $force = false)
     {
-        $data = self::getWebAuthPluginAll($force);
+        $data   = self::getWebAuthPluginAll($force);
         $result = [];
         foreach ($data as $item) {
             $expireTime = $item['expire_time'];
@@ -68,7 +76,7 @@ class WebPlugin extends Model
      */
     public static function getWorkbenchRoute()
     {
-        $data = self::getWebAuthPlugin();
+        $data   = self::getWebAuthPlugin();
         $result = [];
         foreach ($data as $item) {
             $class = "\\plugin\\{$item['name']}\\app\\controller\\IndexController";
