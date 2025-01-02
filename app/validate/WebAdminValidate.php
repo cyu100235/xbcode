@@ -46,7 +46,7 @@ class WebAdminValidate extends Validate
         return $this->only([
             'username',
             'password',
-        ]);
+        ])->remove('username', 'verifyUsername');
     }
 
     /**

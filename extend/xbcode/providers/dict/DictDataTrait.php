@@ -20,14 +20,14 @@ trait DictDataTrait
      */
     private static function cacheDictData()
     {
-        $data = DictTag::where('state', '20')->column('id,title,name', 'name');
+        $data = DictTag::where('state', '20')->order('sort asc,id asc')->column('id,title,name', 'name');
         foreach ($data as &$value) {
             // 查询条件
             $where         = [
                 'dict_id' => $value['id'],
                 'state' => '20'
             ];
-            $children      = DictData::where($where)->column('label,value');
+            $children      = DictData::where($where)->order('sort asc,id asc')->column('label,value');
             $value['dict'] = $children;
         }
         Cache::set('dict_data', $data, 3600);
@@ -35,14 +35,15 @@ trait DictDataTrait
     
     /**
      * 获取缓存字典数据
+     * @param bool $force 是否强制刷新缓存
      * @return mixed
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    protected function getCacheDict()
+    public function getCacheDict(bool $force = false)
     {
         $data = Cache::get('dict_data', []);
-        if (empty($data)) {
+        if (empty($data) || $force) {
             // 缓存字典数据
             self::cacheDictData();
             // 获取缓存数据

@@ -9,7 +9,9 @@ use xbcode\XbController;
 use Tinywan\Jwt\JwtToken;
 use xbcode\utils\TokenUtil;
 use xbcode\utils\PasswdUtil;
+use Webman\Captcha\PhraseBuilder;
 use xbcode\providers\AppProvider;
+use Webman\Captcha\CaptchaBuilder;
 use app\validate\WebAdminValidate;
 use xbcode\providers\MenuProvider;
 
@@ -20,6 +22,45 @@ use xbcode\providers\MenuProvider;
  */
 class LoginController extends XbController
 {
+    /**
+     * 不需要登录的方法
+     * @var array
+     */
+    protected $noLogin = [
+        'captcha',
+        'login',
+        'user',
+        'menus',
+    ];
+
+    /**
+     * 渲染验证码
+     * @return \support\Response
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public function captcha()
+    {
+        // 构造验证码生成器
+        $builder = new PhraseBuilder(4, '0123456789');
+        // 初始化验证码类
+        $builder = new CaptchaBuilder(null, $builder);
+        // 设置验证码背景色
+        $builder->setBackgroundColor(255, 255, 255);
+        // 生成验证码
+        $builder->build();
+        // 获取验证码的内容
+        $captcha = $builder->getPhrase();
+        // 将验证码的值转换为小写
+        $captcha = strtolower($captcha);
+        // 将验证码的值存储到session中
+        request()->session()->set('captcha', $captcha);
+        // 获得二维码base64内容
+        $img_content = $builder->inline();
+        // 输出图片内容
+        return response($img_content);
+    }
+
     /**
      * 用户登录
      * @param \support\Request $request

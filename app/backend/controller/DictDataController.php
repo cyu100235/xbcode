@@ -1,14 +1,15 @@
 <?php
 namespace app\backend\controller;
 
-use app\model\DictData;
+use support\Request;
 use app\model\DictTag;
-use app\validate\DictDataValidate;
+use app\model\DictData;
+use xbcode\XbController;
 use xbcode\builder\FormBuilder;
 use xbcode\builder\ListBuilder;
+use xbcode\providers\DictProvider;
+use app\validate\DictDataValidate;
 use xbcode\builder\table\attrs\RowEditTrait;
-use xbcode\XbController;
-use support\Request;
 
 /**
  * 字典数据管理
@@ -160,6 +161,8 @@ class DictDataController extends XbController
             if (!$model->save($post)) {
                 return $this->fail('保存失败');
             }
+            // 刷新缓存
+            DictProvider::get('')->getCacheDict(true);
             // 返回结果
             return $this->success('保存成功');
         }
@@ -191,6 +194,8 @@ class DictDataController extends XbController
             if (!$model->save($post)) {
                 return $this->fail('保存失败');
             }
+            // 刷新缓存
+            DictProvider::get('')->getCacheDict(true);
             // 返回结果
             return $this->success('保存成功');
         }
@@ -219,6 +224,8 @@ class DictDataController extends XbController
         if (!$model->delete()) {
             return $this->fail('删除失败');
         }
+        // 刷新缓存
+        DictProvider::get('')->getCacheDict(true);
         // 返回结果
         return $this->success('删除成功');
     }

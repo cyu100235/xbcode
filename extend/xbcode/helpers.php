@@ -11,11 +11,12 @@ if (!function_exists('p')) {
     function p(mixed $data, string $remarks = '')
     {
         if (config('app.debug')) {
-            if ($remarks) {
-                echo '--------';
-                echo $remarks;
-                echo '--------';
+            if (empty($remarks)) {
+                $remarks = '打印数据';
             }
+            echo '--------';
+            echo $remarks;
+            echo '--------';
             echo PHP_EOL;
             print_r($data);
             echo PHP_EOL;

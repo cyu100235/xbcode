@@ -1,6 +1,6 @@
 <template>
     <div>
-        来自于插件的Vue组件接管后台欢迎界面
+        来自插件的Vue组件数据页面
     </div>
 </template>
 

@@ -1,6 +1,7 @@
 <?php
 namespace app\admin\controller;
 
+use app\model\WebPlugin;
 use support\Request;
 use xbcode\providers\AppProvider;
 use xbcode\XbController;
@@ -12,6 +13,16 @@ use xbcode\XbController;
  */
 class IndexController extends XbController
 {
+    /**
+     * 不需要登录的方法
+     * @var array
+     */
+    protected $noLogin = [
+        'index',
+        'site',
+        'workbench',
+    ];
+
     /**
      * 首页视图
      * @param \support\Request $request
@@ -50,6 +61,8 @@ class IndexController extends XbController
      */
     public function workbench(Request $request)
     {
-        return $this->view('view/admin/workbench');
+        // 获取已授权插件工作台路由
+        $data = WebPlugin::getWorkbenchRoute();
+        return $this->successRes($data);
     }
 }

@@ -1,8 +1,11 @@
 <?php
 namespace xbcode\service\xbcode;
 
+use Exception;
 use support\Cache;
+use app\model\WebSite;
 use yzh52521\EasyHttp\Http;
+use xbcode\providers\ConfigProvider;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -31,6 +34,48 @@ class XbBaseService
     protected static $cacheTime = 600;
 
     /**
+     * 获取服务域名
+     * @return array|bool|int|string|null
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public static function getServiceDomain()
+    {
+        // 当前域名
+        $domain = request()->host();
+        // 获取租户站点域名
+        $webSite = WebSite::getWebSiteDict();
+        $webSiteDomain = array_keys($webSite);
+        // 检测当前域名是否为租户站点域名
+        if (in_array($domain, $webSiteDomain)) {
+            // 使用系统配置域名
+            $webUrl = ConfigProvider::get('system', 'web_url');
+            if (empty($webUrl)) {
+                throw new Exception('请先配置系统域名~');
+            }
+            $domain = parse_url($webUrl, PHP_URL_HOST);
+        }
+        return $domain;
+    }
+    
+    /**
+     * 获取服务IP地址
+     * @return mixed
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public static function getServiceIp()
+    {
+        $key = "xb_service_ip";
+        $ip = Cache::get($key);
+        if (empty($ip)) {
+            $ip = file_get_contents('http://ifconfig.me/ip');
+            Cache::set($key, $ip, 3600);
+        }
+        return $ip;
+    }
+
+    /**
      * 获取服务缓存KEY
      * @return string
      * @copyright 贵州小白基地网络科技有限公司
@@ -39,9 +84,9 @@ class XbBaseService
     public static function getServiceTokenName()
     {
         // 服务器IP地址
-        $serviceIp = file_get_contents('http://ifconfig.me/ip');
+        $serviceIp = self::getServiceIp();
         // 当前域名
-        $domain = request()->host();
+        $domain = self::getServiceDomain();
         // 保存登录信息KEY
         $key = "xb_token_host_{$domain}_ip_{$serviceIp}";
         return $key;

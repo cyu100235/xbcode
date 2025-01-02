@@ -117,7 +117,7 @@ class WebPluginController extends XbController
         $siteId = $request->get('site_id');
         $model  = $this->model;
         $where  = [
-            'site_id' => $siteId,
+            'saas_appid' => $siteId,
         ];
         $pluginModel = new Plugins;
         $plugins = $pluginModel->pluginCacheDict();
@@ -127,8 +127,13 @@ class WebPluginController extends XbController
             ->order('id desc')
             ->paginate()
             ->each(function ($item)use($plugins) {
+                // 设置插件名称
                 $plugin      = $plugins[$item->name] ?? [];
                 $item->title = $plugin['title'] ?? '';
+                // 设置过期时间
+                if (empty($item->expire_time)) {
+                    $item->expire_time = '永久不过期';
+                }
             });
         return $this->successRes($data);
     }
@@ -145,17 +150,20 @@ class WebPluginController extends XbController
         if ($request->method() == 'POST') {
             $siteId          = $request->get('site_id');
             $post            = $request->post();
-            $post['site_id'] = $siteId;
+            $post['saas_appid'] = $siteId;
 
             // 数据验证
             xbValidate(WebPluginValidate::class, $post, 'add');
-
+            // 设置永久不到期
+            if (empty($post['expire_time'])) {
+                unset($post['expire_time']);
+            }
             $model = $this->model;
             if (!$model->save($post)) {
                 return $this->fail('保存失败');
             }
             // 更新缓存
-            $this->model->getWebAuthPlugin(true);
+            WebPlugin::getWebAuthPlugin(true);
             // 返回数据
             return $this->success('保存成功');
         }
@@ -185,16 +193,16 @@ class WebPluginController extends XbController
 
             // 数据验证
             xbValidate(WebPluginValidate::class, $post, 'edit');
-
-            // 空密码，不修改
-            if (empty($post['password'])) {
-                unset($post['password']);
+            // 设置永久不到期
+            if (empty($post['expire_time'])) {
+                unset($post['expire_time']);
             }
+            
             if (!$model->save($post)) {
                 return $this->fail('保存失败');
             }
             // 更新缓存
-            $this->model->getWebAuthPlugin(true);
+            WebPlugin::getWebAuthPlugin(true);
             // 返回数据
             return $this->success('保存成功');
         }
@@ -224,7 +232,7 @@ class WebPluginController extends XbController
             return $this->fail('删除失败');
         }
         // 更新缓存
-        $this->model->getWebAuthPlugin(true);
+        WebPlugin::getWebAuthPlugin(true);
         // 返回数据
         return $this->success('删除成功');
     }

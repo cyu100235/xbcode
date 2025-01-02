@@ -28,8 +28,7 @@ class WebSiteMiddleware implements MiddlewareInterface
         // 获取当前域名
         $domain = $request->host();
         // 获取站点字典
-        $model = new WebSite;
-        $data  = $model->getWebSiteDict();
+        $data = WebSite::getWebSiteDict();
         // 获取域名对应站点
         $webSite = $data[$domain] ?? null;
         // 检测域名站点不存在则跳转总后台
@@ -87,6 +86,10 @@ class WebSiteMiddleware implements MiddlewareInterface
         if (empty($plugin)) {
             throw new Exception('您没有该插件的授权~', 403);
         }
+        // 插件永久不过期
+        if (empty($plugin['expire_time'])) {
+            return;
+        }
         // 检测插件授权是否过期
         $expireTime = strtotime($plugin['expire_time']);
         if (time() > $expireTime) {
@@ -102,13 +105,11 @@ class WebSiteMiddleware implements MiddlewareInterface
      */
     private function getWebPluginsDict()
     {
-        // 实例站点插件模型
-        $model = new WebPlugin;
         // 获取站点插件信息
-        $data = $model->getWebAuthPlugin();
+        $data = WebPlugin::getWebAuthPluginAll();
         $list = [];
         foreach ($data as $value) {
-            $list["{$value['name']}_{$value['site_id']}"] = $value;
+            $list["{$value['name']}_{$value['saas_appid']}"] = $value;
         }
         return $list;
     }

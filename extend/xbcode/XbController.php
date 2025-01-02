@@ -44,15 +44,20 @@ class XbController
      */
     protected function view(string $file, string $suffix = 'vue')
     {
+        // 获取插件名称
+        $plugin = request()->plugin;
+        if ($plugin) {
+            $file = "plugin/{$plugin}/{$file}";
+        }
         // 模板文件
         $template = base_path() . "/{$file}";
-        // 拼接文件名
-        $file = "{$template}.{$suffix}";
+        // 拼接文件名得到完整地址
+        $path = "{$template}.{$suffix}";
         // 获取视图内容
-        if (!file_exists($file)) {
+        if (!file_exists($path)) {
             throw new Exception("视图文件不存在：{$file}");
         }
-        $content = file_get_contents($file);
+        $content = file_get_contents($path);
         if (empty($content)) {
             throw new Exception("视图文件内容为空：{$file}");
         }

@@ -87,7 +87,7 @@ class IndexController extends XbController
     }
 
     /**
-     * 工作台视图
+     * 获取工作台远程视图
      * @param \support\Request $request
      * @return \support\Response
      * @copyright 贵州小白基地网络科技有限公司
@@ -95,6 +95,6 @@ class IndexController extends XbController
      */
     public function workbench(Request $request)
     {
-        return $this->view('view/backend/workbench', 'vue');
+        return $this->view('view/backend/workbench');
     }
 }

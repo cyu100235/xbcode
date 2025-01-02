@@ -13,12 +13,12 @@ $middlewares = [];
 $middlewares['@'] = [
     // 跨域中间件
     \xbcode\middleware\CrossMiddleware::class,
-    // 授权服务检查中间件
-    \xbcode\middleware\ServerAuthMiddleware::class,
     // 静态文件中间件
     \xbcode\middleware\StaticFileMiddleware::class,
     // 安装检测中间件
     \xbcode\middleware\InstallMiddleware::class,
+    // 授权服务检查中间件
+    \xbcode\middleware\ServerAuthMiddleware::class,
 ];
 // 主项目总后台模块中间件
 $middlewares['backend'] = [

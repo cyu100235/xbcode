@@ -26,7 +26,7 @@ class Plugins extends Model
     {
         return "xb_plugin_auth_{$name}_{$versionName}_{$version}";
     }
-    
+
     /**
      * 获取插件授权信息
      * @param string $name 插件标识
@@ -40,7 +40,7 @@ class Plugins extends Model
     public function getAuthData(string $name, string $versionName, string $version, bool $force = false)
     {
         // 缓存授权信息名称
-        $key    = $this->getPluginCacheKey($name,$versionName,$version);
+        $key    = $this->getPluginCacheKey($name, $versionName, $version);
         $result = Cache::get($key);
         if ($result && !$force) {
             return $result;
@@ -68,7 +68,7 @@ class Plugins extends Model
     {
         return $this->column($fields, 'name');
     }
-    
+
     /**
      * 获取已安装插件缓存字典
      * @param bool $force
@@ -78,8 +78,8 @@ class Plugins extends Model
      */
     public function pluginCacheDict(bool $force = false)
     {
-        $key = 'xb_installed_plugins_dict';
-        $data    = Cache::get($key);
+        $key  = 'xb_installed_plugins_dict';
+        $data = Cache::get($key);
         if ($data && !$force) {
             return $data;
         }
@@ -104,7 +104,7 @@ class Plugins extends Model
         // 获取插件授权信息
         $result = PluginService::authorize($name, $versionName, $version);
         // 保存插件信息
-        $model  = self::where('name', $result['plugin_name'])->find();
+        $model = self::where('name', $result['plugin_name'])->find();
         if (!$model) {
             $model = new self;
         }
@@ -121,7 +121,7 @@ class Plugins extends Model
         }
         return $model;
     }
-    
+
     /**
      * 插件更新完成
      * @param string $name 插件标识
@@ -136,7 +136,7 @@ class Plugins extends Model
         // 获取插件授权信息
         $result = PluginService::authorize($name, $versionName, $version);
         // 保存插件信息
-        $model  = self::where('name', $result['plugin_name'])->find();
+        $model = self::where('name', $result['plugin_name'])->find();
         if (!$model) {
             throw new \Exception('该插件未安装');
         }

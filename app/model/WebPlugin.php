@@ -19,18 +19,68 @@ class WebPlugin extends Model
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public function getWebAuthPlugin(bool $force = false)
+    public static function getWebAuthPluginAll(bool $force = false)
     {
-        $key = "xb_web_auth_plugin";
+        $key = 'xb_web_auth_plugin';
         $data    = Cache::get($key);
         if ($data && !$force) {
             return $data;
         }
         // 获取授权插件
-        $data = $this->select()->toArray();
+        $data = self::select()->toArray();
         // 设置授权插件缓存
         Cache::set($key, $data, 600);
         // 返回数据
         return $data;
+    }
+
+    /**
+     * 获取站点授权插件
+     * @param bool $force
+     * @return array
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public static function getWebAuthPlugin(bool $force = false)
+    {
+        $data = self::getWebAuthPluginAll($force);
+        $result = [];
+        foreach ($data as $item) {
+            $expireTime = $item['expire_time'];
+            if (empty($expireTime)) {
+                $result[] = $item;
+                continue;
+            }
+            // 判断是否过期
+            $expireTime = strtotime($expireTime);
+            if ($expireTime > time()) {
+                $result[] = $item;
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * 获取工作台路由
+     * @return array
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public static function getWorkbenchRoute()
+    {
+        $data = self::getWebAuthPlugin();
+        $result = [];
+        foreach ($data as $item) {
+            $class = "\\plugin\\{$item['name']}\\app\\controller\\IndexController";
+            if (!class_exists($class)) {
+                continue;
+            }
+            $controller = new $class();
+            if (!method_exists($controller, 'workbench')) {
+                continue;
+            }
+            $result[$item['name']] = "app/{$item['name']}/Index/workbench";
+        }
+        return $result;
     }
 }

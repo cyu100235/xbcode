@@ -347,7 +347,7 @@ class WebSiteController extends XbController
                 throw $th;
             }
             // 刷新站点字典
-            $this->model->getWebSiteDict(true);
+            WebSite::getWebSiteDict(true);
             // 返回成功
             return $this->success('保存成功');
         }
@@ -456,7 +456,7 @@ class WebSiteController extends XbController
                 return $this->fail($th->getMessage());
             }
             // 刷新站点字典
-            $this->model->getWebSiteDict(true);
+            WebSite::getWebSiteDict(true);
             // 返回成功
             return $this->success('保存成功');
         }
@@ -521,7 +521,7 @@ class WebSiteController extends XbController
             return $this->fail($th->getMessage());
         }
         // 刷新站点字典
-        $this->model->getWebSiteDict(true);
+        WebSite::getWebSiteDict(true);
         // 返回成功
         return $this->success('删除成功');
     }
@@ -538,7 +538,7 @@ class WebSiteController extends XbController
         // 数据编辑
         $this->rowEdit($request);
         // 刷新站点字典
-        $this->model->getWebSiteDict(true);
+        WebSite::getWebSiteDict(true);
         // 返回数据
         return $this->success('操作成功');
     }

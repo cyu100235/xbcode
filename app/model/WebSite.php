@@ -19,14 +19,14 @@ class WebSite extends Model
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public function getWebSiteDict(bool $force = false, mixed $fields = '*')
+    public static function getWebSiteDict(bool $force = false, mixed $fields = '*')
     {
         $key = 'xb_web_site_dict';
         $result = Cache::get($key);
         if ($result && !$force) {
             return $result;
         }
-        $data = $this->column($fields, 'domain');
+        $data = self::column($fields, 'domain');
         // 缓存站点字典
         Cache::set($key, $data, 600);
         // 返回站点字典
