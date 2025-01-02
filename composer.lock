@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "48e5cc1b8528bb75a100c6d8ac055f57",
+    "content-hash": "03f026fa8a5e33cda9bdd5adc0d6c9c6",
     "packages": [
         {
             "name": "carbonphp/carbon-doctrine-types",
@@ -3122,6 +3122,27 @@
                 "webman console"
             ],
             "time": "2024-09-24T06:37:05+00:00"
+        },
+        {
+            "name": "webman/event",
+            "version": "v1.0.5",
+            "dist": {
+                "type": "zip",
+                "url": "https://mirrors.tencent.com/repository/composer/webman/event/v1.0.5/webman-event-v1.0.5.zip",
+                "reference": "b1c3f6b70fd290e48288703d59bead0e28f9fb84",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Webman\\Event\\": "src"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Webman event plugin",
+            "time": "2023-12-04T09:22:12+00:00"
         },
         {
             "name": "webman/log",

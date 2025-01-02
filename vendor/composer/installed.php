@@ -3,7 +3,7 @@
         'name' => 'workerman/webman',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '915a46222dee97f887a2dc157472a22d6cec4f3b',
+        'reference' => '492d1331e12915a2acad699d17f0c864e3b6f3d1',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -620,6 +620,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'webman/event' => array(
+            'pretty_version' => 'v1.0.5',
+            'version' => '1.0.5.0',
+            'reference' => 'b1c3f6b70fd290e48288703d59bead0e28f9fb84',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../webman/event',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'webman/log' => array(
             'pretty_version' => 'v1.2.0',
             'version' => '1.2.0.0',
@@ -677,7 +686,7 @@
         'workerman/webman' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '915a46222dee97f887a2dc157472a22d6cec4f3b',
+            'reference' => '492d1331e12915a2acad699d17f0c864e3b6f3d1',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

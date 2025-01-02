@@ -21,6 +21,7 @@ return array(
     'Webman\\ThinkOrm\\' => array($vendorDir . '/webman/think-orm/src'),
     'Webman\\RedisQueue\\' => array($vendorDir . '/webman/redis-queue/src'),
     'Webman\\Log\\' => array($vendorDir . '/webman/log/src'),
+    'Webman\\Event\\' => array($vendorDir . '/webman/event/src'),
     'Webman\\Console\\' => array($vendorDir . '/webman/console/src'),
     'Webman\\Captcha\\' => array($vendorDir . '/webman/captcha/src'),
     'Webman\\' => array($vendorDir . '/workerman/webman-framework/src'),

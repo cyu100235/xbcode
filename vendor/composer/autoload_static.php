@@ -65,6 +65,7 @@ class ComposerStaticInit36db3d91b6ceb9404e632f09a492d0c5
             'Webman\\ThinkOrm\\' => 16,
             'Webman\\RedisQueue\\' => 18,
             'Webman\\Log\\' => 11,
+            'Webman\\Event\\' => 13,
             'Webman\\Console\\' => 15,
             'Webman\\Captcha\\' => 15,
             'Webman\\' => 7,
@@ -215,6 +216,10 @@ class ComposerStaticInit36db3d91b6ceb9404e632f09a492d0c5
         'Webman\\Log\\' => 
         array (
             0 => __DIR__ . '/..' . '/webman/log/src',
+        ),
+        'Webman\\Event\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/webman/event/src',
         ),
         'Webman\\Console\\' => 
         array (

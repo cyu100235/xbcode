@@ -3301,6 +3301,30 @@
             "install-path": "../webman/console"
         },
         {
+            "name": "webman/event",
+            "version": "v1.0.5",
+            "version_normalized": "1.0.5.0",
+            "dist": {
+                "type": "zip",
+                "url": "https://mirrors.tencent.com/repository/composer/webman/event/v1.0.5/webman-event-v1.0.5.zip",
+                "reference": "b1c3f6b70fd290e48288703d59bead0e28f9fb84",
+                "shasum": ""
+            },
+            "time": "2023-12-04T09:22:12+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Webman\\Event\\": "src"
+                }
+            },
+            "license": [
+                "MIT"
+            ],
+            "description": "Webman event plugin",
+            "install-path": "../webman/event"
+        },
+        {
             "name": "webman/log",
             "version": "v1.2.0",
             "version_normalized": "1.2.0.0",
