@@ -43,6 +43,18 @@ class AdminLogController extends XbController
         // 表格渲染
         $builder = new ListBuilder;
         $builder->pageConfig();
+        $options = [
+            [
+                'value' => '10',
+                'label' => '操作日志',
+            ],
+            [
+                'value' => '20',
+                'label' => '登录日志',
+            ],
+        ];
+        $type    = (string) $request->get('type', '10');
+        $builder->setTabs($options, 'type', $type);
         $builder->addColumn('id', '序号', [
             'width' => 80,
         ]);
@@ -69,15 +81,13 @@ class AdminLogController extends XbController
         $builder->addColumn('path', '请求地址', [
             'minWidth' => 180,
         ]);
+        $dicts = array_column($options, 'label', 'value');
         $builder->addColumn('type', '日志类型', [
             'width' => 100,
             'params' => [
                 'type' => 'dict',
                 'props' => [
-                    'options' => [
-                        '10' => '操作日志',
-                        '20' => '登录日志',
-                    ],
+                    'options' => $dicts,
                     'style' => [
                         '10' => [
                             'type' => 'warning',
@@ -117,6 +127,9 @@ class AdminLogController extends XbController
                 ],
             ],
         ]);
+        $builder->addColumn('menu_title', '菜单名称', [
+            'minWidth' => 100,
+        ]);
         $builder->addColumn('query', '请求参数', [
             'minWidth' => 100,
         ]);
@@ -139,8 +152,14 @@ class AdminLogController extends XbController
      */
     public function index(Request $request)
     {
+        $type  = (string) $request->get('type', '10');
+        $where = [];
+        if ($type) {
+            $where[] = ['type', '=', $type];
+        }
         $model = $this->model;
         $data  = $model
+            ->where($where)
             ->order('id desc')
             ->paginate()
             ->each(function ($item) {
