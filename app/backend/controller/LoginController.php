@@ -100,23 +100,6 @@ class LoginController extends XbController
             'is_system' => $model['is_system'],
         ];
         $data = TokenUtil::create($data);
-        // 增加登录日志
-        $query             = $post;
-        $query['password'] = '******';
-        $query             = is_array($query) ? json_encode($query, 256) : $query;
-        $result            = json_encode($data, 256);
-        $taskData          = [
-            'type' => '20',
-            'admin_id' => $model['id'],
-            'admin_name' => $model['username'],
-            'real_ip' => $request->getRealIp(true),
-            'path' => trim(ltrim($request->path(), '/'), '/'),
-            'method' => $request->method(),
-            'title' => '用户登录',
-            'query' => $query,
-            'result' => $result,
-        ];
-        QueueProvider::addAsync('backend_log', $taskData, '', 10);
         // 返回数据
         return $this->successFul('登录成功', $data);
     }

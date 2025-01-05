@@ -15,20 +15,20 @@ class ProjectPluginService extends XbBaseService
      * 获取插件列表
      * @param array $plugins 插件标识
      * @param bool $installed 是否已安装
-     * @param int $page 页码
-     * @param int $limit 每页数量
+     * @param array $params 其他参数
      * @return mixed
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public static function datalist(array $plugins = [], bool $installed = false, int $page = 1, int $limit = 20)
+    public static function datalist(array $plugins = [], bool $installed = false, array $params = [])
     {
-        $service = static::request()->post('ProjectsPlugin/index',[
+        $query = array_merge([
             'plugins' => $plugins,
             'installed' => $installed ? '20' : '10',
-            'page' => $page,
-            'limit' => $limit
-        ]);
+            'page' => 1,
+            'limit' => 30,
+        ], $params);
+        $service = static::request()->post('ProjectsPlugin/index', $query);
         $result = $service->array();
         if (empty($result)) {
             return [];

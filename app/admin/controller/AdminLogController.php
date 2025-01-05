@@ -1,5 +1,5 @@
 <?php
-namespace app\backend\controller;
+namespace app\admin\controller;
 
 use support\Request;
 use app\model\AdminLog;
@@ -153,9 +153,7 @@ class AdminLogController extends XbController
     public function index(Request $request)
     {
         $type  = (string) $request->get('type', '10');
-        $where = [
-            ['saas_appid', '=', null],
-        ];
+        $where = [];
         if ($type) {
             $where[] = ['type', '=', $type];
         }

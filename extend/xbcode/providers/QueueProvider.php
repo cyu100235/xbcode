@@ -11,6 +11,12 @@ use Webman\RedisQueue\Redis;
 class QueueProvider
 {
     /**
+     * 主任务名称
+     * @var string
+     */
+    private static $mainTaskName = 'xbcode_queue_task';
+
+    /**
      * 投递同步队列任务
      * @param string $name 队列名称
      * @param array $data 投递数据
@@ -22,7 +28,7 @@ class QueueProvider
     public static function add(string $name, array $data, string $plugin = '')
     {
         $result = self::getResult($name, $data, $plugin);
-        return Redis::send('xbcode_queue_task', $result);
+        return Redis::send(self::$mainTaskName, $result);
     }
 
     /**
@@ -35,10 +41,10 @@ class QueueProvider
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public static function addAsync(string $name, array $data,string $plugin = '', int $delay = 60)
+    public static function addAsync(string $name, array $data, string $plugin = '', int $delay = 60)
     {
         $result = self::getResult($name, $data, $plugin);
-        return Redis::send('xbcode_queue_task', $result, $delay);
+        return Redis::send(self::$mainTaskName, $result, $delay);
     }
 
     /**

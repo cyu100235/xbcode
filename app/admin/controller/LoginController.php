@@ -5,6 +5,7 @@ use Exception;
 use support\Request;
 use app\model\WebAdmin;
 use app\model\AdminRule;
+use xbcode\providers\QueueProvider;
 use xbcode\XbController;
 use Tinywan\Jwt\JwtToken;
 use xbcode\utils\TokenUtil;
@@ -113,12 +114,12 @@ class LoginController extends XbController
         // 生成令牌
         $data = [
             'id' => $model['id'],
+            'saas_appid' => $model['saas_appid'],
             'username' => $model['username'],
             'state' => $model['state'],
             'is_system' => $model['is_system'],
         ];
         $data = TokenUtil::create($data);
-        // 增加登录日志
         // 返回数据
         return $this->successFul('登录成功', $data);
     }

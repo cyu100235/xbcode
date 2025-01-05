@@ -48,7 +48,14 @@ class IndexController extends XbController
      */
     public function site(Request $request)
     {
-        $data = AppProvider::get();
+        $config = [
+            'public_view' => [
+                'toolbar' => xbUrl('Index/toolbar'),
+            ],
+        ];
+        // 获取站点配置
+        $data = AppProvider::get($config);
+        // 返回数据
         return $this->successRes($data);
     }
 
@@ -63,6 +70,37 @@ class IndexController extends XbController
     {
         // 获取已授权插件工作台路由
         $data = WebPlugin::getWorkbenchRoute();
+        // 返回数据
         return $this->successRes($data);
+    }
+
+    /**
+     * 工具栏数据
+     * @param \support\Request $request
+     * @return \support\Response
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public function toolbar(Request $request)
+    {
+        // 获取已授权插件工作台路由
+        $data = WebPlugin::getToolbarRoute();
+        $data = array_merge($data, [
+            'admin' => xbUrl('Index/toolbarView'),
+        ]);
+        // 返回数据
+        return $this->successRes($data);
+    }
+
+    /**
+     * 工具栏视图
+     * @param \support\Request $request
+     * @return \support\Response
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public function toolbarView(Request $request)
+    {
+        return $this->view('view/admin/toolbar');
     }
 }

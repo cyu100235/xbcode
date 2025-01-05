@@ -195,7 +195,8 @@ class PluginsController extends XbController
             'type' => 'success',
             'icon' => 'GiftOutlined',
         ]);
-        $builder->addScreen('keyword', '$input', '关键词', '', [
+        $keyword = $request->get('keyword', '');
+        $builder->addScreen('keyword', '$input', '关键词', $keyword, [
             'placeholder' => '请输入关键词',
         ]);
         $pluginTypes = [
@@ -301,6 +302,7 @@ class PluginsController extends XbController
     public function index(Request $request)
     {
         $install = $request->get('install', 'market');
+        $keyword = (string) $request->get('keyword', '');
         $page    = (int) $request->get('page', 1);
         $limit   = (int) $request->get('limit', 30);
         $model   = $this->model;
@@ -309,7 +311,11 @@ class PluginsController extends XbController
         // 是否获取已安装插件
         $installed = $install === 'installed' ? true : false;
         // 获取插件列表
-        $data = ProjectPluginService::datalist($plugins, $installed, $page, $limit);
+        $data = ProjectPluginService::datalist($plugins, $installed, [
+            'keyword' => $keyword,
+            'page' => $page,
+            'limit' => $limit,
+        ]);
         // 重设数据
         $data['data'] = array_map(function ($item) use ($plugins) {
             // 本地插件ID

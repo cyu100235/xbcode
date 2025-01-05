@@ -1,8 +1,8 @@
 <?php
-namespace app\backend\controller;
+namespace app\admin\controller;
 
-use xbcode\providers\ConfigProvider;
 use xbcode\XbController;
+use xbcode\providers\ConfigProvider;
 
 /**
  * 系统配置控制器

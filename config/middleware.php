@@ -73,6 +73,5 @@ if (is_dir($pluginDir)) {
         ];
     }
 }
-
 // 返回中间件数据
 return $middlewares;

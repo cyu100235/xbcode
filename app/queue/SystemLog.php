@@ -5,11 +5,11 @@ use Exception;
 use Webman\RedisQueue\Consumer;
 
 /**
- * 总后台日志队列
+ * 系统日志队列
  * @copyright 贵州小白基地网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
-class BackendLog implements Consumer
+class SystemLog implements Consumer
 {
     /**
      * 队列消费
@@ -44,9 +44,6 @@ class BackendLog implements Consumer
             }
             if (empty($data['query'])) {
                 throw new Exception('请求参数错误');
-            }
-            if (empty($data['result'])) {
-                throw new Exception('操作结果参数错误');
             }
             // 默认城市名称
             $data['city_name'] = '未知城市';

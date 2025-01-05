@@ -1,8 +1,8 @@
 <?php
 namespace xbcode\trait;
 
-use support\Response;
 use Exception;
+use support\Response;
 
 /**
  * JSON构造类
@@ -25,6 +25,7 @@ trait JsonTrait
         $json['msg']  = $msg;
         $json['code'] = $code;
         $json['data'] = $data;
+        // 返回JSON
         return json($json);
     }
 
@@ -43,7 +44,7 @@ trait JsonTrait
         }
         return self::json($data['msg'], $data['code'], $data['data']);
     }
-    
+
     /**
      * 返回成功消息带token
      * @param int $code
@@ -120,7 +121,7 @@ trait JsonTrait
     {
         return self::json($msg, $code);
     }
-    
+
     /**
      * 刷新当前页面
      * @param string $msg
@@ -130,7 +131,7 @@ trait JsonTrait
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    protected static function reload(string $msg = '',string $type ='success', int $delay = 0)
+    protected static function reload(string $msg = '', string $type = 'success', int $delay = 0)
     {
         return self::json($msg, 300, [
             'delay' => $delay,
@@ -148,7 +149,7 @@ trait JsonTrait
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    protected static function redirect(string $url, string $msg = '',string $type = 'success', int $delay = 0)
+    protected static function redirect(string $url, string $msg = '', string $type = 'success', int $delay = 0)
     {
         return self::json($msg, 301, [
             'type' => $type,

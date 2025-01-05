@@ -24,19 +24,22 @@ trait ConfigAttrTrait
      */
     private static function saveConfig(string $group, string $name, mixed $value)
     {
-        $original = $value;
+        $saasAppid = request()->saasAppid ?? null;
+        $original  = $value;
         if (is_array($value)) {
             $value = json_encode($value, JSON_UNESCAPED_UNICODE);
         }
         $where = [
             'group' => $group,
             'name' => $name,
+            'saas_appid' => $saasAppid
         ];
-        $data = Db::name('config')->where($where)->find();
+        $data  = Db::name('config')->where($where)->find();
         if (empty($data)) {
             Db::name('config')->save([
                 'create_at' => date('Y-m-d H:i:s'),
                 'update_at' => date('Y-m-d H:i:s'),
+                'saas_appid' => $saasAppid,
                 'group' => $group,
                 'name' => $name,
                 'value' => $value
@@ -91,7 +94,7 @@ trait ConfigAttrTrait
         $current = $config;
         return $data2;
     }
-    
+
     /**
      * 获取模板数据
      * @param string $path 配置文件路径
@@ -120,10 +123,10 @@ trait ConfigAttrTrait
             }
             // 检测是否附件
             if ($component === 'xbUpload') {
-                $filePath     = empty($dataValue) ? $value['value'] : $dataValue;
-                $url          = FileProvider::url($filePath);
+                $filePath = empty($dataValue) ? $value['value'] : $dataValue;
+                $url      = FileProvider::url($filePath);
                 if (is_array($url)) {
-                    $url = count($url) === 1? current($url) : $url;
+                    $url = count($url) === 1 ? current($url) : $url;
                 }
                 $data[$field] = $url;
             }
@@ -144,7 +147,7 @@ trait ConfigAttrTrait
         // 返回数据
         return $data;
     }
-    
+
     /**
      * 设置模板数据保存
      * @param string $path 配置文件路径

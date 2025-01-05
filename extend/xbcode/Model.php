@@ -62,8 +62,13 @@ class Model extends BaseModel
      */
     private static function setAppid($model, bool $isQuery = false)
     {
-        // 获取站点ID
-        $saasAppid = request()->saas_appid ?? null;
+        // 检测是否已设置APPID
+        if (!empty($model->saas_appid)) {
+            return;
+        }
+        // 获取请求中的APPID
+        $saasAppid = request()->saasAppid ?? null;
+        // 检测站点ID
         if (!$saasAppid) {
             return;
         }

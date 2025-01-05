@@ -236,6 +236,8 @@ class WebMenusController extends XbController
             if (!$model->save($post)) {
                 throw new Exception('添加站点菜单失败');
             }
+            // 刷新缓存
+            AdminRule::getMenuDict(true);
             // 返回结果
             return $this->success('添加站点成功');
         }
@@ -274,6 +276,8 @@ class WebMenusController extends XbController
             if (!$model->save($post)) {
                 throw new Exception('修改站点菜单失败');
             }
+            // 刷新缓存
+            AdminRule::getMenuDict(true);
             // 返回结果
             return $this->success('修改站点菜单成功');
         }
@@ -305,6 +309,8 @@ class WebMenusController extends XbController
                 throw new Exception("ID:{$model['id']} 删除失败");
             }
         }
+        // 刷新缓存
+        AdminRule::getMenuDict(true);
         // 返回数据
         return $this->success('删除成功');
     }
@@ -330,6 +336,8 @@ class WebMenusController extends XbController
             }
             // 创建资源菜单
             MenuProvider::createResponse($menu->toArray(), $post);
+            // 刷新缓存
+            AdminRule::getMenuDict(true);
             // 返回数据
             return $this->success('生成资源菜单成功');
         }
@@ -401,7 +409,7 @@ class WebMenusController extends XbController
             ],
         ]);
         $builder->addRow('plugin', 'input', '插件标识', '', [
-            'prompt' => '请填写插件标识，如：xbcode',
+            'prompt' => '请填写插件标识，admin则为主项目中的模块',
         ]);
         $builder->addRow('title', 'input', '菜单名称', '', [
             'prompt' => '左侧菜单名称，如：工作台',

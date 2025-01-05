@@ -22,6 +22,7 @@ class AdminLog extends Model
     {
         $result = [
             'type' => $data['type'] ?? '10',
+            'saas_appid' => $data['saas_appid'] ?? null,
             'admin_id' => $data['admin_id'] ?? 0,
             'admin_name' => $data['admin_name'] ?? '',
             'real_ip' => $data['real_ip'] ?? '',

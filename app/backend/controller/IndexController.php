@@ -59,9 +59,11 @@ class IndexController extends XbController
     public function site(Request $request)
     {
         try {
+            // 获取站点配置
             $config    = ConfigProvider::get('system', '', [], [
                 'refresh' => true,
             ]);
+            // 获取版权配置
             $copyright = ConfigProvider::get('copyright', '', []);
             if (!empty($copyright)) {
                 $config['login_beian'] = $copyright;

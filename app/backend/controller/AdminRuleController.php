@@ -224,6 +224,8 @@ class AdminRuleController extends XbController
             if (!$model->save($post)) {
                 throw new Exception('添加菜单失败');
             }
+            // 刷新缓存
+            AdminRule::getMenuDict(true);
             // 返回结果
             return $this->success('添加成功');
         }
@@ -262,6 +264,8 @@ class AdminRuleController extends XbController
             if (!$model->save($post)) {
                 throw new Exception('编辑失败');
             }
+            // 刷新缓存
+            AdminRule::getMenuDict(true);
             // 返回结果
             return $this->success('修改成功');
         }
@@ -293,6 +297,8 @@ class AdminRuleController extends XbController
                 throw new Exception("ID:{$model['id']} 删除失败");
             }
         }
+        // 刷新缓存
+        AdminRule::getMenuDict(true);
         // 返回数据
         return $this->success('删除成功');
     }
@@ -318,6 +324,8 @@ class AdminRuleController extends XbController
             }
             // 创建资源菜单
             MenuProvider::createResponse($menu->toArray(), $post);
+            // 刷新缓存
+            AdminRule::getMenuDict(true);
             // 返回数据
             return $this->success('生成资源菜单成功');
         }

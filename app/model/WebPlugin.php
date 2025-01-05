@@ -91,4 +91,28 @@ class WebPlugin extends Model
         }
         return $result;
     }
+
+    /**
+     * 获取工具栏路由
+     * @return array
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public static function getToolbarRoute()
+    {
+        $data   = self::getWebAuthPlugin();
+        $result = [];
+        foreach ($data as $item) {
+            $class = "\\plugin\\{$item['name']}\\app\\controller\\IndexController";
+            if (!class_exists($class)) {
+                continue;
+            }
+            $controller = new $class();
+            if (!method_exists($controller, 'toolbar')) {
+                continue;
+            }
+            $result[$item['name']] = "app/{$item['name']}/Index/toolbar";
+        }
+        return $result;
+    }
 }

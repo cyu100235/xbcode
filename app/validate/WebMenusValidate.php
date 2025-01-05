@@ -12,7 +12,7 @@ class WebMenusValidate extends Validate
 {
     protected array $rule = [
         'pid' => 'require',
-        'plugin' => 'require|alphaNum|length:5,35',
+        'plugin' => 'alphaNum|length:5,35',
         'title' => 'require',
         'path' => 'require',
         'component' => 'require|verifyComponet',
@@ -21,7 +21,6 @@ class WebMenusValidate extends Validate
 
     protected array $message = [
         'pid.require' => '请选择父级菜单',
-        'plugin.require' => '请填写插件标识',
         'plugin.alphaNum' => '插件标识只能是字母和数字',
         'plugin.length' => '插件标识长度为5-35个字符',
         'title.require' => '请填写菜单名称',

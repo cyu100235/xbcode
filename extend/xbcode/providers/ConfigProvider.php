@@ -43,16 +43,20 @@ class ConfigProvider
         if ($data && (isset($config['refresh']) && $config['refresh'] !== true)) {
             return $data;
         }
+        // 站点ID
+        $saasAppid = request()->saasAppid ?? null;
         // 获取数据
         if (empty($name)) {
             $where = [
-                'group' => $group
+                'group' => $group,
+                'saas_appid' => $saasAppid
             ];
             $data  = Db::name('config')->where($where)->column('value', 'name');
         } else {
             $where = [
                 'group' => $group,
-                'name' => $name
+                'name' => $name,
+                'saas_appid' => $saasAppid
             ];
             $data  = Db::name('config')->where($where)->value('value', []);
             if ($data) {
