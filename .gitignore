@@ -8,4 +8,3 @@ php-cli.ini
 /tests/tmp
 /tests/.phpunit.result.cache
 /public/.well-known
-/public/uploads/*
