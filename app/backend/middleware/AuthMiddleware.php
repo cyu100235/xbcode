@@ -6,6 +6,7 @@ use app\model\AdminRole;
 use Webman\Http\Request;
 use Tinywan\Jwt\JwtToken;
 use Webman\Http\Response;
+use xbcode\providers\AdminLogProvider;
 use xbcode\trait\JsonTrait;
 use xbcode\utils\TokenUtil;
 use Webman\MiddlewareInterface;
@@ -54,11 +55,17 @@ class AuthMiddleware implements MiddlewareInterface
             // 抛出异常
             throw new Exception($th->getMessage(), $th->getCode());
         }
-        /**
-         * 如果是options请求则返回一个空响应，否则继续向洋葱芯穿越，并得到一个响应
-         * @var Response
-         */
-        $response = $request->method() == 'OPTIONS' ? response('') : $handler($request);
+        // 返回空响应
+        if ($request->method() === 'OPTIONS') {
+            return response('');
+        }
+        // 继续向洋葱芯穿越，直至执行控制器得到响应
+        $response = $handler($request);
+        // 响应结果
+        $result = $response->rawBody();
+        $result = is_array($result) ? json_encode($result, 256) : $result;
+        // 记录日志
+        AdminLogProvider::record($request, $result);
         // 返回响应
         return $response;
     }

@@ -5,7 +5,6 @@ use Exception;
 use support\Request;
 use app\model\WebAdmin;
 use app\model\AdminRule;
-use xbcode\providers\QueueProvider;
 use xbcode\XbController;
 use Tinywan\Jwt\JwtToken;
 use xbcode\utils\TokenUtil;
@@ -15,6 +14,7 @@ use xbcode\providers\AppProvider;
 use Webman\Captcha\CaptchaBuilder;
 use app\validate\WebAdminValidate;
 use xbcode\providers\MenuProvider;
+use xbcode\providers\AdminLogProvider;
 
 /**
  * 登录控制器
@@ -119,9 +119,13 @@ class LoginController extends XbController
             'state' => $model['state'],
             'is_system' => $model['is_system'],
         ];
-        $data = TokenUtil::create($data);
+        $result = TokenUtil::create($data);
+        // 日志数据
+        $request->uid = $model['id'];
+        $request->username = $model['username'];
+        $request->saasAppid = $model['saas_appid'];
         // 返回数据
-        return $this->successFul('登录成功', $data);
+        return $this->successFul('登录成功', $result);
     }
 
     /**

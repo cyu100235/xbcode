@@ -28,22 +28,16 @@ class RouteProvider
         Route::any(
             '/backend/Setting/config/{path:.+}',
             [\app\backend\controller\SettingController::class, 'config']
-        )->middleware([
-            \app\backend\middleware\AuthMiddleware::class,
-        ]);
+        );
         // 子后台配置项
         Route::any(
             '/admin/Setting/config/{path:.+}',
             [\app\admin\controller\SettingController::class, 'config']
-        )->middleware([
-            \app\admin\middleware\AuthMiddleware::class,
-        ]);
+        );
         // 插件配置项
         Route::any(
             '/app/:plugin/Setting/config/{path:.+}',
             [\app\admin\controller\SettingController::class, 'config']
-        )->middleware([
-            \app\admin\middleware\AuthMiddleware::class,
-        ]);
+        );
     }
 }

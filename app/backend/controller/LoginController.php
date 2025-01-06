@@ -14,7 +14,7 @@ use xbcode\providers\AppProvider;
 use Webman\Captcha\PhraseBuilder;
 use Webman\Captcha\CaptchaBuilder;
 use xbcode\providers\MenuProvider;
-use xbcode\providers\QueueProvider;
+use xbcode\providers\AdminLogProvider;
 
 /**
  * 登录控制器
@@ -99,9 +99,13 @@ class LoginController extends XbController
             'state' => $model['state'],
             'is_system' => $model['is_system'],
         ];
-        $data = TokenUtil::create($data);
+        $result = TokenUtil::create($data);
+        // 日志数据
+        $request->uid = $model['id'];
+        $request->username = $model['username'];
+        $request->saasAppid = $model['saas_appid'];
         // 返回数据
-        return $this->successFul('登录成功', $data);
+        return $this->successFul('登录成功', $result);
     }
 
     /**
