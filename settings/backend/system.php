@@ -60,6 +60,7 @@ return [
             'prompt' => "建议尺寸：300*300像素\n支持jpg，jpeg，png格式",
             'props' => [
                 'type' => 'image',
+                'isUpload' => true,
             ],
         ],
     ],
@@ -73,6 +74,7 @@ return [
             'prompt' => "尺寸：1920*1080像素\n支持jpg，jpeg，png图片与MP4视频格式",
             'props' => [
                 'type' => 'other',
+                'isUpload' => true,
             ],
         ],
     ],
@@ -86,6 +88,7 @@ return [
             'prompt' => "建议尺寸：400*400像素\n支持jpg，jpeg，png图片与MP4视频格式",
             'props' => [
                 'type' => 'other',
+                'isUpload' => true,
             ],
         ],
     ],
