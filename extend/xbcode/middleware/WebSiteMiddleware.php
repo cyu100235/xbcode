@@ -27,10 +27,8 @@ class WebSiteMiddleware implements MiddlewareInterface
     {
         // 获取当前域名
         $domain = $request->host();
-        // 获取站点字典
-        $data = WebSite::getWebSiteDict();
         // 获取域名对应站点
-        $webSite = $data[$domain] ?? null;
+        $webSite = WebSite::getWebSiteByDomain($domain);
         // 检测域名站点不存在则跳转总后台
         if (empty($webSite)) {
             return redirect('/backend/');
@@ -48,7 +46,7 @@ class WebSiteMiddleware implements MiddlewareInterface
             }
         }
         // 设置站点APPID
-        $request->saas_appid = $webSite['id'];
+        $request->saasAppid = $webSite['id'];
         // 验证本地插件租户站点授权
         $this->checkedLocalPluginAuth($request);
 

@@ -111,8 +111,12 @@ trait ConfigAttrTrait
         }
         // 处理数据
         foreach ($template as $value) {
+            // 拦截无需验证的组件
+            if (in_array($value['type'], ['xbTitle', 'xbAlert', 'NDivider'])) {
+                continue;
+            }
             // 获取字段名称
-            $field = $value['field'];
+            $field = $value['field'] ?? '';
             // 获取填写数据
             $dataValue = $data[$field] ?? '';
             // 获取组件类型
@@ -165,8 +169,11 @@ trait ConfigAttrTrait
         }
         // 处理数据
         foreach ($template as $value) {
+            if (in_array($value['type'], ['xbTitle', 'xbAlert', 'NDivider'])) {
+                continue;
+            }
             // 获取字段名称
-            $field = $value['field'];
+            $field = $value['field'] ?? '';
             // 获取填写参数
             $dataValue = $data[$field] ?? '';
             // 验证组件类型

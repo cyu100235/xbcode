@@ -1,10 +1,12 @@
 <?php
 namespace app\admin\controller;
 
+use app\model\WebSite;
 use support\Request;
 use app\model\WebPlugin;
 use xbcode\XbController;
 use xbcode\providers\AppProvider;
+use xbcode\providers\ConfigProvider;
 
 /**
  * 首页控制器
@@ -55,6 +57,38 @@ class IndexController extends XbController
                 'toolbar' => xbUrl('Index/toolbar'),
             ],
         ];
+        // 是否支持版权设置
+        $copyright = WebSite::copyrightValue();
+        if ($copyright) {
+            // 获取站点配置
+            $site = ConfigProvider::get('system', '', [], [
+                'refresh' => true,
+            ]);
+            // 设置站点名称
+            if (!empty($site['web_name']) && !empty($site['web_url'])) {
+                $config['web_name'] = $site['web_name'];
+                $config['web_url'] = $site['web_url'];
+                // 设置站点版权
+                $config['login_beian']['system_name'] = $site['web_name'];
+                $config['login_beian']['system_url'] = $site['web_url'];
+                $config['login_beian']['system_version'] = config('projects.version_name', '');
+            }
+            // 设置组织信息
+            if (!empty($site['about_name']) && !empty($site['about_url'])) {
+                $config['login_beian']['about_name'] = $site['about_name'];
+                $config['login_beian']['about_url'] = $site['about_url'];
+            }
+            // 设置备案信息
+            if (!empty($site['beian_text']) && !empty($site['beian_url'])) {
+                $config['login_beian']['beian_text'] = $site['beian_text'];
+                $config['login_beian']['beian_url'] = $site['beian_url'];
+            }
+            // 设置公安备案
+            if (!empty($site['police_beian_text']) && !empty($site['police_beian_url'])) {
+                $config['login_beian']['police_beian_text'] = $site['police_beian_text'];
+                $config['login_beian']['police_beian_url'] = $site['police_beian_url'];
+            }
+        }
         // 获取站点配置
         $data = AppProvider::get($config);
         // 返回数据

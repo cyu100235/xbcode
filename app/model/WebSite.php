@@ -32,4 +32,29 @@ class WebSite extends Model
         // 返回站点字典
         return $data;
     }
+
+    /**
+     * 根据域名获取站点信息
+     * @param string $domain
+     * @return mixed
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public static function getWebSiteByDomain(string $domain)
+    {
+        $data = WebSite::getWebSiteDict();
+        return $data[$domain] ?? [];
+    }
+    
+    /**
+     * 获取自定义版权状态
+     * @return bool
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public static function copyrightValue()
+    {
+        $state = self::order('id','asc')->value('copyright', '10');
+        return $state === '20' ? true : false;
+    }
 }

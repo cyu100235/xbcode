@@ -191,6 +191,19 @@ class WebSiteController extends XbController
         $builder->addColumn('title', '站点名称', [
             'minWidth' => 180,
         ]);
+        $builder->addColumn('copyright', '自定义版权', [
+            'width' => 120,
+            'params' => [
+                'type' => 'switch',
+                'api' => xbUrl('WebSite/action'),
+                'props' => [
+                    'activeText' => '开启',
+                    'inactiveText' => '关闭',
+                    'activeValue' => '20',
+                    'inactiveValue' => '10',
+                ],
+            ]
+        ]);
         $builder->addColumn('local', '本地储存', [
             'width' => 120,
             'params' => [

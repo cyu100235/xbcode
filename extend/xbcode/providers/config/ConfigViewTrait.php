@@ -47,7 +47,6 @@ trait ConfigViewTrait
             if (!in_array($value['type'], ['xbTitle'])) {
                 $components = ['radio', 'checkbox', 'select'];
                 if (!in_array($value['type'], $components) && $value['field'] !== 'active') {
-                    // 数据验证
                     // 验证扩展组件
                     if (in_array($value['type'], ['checkbox', 'radio', 'select'])) {
                         if (empty($value['extra'])) {
@@ -57,7 +56,7 @@ trait ConfigViewTrait
                 }
             }
             // 设置默认值
-            $configValue = $value['value'];
+            $configValue = $value['value'] ?? '';
             // 检测是否选项值
             if (!in_array($value['type'], ['checkbox', 'radio', 'select'])) {
                 $configValue = !isset($value['value']) ? '' : $value['value'];

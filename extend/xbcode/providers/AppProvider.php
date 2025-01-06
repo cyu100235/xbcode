@@ -28,25 +28,23 @@ class AppProvider
         $data['web_logo']   = empty($config['web_logo']) ? '' : $config['web_logo'];
         $data['workbench']  = $config['workbench'] ?? '';
         // 备案信息
-        if (empty($config['login_beian'])) {
-            $loginBeian = config('projects.system_info', []);
-            // 登录页备案信息
-            $data['login_beian'] = [
-                // 组织信息
-                'about_name' => $loginBeian['about_name'] ?? '',
-                'about_url' => $loginBeian['about_url'] ?? '',
-                // 系统信息
-                'system_name' => $loginBeian['system_name'] ?? '',
-                'system_url' => $loginBeian['system_url'] ?? '',
-                'system_version' => $loginBeian['system_version'] ?? '',
-                // 备案编号
-                'beian_text' => $loginBeian['beian_text'] ?? '',
-                'beian_url' => $loginBeian['beian_url'] ?? '',
-                // 公安备案
-                'police_beian_text' => $loginBeian['police_beian_text'] ?? '',
-                'police_beian_url' => $loginBeian['police_beian_url'] ?? '',
-            ];
-        }
+        $loginBeian = config('projects.system_info', []);
+        // 登录页备案信息
+        $data['login_beian'] = [
+            // 组织信息
+            'about_name' => $config['login_beian']['about_name'] ?? $loginBeian['about_name'],
+            'about_url' => $config['login_beian']['about_url'] ?? $loginBeian['about_url'],
+            // 系统信息
+            'system_name' => $config['login_beian']['system_name'] ?? $loginBeian['system_name'],
+            'system_url' => $config['login_beian']['system_url'] ?? $loginBeian['system_url'],
+            'system_version' => $config['login_beian']['system_version'] ?? $loginBeian['system_version'],
+            // 备案编号
+            'beian_text' => $config['login_beian']['beian_text'] ?? $loginBeian['beian_text'],
+            'beian_url' => $config['login_beian']['beian_url'] ?? $loginBeian['beian_url'],
+            // 公安备案
+            'police_beian_text' => $config['login_beian']['police_beian_text'] ?? $loginBeian['police_beian_text'],
+            'police_beian_url' => $config['login_beian']['police_beian_url'] ?? $loginBeian['police_beian_url'],
+        ];
         // 登录页数据
         $data['login_data'] = [
             // 登录标题
