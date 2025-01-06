@@ -2,10 +2,11 @@
 
 namespace xbcode\providers;
 
+use Exception;
+use think\facade\Db;
+use app\model\Upload;
 use xbcode\providers\upload\Driver;
 use xbcode\providers\upload\UploadTrait;
-use app\model\Upload;
-use Exception;
 
 /**
  * 附件服务类
@@ -34,19 +35,28 @@ class UploadProvider
             if (empty($adapter)) {
                 $adapter = ConfigProvider::get('upload', 'active', 'local');
             }
-            // 2.获取上传配置
+            // 2.检测是否站点上传
+            $appid = request()->saasAppid ?? null;
+            if ($appid) {
+                // 本地储存权限检测
+                $local = Db::name('web_site')->where('id', $appid)->value('local', '10');
+                if ($local === '10' && $adapter === 'local') {
+                    throw new Exception('您没有上传本地储存权限');
+                }
+            }
+            // 3.获取上传配置
             $config = [
                 'default' => $adapter,
                 'engine' => ConfigProvider::get('upload', '', '', ['json' => true]),
             ];
-            // 3.获取上传文件信息
+            // 4.获取上传文件信息
             $driver = new Driver($config);
             $driver->setUploadFile($name);
             $fileName = $driver->getFileName();
             $fileInfo = $driver->getFileInfo();
             $ext      = $fileInfo['ext'] ?? '';
             $md5 = md5_file($fileInfo['realPath']);
-            // 4.检测文件是否已存在
+            // 5.检测文件是否已存在
             $where = [
                 'md5' => $md5,
                 'cid' => $cid,
@@ -59,19 +69,19 @@ class UploadProvider
                 $file->save();
                 return $file;
             }
-            // 5.上传文件
+            // 6.上传文件
             $saveDir = self::getUploadPath($ext);
             $saveDir = "{$saveDir}/{$fileName}";
             if (!$driver->upload($saveDir)) {
                 throw new Exception($driver->getError());
             }
-            // 6.处理文件信息
+            // 7.处理文件信息
             if (strlen($fileInfo['name']) > 128) {
                 $temp             = substr($fileInfo['name'], 0, 123);
                 $nameEnd          = substr($fileInfo['name'], strlen($fileInfo['name']) - 5, strlen($fileInfo['name']));
                 $fileInfo['name'] = $temp . $nameEnd;
             }
-            // 7.保存文件信息
+            // 8.保存文件信息
             $file = Upload::create([
                 'cid' => $cid,
                 'uid' => $uid,
@@ -84,7 +94,7 @@ class UploadProvider
                 'uri' => $saveDir,
                 'url' => FileProvider::url($saveDir),
             ]);
-            // 8.返回文件信息
+            // 9.返回文件信息
             return $file;
         } catch (\Throwable $th) {
             throw $th;

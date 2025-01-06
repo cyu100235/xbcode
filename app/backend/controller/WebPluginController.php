@@ -129,7 +129,7 @@ class WebPluginController extends XbController
             ->each(function ($item)use($plugins) {
                 // 设置插件名称
                 $plugin      = $plugins[$item->name] ?? [];
-                $item->title = $plugin['title'] ?? '';
+                $item->title = $plugin['title'] ?? '未安装插件';
                 // 设置过期时间
                 if (empty($item->expire_time)) {
                     $item->expire_time = '永久不过期';

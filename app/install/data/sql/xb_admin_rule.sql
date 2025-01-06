@@ -17,7 +17,7 @@ CREATE TABLE `xb_admin_rule`  (
   `params` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL DEFAULT '' COMMENT '菜单参数',
   `sort` int(11) NOT NULL DEFAULT 100 COMMENT '菜单排序（值越大，越靠后）',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 433 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '后台菜单' ROW_FORMAT = DYNAMIC;
+) ENGINE = InnoDB AUTO_INCREMENT = 447 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci COMMENT = '后台菜单' ROW_FORMAT = DYNAMIC;
 INSERT INTO `xb_admin_rule` VALUES (2, '2024-03-27 15:57:58', '2024-11-30 12:29:09', '权限管理', '10', '', 'Auth', 0, 'none/index', '20', '10', '10', 'GET', 'TeamOutlined', '', 8888);
 INSERT INTO `xb_admin_rule` VALUES (3, '2024-03-27 15:58:24', '2025-01-01 04:59:11', '系统设置', '10', '', 'Setting', 0, 'none/index', '20', '10', '10', 'GET', 'Setting', '', 9999);
 INSERT INTO `xb_admin_rule` VALUES (5, '2024-03-27 16:00:15', '2025-01-03 05:11:56', '工作台', '20', '', 'workbench', 0, 'remote/index', '20', '20', '20', 'GET', 'DashboardOutlined', 'backend/Index/workbench', 0);
@@ -119,13 +119,27 @@ INSERT INTO `xb_admin_rule` VALUES (419, '2024-12-31 02:26:02', '2024-12-31 02:2
 INSERT INTO `xb_admin_rule` VALUES (420, '2025-01-01 02:41:56', '2025-01-01 02:41:56', '获取菜单', '30', '', 'backend/Login/menus', 5, 'none/index', '10', '20', '20', 'GET', '', '', 100);
 INSERT INTO `xb_admin_rule` VALUES (421, '2025-01-01 04:58:25', '2025-01-01 04:58:37', '系统日志', '20', '', 'backend/AdminLog/index', 3, 'table/index', '20', '10', '10', 'GET', '', '', 7);
 INSERT INTO `xb_admin_rule` VALUES (422, '2025-01-01 04:58:47', '2025-01-01 04:58:47', '系统日志-表格', '30', '', 'backend/AdminLog/indexTable', 421, 'none/index', '10', '10', '10', 'GET', '', '', 0);
-INSERT INTO `xb_admin_rule` VALUES (423, '2025-01-04 12:13:21', '2025-01-04 12:25:59', '系统登录', '30', 'admin', 'admin/Login/login', 401, 'none/index', '10', '10', '10', 'POST', '', '', 2);
-INSERT INTO `xb_admin_rule` VALUES (424, '2025-01-04 12:23:00', '2025-01-04 12:25:57', '获取应用信息', '30', 'admin', 'admin/Index/Site', 401, 'none/index', '10', '10', '10', 'GET', '', '', 1);
-INSERT INTO `xb_admin_rule` VALUES (425, '2025-01-04 12:24:25', '2025-01-04 12:26:01', '获取管理员信息', '30', 'admin', 'admin/Login/user', 401, 'none/index', '10', '10', '10', 'GET', '', '', 3);
-INSERT INTO `xb_admin_rule` VALUES (426, '2025-01-04 12:25:06', '2025-01-04 12:26:04', '获取菜单', '30', 'admin', 'admin/Login/menus', 401, 'none/index', '10', '10', '10', 'GET', '', '', 4);
-INSERT INTO `xb_admin_rule` VALUES (427, '2025-01-04 12:34:12', '2025-01-04 12:34:35', '系统设置', '20', 'admin', 'Setting', 0, 'table/index', '20', '10', '10', 'GET', 'Setting', '', 100);
-INSERT INTO `xb_admin_rule` VALUES (428, '2025-01-04 12:35:38', '2025-01-04 21:41:16', '系统设置', '20', 'admin', 'admin/Setting/config/admin/system', 427, 'form/index', '20', '10', '10', 'GET', '', '', 100);
-INSERT INTO `xb_admin_rule` VALUES (429, '2025-01-04 12:37:19', '2025-01-04 12:37:19', '上传设置', '20', 'admin', 'admin/UploadConf/index', 427, 'table/index', '20', '10', '10', 'GET', '', '', 100);
-INSERT INTO `xb_admin_rule` VALUES (430, '2025-01-04 12:37:53', '2025-01-04 12:38:14', '保存上传设置', '30', 'admin', 'admin/UploadConf/config', 429, 'form/index', '10', '10', '10', 'GET,PUT', '', '', 100);
-INSERT INTO `xb_admin_rule` VALUES (431, '2025-01-04 12:38:52', '2025-01-04 12:38:52', '系统日志', '20', 'admin', 'admin/AdminLog/index', 427, 'table/index', '20', '10', '10', 'GET', '', '', 100);
-INSERT INTO `xb_admin_rule` VALUES (432, '2025-01-04 12:38:57', '2025-01-04 12:38:57', '系统日志-表格', '30', 'admin', 'admin/AdminLog/indexTable', 431, 'none/index', '10', '10', '10', 'GET', '', '', 0);
+INSERT INTO `xb_admin_rule` VALUES (423, '2025-01-04 12:13:21', '2025-01-04 12:25:59', '系统登录', '30', 'admin', 'admin/Login/login', 401, 'none/index', '10', '20', '20', 'POST', '', '', 2);
+INSERT INTO `xb_admin_rule` VALUES (424, '2025-01-04 12:23:00', '2025-01-04 12:25:57', '获取应用信息', '30', 'admin', 'admin/Index/Site', 401, 'none/index', '10', '20', '20', 'GET', '', '', 1);
+INSERT INTO `xb_admin_rule` VALUES (425, '2025-01-04 12:24:25', '2025-01-04 12:26:01', '获取管理员信息', '30', 'admin', 'admin/Login/user', 401, 'none/index', '10', '20', '20', 'GET', '', '', 3);
+INSERT INTO `xb_admin_rule` VALUES (426, '2025-01-04 12:25:06', '2025-01-04 12:26:04', '获取菜单', '30', 'admin', 'admin/Login/menus', 401, 'none/index', '10', '20', '20', 'GET', '', '', 4);
+INSERT INTO `xb_admin_rule` VALUES (427, '2025-01-04 12:34:12', '2025-01-06 17:52:19', '系统设置', '20', 'admin', 'Setting', 0, 'none/index', '20', '10', '20', 'GET', 'Setting', '', 100);
+INSERT INTO `xb_admin_rule` VALUES (428, '2025-01-04 12:35:38', '2025-01-04 21:41:16', '系统设置', '20', 'admin', 'admin/Setting/config/admin/system', 427, 'form/index', '20', '10', '20', 'GET', '', '', 100);
+INSERT INTO `xb_admin_rule` VALUES (429, '2025-01-04 12:37:19', '2025-01-04 12:37:19', '上传设置', '20', 'admin', 'admin/UploadConf/index', 427, 'table/index', '20', '10', '20', 'GET', '', '', 100);
+INSERT INTO `xb_admin_rule` VALUES (430, '2025-01-04 12:37:53', '2025-01-04 12:38:14', '保存上传设置', '30', 'admin', 'admin/UploadConf/config', 429, 'form/index', '10', '10', '20', 'GET,PUT', '', '', 100);
+INSERT INTO `xb_admin_rule` VALUES (431, '2025-01-04 12:38:52', '2025-01-04 12:38:52', '系统日志', '20', 'admin', 'admin/AdminLog/index', 427, 'table/index', '20', '10', '20', 'GET', '', '', 100);
+INSERT INTO `xb_admin_rule` VALUES (432, '2025-01-04 12:38:57', '2025-01-04 12:38:57', '系统日志-表格', '30', 'admin', 'admin/AdminLog/indexTable', 431, 'none/index', '10', '10', '20', 'GET', '', '', 0);
+INSERT INTO `xb_admin_rule` VALUES (433, '2025-01-06 17:51:59', '2025-01-06 17:59:25', '权限管理', '10', 'admin', 'WebMenu', 0, 'none/index', '20', '10', '20', 'GET', 'TeamOutlined', '', 90);
+INSERT INTO `xb_admin_rule` VALUES (434, '2025-01-06 17:53:55', '2025-01-06 17:53:55', '账号管理', '20', 'admin', 'admin/Admin/index', 433, 'table/index', '20', '10', '20', 'GET', '', '', 100);
+INSERT INTO `xb_admin_rule` VALUES (435, '2025-01-06 17:54:35', '2025-01-06 17:54:35', '角色管理', '20', 'admin', 'admin/AdminRole/index', 433, 'table/index', '20', '10', '20', 'GET', '', '', 100);
+INSERT INTO `xb_admin_rule` VALUES (436, '2025-01-06 17:55:00', '2025-01-06 17:55:00', '账号管理-添加', '30', 'admin', 'admin/Admin/add', 434, 'form/index', '10', '10', '20', 'GET,POST', '', '', 0);
+INSERT INTO `xb_admin_rule` VALUES (437, '2025-01-06 17:55:01', '2025-01-06 17:55:01', '账号管理-修改', '30', 'admin', 'admin/Admin/edit', 434, 'form/index', '10', '10', '20', 'GET,PUT', '', '', 0);
+INSERT INTO `xb_admin_rule` VALUES (438, '2025-01-06 17:55:01', '2025-01-06 17:55:01', '账号管理-删除', '30', 'admin', 'admin/Admin/del', 434, 'none/index', '10', '10', '20', 'GET,DELETE', '', '', 0);
+INSERT INTO `xb_admin_rule` VALUES (439, '2025-01-06 17:55:01', '2025-01-06 17:55:01', '账号管理-修改列', '30', 'admin', 'admin/Admin/rowEdit', 434, 'none/index', '10', '10', '20', 'GET,PUT', '', '', 0);
+INSERT INTO `xb_admin_rule` VALUES (440, '2025-01-06 17:55:01', '2025-01-06 17:55:01', '账号管理-表格', '30', 'admin', 'admin/Admin/indexTable', 434, 'none/index', '10', '10', '20', 'GET', '', '', 0);
+INSERT INTO `xb_admin_rule` VALUES (441, '2025-01-06 17:55:07', '2025-01-06 17:55:07', '角色管理-添加', '30', 'admin', 'admin/AdminRole/add', 435, 'form/index', '10', '10', '20', 'GET,POST', '', '', 0);
+INSERT INTO `xb_admin_rule` VALUES (442, '2025-01-06 17:55:07', '2025-01-06 17:55:07', '角色管理-修改', '30', 'admin', 'admin/AdminRole/edit', 435, 'form/index', '10', '10', '20', 'GET,PUT', '', '', 0);
+INSERT INTO `xb_admin_rule` VALUES (443, '2025-01-06 17:55:07', '2025-01-06 17:55:07', '角色管理-删除', '30', 'admin', 'admin/AdminRole/del', 435, 'none/index', '10', '10', '20', 'GET,DELETE', '', '', 0);
+INSERT INTO `xb_admin_rule` VALUES (444, '2025-01-06 17:55:07', '2025-01-06 17:55:07', '角色管理-表格', '30', 'admin', 'admin/AdminRole/indexTable', 435, 'none/index', '10', '10', '20', 'GET', '', '', 0);
+INSERT INTO `xb_admin_rule` VALUES (445, '2025-01-06 17:55:55', '2025-01-06 17:55:55', '角色管理-授权', '30', 'admin', 'admin/AdminRole/auth', 435, 'form/index', '10', '10', '20', 'GET,PUT', '', '', 100);
+INSERT INTO `xb_admin_rule` VALUES (446, '2025-01-06 19:32:16', '2025-01-06 19:32:16', '上传设置-表格', '30', 'admin', 'admin/UploadConf/indexTable', 429, 'none/index', '10', '10', '10', 'GET', '', '', 0);

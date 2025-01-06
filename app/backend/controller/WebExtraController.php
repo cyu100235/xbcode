@@ -75,6 +75,7 @@ class WebExtraController extends XbController
         // 生成令牌
         $data = [
             'id' => $result['id'],
+            'role_id' => $result['role_id'],
             'saas_appid' => $result['saas_appid'],
             'username' => $result['username'],
             'state' => $result['state'],

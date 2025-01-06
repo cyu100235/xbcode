@@ -2,8 +2,8 @@
 
 namespace app\model;
 
-use support\Cache;
 use xbcode\Model;
+use support\Cache;
 
 /**
  * 站点插件
@@ -13,7 +13,7 @@ use xbcode\Model;
 class WebPlugin extends Model
 {
     /**
-     * 获取站点授权插件
+     * 获取站点全部授权插件
      * @param bool $force 是否强制刷新
      * @return mixed
      * @copyright 贵州小白基地网络科技有限公司
@@ -43,7 +43,7 @@ class WebPlugin extends Model
     }
 
     /**
-     * 获取站点授权插件
+     * 获取站点生效中授权插件
      * @param bool $force
      * @return array
      * @copyright 贵州小白基地网络科技有限公司
@@ -69,7 +69,7 @@ class WebPlugin extends Model
     }
 
     /**
-     * 获取工作台路由
+     * 获取插件工作台路由
      * @return array
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
@@ -93,7 +93,7 @@ class WebPlugin extends Model
     }
 
     /**
-     * 获取工具栏路由
+     * 获取插件工具栏路由
      * @return array
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com

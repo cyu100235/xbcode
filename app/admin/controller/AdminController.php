@@ -1,15 +1,15 @@
 <?php
-namespace app\backend\controller;
+namespace app\admin\controller;
 
 use support\Request;
-use app\model\Admin;
-use app\model\AdminRole;
+use app\model\WebRole;
+use app\model\WebAdmin;
 use xbcode\XbController;
 use Tinywan\Jwt\JwtToken;
 use xbcode\utils\PasswdUtil;
-use app\validate\AdminValidate;
 use xbcode\builder\FormBuilder;
 use xbcode\builder\ListBuilder;
+use app\validate\WebAdminValidate;
 use xbcode\builder\table\attrs\RowEditTrait;
 
 /**
@@ -23,6 +23,12 @@ class AdminController extends XbController
     use RowEditTrait;
 
     /**
+     * 模型
+     * @var WebAdmin
+     */
+    protected $model;
+
+    /**
      * 初始化
      * @return void
      * @copyright 贵州小白基地网络科技有限公司
@@ -30,7 +36,7 @@ class AdminController extends XbController
      */
     protected function init()
     {
-        $this->model = new Admin;
+        $this->model = new WebAdmin;
     }
     
     /**
@@ -139,7 +145,8 @@ class AdminController extends XbController
     public function index(Request $request)
     {
         $adminId = JwtToken::getCurrentId();
-        $data    = Admin::with(['role'])
+        $model   = $this->model;
+        $data    = $model->with(['role'])
             ->where('admin_id', $adminId)
             ->order('id desc')
             ->paginate();
@@ -161,9 +168,9 @@ class AdminController extends XbController
             $post['admin_id'] = $adminId;
 
             // 数据验证
-            xbValidate(AdminValidate::class, $post, 'add');
+            xbValidate(WebAdminValidate::class, $post, 'add');
 
-            $model = new Admin;
+            $model = $this->model;
             if (!$model->save($post)) {
                 return $this->fail('保存失败');
             }
@@ -185,7 +192,8 @@ class AdminController extends XbController
     public function edit(Request $request)
     {
         $id    = $request->get('id');
-        $model = Admin::where('id', $id)->find();
+        $model = $this->model;
+        $model = $model->where('id', $id)->find();
         if (!$model) {
             return $this->fail('该数据不存在');
         }
@@ -193,7 +201,7 @@ class AdminController extends XbController
             $post = $request->post();
 
             // 数据验证
-            xbValidate(AdminValidate::class, $post, 'edit');
+            xbValidate(WebAdminValidate::class, $post, 'edit');
 
             if (empty($post['password'])) {
                 unset($post['password']);
@@ -223,7 +231,8 @@ class AdminController extends XbController
     public function del(Request $request)
     {
         $id    = $request->post('id');
-        $model = Admin::where('id', $id)->find();
+        $model = $this->model;
+        $model = $model->where('id', $id)->find();
         if (!$model) {
             return $this->fail('该数据不存在');
         }
@@ -248,14 +257,15 @@ class AdminController extends XbController
     public function profile(Request $request)
     {
         $adminId = JwtToken::getCurrentId();
-        $model = Admin::where('id', $adminId)->find();
+        $model = $this->model;
+        $model = $model->where('id', $adminId)->find();
         if (!$model) {
             return $this->fail('该数据不存在');
         }
         if ($request->method() === 'PUT') {
             $post = $request->post();
             // 数据验证
-            xbValidate(AdminValidate::class, $post, 'profile');
+            xbValidate(WebAdminValidate::class, $post, 'profile');
             // 原登录密码与旧密码一致
             if ($post['originpwd'] === $post['newpassword']) {
                 return $this->fail('新密码不能与原密码一致');
@@ -313,7 +323,7 @@ class AdminController extends XbController
         $builder->setPosition('left');
 
         // 所属角色
-        $roles = AdminRole::where('admin_id', $adminId)
+        $roles = WebRole::where('admin_id', $adminId)
             ->order('sort asc,id asc')
             ->column('title as label,id as value');
         $builder->addRow('role_id', 'select', '所属角色', '', [

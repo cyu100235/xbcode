@@ -79,7 +79,7 @@ class AdminRule extends Model
             return $data;
         }
         $data = self::column('*', 'path');
-        Cache::set($key, $data);
+        Cache::set($key, $data, 600);
         return $data;
     }
 }

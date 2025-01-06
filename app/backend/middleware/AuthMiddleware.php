@@ -6,10 +6,10 @@ use app\model\AdminRole;
 use Webman\Http\Request;
 use Tinywan\Jwt\JwtToken;
 use Webman\Http\Response;
-use xbcode\providers\AdminLogProvider;
 use xbcode\trait\JsonTrait;
 use xbcode\utils\TokenUtil;
 use Webman\MiddlewareInterface;
+use xbcode\providers\AdminLogProvider;
 
 /**
  * 权限中间件
@@ -95,6 +95,8 @@ class AuthMiddleware implements MiddlewareInterface
         try {
             // 获取管理员ID
             $adminId = JwtToken::getCurrentId();
+            // 获取管理员角色ID
+            $roleId = JwtToken::getExtendVal('role_id');
             // 获取管理员账号
             $username = JwtToken::getExtendVal('username');
             // 获取管理员状态
@@ -128,7 +130,7 @@ class AuthMiddleware implements MiddlewareInterface
             return;
         }
         // 检测是否有操作权限
-        if (!AdminRole::checkAuth($adminId, $pathInfo['path'])) {
+        if (!AdminRole::checkAuth($roleId, $pathInfo['uri'])) {
             throw new Exception('您没有操作权限', 403);
         }
     }

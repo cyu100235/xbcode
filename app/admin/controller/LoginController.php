@@ -1,6 +1,7 @@
 <?php
 namespace app\admin\controller;
 
+use app\model\WebPlugin;
 use Exception;
 use support\Request;
 use app\model\WebAdmin;
@@ -112,8 +113,9 @@ class LoginController extends XbController
         $model->login_time = date('Y-m-d H:i:s');
         $model->save();
         // 生成令牌
-        $data = [
+        $data   = [
             'id' => $model['id'],
+            'role_id' => $model['role_id'],
             'saas_appid' => $model['saas_appid'],
             'username' => $model['username'],
             'state' => $model['state'],
@@ -121,8 +123,8 @@ class LoginController extends XbController
         ];
         $result = TokenUtil::create($data);
         // 日志数据
-        $request->uid = $model['id'];
-        $request->username = $model['username'];
+        $request->uid       = $model['id'];
+        $request->username  = $model['username'];
         $request->saasAppid = $model['saas_appid'];
         // 返回数据
         return $this->successFul('登录成功', $result);
@@ -155,17 +157,24 @@ class LoginController extends XbController
 
     /**
      * 获取用户菜单
+     * @param \support\Request $request
      * @return \support\Response
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public function menus()
+    public function menus(Request $request)
     {
-        $where = [
-            ['plugin', '<>', ''],
-        ];
-        $data  = AdminRule::where($where)->order('sort asc')->select()->toArray();
-        $data  = MenuProvider::parseMenu($data, true);
+        // 获取参数
+        $uid     = (int) JwtToken::getCurrentId();
+        // 获取主项目名称
+        $app     = $request->app;
+        // 获取授权插件名称
+        $plugins = WebPlugin::getWebAuthPlugin();
+        $plugins = array_column($plugins, 'name');
+        $plugins = array_merge($plugins, [$app]);
+        // 获取菜单数据
+        $data    = MenuProvider::getWebMenus($uid, $plugins);
+        // 返回数据
         return $this->successRes($data);
     }
 }

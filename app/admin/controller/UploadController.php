@@ -1,14 +1,14 @@
 <?php
 namespace app\admin\controller;
 
+use support\Request;
 use app\model\Upload;
+use xbcode\XbController;
 use app\model\UploadCate;
 use xbcode\builder\FormBuilder;
 use xbcode\providers\DictProvider;
 use xbcode\providers\FileProvider;
 use xbcode\providers\UploadProvider;
-use xbcode\XbController;
-use support\Request;
 
 /**
  * 附件管理

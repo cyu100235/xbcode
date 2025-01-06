@@ -197,18 +197,17 @@ if (!function_exists('xbPathInfo')) {
      */
     function xbPathInfo($path)
     {
-        $path = trim($path, '/');
-        $path = ltrim($path, '/');
-        $path = explode('/', $path);
-        $path = array_filter($path);
-        $path = array_values($path);
-        if (empty($path[1])) {
+        $path = ltrim(trim($path, '/'), '/');
+        $paths = explode('/', $path);
+        $paths = array_filter($paths);
+        $paths = array_values($paths);
+        if (empty($paths[1])) {
             return [];
         }
-        $module     = $path[0] ?? '';
-        $controller = $path[1] ?? '';
+        $module     = $paths[0] ?? '';
+        $controller = $paths[1] ?? '';
         $controller = ucfirst($controller);
-        $action     = $path[2] ?? '';
+        $action     = $paths[2] ?? '';
         $suffix     = config('app.controller_suffix', '');
         $class      = "app\\{$module}\\controller\\{$controller}{$suffix}";
         if (!class_exists($class)) {
@@ -219,6 +218,7 @@ if (!function_exists('xbPathInfo')) {
             'controller' => $controller,
             'action' => $action,
             'path' => "{$module}/{$controller}/{$action}",
+            'uri' => $path,
             'class' => $class,
         ];
     }

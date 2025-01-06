@@ -1,15 +1,16 @@
 <?php
-namespace app\backend\controller;
+namespace app\admin\controller;
 
-use app\model\Admin;
-use app\model\AdminRole;
-use app\validate\AdminRoleValidate;
+use app\model\WebPlugin;
+use support\Request;
+use app\model\WebRole;
+use app\model\WebAdmin;
+use xbcode\XbController;
+use Tinywan\Jwt\JwtToken;
 use xbcode\builder\FormBuilder;
 use xbcode\builder\ListBuilder;
-use Tinywan\Jwt\JwtToken;
 use xbcode\providers\MenuProvider;
-use xbcode\XbController;
-use support\Request;
+use app\validate\AdminRoleValidate;
 
 /**
  * 角色管理
@@ -19,6 +20,12 @@ use support\Request;
 class AdminRoleController extends XbController
 {
     /**
+     * 模型
+     * @var WebRole
+     */
+    protected $model;
+
+    /**
      * 初始化
      * @return void
      * @copyright 贵州小白基地网络科技有限公司
@@ -26,9 +33,10 @@ class AdminRoleController extends XbController
      */
     protected function init()
     {
-        $this->model = new AdminRole;
+        parent::init();
+        $this->model = new WebRole;
     }
-    
+
     /**
      * 表格
      * @param \support\Request $request
@@ -125,14 +133,15 @@ class AdminRoleController extends XbController
     public function index(Request $request)
     {
         $adminId = JwtToken::getCurrentId();
-        $data    = AdminRole::where('admin_id', $adminId)
+        $model   = $this->model;
+        $data    = $model->where('admin_id', $adminId)
             ->order('sort asc,id asc')
             ->paginate()
             ->each(function ($item) {
                 $where     = [
                     'role_id' => $item['id'],
                 ];
-                $count     = Admin::where($where)->count();
+                $count     = WebAdmin::where($where)->count();
                 $item->num = $count;
             });
         return $this->successRes($data);
@@ -149,7 +158,7 @@ class AdminRoleController extends XbController
     {
         if ($request->method() == 'POST') {
             $adminId = JwtToken::getCurrentId();
-            $post = $request->post();
+            $post    = $request->post();
 
             // 数据验证
             xbValidate(AdminRoleValidate::class, $post, 'add');
@@ -157,10 +166,12 @@ class AdminRoleController extends XbController
             // 设置旗下角色
             $post['admin_id'] = $adminId;
             // 获取默认菜单
-            $rules = MenuProvider::defaultMenus();
+            $rules        = MenuProvider::defaultMenus([
+                ['plugin', '<>', ''],
+            ]);
             $post['rule'] = $rules;
 
-            $model = new AdminRole;
+            $model = $this->model;
             if (!$model->save($post)) {
                 return $this->fail('保存失败');
             }
@@ -182,7 +193,8 @@ class AdminRoleController extends XbController
     public function edit(Request $request)
     {
         $id    = $request->get('id');
-        $model = AdminRole::where('id', $id)->find();
+        $model = $this->model;
+        $model = $model->where('id', $id)->find();
         if (!$model) {
             return $this->fail('该数据不存在');
         }
@@ -214,7 +226,8 @@ class AdminRoleController extends XbController
     public function del(Request $request)
     {
         $id    = $request->post('id');
-        $model = AdminRole::where('id', $id)->find();
+        $model = $this->model;
+        $model = $model->where('id', $id)->find();
         if (!$model) {
             return $this->fail('该数据不存在');
         }
@@ -223,7 +236,7 @@ class AdminRoleController extends XbController
             return $this->fail('无法删除系统角色');
         }
         // 检测是否有管理员
-        if (Admin::where('role_id', $id)->count()) {
+        if (WebAdmin::where('role_id', $id)->count()) {
             return $this->fail('该角色下存在管理员，无法删除');
         }
         // 删除管理员
@@ -243,18 +256,22 @@ class AdminRoleController extends XbController
     public function auth(Request $request)
     {
         $id    = $request->get('id');
-        $model = AdminRole::where('id', $id)->find();
+        $model = $this->model;
+        $model = $model->where('id', $id)->find();
         if (!$model) {
             return $this->fail('该数据不存在');
         }
         if ($request->method() === 'PUT') {
-            $rules = $request->post('rule',[]);
+            $rules = $request->post('rule', []);
             if (empty($rules)) {
                 return $this->fail('请选择权限规则');
             }
             if (!$model->save(['rule' => $rules])) {
                 return $this->fail('权限分配失败');
             }
+            // 更新权限规则
+            $this->updateRules($id);
+            // 返回数据
             return $this->success('权限分配成功');
         }
         $builder = new FormBuilder;
@@ -265,12 +282,15 @@ class AdminRoleController extends XbController
         // 检测是否有权限
         $model['rule'] = empty($model['rule']) ? [] : $model['rule'];
         // 获取全部权限规则
-        $rules = MenuProvider::menuList(['plugin'=> '']);
+        $where = [
+            ['plugin', '<>', ''],
+        ];
+        $rules = MenuProvider::menuList($where);
         $rules = MenuProvider::menu2DToTree($rules);
         // 获取默认规则
         $defaultRules = MenuProvider::defaultMenus();
         // 解析权限规则
-        $authRule = $this->parseAuthRule($defaultRules,$rules);
+        $authRule = $this->parseAuthRule($defaultRules, $rules);
         // 添加权限规则
         $builder->addRow('rule', 'tree', '权限授权', [], [
             // 节点数据
@@ -286,7 +306,25 @@ class AdminRoleController extends XbController
         $data = $builder->create();
         return $this->successRes($data);
     }
-    
+
+    /**
+     * 更新权限规则缓存
+     * @param int $roleId
+     * @return void
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    private function updateRules(int $roleId)
+    {
+        // 获取站点授权插件
+        $app     = request()->app;
+        $plugin  = WebPlugin::getWebAuthPlugin(true);
+        $plugin  = array_column($plugin, 'name');
+        $plugins = array_merge($plugin, [$app]);
+        // 更新权限规则
+        MenuProvider::getWebRoleRules($roleId, $plugins, true);
+    }
+
     /**
      * 获取权限规则
      * @param array $defaultRules
@@ -295,10 +333,10 @@ class AdminRoleController extends XbController
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    private function parseAuthRule(array $defaultRules,array $rules)
+    private function parseAuthRule(array $defaultRules, array $rules)
     {
         $data = [];
-        $i = 0;
+        $i    = 0;
         foreach ($rules as $value) {
             // 组装树状格式数据
             $label = $value['title'];
@@ -311,11 +349,11 @@ class AdminRoleController extends XbController
             $data[$i]['value'] = $value['path'];
 
             // 默认选选中
-            $disabled = in_array($value['path'], $defaultRules) ? true : false;
+            $disabled             = in_array($value['path'], $defaultRules) ? true : false;
             $data[$i]['disabled'] = $disabled;
             // 是否有子节点
             if ($value['children']) {
-                $data[$i]['children'] = $this->parseAuthRule($defaultRules,$value['children']);
+                $data[$i]['children'] = $this->parseAuthRule($defaultRules, $value['children']);
             }
             $i++;
         }

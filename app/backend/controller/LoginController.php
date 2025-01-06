@@ -95,6 +95,7 @@ class LoginController extends XbController
         // 生成令牌
         $data = [
             'id' => $model['id'],
+            'role_id' => $model['role_id'],
             'username' => $model['username'],
             'state' => $model['state'],
             'is_system' => $model['is_system'],
@@ -165,18 +166,15 @@ class LoginController extends XbController
     }
 
     /**
-     * 获取用户菜单
+     * 获取管理员菜单
      * @return \support\Response
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public function menus()
     {
-        $where = [
-            ['plugin', '=', ''],
-        ];
-        $data  = AdminRule::where($where)->order('sort asc')->select()->toArray();
-        $data  = MenuProvider::parseMenu($data, true);
+        $uid  = (int)JwtToken::getCurrentId();
+        $data  = MenuProvider::getAdminMenus($uid);
         return $this->successRes($data);
     }
 }

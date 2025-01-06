@@ -1,10 +1,10 @@
 <?php
 namespace app\admin\controller;
 
-use app\model\WebPlugin;
 use support\Request;
-use xbcode\providers\AppProvider;
+use app\model\WebPlugin;
 use xbcode\XbController;
+use xbcode\providers\AppProvider;
 
 /**
  * 首页控制器
@@ -21,6 +21,8 @@ class IndexController extends XbController
         'index',
         'site',
         'workbench',
+        'toolbar',
+        'toolbarView',
     ];
 
     /**

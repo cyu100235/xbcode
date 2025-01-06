@@ -53,8 +53,21 @@ class Upload extends Model
      */
     public static function getEngineList()
     {
+        $appid = request()->saasAppid;
         $default = ConfigProvider::get('upload', 'active', 'local');
         $data    = Upload::$engineList;
+        if ($appid) {
+            // 本地储存权限
+            $local = WebSite::where('id', $appid)->value('local', '10');
+            // 无本地存储权限
+            if ($local !== '20') {
+                $data = array_filter($data, function ($item) {
+                    return $item['engine'] !== 'local';
+                });
+                // 重置索引
+                $data = array_values($data);
+            }
+        }
         $data    = array_map(function ($item) use ($default) {
             $item['state'] = $item['engine'] === $default ? '20' : '10';
             return $item;
