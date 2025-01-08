@@ -1,7 +1,7 @@
 <?php
 namespace app\validate;
 
-use Tinywan\Validate\Validate;
+use taoser\Validate;
 
 /**
  * 管理员验证器
@@ -10,7 +10,7 @@ use Tinywan\Validate\Validate;
  */
 class AdminValidate extends Validate
 {
-    protected array $rule = [
+    protected $rule = [
         'role_id' => 'require',
         'username' => 'require|length:2,20',
         'originpwd' => 'require',
@@ -20,7 +20,7 @@ class AdminValidate extends Validate
         'avatar' => 'require',
     ];
 
-    protected array $message = [
+    protected $message = [
         'role_id.require' => '请选择角色',
         'username.require' => '请输入登录账号',
         'username.length' => '登录账号字数必须在2-20位之间',

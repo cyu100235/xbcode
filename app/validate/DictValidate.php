@@ -2,16 +2,16 @@
 namespace app\validate;
 
 use app\model\DictTag;
-use Tinywan\Validate\Validate;
+use taoser\Validate;
 
 class DictValidate extends Validate
 {
-    protected array $rule = [
+    protected $rule = [
         'title' => 'require',
         'name' => 'require|alphaNum|verifyunique',
     ];
 
-    protected array $message = [
+    protected $message = [
         'title.require' => '请输入字典名称',
         'name.require' => '请输入字典标识',
         'name.unique' => '字典标识已存在',

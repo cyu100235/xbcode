@@ -1,7 +1,7 @@
 <?php
 namespace app\validate;
 
-use Tinywan\Validate\Validate;
+use taoser\Validate;
 
 /**
  * 菜单验证器
@@ -10,7 +10,7 @@ use Tinywan\Validate\Validate;
  */
 class AdminRuleValidate extends Validate
 {
-    protected array $rule = [
+    protected $rule = [
         'pid' => 'require',
         'title' => 'require',
         'path' => 'require',
@@ -18,7 +18,7 @@ class AdminRuleValidate extends Validate
         'method' => 'require',
     ];
 
-    protected array $message = [
+    protected $message = [
         'pid.require' => '请选择父级菜单',
         'path.require' => '请填写路由地址',
         'title.require' => '请填写菜单名称',

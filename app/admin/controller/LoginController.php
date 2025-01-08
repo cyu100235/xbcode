@@ -169,9 +169,10 @@ class LoginController extends XbController
         // 获取主项目名称
         $app     = $request->app;
         // 获取授权插件名称
-        $plugins = WebPlugin::getWebAuthPlugin();
+        $plugins = WebPlugin::getWebAuthPlugin(true);
         $plugins = array_column($plugins, 'name');
         $plugins = array_merge($plugins, [$app]);
+        $plugins = array_unique($plugins);
         // 获取菜单数据
         $data    = MenuProvider::getWebMenus($uid, $plugins);
         // 返回数据

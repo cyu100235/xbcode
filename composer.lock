@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "03f026fa8a5e33cda9bdd5adc0d6c9c6",
+    "content-hash": "69ef1e819e6d534cfd6c3bc8e2c13ad7",
     "packages": [
         {
             "name": "carbonphp/carbon-doctrine-types",
@@ -2702,6 +2702,42 @@
             "time": "2023-01-13T08:34:10+00:00"
         },
         {
+            "name": "taoser/webman-validate",
+            "version": "v1.7.2",
+            "dist": {
+                "type": "zip",
+                "url": "https://mirrors.tencent.com/repository/composer/taoser/webman-validate/v1.7.2/taoser-webman-validate-v1.7.2.zip",
+                "reference": "f6ceda3700cabf3e48966b845fd980faa292127e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.0",
+                "symfony/translation": "^5.4|^6.0",
+                "topthink/think-container": "~2.0",
+                "topthink/think-helper": "^3.1"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "src/helper.php"
+                ],
+                "psr-4": {
+                    "taoser\\": "src/"
+                }
+            },
+            "license": [
+                "mit"
+            ],
+            "authors": [
+                {
+                    "name": "taoser",
+                    "email": "changlin_zhao@qq.com"
+                }
+            ],
+            "description": "The webman Validate Package",
+            "time": "2022-08-27T08:29:08+00:00"
+        },
+        {
             "name": "tinywan/jwt",
             "version": "v1.10.1",
             "dist": {
@@ -2739,48 +2775,40 @@
             "time": "2024-07-09T12:08:44+00:00"
         },
         {
-            "name": "tinywan/validate",
-            "version": "v1.0.2",
+            "name": "topthink/think-container",
+            "version": "v2.0.5",
             "dist": {
                 "type": "zip",
-                "url": "https://mirrors.tencent.com/repository/composer/tinywan/validate/v1.0.2/tinywan-validate-v1.0.2.zip",
-                "reference": "31cc4c3b1fd991ecce2446729891eada09eb0193",
+                "url": "https://mirrors.tencent.com/repository/composer/topthink/think-container/v2.0.5/topthink-think-container-v2.0.5.zip",
+                "reference": "2189b39e42af2c14203ed4372b92e38989e9dabb",
                 "shasum": ""
             },
             "require": {
-                "ext-ctype": "*",
-                "ext-mbstring": "*",
-                "php": ">=7.4"
+                "php": ">=7.2.0",
+                "psr/container": "^1.0|^2.0",
+                "topthink/think-helper": "^3.1"
             },
             "require-dev": {
-                "phpunit/phpunit": "^9.0",
-                "workerman/webman": "^1.0"
+                "phpunit/phpunit": "^7.0|^8.0"
             },
             "type": "library",
             "autoload": {
-                "files": [
-                    "src/helper.php"
-                ],
+                "files": [],
                 "psr-4": {
-                    "Tinywan\\Validate\\": "src"
+                    "think\\": "src"
                 }
             },
             "license": [
-                "MIT"
+                "Apache-2.0"
             ],
             "authors": [
                 {
-                    "name": "Tinywan",
-                    "email": "756684177@qq.com"
+                    "name": "liu21st",
+                    "email": "liu21st@gmail.com"
                 }
             ],
-            "description": "validate for webman plugin",
-            "keywords": [
-                "plugin",
-                "validate",
-                "webman"
-            ],
-            "time": "2024-05-20T07:11:49+00:00"
+            "description": "PHP Container & Facade Manager",
+            "time": "2022-05-23T06:24:54+00:00"
         },
         {
             "name": "topthink/think-helper",

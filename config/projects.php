@@ -12,7 +12,7 @@ return [
         // 系统信息
         'system_name' => '小白基地',
         'system_version' => '1.0.0',
-        'system_url' => 'http://www.xbcode.net/',
+        'system_url' => 'http://xb.dev.xbcode.net/',
         // 备案编号
         'beian_text' => '黔ICP备2024022243号-1',
         'beian_url' => 'https://beian.miit.gov.cn/',

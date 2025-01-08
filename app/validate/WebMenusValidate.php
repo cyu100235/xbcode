@@ -1,7 +1,7 @@
 <?php
 namespace app\validate;
 
-use Tinywan\Validate\Validate;
+use taoser\Validate;
 
 /**
  * 站点菜单验证器
@@ -10,7 +10,7 @@ use Tinywan\Validate\Validate;
  */
 class WebMenusValidate extends Validate
 {
-    protected array $rule = [
+    protected $rule = [
         'pid' => 'require',
         'plugin' => 'alphaNum|length:5,35',
         'title' => 'require',
@@ -19,7 +19,7 @@ class WebMenusValidate extends Validate
         'method' => 'require',
     ];
 
-    protected array $message = [
+    protected $message = [
         'pid.require' => '请选择父级菜单',
         'plugin.alphaNum' => '插件标识只能是字母和数字',
         'plugin.length' => '插件标识长度为5-35个字符',

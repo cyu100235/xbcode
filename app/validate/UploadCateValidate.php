@@ -2,17 +2,17 @@
 namespace app\validate;
 
 use app\model\UploadCate;
-use Tinywan\Validate\Validate;
+use taoser\Validate;
 
 class UploadCateValidate extends Validate
 {
-    protected array $rule =   [
+    protected $rule =   [
         'title'             => 'require|verifyTitle',
         'dir_name'          => 'require|alpha|verifyDirName',
         'sort'              => 'require|number',
     ];
 
-    protected array $message  =   [
+    protected $message  =   [
         'title.require'     => '请输入分类名称',
         'dir_name.require'  => '请输入目录名称',
         'dir_name.alpha'    => '目录名称只能是字母',

@@ -44,6 +44,15 @@ trait WebMenuTrait
             $where[] = ['path', 'in', $rules];
             $data = MenuProvider::menuList($where);
         }
+        // 解析插件类型菜单
+        $data = array_map(function ($item) {
+            // 检测斜杠数量
+            $pathCount = substr_count($item['path'], '/');
+            if ($pathCount >= 1 && $item['plugin'] && $item['plugin'] !== 'admin') {
+                $item['path'] = "app/{$item['plugin']}/{$item['path']}";
+            }
+            return $item;
+        }, $data);
         // 解析数据格式
         $data = MenuProvider::parseMenu($data);
         // 返回数据

@@ -4,6 +4,7 @@ namespace app\model;
 
 use xbcode\Model;
 use support\Cache;
+use xbcode\service\xbcode\UserService;
 
 /**
  * 站点插件
@@ -12,6 +13,28 @@ use support\Cache;
  */
 class WebPlugin extends Model
 {
+    /**
+     * 获取本地全部插件
+     * @return array
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    private static function getLocalPluginAll()
+    {
+        $data = [];
+        $path = base_path() . '/plugin/*';
+        $list = glob($path, GLOB_ONLYDIR);
+        foreach ($list as $key => $pluginPath) {
+            $name = basename($pluginPath);
+            $data[] = [
+                'name' => $name,
+                'title' => $name,
+                'expire_time' => '',
+            ];
+        }
+        return $data;
+    }
+
     /**
      * 获取站点全部授权插件
      * @param bool $force 是否强制刷新

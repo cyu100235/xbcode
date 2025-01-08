@@ -30,7 +30,7 @@ class UserService extends XbBaseService
         // 项目版本
         $version = config('projects.version');
         // 服务器IP地址
-        $serviceIp = file_get_contents('http://ifconfig.me/ip');
+        $serviceIp = XbBaseService::getServiceIp();
         // 当前域名
         $domain = request()->host();
         // 请求数据
@@ -106,5 +106,35 @@ class UserService extends XbBaseService
             throw new Exception('网络请求错误');
         }
         return $result;
+    }
+
+    /**
+     * 获取用户信息
+     * @param bool $refresh
+     * @return mixed
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public static function userinfo(bool $refresh = false)
+    {
+        $key    = 'xb_user_info';
+        $result = Cache::get($key);
+        if ($result && !$refresh) {
+            return $result;
+        }
+        $result = static::request()->get('User/info')->array();
+        if (!isset($result['code'])) {
+            throw new Exception('网络请求错误');
+        }
+        if (isset($result['code']) && $result['code'] != 200) {
+            throw new Exception($result['msg']);
+        }
+        if (empty($result['data'])) {
+            throw new Exception('获取授权用户信息失败');
+        }
+        // 保存用户信息
+        Cache::set($key, $result['data'], 300);
+        // 返回数据
+        return $result['data'];
     }
 }

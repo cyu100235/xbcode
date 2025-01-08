@@ -1,7 +1,7 @@
 <?php
 namespace app\validate;
 
-use Tinywan\Validate\Validate;
+use taoser\Validate;
 
 /**
  * 定时任务验证器
@@ -10,13 +10,13 @@ use Tinywan\Validate\Validate;
  */
 class CrontabValidate extends Validate
 {
-    protected array $rule = [
+    protected $rule = [
         'title' => 'require',
         'command' => 'require',
         'expression' => 'require',
     ];
 
-    protected array $message = [
+    protected $message = [
         'title.require' => '请输入任务名称',
         'command.require' => '请输入任务命令',
         'expression.require' => '请输入任务规则',

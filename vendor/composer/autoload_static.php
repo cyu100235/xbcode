@@ -13,18 +13,18 @@ class ComposerStaticInit36db3d91b6ceb9404e632f09a492d0c5
         'a1105708a18b76903365ca1c4aa61b02' => __DIR__ . '/..' . '/symfony/translation/Resources/functions.php',
         '72579e7bd17821bb1321b87411366eae' => __DIR__ . '/..' . '/illuminate/support/helpers.php',
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
+        '9b552a3cc426e3287cc811caefa3cf53' => __DIR__ . '/..' . '/topthink/think-helper/src/helper.php',
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '253c157292f75eb38082b5acb06f3f01' => __DIR__ . '/..' . '/nikic/fast-route/src/functions.php',
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         '8825ede83f2f289127722d4e842cf7e8' => __DIR__ . '/..' . '/symfony/polyfill-intl-grapheme/bootstrap.php',
         'e69f7f6ee287b969198c3c9d6777bd38' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/bootstrap.php',
         'b6b991a57620e2fb6b2f66f03fe9ddc2' => __DIR__ . '/..' . '/symfony/string/Resources/functions.php',
-        '9b552a3cc426e3287cc811caefa3cf53' => __DIR__ . '/..' . '/topthink/think-helper/src/helper.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
         '0d59ee240a4cd96ddbb4ff164fccea4d' => __DIR__ . '/..' . '/symfony/polyfill-php73/bootstrap.php',
         '35fab96057f1bf5e7aba31a8a6d5fdde' => __DIR__ . '/..' . '/topthink/think-orm/stubs/load_stubs.php',
         'ef65a1626449d89d0811cf9befce46f0' => __DIR__ . '/..' . '/illuminate/events/functions.php',
-        '8af3fa7e0debc674a27a2d67e57bd6eb' => __DIR__ . '/..' . '/tinywan/validate/src/helper.php',
+        '2ffd98f0768af7a16d85759bb5922585' => __DIR__ . '/..' . '/taoser/webman-validate/src/helper.php',
         'da5b71a9ad8465d48da441e2f36823b6' => __DIR__ . '/../..' . '/support/helpers.php',
         'd680fc8e2f6fedcc13ecf4e04c537dd3' => __DIR__ . '/../..' . '/extend/xbcode/helpers.php',
     );
@@ -42,6 +42,7 @@ class ComposerStaticInit36db3d91b6ceb9404e632f09a492d0c5
         array (
             'think\\view\\driver\\' => 18,
             'think\\' => 6,
+            'taoser\\' => 7,
         ),
         's' => 
         array (
@@ -72,7 +73,6 @@ class ComposerStaticInit36db3d91b6ceb9404e632f09a492d0c5
         ),
         'T' => 
         array (
-            'Tinywan\\Validate\\' => 17,
             'Tinywan\\Jwt\\' => 12,
         ),
         'S' => 
@@ -172,6 +172,11 @@ class ComposerStaticInit36db3d91b6ceb9404e632f09a492d0c5
             0 => __DIR__ . '/..' . '/topthink/think-helper/src',
             1 => __DIR__ . '/..' . '/topthink/think-orm/src',
             2 => __DIR__ . '/..' . '/topthink/think-template/src',
+            3 => __DIR__ . '/..' . '/topthink/think-container/src',
+        ),
+        'taoser\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/taoser/webman-validate/src',
         ),
         'support\\' => 
         array (
@@ -232,10 +237,6 @@ class ComposerStaticInit36db3d91b6ceb9404e632f09a492d0c5
         'Webman\\' => 
         array (
             0 => __DIR__ . '/..' . '/workerman/webman-framework/src',
-        ),
-        'Tinywan\\Validate\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/tinywan/validate/src',
         ),
         'Tinywan\\Jwt\\' => 
         array (

@@ -205,6 +205,11 @@ class WebMenusController extends XbController
             if (is_array($item['method'])) {
                 $item['method'] = implode(',', $item['method']);
             }
+            // 检测斜杠数量
+            $pathCount = substr_count($item['path'], '/');
+            if ($pathCount >= 1 && $item['plugin']) {
+                $item['path'] = "app/{$item['plugin']}/{$item['path']}";
+            }
             return $item;
         }, $data);
         return $this->successRes($data);

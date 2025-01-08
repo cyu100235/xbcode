@@ -2,7 +2,7 @@
 namespace app\validate;
 
 use app\model\WebPlugin;
-use Tinywan\Validate\Validate;
+use taoser\Validate;
 
 /**
  * 站点插件授权验证器
@@ -11,11 +11,11 @@ use Tinywan\Validate\Validate;
  */
 class WebPluginValidate extends Validate
 {
-    protected array $rule = [
+    protected $rule = [
         'name' => 'require|verifyPluginAuth',
     ];
 
-    protected array $message = [
+    protected $message = [
         'name.require' => '请选择授权插件',
     ];
 

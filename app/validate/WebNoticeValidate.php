@@ -1,7 +1,7 @@
 <?php
 namespace app\validate;
 
-use Tinywan\Validate\Validate;
+use taoser\Validate;
 
 /**
  * 站点公告验证器
@@ -10,11 +10,11 @@ use Tinywan\Validate\Validate;
  */
 class WebNoticeValidate extends Validate
 {
-    protected array $rule = [
+    protected $rule = [
         'title' => 'require',
     ];
 
-    protected array $message = [
+    protected $message = [
         'title.require' => '请输入公告标题',
     ];
 }

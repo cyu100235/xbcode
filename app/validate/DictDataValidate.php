@@ -1,7 +1,7 @@
 <?php
 namespace app\validate;
 
-use Tinywan\Validate\Validate;
+use taoser\Validate;
 
 /**
  * 字典数据验证器
@@ -10,13 +10,13 @@ use Tinywan\Validate\Validate;
  */
 class DictDataValidate extends Validate
 {
-    protected array $rule = [
+    protected $rule = [
         'dict_id' => 'require',
         'label' => 'require',
         'value' => 'require',
     ];
 
-    protected array $message = [
+    protected $message = [
         'dict_id.require' => '字典参数错误',
         'label.require' => '请输入数据名称',
         'value.require' => '请输入数据参数',

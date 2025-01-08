@@ -5,7 +5,6 @@ use Exception;
 use support\Cache;
 use app\model\WebSite;
 use yzh52521\EasyHttp\Http;
-use xbcode\providers\ConfigProvider;
 use Psr\Http\Message\ResponseInterface;
 
 /**
@@ -49,11 +48,14 @@ class XbBaseService
         // 检测当前域名是否为租户站点域名
         if (in_array($domain, $webSiteDomain)) {
             // 使用系统配置域名
-            $webUrl = ConfigProvider::get('system', 'web_url');
+            $webUrl = config('projects.system_info.system_url', '');
             if (empty($webUrl)) {
-                throw new Exception('请先配置系统域名~');
+                throw new Exception('获取授权域名错误~');
             }
             $domain = parse_url($webUrl, PHP_URL_HOST);
+        }
+        if (empty($domain)) {
+            throw new Exception('获取系统授权域名失败~');
         }
         return $domain;
     }

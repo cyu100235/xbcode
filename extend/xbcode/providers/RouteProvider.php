@@ -25,18 +25,21 @@ class RouteProvider
             [\app\index\controller\IndexController::class, 'index']
         );
         // 总后台配置项
-        Route::any(
+        Route::add(
+            ['GET', 'PUT'],
             '/backend/Setting/config/{path:.+}',
             [\app\backend\controller\SettingController::class, 'config']
         );
         // 子后台配置项
-        Route::any(
+        Route::add(
+            ['GET', 'PUT'],
             '/admin/Setting/config/{path:.+}',
             [\app\admin\controller\SettingController::class, 'config']
         );
         // 插件配置项
-        Route::any(
-            '/app/:plugin/Setting/config/{path:.+}',
+        Route::add(
+            ['GET', 'PUT'],
+            '/app/{:name}/Setting/config/{path:.+}',
             [\app\admin\controller\SettingController::class, 'config']
         );
     }

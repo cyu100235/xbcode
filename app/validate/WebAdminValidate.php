@@ -2,7 +2,7 @@
 namespace app\validate;
 
 use app\model\WebAdmin;
-use Tinywan\Validate\Validate;
+use taoser\Validate;
 
 /**
  * 站点管理员验证器
@@ -11,7 +11,7 @@ use Tinywan\Validate\Validate;
  */
 class WebAdminValidate extends Validate
 {
-    protected array $rule = [
+    protected $rule = [
         'role_id' => 'require',
         'username' => 'require|length:5,20|alphaNum|verifyUsername',
         'originpwd' => 'require',
@@ -21,7 +21,7 @@ class WebAdminValidate extends Validate
         'avatar' => 'require',
     ];
 
-    protected array $message = [
+    protected $message = [
         'role_id.require' => '请选择角色',
         'username.require' => '请输入登录账号',
         'username.length' => '登录账号字数必须在5-20位之间',

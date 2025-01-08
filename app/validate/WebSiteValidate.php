@@ -1,7 +1,7 @@
 <?php
 namespace app\validate;
 
-use Tinywan\Validate\Validate;
+use taoser\Validate;
 
 /**
  * 站点验证器
@@ -10,14 +10,14 @@ use Tinywan\Validate\Validate;
  */
 class WebSiteValidate extends Validate
 {
-    protected array $rule = [
+    protected $rule = [
         'title' => 'require',
         'domain' => 'require|verifyDomain',
         'username' => 'require|alphaNum|length:5,20',
         'password' => 'require|length:5,20',
     ];
 
-    protected array $message = [
+    protected $message = [
         'title.require' => '请填写站点名称',
         'domain.require' => '请填写绑定域名',
         'username.require' => '请填写登录账号',

@@ -245,6 +245,28 @@ class WebPluginController extends XbController
      */
     private function formView()
     {
+        // 获取已安装插件
+        $pluginOptions = $this->getInstalledPlugin();
+        $disabled      = request()->get('id');
+        $builder       = new FormBuilder;
+        $builder->addRow('name', 'select', '选择插件', '', [
+            'options' => $pluginOptions,
+            'disabled' => $disabled ? true : false,
+        ]);
+        $builder->addRow('expire_time', 'datePicker', '到期时间', '', [
+            'prompt' => '过期时间，不填写则永久，示例：2021-12-31',
+        ]);
+        return $builder;
+    }
+    
+    /**
+     * 获取已安装插件
+     * @return array
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    private function getInstalledPlugin()
+    {
         $plugin        = new Plugins;
         $pluginOptions = $plugin->pluginCacheDict(true);
         $pluginOptions = array_filter($pluginOptions, function ($item) {
@@ -257,15 +279,6 @@ class WebPluginController extends XbController
                 'label' => $item['title'],
             ];
         }, $pluginOptions);
-        $disabled      = request()->get('id');
-        $builder       = new FormBuilder;
-        $builder->addRow('name', 'select', '选择插件', '', [
-            'options' => $pluginOptions,
-            'disabled' => $disabled ? true : false,
-        ]);
-        $builder->addRow('expire_time', 'datePicker', '到期时间', '', [
-            'prompt' => '过期时间，不填写则永久，示例：2021-12-31',
-        ]);
-        return $builder;
+        return $pluginOptions;
     }
 }

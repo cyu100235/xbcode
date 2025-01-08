@@ -1,7 +1,7 @@
 <?php
 namespace app\validate;
 
-use Tinywan\Validate\Validate;
+use taoser\Validate;
 
 /**
  * 角色验证器
@@ -10,12 +10,12 @@ use Tinywan\Validate\Validate;
  */
 class AdminRoleValidate extends Validate
 {
-    protected array $rule = [
+    protected $rule = [
         'title' => 'require',
         'sort' => 'require',
     ];
 
-    protected array $message = [
+    protected $message = [
         'title.require' => '请输入角色名称',
         'sort.require' => '请输入角色排序',
     ];

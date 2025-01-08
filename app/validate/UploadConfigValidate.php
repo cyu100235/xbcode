@@ -1,18 +1,18 @@
 <?php
 namespace app\validate;
 
-use Tinywan\Validate\Validate;
+use taoser\Validate;
 
 class UploadConfigValidate extends Validate
 {
-    protected array $rule = [
+    protected $rule = [
         'bucket' => 'require',
         'access_key' => 'require',
         'secret_key' => 'require',
         'domain' => 'require|url',
     ];
 
-    protected array $message = [
+    protected $message = [
         'bucket.require' => '请输入空间名称',
         'access_key.require' => '请输入ACCESS_KEY',
         'secret_key.require' => '请输入SECRET_KEY',
