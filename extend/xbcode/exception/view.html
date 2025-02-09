@@ -25,8 +25,12 @@
             padding: 20px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
+        .exception {
+            overflow: hidden;
+            word-wrap: break-word;
+            white-space: normal;
+        }
         .message {
-            width: 100%;
             overflow: hidden;
             word-wrap: break-word;
             white-space: normal;
@@ -57,7 +61,9 @@
     <div class="container">
         <h2>出错了!</h2>
         <div class="content">
-            <p>{$message}</p>
+            <div class="exception">
+                {$message}
+            </div>
             {if $debug}
             <div class="message">
                 <div>{$file}</div>
