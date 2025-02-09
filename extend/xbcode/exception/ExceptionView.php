@@ -31,6 +31,7 @@ class ExceptionView
             'file' => $exception->getFile(),
             'line' => $exception->getLine(),
             'project' => config('projects'),
+            'debug' => config('app.debug', false),
         ];
         // 抛出异常响应
         return new Response(200, [], ThinkPHP::render($templatePath, $vars));

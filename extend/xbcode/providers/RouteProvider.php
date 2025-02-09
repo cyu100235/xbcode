@@ -19,11 +19,6 @@ class RouteProvider
      */
     public static function get()
     {
-        // 设置默认路由
-        Route::get(
-            '/',
-            [\app\index\controller\IndexController::class, 'index']
-        );
         // 总后台配置项
         Route::add(
             ['GET', 'PUT'],

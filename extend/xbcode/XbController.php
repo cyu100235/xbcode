@@ -33,20 +33,21 @@ class XbController
     protected function init()
     {
     }
-
+    
     /**
      * 渲染视图
      * @param string $file 模板文件
      * @param string $suffix 文件后缀
+     * @param bool $isPlugin 是否插件视图
      * @return \support\Response
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    protected function view(string $file, string $suffix = 'vue')
+    protected function view(string $file, string $suffix = 'vue', bool $isPlugin = false)
     {
         // 获取插件名称
         $plugin = request()->plugin;
-        if ($plugin) {
+        if ($plugin && $isPlugin) {
             $file = "plugin/{$plugin}/{$file}";
         }
         // 模板文件

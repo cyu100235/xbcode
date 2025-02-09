@@ -1,10 +1,10 @@
 <?php
 
 return [
-    // Default language
+    // 默认语言
     'locale' => 'zh_CN',
-    // Fallback language
+    // 回退语言
     'fallback_locale' => ['zh_CN', 'en'],
-    // Folder where language files are stored
-    'path' => base_path() . "/plugin/{PLUGIN_NAME}/resource/translations",
+    // 存储语言文件的文件夹
+    'path' => base_path() . '/resource/translations',
 ];

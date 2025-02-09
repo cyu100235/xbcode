@@ -84,6 +84,9 @@ trait FormTrait
         if (in_array($type, ['select', 'radio', 'checkbox'])) {
             $plaholder = "请选择{$title}";
         }
+        if (strrpos($type, '$') === false) {
+            $type = "\${$type}";
+        }
         $item = [
             'field' => $field,
             'title' => $title,

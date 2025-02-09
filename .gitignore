@@ -1,5 +1,4 @@
 /backup/*
-/runtime
 /.idea
 /.vscode
 php-cli.ini

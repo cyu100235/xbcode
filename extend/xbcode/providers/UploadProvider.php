@@ -65,9 +65,11 @@ class UploadProvider
             ];
             $file = Upload::where($where)->find();
             if ($file) {
-                $file->update_at = date('Y-m-d H:i:s');
-                $file->save();
-                return $file;
+                if (file_exists($file->uri)) {
+                    $file->update_at = date('Y-m-d H:i:s');
+                    $file->save();
+                    return $file;
+                }
             }
             // 6.上传文件
             $saveDir = self::getUploadPath($ext);

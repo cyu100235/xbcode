@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>错误页面</title>
+    <title>错误页面 - xbcode</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -24,6 +24,12 @@
             border-radius: 8px;
             padding: 20px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .message {
+            width: 100%;
+            overflow: hidden;
+            word-wrap: break-word;
+            white-space: normal;
         }
         h1 {
             font-size: 48px;
@@ -50,7 +56,15 @@
 <body>
     <div class="container">
         <h2>出错了!</h2>
-        <p>{$message}</p>
+        <div class="content">
+            <p>{$message}</p>
+            {if $debug}
+            <div class="message">
+                <div>{$file}</div>
+                <div>错误行：{$line}</div>
+            </div>
+            {/if}
+        </div>
         <a href="/">返回首页</a>
     </div>
 </body>

@@ -60,7 +60,6 @@ class XbPluginCreateCommand extends Command
         'config/process.php',
         'config/redis.php',
         'config/route.php',
-        'config/slot.php',
         'config/static.php',
         'config/thinkorm.php',
         'config/translation.php',

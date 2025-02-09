@@ -150,6 +150,8 @@ trait DictDataTrait
         return $list;
     }
 
+    
+
     /**
      * 开关数据
      * @param string $value 示例：10关闭，20开启
@@ -157,7 +159,7 @@ trait DictDataTrait
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public function switch(string $value)
+    public function switchValue(string $value)
     {
         $data = $this->getDictData();
         $data = array_map(function ($item) use ($value) {
@@ -170,6 +172,23 @@ trait DictDataTrait
         }, $data);
         $data = array_filter($data);
         $data = current($data);
+        return $data;
+    }
+
+    /**
+     * 开关属性
+     * @return array
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public function switch()
+    {
+        $data = [
+            'activeText' => self::get($this->name)->getLabel('20'),
+            'inactiveText' => self::get($this->name)->getLabel('10'),
+            'activeValue' => self::get($this->name)->getValue('20'),
+            'inactiveValue' => self::get($this->name)->getValue('10'),
+        ];
         return $data;
     }
 
