@@ -186,7 +186,7 @@ class AdminRuleController extends XbController
     public function index(Request $request)
     {
         $where = [
-            ['is_web', '=', '10'],
+            ['is_web', '=', '20'],
         ];
         $data  = AdminRule::where($where)
             ->order('sort asc,id asc')
@@ -433,7 +433,7 @@ class AdminRuleController extends XbController
     protected static function getCascaderOptions()
     {
         $where = [
-            ['is_web', '=', '10'],
+            ['is_web', '=', '20'],
         ];
         $data = AdminRule::where($where)->order('sort asc,id asc')->select()->toArray();
         $data = DataUtil::channelLevel($data, 0, '', 'id', 'pid');

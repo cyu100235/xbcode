@@ -26,7 +26,7 @@ class AdminMenus
             throw new \Exception('管理员信息错误，请重新登录', 12000);
         }
         $where = [
-            ['is_web', '=', '10']
+            ['is_web', '=', '20']
         ];
         // 检测非系统管理员
         if ($model['is_system'] !== '20') {

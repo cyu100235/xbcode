@@ -40,14 +40,15 @@ class IndexController extends XbController
             throw new Exception('已经安装，无需重复安装', 10000);
         }
     }
-
+    
     /**
      * 安装视图
+     * @param \support\Request $request
      * @return \support\Response
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public function index()
+    public function index(Request $request)
     {
         return $this->view('public/install/index', 'html');
     }
@@ -432,8 +433,15 @@ class IndexController extends XbController
         $envPath = base_path() . '/.env';
         // 读取配置文件
         $envConfig = file_get_contents($envTplPath);
+        // 获取宝塔环境配置
+        $btEnvState = 'false';
+        $btEnvName = $request->host();
         // 替换配置文件参数
         $str1 = [
+            // 宝塔环境配置
+            "{BT_ENV_STATE}",
+            "{BT_ENV_NAME}",
+            // 数据库配置
             "{TYPE}",
             "{HOSTNAME}",
             "{DATABASE}",
@@ -441,6 +449,7 @@ class IndexController extends XbController
             "{PASSWORD}",
             "{HOSTPORT}",
             "{PREFIX}",
+            // Redis配置
             "{REDIS_HOST}",
             "{REDIS_PORT}",
             "{REDIS_PASSWD}",
@@ -448,6 +457,8 @@ class IndexController extends XbController
         ];
         $str2 = [
             // 宝塔环境配置
+            $btEnvState,
+            $btEnvName,
             // 数据库配置
             $database['type'],
             $database['host'],

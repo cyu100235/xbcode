@@ -69,6 +69,15 @@ if (!function_exists('xbServerPort')) {
                 return (int) $port;
             }
         }
+        // 检测插件伪静态文件
+        $file = base_path() . '/plugin/xbCode/nginx.conf';
+        if (file_exists($file)) {
+            // 获取nginx配置文件端口号
+            $port = xbGetNginxConf($file);
+            if ($port) {
+                return (int) $port;
+            }
+        }
         // 返回默认端口号
         return $default;
     }

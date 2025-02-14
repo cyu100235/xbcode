@@ -95,7 +95,6 @@ class AuthMiddleware implements MiddlewareInterface
         if ($adminState === '10') {
             throw new Exception('账号已被禁用', 404);
         }
-        print_r($isAdmin);
         // 系统管理员不验证权限
         if ($isAdmin === '20') {
             return;
