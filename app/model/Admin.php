@@ -1,10 +1,11 @@
 <?php
 
-namespace app\model;
+namespace plugin\xbCode\app\model;
 
-use xbcode\Model;
-use xbcode\utils\PasswdUtil;
-use xbcode\providers\FileProvider;
+use plugin\xbCode\api\Plugins;
+use plugin\xbCode\Model;
+use plugin\xbCode\utils\PasswdUtil;
+use plugin\xbCode\providers\FileProvider;
 
 class Admin extends Model
 {
@@ -28,7 +29,7 @@ class Admin extends Model
      */
     protected function setAvatarAttr($value)
     {
-        if ($value) {
+        if ($value && Plugins::checked('xbUpload')) {
             $value = FileProvider::path($value);
         }
         return $value;
@@ -43,7 +44,7 @@ class Admin extends Model
      */
     protected function getAvatarAttr($value)
     {
-        if ($value) {
+        if ($value && Plugins::checked('xbUpload')) {
             $value = FileProvider::url($value);
         }
         return $value;

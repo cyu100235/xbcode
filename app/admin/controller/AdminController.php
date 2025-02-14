@@ -1,16 +1,16 @@
 <?php
-namespace app\admin\controller;
+namespace plugin\xbCode\app\admin\controller;
 
 use support\Request;
-use app\model\WebRole;
-use app\model\WebAdmin;
-use xbcode\XbController;
-use Tinywan\Jwt\JwtToken;
-use xbcode\utils\PasswdUtil;
-use xbcode\builder\FormBuilder;
-use xbcode\builder\ListBuilder;
-use app\validate\WebAdminValidate;
-use xbcode\builder\table\attrs\RowEditTrait;
+use plugin\xbCode\api\Plugins;
+use plugin\xbCode\XbController;
+use plugin\xbCode\app\model\Admin;
+use plugin\xbCode\utils\PasswdUtil;
+use plugin\xbCode\app\model\AdminRole;
+use plugin\xbCode\builder\FormBuilder;
+use plugin\xbCode\builder\ListBuilder;
+use plugin\xbCode\app\validate\AdminValidate;
+use plugin\xbCode\builder\table\attrs\RowEditTrait;
 
 /**
  * 管理员管理
@@ -23,23 +23,6 @@ class AdminController extends XbController
     use RowEditTrait;
 
     /**
-     * 模型
-     * @var WebAdmin
-     */
-    protected $model;
-
-    /**
-     * 初始化
-     * @return void
-     * @copyright 贵州小白基地网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
-     */
-    protected function init()
-    {
-        $this->model = new WebAdmin;
-    }
-    
-    /**
      * 表格
      * @param \support\Request $request
      * @return \support\Response
@@ -51,7 +34,7 @@ class AdminController extends XbController
         // 表格渲染
         $builder = new ListBuilder;
         $builder->addActionOptions('操作', [
-            'width' => 180
+            'width' => 180,
         ]);
         $builder->pageConfig();
         $builder->addTopButton('add', '添加', [
@@ -65,7 +48,7 @@ class AdminController extends XbController
                 'height' => '60vh',
             ],
         ], [
-            'type' => 'primary'
+            'type' => 'primary',
         ]);
         $builder->addRightButton('edit', '修改', [
             'type' => 'modal',
@@ -79,7 +62,7 @@ class AdminController extends XbController
             ],
         ], [
             'type' => 'primary',
-            'icon' => 'Edit'
+            'icon' => 'Edit',
         ]);
         $builder->addRightButton('del', '删除', [
             'type' => 'confirm',
@@ -92,7 +75,7 @@ class AdminController extends XbController
             'content' => '是否确认删除该数据？',
         ], [
             'type' => 'danger',
-            'icon' => 'Delete'
+            'icon' => 'Delete',
         ]);
         $builder->addColumn('id', '序号', [
             'width' => 80,
@@ -101,7 +84,7 @@ class AdminController extends XbController
             'minWidth' => 180,
             'params' => [
                 'type' => 'image',
-            ]
+            ],
         ]);
         $builder->addColumn('username', '登录账号', [
             'minWidth' => 180,
@@ -129,12 +112,12 @@ class AdminController extends XbController
                     'activeValue' => '20',
                     'inactiveValue' => '10',
                 ],
-            ]
+            ],
         ]);
         $data = $builder->create();
         return $this->successRes($data);
     }
-    
+
     /**
      * 列表
      * @param \support\Request $request
@@ -144,15 +127,14 @@ class AdminController extends XbController
      */
     public function index(Request $request)
     {
-        $adminId = JwtToken::getCurrentId();
-        $model   = $this->model;
-        $data    = $model->with(['role'])
+        $adminId = $request->uid;
+        $data = Admin::with(['role'])
             ->where('admin_id', $adminId)
             ->order('id desc')
             ->paginate();
         return $this->successRes($data);
     }
-    
+
     /**
      * 添加
      * @param \support\Request $request
@@ -163,14 +145,14 @@ class AdminController extends XbController
     public function add(Request $request)
     {
         if ($request->method() == 'POST') {
-            $adminId          = JwtToken::getCurrentId();
-            $post             = $request->post();
+            $adminId = $request->uid;
+            $post = $request->post();
             $post['admin_id'] = $adminId;
 
             // 数据验证
-            xbValidate(WebAdminValidate::class, $post, 'add');
+            xbValidate(AdminValidate::class, $post, 'add');
 
-            $model = $this->model;
+            $model = new Admin;
             if (!$model->save($post)) {
                 return $this->fail('保存失败');
             }
@@ -191,9 +173,8 @@ class AdminController extends XbController
      */
     public function edit(Request $request)
     {
-        $id    = $request->get('id');
-        $model = $this->model;
-        $model = $model->where('id', $id)->find();
+        $id = $request->get('id');
+        $model = Admin::where('id', $id)->find();
         if (!$model) {
             return $this->fail('该数据不存在');
         }
@@ -201,7 +182,7 @@ class AdminController extends XbController
             $post = $request->post();
 
             // 数据验证
-            xbValidate(WebAdminValidate::class, $post, 'edit');
+            xbValidate(AdminValidate::class, $post, 'edit');
 
             if (empty($post['password'])) {
                 unset($post['password']);
@@ -220,7 +201,7 @@ class AdminController extends XbController
         $data = $builder->create();
         return $this->successRes($data);
     }
-    
+
     /**
      * 删除
      * @param \support\Request $request
@@ -230,9 +211,8 @@ class AdminController extends XbController
      */
     public function del(Request $request)
     {
-        $id    = $request->post('id');
-        $model = $this->model;
-        $model = $model->where('id', $id)->find();
+        $id = $request->post('id');
+        $model = Admin::where('id', $id)->find();
         if (!$model) {
             return $this->fail('该数据不存在');
         }
@@ -246,7 +226,7 @@ class AdminController extends XbController
         }
         return $this->success('删除成功');
     }
-    
+
     /**
      * 修改个人资料
      * @param \support\Request $request
@@ -256,16 +236,15 @@ class AdminController extends XbController
      */
     public function profile(Request $request)
     {
-        $adminId = JwtToken::getCurrentId();
-        $model = $this->model;
-        $model = $model->where('id', $adminId)->find();
+        $adminId = $request->uid;
+        $model = Admin::where('id', $adminId)->find();
         if (!$model) {
             return $this->fail('该数据不存在');
         }
         if ($request->method() === 'PUT') {
             $post = $request->post();
             // 数据验证
-            xbValidate(WebAdminValidate::class, $post, 'profile');
+            xbValidate(AdminValidate::class, $post, 'profile');
             // 原登录密码与旧密码一致
             if ($post['originpwd'] === $post['newpassword']) {
                 return $this->fail('新密码不能与原密码一致');
@@ -276,7 +255,7 @@ class AdminController extends XbController
             if ($password !== $originPwd) {
                 return $this->fail('原登录密码错误');
             }
-            if (!$model->save(['password'=> $post['newpassword']])) {
+            if (!$model->save(['password' => $post['newpassword']])) {
                 return $this->fail('个人资料修改失败');
             }
             return $this->success('个人资料修改成功');
@@ -285,7 +264,7 @@ class AdminController extends XbController
         unset($formData['password']);
         $builder = new FormBuilder;
         $builder->setMethod('PUT');
-        $builder->setPosition('left',100);
+        $builder->setPosition('left', 100);
         $builder->addRow('username', 'input', '登录账号', '', [
             'prompt' => '字母数字下划线组合，4-20位',
         ]);
@@ -303,6 +282,7 @@ class AdminController extends XbController
             'props' => [
                 'type' => 'image',
                 'isUpload' => true,
+                'isAlert' => !Plugins::checked('xbUpload') ? '请先安装 xbUpload 插件' : '',
             ],
         ]);
         $builder->setFormData($formData);
@@ -318,12 +298,12 @@ class AdminController extends XbController
      */
     private function formView()
     {
-        $adminId = JwtToken::getCurrentId();
+        $adminId = request()->uid;
         $builder = new FormBuilder;
         $builder->setPosition('left');
 
         // 所属角色
-        $roles = WebRole::where('admin_id', $adminId)
+        $roles = AdminRole::where('admin_id', $adminId)
             ->order('sort asc,id asc')
             ->column('title as label,id as value');
         $builder->addRow('role_id', 'select', '所属角色', '', [
@@ -343,6 +323,8 @@ class AdminController extends XbController
             'prompt' => '请上传用户头像',
             'props' => [
                 'type' => 'image',
+                'isUpload' => true,
+                'isAlert' => !Plugins::checked('xbUpload') ? '请先安装 xbUpload 插件' : '',
             ],
         ]);
         return $builder;

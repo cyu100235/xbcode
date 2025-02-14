@@ -1,9 +1,9 @@
 <?php
 
-namespace app\model;
+namespace plugin\xbCode\app\model;
 
 use support\Cache;
-use xbcode\Model;
+use plugin\xbCode\Model;
 
 /**
  * 菜单规则

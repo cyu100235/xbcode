@@ -1,5 +1,5 @@
 <?php
 
 return [
-    '' => \xbcode\exception\Handler::class,
+    '' => plugin\xbCode\exception\Handler::class,
 ];

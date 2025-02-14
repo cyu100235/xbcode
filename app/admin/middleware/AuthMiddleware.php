@@ -1,15 +1,12 @@
 <?php
-namespace app\admin\middleware;
+namespace plugin\xbCode\app\admin\middleware;
 
 use Exception;
-use app\model\WebRole;
 use Webman\Http\Request;
-use Tinywan\Jwt\JwtToken;
 use Webman\Http\Response;
-use xbcode\trait\JsonTrait;
-use xbcode\utils\TokenUtil;
 use Webman\MiddlewareInterface;
-use xbcode\providers\AdminLogProvider;
+use plugin\xbCode\app\model\AdminRole;
+use plugin\xbCode\utils\trait\JsonTrait;
 
 /**
  * 权限中间件
@@ -35,23 +32,6 @@ class AuthMiddleware implements MiddlewareInterface
             // 权限检测
             $this->validateAuth($request);
         } catch (\Throwable $th) {
-            // 没有操作权限
-            if ($th->getCode() === 403) {
-                return $this->redirect('/', $th->getMessage(), 'error');
-            }
-            // 刷新令牌
-            if ($th->getCode() === 600) {
-                // 刷新令牌
-                $result = TokenUtil::refreshToken();
-                // 设置刷新令牌
-                $response = response('');
-                $response->withHeader('refresh-token', $result['access_token']);
-                $response->withHeader('refresh-type', $result['token_type'] ?? '');
-                // 设置响应状态码
-                $response->withStatus(200);
-                // 返回响应
-                return $response;
-            }
             // 抛出异常
             throw new Exception($th->getMessage(), $th->getCode());
         }
@@ -64,8 +44,6 @@ class AuthMiddleware implements MiddlewareInterface
         // 响应结果
         $result = $response->rawBody();
         $result = is_array($result) ? json_encode($result, 256) : $result;
-        // 记录日志
-        AdminLogProvider::record($request, $result);
         // 返回响应
         return $response;
     }
@@ -92,38 +70,32 @@ class AuthMiddleware implements MiddlewareInterface
         if (in_array($pathInfo['action'], $noLogin)) {
             return;
         }
+        $users = $request->session()->get('xbcode');
+        if (empty($users)) {
+            throw new Exception('请登录后再操作', 12000);
+        }
         try {
             // 获取管理员ID
-            $adminId = JwtToken::getCurrentId();
-            // 获取角色ID
-            $roleId = JwtToken::getExtendVal('role_id');
+            $adminId = $users['id'];
+            // 获取管理员角色ID
+            $roleId = $users['role_id'];
             // 获取管理员账号
-            $username = JwtToken::getExtendVal('username');
-            // 应用站点ID
-            $saasAppid = JwtToken::getExtendVal('saas_appid');
+            $username = $users['username'];
             // 获取管理员状态
-            $adminState = JwtToken::getExtendVal('state');
+            $adminState = $users['state'];
             // 是否系统管理员
-            $isAdmin = JwtToken::getExtendVal('is_system');
-            // 获取令牌剩余有效期
-            $expireSecond = JwtToken::getTokenExp();
+            $isAdmin = $users['is_system'];
             // 设置请求管理员ID
             $request->uid = $adminId;
-            // 设置请求站点ID
-            $request->saasAppid = $saasAppid;
             // 设置请求管理员账号
             $request->username = $username;
         } catch (\Throwable $th) {
             throw new Exception($th->getMessage(), 12000);
         }
-        // 令牌过一半时间则刷新
-        $expireTime = (int) ($expireSecond / 2);
-        if ($expireTime <= 0) {
-            throw new Exception('刷新令牌', 600);
-        }
         if ($adminState === '10') {
             throw new Exception('账号已被禁用', 404);
         }
+        print_r($isAdmin);
         // 系统管理员不验证权限
         if ($isAdmin === '20') {
             return;
@@ -134,7 +106,7 @@ class AuthMiddleware implements MiddlewareInterface
             return;
         }
         // 检测是否有操作权限
-        if (!WebRole::checkAuth($roleId, $pathInfo['uri'])) {
+        if (!AdminRole::checkAuth($roleId, $pathInfo['uri'])) {
             throw new Exception('您没有操作权限', 403);
         }
     }

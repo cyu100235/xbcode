@@ -1,5 +1,5 @@
 <?php
-namespace app\install\utils;
+namespace plugin\xbCode\app\install\utils;
 
 /**
  * 环境检测规则
@@ -9,275 +9,6 @@ namespace app\install\utils;
 class EnvironmentUtil
 {
     /**
-     * 环境参数
-     * @var array
-     */
-    private static $environment = [
-        [
-            'title' => '操作系统',
-            'type'    => 'system',
-            'status' => false,
-            'value' => [
-                'Linux',
-                'Windows'
-            ],
-        ],
-        [
-            'title' => '磁盘空间',
-            'type'    => 'disk',
-            'status' => false,
-            'value' => 300,
-        ],
-        [
-            'title'   => 'php版本',
-            'name'    => 'php',
-            'min'     => '8.0',
-            'max'     => '8.1',
-            'type'    => 'version',
-            'status'  => false,
-            'value'   => '最低PHP8.0以上版本'
-        ],
-        [
-            'title'   => 'mysql版本',
-            'name'    => 'mysql',
-            'type'    => 'mysql',
-            'status'  => false,
-            'value'   => '建议使用5.7版本'
-        ],
-    ];
-
-    /**
-     * 目录列表
-     * @var array
-     */
-    private static $dirList = [
-        [
-            'title'     => '/config',
-            'dir'       => '/config',
-            'status'    => false,
-            'value'     => 'fail'
-        ],
-        [
-            'title'     => '/runtime',
-            'dir'       => '/runtime',
-            'status'    => false,
-            'value'     => 'fail'
-        ],
-        [
-            'title'     => '/public',
-            'dir'       => '/public',
-            'status'    => false,
-            'value'     => 'fail'
-        ],
-        [
-            'title'     => '/public/uploads',
-            'dir'       => '/public/uploads',
-            'status'    => false,
-            'value'     => 'fail'
-        ],
-        [
-            'title'     => '/settings',
-            'dir'       => '/settings',
-            'status'    => false,
-            'value'     => 'fail'
-        ],
-    ];
-
-    /**
-     * 函数列表
-     * @var array
-     */
-    private static $funList = [
-        [
-            'title'     => 'putenv',
-            'name'      => 'putenv',
-            'status'    => false,
-            'value'     => 'fail'
-        ],
-        [
-            'title'     => 'shell_exec',
-            'name'      => 'shell_exec',
-            'status'    => false,
-            'value'     => 'fail'
-        ],
-        [
-            'title'     => 'stream_socket_server',
-            'name'      => 'stream_socket_server',
-            'status'    => false,
-            'value'     => 'fail'
-        ],
-        [
-            'title'     => 'stream_socket_client',
-            'name'      => 'stream_socket_client',
-            'status'    => false,
-            'value'     => 'fail'
-        ],
-        [
-            'title'     => 'pcntl_signal_dispatch',
-            'name'      => 'pcntl_signal_dispatch',
-            'status'    => false,
-            'value'     => 'fail'
-        ],
-        [
-            'title'     => 'pcntl_signal',
-            'name'      => 'pcntl_signal',
-            'status'    => false,
-            'value'     => 'fail'
-        ],
-        [
-            'title'     => 'pcntl_alarm',
-            'name'      => 'pcntl_alarm',
-            'status'    => false,
-            'value'     => 'fail'
-        ],
-        [
-            'title'     => 'pcntl_fork',
-            'name'      => 'pcntl_fork',
-            'status'    => false,
-            'value'     => 'fail'
-        ],
-        [
-            'title'     => 'posix_getuid',
-            'name'      => 'posix_getuid',
-            'status'    => false,
-            'value'     => 'fail'
-        ],
-        [
-            'title'     => 'posix_getpwuid',
-            'name'      => 'posix_getpwuid',
-            'status'    => false,
-            'value'     => 'fail'
-        ],
-        [
-            'title'     => 'posix_kill',
-            'name'      => 'posix_kill',
-            'status'    => false,
-            'value'     => 'fail'
-        ],
-        [
-            'title'     => 'posix_setsid',
-            'name'      => 'posix_setsid',
-            'status'    => false,
-            'value'     => 'fail'
-        ],
-        [
-            'title'     => 'posix_getpid',
-            'name'      => 'posix_getpid',
-            'status'    => false,
-            'value'     => 'fail'
-        ],
-        [
-            'title'     => 'posix_getpwnam',
-            'name'      => 'posix_getpwnam',
-            'status'    => false,
-            'value'     => 'fail'
-        ],
-        [
-            'title'     => 'posix_getgrnam',
-            'name'      => 'posix_getgrnam',
-            'status'    => false,
-            'value'     => 'fail'
-        ],
-        [
-            'title'     => 'posix_getgid',
-            'name'      => 'posix_getgid',
-            'status'    => false,
-            'value'     => 'fail'
-        ],
-        [
-            'title'     => 'posix_setgid',
-            'name'      => 'posix_setgid',
-            'status'    => false,
-            'value'     => 'fail'
-        ],
-        [
-            'title'     => 'posix_initgroups',
-            'name'      => 'posix_initgroups',
-            'status'    => false,
-            'value'     => 'fail'
-        ],
-        [
-            'title'     => 'posix_setuid',
-            'name'      => 'posix_setuid',
-            'status'    => false,
-            'value'     => 'fail'
-        ],
-        [
-            'title'     => 'posix_isatty',
-            'name'      => 'posix_isatty',
-            'status'    => false,
-            'value'     => 'fail'
-        ],
-        [
-            'title'     => 'proc_open',
-            'name'      => 'proc_open',
-            'status'    => false,
-            'value'     => 'fail'
-        ],
-        [
-            'title'     => 'proc_get_status',
-            'name'      => 'proc_get_status',
-            'status'    => false,
-            'value'     => 'fail'
-        ],
-        [
-            'title'     => 'proc_close',
-            'name'      => 'proc_close',
-            'status'    => false,
-            'value'     => 'fail'
-        ],
-    ];
-
-    /**
-     * 扩展列表
-     * @var array
-     */
-    private static $extraList = [
-        [
-            'title'  => 'fileinfo',
-            'name'   => 'fileinfo',
-            'type'   => 'extra',
-            'status' => false,
-            'value'  => 'fail'
-        ],
-        [
-            'title'  => 'swoole',
-            'name'   => 'swoole',
-            'type'   => 'extra',
-            'status' => false,
-            'value'  => 'fail'
-        ],
-        [
-            'title'  => 'redis',
-            'name'   => 'Redis',
-            'type'   => 'class',
-            'status' => false,
-            'value'  => 'fail'
-        ],
-        [
-            'title'  => 'curl',
-            'name'   => 'curl',
-            'type'   => 'extra',
-            'status' => false,
-            'value'  => 'fail'
-        ],
-        [
-            'title'  => 'gd',
-            'name'   => 'gd',
-            'type'   => 'extra',
-            'status' => false,
-            'value'  => 'fail'
-        ],
-        [
-            'title'  => 'exif',
-            'name'   => 'exif',
-            'type'   => 'extra',
-            'status' => false,
-            'value'  => 'fail'
-        ],
-    ];
-
-    /**
      * 获取目录权限
      * @return mixed
      * @copyright 贵州小白基地网络科技有限公司
@@ -285,7 +16,7 @@ class EnvironmentUtil
      */
     private static function getDirData()
     {
-        $data = self::$dirList;
+        $data = include dirname(__DIR__) . '/config/dir.php';
         foreach ($data as $key => $value) {
             $dirPath = base_path() . $value['dir'];
             $data[$key]['status_text']  = '读写权限';
@@ -316,7 +47,7 @@ class EnvironmentUtil
      */
     private static function getVerifyFun()
     {
-        $data = self::$funList;
+        $data = include dirname(__DIR__) . '/config/fun.php';
         foreach ($data as $key => $value) {
             $data[$key]['status'] = function_exists($value['name']) ? true : false;
             $data[$key]['status_text'] = $data[$key]['status'] ?'解除函数禁用' : '未解除禁用';
@@ -333,7 +64,7 @@ class EnvironmentUtil
      */
     private static function getVerifyExtra()
     {
-        $data = self::$extraList;
+        $data = include dirname(__DIR__) . '/config/extra.php';
         foreach ($data as $key => $value) {
             $data[$key]['status'] = false;
             $data[$key]['status_text'] = '安装扩展';
@@ -372,7 +103,7 @@ class EnvironmentUtil
      */
     private static function getEnvironment()
     {
-        $data = self::$environment;
+        $data = include dirname(__DIR__) . '/config/environment.php';
         foreach ($data as $key => $value) {
             switch ($value['type']) {
                 case 'mysql':

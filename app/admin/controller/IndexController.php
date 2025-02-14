@@ -1,12 +1,10 @@
 <?php
-namespace app\admin\controller;
+namespace plugin\xbCode\app\admin\controller;
 
-use app\model\WebSite;
 use support\Request;
-use app\model\WebPlugin;
-use xbcode\XbController;
-use xbcode\providers\AppProvider;
-use xbcode\providers\ConfigProvider;
+use plugin\xbCode\XbController;
+use plugin\xbConfig\api\ConfigApi;
+use plugin\xbConfig\api\AppsEntryApi;
 
 /**
  * 首页控制器
@@ -16,15 +14,12 @@ use xbcode\providers\ConfigProvider;
 class IndexController extends XbController
 {
     /**
-     * 不需要登录的方法
+     * 客户端无需登录的方法
      * @var array
      */
     protected $noLogin = [
         'index',
         'site',
-        'workbench',
-        'toolbar',
-        'toolbarView',
     ];
 
     /**
@@ -52,46 +47,45 @@ class IndexController extends XbController
      */
     public function site(Request $request)
     {
-        $config = [
-            'public_view' => [
-                'toolbar' => xbUrl('Index/toolbar'),
-            ],
-        ];
-        // 是否支持版权设置
-        $copyright = WebSite::copyrightValue();
-        if ($copyright) {
-            // 获取站点配置
-            $site = ConfigProvider::get('system', '', [], [
-                'refresh' => true,
-            ]);
-            // 设置站点名称
-            if (!empty($site['web_name']) && !empty($site['web_url'])) {
-                $config['web_name'] = $site['web_name'];
-                $config['web_url'] = $site['web_url'];
-                // 设置站点版权
-                $config['login_beian']['system_name'] = $site['web_name'];
-                $config['login_beian']['system_url'] = $site['web_url'];
-                $config['login_beian']['system_version'] = config('projects.version_name', '');
-            }
-            // 设置组织信息
-            if (!empty($site['about_name']) && !empty($site['about_url'])) {
-                $config['login_beian']['about_name'] = $site['about_name'];
-                $config['login_beian']['about_url'] = $site['about_url'];
-            }
-            // 设置备案信息
-            if (!empty($site['beian_text']) && !empty($site['beian_url'])) {
-                $config['login_beian']['beian_text'] = $site['beian_text'];
-                $config['login_beian']['beian_url'] = $site['beian_url'];
-            }
-            // 设置公安备案
-            if (!empty($site['police_beian_text']) && !empty($site['police_beian_url'])) {
-                $config['login_beian']['police_beian_text'] = $site['police_beian_text'];
-                $config['login_beian']['police_beian_url'] = $site['police_beian_url'];
-            }
-        }
+        $config = [];
         // 获取站点配置
-        $data = AppProvider::get($config);
-        // 返回数据
+        $config    = ConfigApi::get('system', '', [], [
+            'refresh' => true,
+        ]);
+        // 获取版权配置
+        $copyright = ConfigApi::get('copyright', '', []);
+        if (!empty($copyright)) {
+            $config['login_beian'] = $copyright;
+        }
+        // 获取配置
+        $data = AppsEntryApi::get($config);
+        return $this->successRes($data);
+    }
+
+    /**
+     * 获取工作台远程视图
+     * @param \support\Request $request
+     * @return \support\Response
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public function workbench(Request $request)
+    {
+        $plugins = glob(base_path() . '/plugin/*/config/workbench.php');
+        $workbench = [];
+        foreach ($plugins as $plugin) {
+            $temp = include $plugin;
+            if (!is_array($temp)) {
+                continue;
+            }
+            $workbench = array_merge($workbench, $temp);
+        }
+        if ($workbench) {
+            return $this->successRes($workbench);
+        }
+        $data = [
+            xbUrl('Index/workbenchView'),
+        ];
         return $this->successRes($data);
     }
 
@@ -102,41 +96,8 @@ class IndexController extends XbController
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public function workbench(Request $request)
+    public function workbenchView(Request $request)
     {
-        // 获取已授权插件工作台路由
-        $data = WebPlugin::getWorkbenchRoute();
-        // 返回数据
-        return $this->successRes($data);
-    }
-
-    /**
-     * 工具栏数据
-     * @param \support\Request $request
-     * @return \support\Response
-     * @copyright 贵州小白基地网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
-     */
-    public function toolbar(Request $request)
-    {
-        // 获取已授权插件工作台路由
-        $data = WebPlugin::getToolbarRoute();
-        $data = array_merge($data, [
-            'admin' => xbUrl('Index/toolbarView'),
-        ]);
-        // 返回数据
-        return $this->successRes($data);
-    }
-
-    /**
-     * 工具栏视图
-     * @param \support\Request $request
-     * @return \support\Response
-     * @copyright 贵州小白基地网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
-     */
-    public function toolbarView(Request $request)
-    {
-        return $this->view('view/admin/toolbar');
+        return $this->view('app/admin/view/workbench');
     }
 }

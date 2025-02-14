@@ -1,5 +1,5 @@
 <?php
-namespace app\validate;
+namespace plugin\xbCode\app\validate;
 
 use taoser\Validate;
 

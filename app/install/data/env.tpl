@@ -1,11 +1,19 @@
 # 是否开启调试模式
 APP_DEBUG = false
-# 框架运行端口
-APP_PORT = 39800
+
 # CPU运行核心数
 APP_CPU_LIMIT = 4
+
 # 是否开启登录验证码
 CAPTCHA_LOGIN = true
+
+# 是否宝塔环境
+BT_ENV_STATE = {BT_ENV_STATE}
+# 宝塔环境标识
+BT_ENV_NAME = {BT_ENV_NAME}
+
+# 后台登录地址
+ADMIN_URL = backend
 
 # 数据库配置
 DB_HOST = {HOSTNAME}

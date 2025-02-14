@@ -1,6 +1,7 @@
 <?php
+
 return [
-    'default' => xbEnv('CACHE_TYPE', 'file'),
+    'default' => 'file',
     'stores' => [
         'file' => [
             'driver' => 'file',

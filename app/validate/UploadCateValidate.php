@@ -1,7 +1,7 @@
 <?php
-namespace app\validate;
+namespace plugin\xbCode\app\validate;
 
-use app\model\UploadCate;
+use plugin\xbCode\app\model\UploadCate;
 use taoser\Validate;
 
 class UploadCateValidate extends Validate

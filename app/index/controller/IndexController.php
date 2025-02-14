@@ -1,8 +1,8 @@
 <?php
-namespace app\index\controller;
+namespace plugin\xbCode\app\index\controller;
 
 use support\Request;
-use xbcode\XbController;
+use plugin\xbCode\XbController;
 
 /**
  * 首页控制器
