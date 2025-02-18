@@ -3,7 +3,9 @@ namespace plugin\xbCode\base;
 
 use Exception;
 use think\facade\Db;
+use plugin\xbCode\api\Menus;
 use plugin\xbCode\api\Mysql;
+use plugin\xbDict\api\DictApi;
 use plugin\xbCode\api\Packages;
 
 /**
@@ -162,6 +164,56 @@ abstract class BasePlugin
         $sqlFile = base_path() . "/plugin/{$plugin}/install.sql";
         // 安装数据库
         Mysql::importSql($sqlFile, $oldPrefix, $newPrefix);
+    }
+
+    /**
+     * 安装菜单
+     * @return void
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    protected static function installMenus()
+    {
+        // 获取插件名称
+        $plugin = self::getCallPluginName();
+        // 获取菜单文件
+        $menuFile = base_path() . "/plugin/{$plugin}/config/menu.php";
+        if (!file_exists($menuFile)) {
+            return;
+        }
+        // 获取菜单数据
+        $menus = include $menuFile;
+        // 检测菜单数据
+        if (empty($menus)) {
+            return;
+        }
+        // 开始安装菜单
+        Menus::install($menus, $plugin);
+    }
+    
+    /**
+     * 安装字典
+     * @return void
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    protected static function installDict()
+    {
+        // 获取插件名称
+        $plugin = self::getCallPluginName();
+        // 获取字典文件
+        $dictFile = base_path() . "/plugin/{$plugin}/config/dict.php";
+        if (!file_exists($dictFile)) {
+            return;
+        }
+        // 获取菜单数据
+        $dict = include $dictFile;
+        // 检测菜单数据
+        if (empty($dict)){
+            return;
+        }
+        // 开始安装字典数据
+        DictApi::installAction()->install($plugin);
     }
 
     /**

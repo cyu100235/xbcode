@@ -17,8 +17,8 @@
     },
     "plugins": {
         "xbConfig": "系统配置",
-        "xbAdminLog": "操作日志",
+        "xbUpload": "储存配置",
         "xbDict": "数据字典",
-        "xbUpload": "储存配置"
+        "xbAdminLog": "操作日志"
     }
 }

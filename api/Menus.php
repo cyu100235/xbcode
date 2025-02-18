@@ -56,6 +56,12 @@ class Menus
                 if (!in_array($value['is_show'], [10, 20])) {
                     throw new Exception('是否显示值错误');
                 }
+                if (empty($value['type'])) {
+                    throw new Exception('缺少菜单类型');
+                }
+                if (!in_array($value['type'], [10, 20, 30])) {
+                    throw new Exception('菜单类型错误');
+                }
                 // 默认值
                 if (empty($value['pid'])) {
                     $value['pid'] = 0;
