@@ -69,7 +69,7 @@ class AdminRuleController extends XbController
             'title' => '添加菜单',
             'customStyle' => [
                 'width' => '500px',
-                'height' => '70vh',
+                'height' => '650px',
             ],
         ], [
             'type' => 'primary',
@@ -82,6 +82,7 @@ class AdminRuleController extends XbController
             'title' => '资源菜单',
             'customStyle' => [
                 'width' => '500px',
+                'height' => '650px',
             ]
         ], [
             'type' => 'success',
@@ -95,7 +96,7 @@ class AdminRuleController extends XbController
             'title' => '修改菜单',
             'customStyle' => [
                 'width' => '500px',
-                'height' => '70vh',
+                'height' => '650px',
             ],
         ], [
             'type' => 'primary',
@@ -146,12 +147,7 @@ class AdminRuleController extends XbController
             'params' => [
                 'type' => 'switch',
                 'api' => xbUrl('AdminRule/rowEdit'),
-                'props' => [
-                    'activeText' => '开启',
-                    'inactiveText' => '关闭',
-                    'activeValue' => '20',
-                    'inactiveValue' => '10',
-                ],
+                'props' => DictApi::get('switchState')->switch(),
             ],
         ]);
         $builder->addColumn('component', '组件类型', [
@@ -380,7 +376,6 @@ class AdminRuleController extends XbController
     private function formView()
     {
         $builder = new FormBuilder;
-
         $rule    = $this->menuTypeRule();
         $builder->addControl('type', 'radio', '菜单类型', '10', $rule, [
             'options' => DictApi::get('menuTypeText')->options(),

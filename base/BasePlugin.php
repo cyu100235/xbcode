@@ -23,7 +23,7 @@ abstract class BasePlugin
     public static function installBefore(string $version = '')
     {
         // 获取插件名称
-        $name = static::getPluginName();
+        $name = self::getCallPluginName();
         try {
             // 检查依赖与插件
             Packages::checked($name);
@@ -156,25 +156,22 @@ abstract class BasePlugin
         // 替换表前缀
         $oldPrefix = ['`xb_', '`php_', '`__PREFIX__'];
         $newPrefix = "`{$prefix}";
-        // 获取调用类的命名空间
-        $callClass = get_called_class();
-        // 获取调用类的的地址
-        $callClassPath = str_replace('\\', '/', $callClass);
-        // 获取插件地址
-        $pluginPath = dirname($callClassPath, 2);
+        // 获取插件名称
+        $plugin = self::getCallPluginName();
         // SQL文件地址
-        $sqlFile = base_path() . "/{$pluginPath}/install.sql";
+        $sqlFile = base_path() . "/plugin/{$plugin}/install.sql";
         // 安装数据库
         Mysql::importSql($sqlFile, $oldPrefix, $newPrefix);
     }
-    
+
     /**
-     * 获取插件名称
+     * 获取调用类插件名称
+     * @throws Exception
      * @return string
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    private static function getPluginName()
+    public static function getCallPluginName()
     {
         // 获取调用类命名空间
         $callClass = get_called_class();

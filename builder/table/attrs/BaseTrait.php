@@ -47,7 +47,7 @@ trait BaseTrait
         // 数据渠道字段
         'props'  => [
             // 默认无分页
-            'list' => 'data',
+            'result' => 'data',
         ],
     ];
 }

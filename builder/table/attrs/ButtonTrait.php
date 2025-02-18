@@ -133,8 +133,8 @@ trait ButtonTrait
     {
         // 设置模态框专有属性
         if (in_array($btnData['pageData']['type'], ['modal', 'table', 'remote', 'info'])) {
-            $btnData['message']['customStyle']['width']  = '480px';
-            $btnData['message']['customStyle']['height'] = '65vh';
+            $btnData['message']['customStyle']['width']  = '500px';
+            $btnData['message']['customStyle']['height'] = '650px';
             $btnData['message']['closeOnClickModal']     = false;
             $btnData['message']['showConfirmButton']     = true;
             $btnData['message']['confirmButtonText']     = '确定';

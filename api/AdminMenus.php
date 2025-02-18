@@ -14,24 +14,26 @@ use plugin\xbCode\app\model\AdminRule;
 class AdminMenus
 {
     /**
-     * 获取登录管理员菜单
+     * 获取管理员菜单
+     * @param int $adminId 管理员ID
+     * @param string $isWeb 是否总后台菜单
      * @throws \Exception
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public static function get(int $id)
+    public static function get(int $adminId, string $isWeb = '20')
     {
-        $model = Admin::where('id', $id)->find();
+        $model = Admin::where('id', $adminId)->find();
         if (!$model) {
             throw new \Exception('管理员信息错误，请重新登录', 12000);
         }
         $where = [
-            ['is_web', '=', '20']
+            ['is_web', '=', $isWeb]
         ];
         // 检测非系统管理员
         if ($model['is_system'] !== '20') {
             // 获取角色菜单规则
-            $rules = self::getRoleRules($model['role_id']);
+            $rules = self::getRoleRules($model['role_id'], $isWeb);
             $where[] = ['path', 'in', $rules];
         }
         // 获取菜单数据
@@ -50,15 +52,15 @@ class AdminMenus
         // 返回数据
         return $data;
     }
-
+    
     /**
-     * 获取总后台角色权限
-     * @param int $roleId
-     * @return array
+     * 获取角色权限
+     * @param int $roleId 角色ID
+     * @param string $isWeb 是否总后台菜单
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public static function getRoleRules(int $roleId)
+    public static function getRoleRules(int $roleId, string $isWeb)
     {
         $key = "admin_rules_{$roleId}";
         $data = Cache::get($key);
@@ -73,7 +75,7 @@ class AdminMenus
             // 查询自身是否有父级规则
             $where  = [
                 ['path', '=', $path],
-                ['plugin', '=', null],
+                ['is_web', '=', $isWeb],
             ];
             $parent = AdminRule::where($where)->value('pid');
             if ($parent !== 0) {

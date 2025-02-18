@@ -19,8 +19,20 @@ class Install extends BasePlugin
      */
     public static function install($version = '')
     {
-        // 导入数据库
+        // 插件名称
+        $name = self::getCallPluginName();
+        // 安装数据库
         static::installSql();
+        // 安装菜单
+        $menus = require dirname(__DIR__) . '/config/menu.php';
+        if ($menus) {
+            Menus::install($menus, $name);
+        }
+        // 安装nginx文件
+        $nginxPath = dirname(__DIR__) . '/nginx.conf';
+        if (file_exists($nginxPath)) {
+            copy($nginxPath, base_path() . '/nginx.conf');
+        }
     }
 
     /**

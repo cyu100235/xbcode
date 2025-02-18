@@ -17,7 +17,6 @@ class AdminValidate extends Validate
         'password' => 'require|length:5,20',
         'newpassword' => 'require',
         'nickname' => 'require|length:2,20',
-        'avatar' => 'require',
     ];
 
     protected $message = [
@@ -30,7 +29,6 @@ class AdminValidate extends Validate
         'newpassword.require' => '请输入新的登录密码',
         'nickname.require' => '请输入用户昵称',
         'nickname.length' => '用户昵称字数必须在2-20位之间',
-        'avatar.require' => '请上传并选择头像',
     ];
 
     /**
@@ -60,7 +58,6 @@ class AdminValidate extends Validate
             'username',
             'password',
             'nickname',
-            'avatar'
         ]);
     }
 
@@ -76,7 +73,6 @@ class AdminValidate extends Validate
             'role_id',
             'username',
             'nickname',
-            'avatar'
         ])
         ->remove('username','unique')
         ->remove('nickname','unique');
@@ -95,7 +91,6 @@ class AdminValidate extends Validate
             'originpwd',
             'newpassword',
             'nickname',
-            'avatar'
         ])
         ->remove('username','unique')
         ->remove('nickname','unique');

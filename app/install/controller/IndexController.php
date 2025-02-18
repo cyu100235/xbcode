@@ -315,7 +315,7 @@ class IndexController extends XbController
             // 重启框架
             FrameUtil::delayReload(2);
             // 返回成功
-            return $this->success('应用安装成功，3秒后跳转...');
+            return $this->success('应用安装成功，即将跳转...');
         } else {
             // 安装失败
             return $this->fail('安装失败...');

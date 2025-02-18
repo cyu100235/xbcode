@@ -2,6 +2,7 @@
 namespace plugin\xbCode\app\admin\controller;
 
 use support\Request;
+use plugin\xbDict\api\DictApi;
 use plugin\xbCode\api\Plugins;
 use plugin\xbCode\XbController;
 use plugin\xbCode\app\model\Admin;
@@ -43,10 +44,6 @@ class AdminController extends XbController
             'path' => xbUrl('Admin/add'),
         ], [
             'title' => '添加管理员',
-            'customStyle' => [
-                'width' => '500px',
-                'height' => '60vh',
-            ],
         ], [
             'type' => 'primary',
         ]);
@@ -56,10 +53,6 @@ class AdminController extends XbController
             'path' => xbUrl('Admin/edit'),
         ], [
             'title' => '修改管理员',
-            'customStyle' => [
-                'width' => '500px',
-                'height' => '60vh',
-            ],
         ], [
             'type' => 'primary',
             'icon' => 'Edit',
@@ -106,12 +99,7 @@ class AdminController extends XbController
             'params' => [
                 'type' => 'switch',
                 'api' => xbUrl('Admin/rowEdit'),
-                'props' => [
-                    'activeText' => '正常',
-                    'inactiveText' => '封禁',
-                    'activeValue' => '20',
-                    'inactiveValue' => '10',
-                ],
+                'props' => DictApi::get('banText')->switch(),
             ],
         ]);
         $data = $builder->create();

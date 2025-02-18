@@ -9,7 +9,7 @@ Route::disableDefaultRoute();
 Route::get('/', [\plugin\xbCode\app\index\controller\IndexController::class, 'index']);
 
 // 注册总后台
-$module = "backend";
+$module = getenv('ADMIN_URL') ?: 'backend';
 Route::group("/{$module}", function () {
     Route::get('/', [\plugin\xbCode\app\admin\controller\IndexController::class, 'index']);
     Route::get('/Index/site', [\plugin\xbCode\app\admin\controller\IndexController::class, 'site']);
