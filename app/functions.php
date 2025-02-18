@@ -118,17 +118,16 @@ function xbValidate($validate, array $data, string $scene = '')
  */
 function xbUrl(string $url, array $query = [], bool $slash = false, bool $domain = false, bool $module = true)
 {
-    $plugin = request()->plugin;
-    if ($plugin) {
+    if ($module) {
+        // 获取插件名称
+        $plugin = request()->plugin;
+        // 获取模块名称
         $moduleName = request()->app;
-        $moduleName = $module ? "{$moduleName}/" : '';
-        // 拼接插件地址
-        $url = "app/{$plugin}/{$moduleName}{$url}";
-    } else {
-        $moduleName = xbAppName();
-        $moduleName = $module ? "{$moduleName}/" : '';
-        // 拼接应用地址
-        $url = "{$moduleName}{$url}";
+        // 拼接模块地址
+        $url = "app/{$plugin}/{$moduleName}/{$url}";
+    }else{
+        // 无模块地址
+        $url = "app/{$url}";
     }
     // 是否拼接前斜杠
     if ($slash) {
