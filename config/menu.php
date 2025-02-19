@@ -135,7 +135,7 @@ return [
                     [
                         "title" => "账号管理-资料",
                         "path" => "admin/Admin/profile",
-                        "component" => "none/index",
+                        "component" => "form/index",
                         "method" => "GET,PUT",
                         "type" => "30",
                         "icon" => "",
