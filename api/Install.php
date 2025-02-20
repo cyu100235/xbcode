@@ -23,11 +23,6 @@ class Install extends BasePlugin
         static::installSql();
         // 安装菜单
         static::installMenus();
-        // 安装nginx文件
-        $nginxPath = dirname(__DIR__) . '/nginx.conf';
-        if (file_exists($nginxPath)) {
-            copy($nginxPath, base_path() . '/nginx.conf');
-        }
     }
 
     /**

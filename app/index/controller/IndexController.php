@@ -20,6 +20,7 @@ class IndexController extends XbController
      */
     public function index(Request $request)
     {
-        return redirect('/backend/');
+        $adminModule = getenv('BT_ENV_NAME') ?: 'backend';
+        return redirect("/{$adminModule}/");
     }
 }

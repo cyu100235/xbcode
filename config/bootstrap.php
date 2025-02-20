@@ -1,5 +1,5 @@
 <?php
 
 return [
-    \plugin\xbCode\bootstrap\DatabaseBootstrap::class,
+    \plugin\xbCode\bootstrap\XbCodeBootstrap::class,
 ];

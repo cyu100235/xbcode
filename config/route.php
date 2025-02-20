@@ -1,12 +1,25 @@
 <?php
-
 use Webman\Route;
 
 // 禁用默认路由
 Route::disableDefaultRoute();
 
 // 注册引导路由
-Route::get('/', [\plugin\xbCode\app\index\controller\IndexController::class, 'index']);
+$pluginHome = glob(base_path() . '/plugin/*/config/home.php');
+$homeConfig = [
+    \plugin\xbCode\app\index\controller\IndexController::class,
+    'index'
+];
+if ($pluginHome) {
+    $configPath = current($pluginHome);
+    if (is_string($configPath)) {
+        $home = include $configPath;
+        if (!empty($home[1])) {
+            $homeConfig = $home;
+        }
+    }
+}
+Route::get('/', $homeConfig);
 
 // 注册总后台
 $module = getenv('ADMIN_URL') ?: 'backend';
