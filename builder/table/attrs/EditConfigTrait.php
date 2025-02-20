@@ -16,12 +16,7 @@ trait EditConfigTrait
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    private $editConfig = [
-        'enabled'    => true,
-        'trigger'    => 'dblclick',
-        'mode'       => 'cell',
-        'showStatus' => true
-    ];
+    private $editConfig = [];
     
     /**
      * 开启编辑
@@ -33,7 +28,12 @@ trait EditConfigTrait
      */
     public function editConfig(array $config = []): ListBuilder
     {
-        $this->editConfig = array_merge($this->editConfig, $config);
+        $this->editConfig = array_merge([
+            'enabled'    => true,
+            'trigger'    => 'dblclick',
+            'mode'       => 'cell',
+            'showStatus' => true
+        ], $config);
         return $this;
     }
 }

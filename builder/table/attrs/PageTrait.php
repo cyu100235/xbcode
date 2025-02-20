@@ -1,5 +1,4 @@
 <?php
-
 namespace plugin\xbCode\builder\table\attrs;
 
 use plugin\xbCode\builder\ListBuilder;
@@ -18,8 +17,8 @@ trait PageTrait
      * @author 楚羽幽 cy958416459@qq.com
      */
     private $pagerConfig = [
-        'currentPage' => 0,
-        'pageSize' => 0,
+        'currentPage' => 1,
+        'pageSize' => 30,
         'total' => 1000,
         'pageSizes' => [20, 30, 50, 100, 200, 300, 500, 1000],
         'align' => 'right',

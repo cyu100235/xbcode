@@ -22,66 +22,6 @@ function p(mixed $data, string $remarks = '')
         echo PHP_EOL;
     }
 }
-/**
- * 解析nginx配置文件
- * @param string $file
- * @copyright 贵州小白基地网络科技有限公司
- * @author 楚羽幽 cy958416459@qq.com
- */
-function xbGetNginxConf(string $file)
-{
-    // 读取文件内容
-    $content = file_get_contents($file);
-    if (empty($content)) {
-        return null;
-    }
-    // 解析nginx配置文件
-    preg_match('/proxy_pass\s+http:\/\/\d+\.\d+\.\d+\.\d+:(\d+)/', $content, $matches);
-    // 获取端口号
-    $port = $matches[1] ?? null;
-    return $port;
-}
-if (!function_exists('xbServerPort')) {
-    /**
-     * 获取端口号
-     * @return int|null
-     */
-    function xbServerPort(int $default = 39000)
-    {
-        // 获取宝塔环境配置
-        $btEnv = getenv('BT_ENV_STATE') === 'true';
-        $name = getenv('BT_ENV_NAME');
-        $file = "/www/server/panel/vhost/rewrite/{$name}.conf";
-        // 检测是否宝塔环境
-        if ($btEnv && $name && file_exists($file)) {
-            // 获取nginx配置文件端口号
-            $port = xbGetNginxConf($file);
-            if ($port) {
-                return (int) $port;
-            }
-        }
-        // 检测本地伪静态文件
-        $file = base_path() . '/nginx.conf';
-        if (file_exists($file)) {
-            // 获取nginx配置文件端口号
-            $port = xbGetNginxConf($file);
-            if ($port) {
-                return (int) $port;
-            }
-        }
-        // 检测插件伪静态文件
-        $file = base_path() . '/plugin/xbCode/nginx.conf';
-        if (file_exists($file)) {
-            // 获取nginx配置文件端口号
-            $port = xbGetNginxConf($file);
-            if ($port) {
-                return (int) $port;
-            }
-        }
-        // 返回默认端口号
-        return $default;
-    }
-}
 
 /**
  * 验证数据

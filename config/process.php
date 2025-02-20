@@ -2,11 +2,12 @@
 use support\Log;
 use support\Request;
 use plugin\xbCode\process\Http;
+use plugin\xbCode\utils\FrameUtil;
 
 return [
     'server' => [
         'handler' => Http::class,
-        'listen' => 'http://0.0.0.0:39800',
+        'listen' => 'http://0.0.0.0:'. FrameUtil::xbServerPort(),
         'count' => cpu_count() * 4,
         'user' => '',
         'group' => '',

@@ -360,9 +360,9 @@ class IndexController extends XbController
         $settings = [
             'web_name' => $site['web_name'],
             'web_url' => $site['web_url'],
-            'web_title' => '',
-            'web_keywords' => '',
-            'web_description' => '',
+            'web_title' => $site['web_name'],
+            'web_keywords' => $site['web_name'],
+            'web_description' => $site['web_name'],
             'web_logo' => '',
         ];
         foreach ($settings as $field => $value) {
