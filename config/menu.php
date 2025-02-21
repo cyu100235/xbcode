@@ -22,6 +22,7 @@ return [
                 "icon" => "",
                 "params" => "",
                 "is_show" => 10,
+                "is_system" => 20,
             ],
             [
                 "title" => "系统登录",
@@ -32,6 +33,7 @@ return [
                 "icon" => "",
                 "params" => "",
                 "is_show" => 10,
+                "is_system" => 20,
             ],
             [
                 "title" => "退出登录",
@@ -42,6 +44,7 @@ return [
                 "icon" => "",
                 "params" => "",
                 "is_show" => 10,
+                "is_system" => 20,
             ],
             [
                 "title" => "获取用户信息",
@@ -52,6 +55,7 @@ return [
                 "icon" => "",
                 "params" => "",
                 "is_show" => 10,
+                "is_system" => 20,
             ],
         ],
     ],
@@ -64,6 +68,7 @@ return [
         "icon" => "TeamOutlined",
         "params" => "",
         "is_show" => 20,
+        "is_system" => 20,
         "sort" => 1,
         "pid" => "",
         "children" => [
@@ -76,6 +81,7 @@ return [
                 "icon" => "",
                 "params" => "",
                 "is_show" => 20,
+                "is_system" => 20,
                 "children" => [
                     [
                         "title" => "账号管理-表格",
@@ -86,6 +92,7 @@ return [
                         "icon" => "",
                         "params" => "",
                         "is_show" => 10,
+                        "is_system" => 20,
                         "children" => [],
                     ],
                     [
@@ -97,6 +104,7 @@ return [
                         "icon" => "",
                         "params" => "",
                         "is_show" => 10,
+                        "is_system" => 20,
                         "children" => [],
                     ],
                     [
@@ -108,6 +116,7 @@ return [
                         "icon" => "",
                         "params" => "",
                         "is_show" => 10,
+                        "is_system" => 20,
                         "children" => [],
                     ],
                     [
@@ -119,6 +128,7 @@ return [
                         "icon" => "",
                         "params" => "",
                         "is_show" => 10,
+                        "is_system" => 20,
                         "children" => [],
                     ],
                     [
@@ -130,6 +140,7 @@ return [
                         "icon" => "",
                         "params" => "",
                         "is_show" => 10,
+                        "is_system" => 20,
                         "children" => [],
                     ],
                     [
@@ -141,6 +152,7 @@ return [
                         "icon" => "",
                         "params" => "",
                         "is_show" => 10,
+                        "is_system" => 20,
                         "children" => [],
                     ],
                 ],
@@ -154,6 +166,7 @@ return [
                 "icon" => "",
                 "params" => "",
                 "is_show" => 20,
+                "is_system" => 20,
                 "children" => [
                     [
                         "title" => "角色管理-表格",
@@ -164,6 +177,7 @@ return [
                         "icon" => "",
                         "params" => "",
                         "is_show" => 10,
+                        "is_system" => 20,
                         "children" => [],
                     ],
                     [
@@ -175,6 +189,7 @@ return [
                         "icon" => "",
                         "params" => "",
                         "is_show" => 10,
+                        "is_system" => 20,
                         "children" => [],
                     ],
                     [
@@ -186,6 +201,7 @@ return [
                         "icon" => "",
                         "params" => "",
                         "is_show" => 10,
+                        "is_system" => 20,
                         "children" => [],
                     ],
                     [
@@ -197,6 +213,7 @@ return [
                         "icon" => "",
                         "params" => "",
                         "is_show" => 10,
+                        "is_system" => 20,
                         "children" => [],
                     ],
                     [
@@ -208,6 +225,7 @@ return [
                         "icon" => "",
                         "params" => "",
                         "is_show" => 10,
+                        "is_system" => 20,
                         "children" => [],
                     ],
                 ],
@@ -221,6 +239,7 @@ return [
                 "icon" => "",
                 "params" => "",
                 "is_show" => 20,
+                "is_system" => 20,
                 "children" => [
                     [
                         "title" => "权限菜单-表格",
@@ -231,6 +250,7 @@ return [
                         "icon" => "",
                         "params" => "",
                         "is_show" => 10,
+                        "is_system" => 20,
                         "children" => [],
                     ],
                     [
@@ -242,6 +262,7 @@ return [
                         "icon" => "",
                         "params" => "",
                         "is_show" => 10,
+                        "is_system" => 20,
                         "children" => [],
                     ],
                     [
@@ -253,6 +274,7 @@ return [
                         "icon" => "",
                         "params" => "",
                         "is_show" => 10,
+                        "is_system" => 20,
                         "children" => [],
                     ],
                     [
@@ -264,6 +286,7 @@ return [
                         "icon" => "",
                         "params" => "",
                         "is_show" => 10,
+                        "is_system" => 20,
                         "children" => [],
                     ],
                     [
@@ -275,6 +298,7 @@ return [
                         "icon" => "",
                         "params" => "",
                         "is_show" => 10,
+                        "is_system" => 20,
                         "children" => [],
                     ],
                     [
@@ -286,6 +310,7 @@ return [
                         "icon" => "",
                         "params" => "",
                         "is_show" => 10,
+                        "is_system" => 20,
                         "children" => [],
                     ],
                 ],

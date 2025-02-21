@@ -265,6 +265,9 @@ class AdminRuleController extends XbController
             return $this->success('修改成功');
         }
         $data           = $model->toArray();
+        if ($data['is_system'] == '20') {
+            return $this->fail('系统菜单，禁止操作');
+        }
         $data['remote'] = $data['params'];
         $builder        = $this->formView();
         $builder->setMethod('PUT');
@@ -288,6 +291,9 @@ class AdminRuleController extends XbController
         // 批量删除
         $data = AdminRule::where('id', 'in', $ids)->select();
         foreach ($data as $model) {
+            if ($model['is_system'] == '20') {
+                return $this->fail('系统菜单，禁止操作');
+            }
             if (!$model->delete()) {
                 throw new Exception("ID:{$model['id']} 删除失败");
             }

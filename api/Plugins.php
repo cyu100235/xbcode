@@ -19,7 +19,7 @@ class Plugins
      */
     public static function checked(mixed $name)
     {
-        $class = "plugin\\{$name}\\Install";
+        $class = "\\plugin\\{$name}\\api\\Install";
         if (!class_exists($class)) {
             return false;
         }
@@ -36,8 +36,7 @@ class Plugins
      */
     public static function checkedThrow(mixed $name)
     {
-        $class = "plugin\\{$name}\\Install";
-        if (!class_exists($class)) {
+        if (!static::checked($name)) {
             throw new Exception("插件 {$name} 未安装");
         }
     }

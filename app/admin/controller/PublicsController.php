@@ -2,7 +2,6 @@
 namespace plugin\xbCode\app\admin\controller;
 
 use Exception;
-use plugin\xbConfig\api\AppsEntryApi;
 use support\Request;
 use plugin\xbCode\XbController;
 use plugin\xbCode\api\AdminMenus;
@@ -10,6 +9,7 @@ use Webman\Captcha\PhraseBuilder;
 use plugin\xbCode\app\model\Admin;
 use plugin\xbCode\utils\TokenUtil;
 use Webman\Captcha\CaptchaBuilder;
+use plugin\xbConfig\api\AppsEntry;
 use plugin\xbCode\utils\PasswdUtil;
 use plugin\xbCode\app\validate\AdminValidate;
 
@@ -56,7 +56,7 @@ class PublicsController extends XbController
         xbValidate(AdminValidate::class, $post, 'login');
 
         // 是否开启验证码
-        $isVcode = AppsEntryApi::get()['public_api']['captcha'] ?? '';
+        $isVcode = AppsEntry::get()['public_api']['captcha'] ?? '';
         if ($isVcode) {
             // 验证码效验
             $captcha = $post['vcode'] ?? '';

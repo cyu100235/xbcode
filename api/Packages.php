@@ -22,7 +22,7 @@ class Packages
         self::composer($plugin);
         self::plugins($plugin);
     }
-    
+
     /**
      * 检查Composer依赖包
      * @param string $plugin 插件标识
@@ -39,11 +39,11 @@ class Packages
         }
         foreach ($data as $class => $value) {
             if (!class_exists($class)) {
-                throw new Exception("请先安装 {$value} 依赖");
+                throw new Exception("请先安装 {$value} 依赖", 4);
             }
         }
     }
-    
+
     /**
      * 检查插件依赖包
      * @param string $plugin 插件标识
@@ -61,11 +61,11 @@ class Packages
         foreach ($data as $name => $value) {
             $class = "plugin\\{$name}\\api\\Install";
             if (!class_exists($class)) {
-                throw new Exception("请先安装 {$value} 插件");
+                throw new Exception("请先安装 {$value} 插件", 4);
             }
         }
     }
-    
+
     /**
      * 获取依赖包数据
      * @param string $plugin 插件标识

@@ -5,6 +5,7 @@ use Exception;
 use think\facade\Db;
 use plugin\xbCode\api\Menus;
 use plugin\xbCode\api\Mysql;
+use plugin\xbCode\api\Plugins;
 use plugin\xbDict\api\DictApi;
 
 /**
@@ -45,20 +46,20 @@ trait InstallTrait
     protected static function installMenus()
     {
         // 获取插件名称
-        $plugin = self::getCallPluginName();
+        $name = self::getCallPluginName();
         // 获取菜单文件
-        $menuFile = base_path() . "/plugin/{$plugin}/config/menu.php";
-        if (!file_exists($menuFile)) {
+        $file = base_path() . "/plugin/{$name}/config/menu.php";
+        if (!file_exists($file)) {
             return;
         }
         // 获取菜单数据
-        $menus = include $menuFile;
+        $data = include $file;
         // 检测菜单数据
-        if (empty($menus)) {
+        if (empty($data)) {
             return;
         }
         // 开始安装菜单
-        Menus::install($menus, $plugin);
+        Menus::install($data, $name);
     }
     
     /**
@@ -69,21 +70,37 @@ trait InstallTrait
      */
     protected static function installDict()
     {
+        // 检测是否安装插件
+        Plugins::checkedThrow('xbDict');
+        // 获取插件名称
+        $name = self::getCallPluginName();
+        // 开始安装字典数据
+        DictApi::installAction()->install($name);
+    }
+
+    /**
+     * 安装定时任务
+     * @return void
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    protected static function installCrontab()
+    {
         // 获取插件名称
         $plugin = self::getCallPluginName();
         // 获取字典文件
-        $dictFile = base_path() . "/plugin/{$plugin}/config/dict.php";
-        if (!file_exists($dictFile)) {
+        $file = base_path() . "/plugin/{$plugin}/config/crontab.php";
+        if (!file_exists($file)) {
             return;
         }
+        // 检测是否安装插件
+        Plugins::checkedThrow('xbCrontab');
         // 获取菜单数据
-        $dict = include $dictFile;
+        $data = include $file;
         // 检测菜单数据
-        if (empty($dict)){
+        if (empty($data)){
             return;
         }
-        // 开始安装字典数据
-        DictApi::installAction()->install($plugin);
     }
 
     /**

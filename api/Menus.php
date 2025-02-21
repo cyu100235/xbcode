@@ -87,6 +87,9 @@ class Menus
                 if (empty($value['plugin'])) {
                     $value['plugin'] = $name;
                 }
+                if (empty($value['is_system'])) {
+                    $value['is_system'] = '10';
+                }
                 // 检测是否菜单是否存在
                 $where = [
                     'plugin' => $value['plugin'],

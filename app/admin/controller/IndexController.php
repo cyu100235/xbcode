@@ -3,8 +3,8 @@ namespace plugin\xbCode\app\admin\controller;
 
 use support\Request;
 use plugin\xbCode\XbController;
-use plugin\xbConfig\api\ConfigApi;
-use plugin\xbConfig\api\AppsEntryApi;
+use plugin\xbConfig\api\Config;
+use plugin\xbConfig\api\AppsEntry;
 
 /**
  * 首页控制器
@@ -49,16 +49,16 @@ class IndexController extends XbController
     {
         $config = [];
         // 获取站点配置
-        $config    = ConfigApi::get('system', '', [], [
+        $config    = Config::get('system', '', [], [
             'refresh' => true,
         ]);
         // 获取版权配置
-        $copyright = ConfigApi::get('copyright', '', []);
+        $copyright = Config::get('copyright', '', []);
         if (!empty($copyright)) {
             $config['login_beian'] = $copyright;
         }
         // 获取配置
-        $data = AppsEntryApi::get($config);
+        $data = AppsEntry::get($config);
         return $this->successRes($data);
     }
 
