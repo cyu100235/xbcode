@@ -1,44 +1,21 @@
 <?php
+/**
+ * This file is part of webman.
+ *
+ * Licensed under The MIT License
+ * For full copyright and license information, please see the MIT-LICENSE.txt
+ * Redistributions of files must retain the above copyright notice.
+ *
+ * @author    walkor<walkor@workerman.net>
+ * @copyright walkor<walkor@workerman.net>
+ * @link      http://www.workerman.net/
+ * @license   http://www.opensource.org/licenses/mit-license.php MIT License
+ */
+
 use Webman\Route;
 
-// 禁用默认路由
-Route::disableDefaultRoute();
 
-// 注册引导路由
-$pluginHome = glob(base_path() . '/plugin/*/config/home.php');
-$homeConfig = [
-    \plugin\xbCode\app\index\controller\IndexController::class,
-    'index'
-];
-if ($pluginHome) {
-    $configPath = current($pluginHome);
-    if (is_string($configPath)) {
-        $home = include $configPath;
-        if (!empty($home[1])) {
-            $homeConfig = $home;
-        }
-    }
-}
-Route::get('/', $homeConfig);
 
-// 注册总后台
-$module = getenv('ADMIN_URL') ?: 'backend';
-Route::group("/{$module}", function () {
-    Route::get('/', [\plugin\xbCode\app\admin\controller\IndexController::class, 'index']);
-    Route::get('/Index/site', [\plugin\xbCode\app\admin\controller\IndexController::class, 'site']);
-});
-// 总后台静态资源
-Route::get("/{$module}/assets/{file:.+}", function ($file) {
-    $path = dirname(__DIR__) . "/public/backend/assets/{$file}";
-    return response()->file($path);
-});
-// 安装路由
-$module = "install";
-Route::get("/{$module}", [\plugin\xbCode\app\install\controller\IndexController::class, 'index']);
-Route::group("/{$module}", function () {
-    Route::get('/', [\plugin\xbCode\app\install\controller\IndexController::class, 'index']);
-    Route::get("/assets/{file:.+}", function ($file) {
-        $path = dirname(__DIR__) . "/public/install/assets/{$file}";
-        return response()->file($path);
-    });
-});
+
+
+
