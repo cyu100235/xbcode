@@ -22,6 +22,7 @@ return array(
     'Webman\\MultiSession\\' => array($vendorDir . '/webman/multi-session/src'),
     'Webman\\Log\\' => array($vendorDir . '/webman/log/src'),
     'Webman\\Console\\' => array($vendorDir . '/webman/console/src'),
+    'Webman\\Captcha\\' => array($vendorDir . '/webman/captcha/src'),
     'Webman\\Cache\\' => array($vendorDir . '/webman/cache/src'),
     'Webman\\' => array($vendorDir . '/workerman/webman-framework/src'),
     'Tinywan\\Jwt\\' => array($vendorDir . '/tinywan/jwt/src'),

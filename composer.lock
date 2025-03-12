@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4e6d527b2b80af5e3e9cc1e38e3e8b77",
+    "content-hash": "3560e3e06b11d573b7e92dc67212f9ba",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -3079,16 +3079,16 @@
         },
         {
             "name": "webman/cache",
-            "version": "v2.1.0",
+            "version": "v2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webman-php/cache.git",
-                "reference": "35cd8c1b3143fd792e2f50a7e6274292a122aed3"
+                "reference": "e420cb82a1db048dd6a02944c83ca5c628785883"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webman-php/cache/zipball/35cd8c1b3143fd792e2f50a7e6274292a122aed3",
-                "reference": "35cd8c1b3143fd792e2f50a7e6274292a122aed3",
+                "url": "https://api.github.com/repos/webman-php/cache/zipball/e420cb82a1db048dd6a02944c83ca5c628785883",
+                "reference": "e420cb82a1db048dd6a02944c83ca5c628785883",
                 "shasum": ""
             },
             "require": {
@@ -3110,9 +3110,67 @@
             ],
             "support": {
                 "issues": "https://github.com/webman-php/cache/issues",
-                "source": "https://github.com/webman-php/cache/tree/v2.1.0"
+                "source": "https://github.com/webman-php/cache/tree/v2.1.1"
             },
-            "time": "2025-01-20T10:54:32+00:00"
+            "time": "2025-03-10T06:11:35+00:00"
+        },
+        {
+            "name": "webman/captcha",
+            "version": "v1.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/webman-php/captcha.git",
+                "reference": "0b2645b813466e4e70bff311511364080bad2ec5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/webman-php/captcha/zipball/0b2645b813466e4e70bff311511364080bad2ec5",
+                "reference": "0b2645b813466e4e70bff311511364080bad2ec5",
+                "shasum": ""
+            },
+            "require": {
+                "ext-gd": "*",
+                "ext-mbstring": "*",
+                "php": ">=7.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^6.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Webman\\Captcha\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "walkor",
+                    "email": "walkor@workerman.net"
+                },
+                {
+                    "name": "Grégoire Passault",
+                    "email": "g.passault@gmail.com",
+                    "homepage": "http://www.gregwar.com/"
+                },
+                {
+                    "name": "Jeremy Livingston",
+                    "email": "jeremy.j.livingston@gmail.com"
+                }
+            ],
+            "description": "Captcha generator",
+            "keywords": [
+                "bot",
+                "captcha",
+                "spam"
+            ],
+            "support": {
+                "source": "https://github.com/webman-php/captcha/tree/v1.0.5"
+            },
+            "time": "2025-03-01T08:43:36+00:00"
         },
         {
             "name": "webman/console",
@@ -3238,20 +3296,23 @@
         },
         {
             "name": "webman/redis-queue",
-            "version": "v1.3.2",
+            "version": "v2.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/webman-php/redis-queue.git",
-                "reference": "80b9ddca0405bbb6d02e6b368e8036b3b1a13814"
+                "reference": "12e1c9915ec64c91c0c9c255606bd0c7de27334c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/webman-php/redis-queue/zipball/80b9ddca0405bbb6d02e6b368e8036b3b1a13814",
-                "reference": "80b9ddca0405bbb6d02e6b368e8036b3b1a13814",
+                "url": "https://api.github.com/repos/webman-php/redis-queue/zipball/12e1c9915ec64c91c0c9c255606bd0c7de27334c",
+                "reference": "12e1c9915ec64c91c0c9c255606bd0c7de27334c",
                 "shasum": ""
             },
             "require": {
-                "workerman/redis-queue": "^1.2"
+                "ext-redis": "*",
+                "php": ">=8.1",
+                "workerman/redis-queue": "^1.2",
+                "workerman/webman-framework": "^2.1 || dev-master"
             },
             "type": "library",
             "autoload": {
@@ -3263,9 +3324,9 @@
             "description": "Redis message queue plugin for webman.",
             "support": {
                 "issues": "https://github.com/webman-php/redis-queue/issues",
-                "source": "https://github.com/webman-php/redis-queue/tree/v1.3.2"
+                "source": "https://github.com/webman-php/redis-queue/tree/v2.1.0"
             },
-            "time": "2024-04-03T02:00:20+00:00"
+            "time": "2025-01-24T12:56:01+00:00"
         },
         {
             "name": "webman/think-orm",
@@ -3416,16 +3477,16 @@
         },
         {
             "name": "workerman/webman-framework",
-            "version": "v2.1.1",
+            "version": "v2.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/walkor/webman-framework.git",
-                "reference": "c27f61ea8d940657db540ee01de4b44dd7733fd8"
+                "reference": "f803bd867f07bb0929faef060b59a19a44186bfc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/walkor/webman-framework/zipball/c27f61ea8d940657db540ee01de4b44dd7733fd8",
-                "reference": "c27f61ea8d940657db540ee01de4b44dd7733fd8",
+                "url": "https://api.github.com/repos/walkor/webman-framework/zipball/f803bd867f07bb0929faef060b59a19a44186bfc",
+                "reference": "f803bd867f07bb0929faef060b59a19a44186bfc",
                 "shasum": ""
             },
             "require": {
@@ -3433,6 +3494,7 @@
                 "nikic/fast-route": "^1.3",
                 "php": ">=8.1",
                 "psr/container": ">=1.0",
+                "psr/log": "^3.0",
                 "workerman/workerman": "^5.1 || dev-master"
             },
             "suggest": {
@@ -3477,7 +3539,7 @@
                 "source": "https://github.com/walkor/webman-framework",
                 "wiki": "https://doc.workerman.net/"
             },
-            "time": "2025-02-07T03:20:27+00:00"
+            "time": "2025-03-10T11:52:22+00:00"
         },
         {
             "name": "workerman/workerman",
