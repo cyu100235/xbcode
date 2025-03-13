@@ -1,0 +1,3 @@
+[submodule "plugin/xbCode"]
+	path = plugin/xbCode
+	url = git@gitcode.com:xbcode-plugn/xbCode.git
