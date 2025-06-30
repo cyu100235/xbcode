@@ -58,7 +58,7 @@ trait RedisTrait
         parent::__construct($namespace, $defaultLifetime);
 
         if (preg_match('#[^-+_.A-Za-z0-9]#', $namespace, $match)) {
-            throw new InvalidArgumentException(\sprintf('RedisAdapter namespace contains "%s" but only characters in [-+_.A-Za-z0-9] are allowed.', $match[0]));
+            throw new InvalidArgumentException(sprintf('RedisAdapter namespace contains "%s" but only characters in [-+_.A-Za-z0-9] are allowed.', $match[0]));
         }
 
         if ($redis instanceof \Predis\ClientInterface && $redis->getOptions()->exceptions) {
@@ -174,12 +174,6 @@ trait RedisTrait
 
         $params += $query + $options + self::$defaultConnectionOptions;
 
-        if (isset($params['redis_sentinel']) && isset($params['sentinel_master'])) {
-            throw new InvalidArgumentException('Cannot use both "redis_sentinel" and "sentinel_master" at the same time.');
-        }
-
-        $params['redis_sentinel'] ??= $params['sentinel_master'] ?? null;
-
         if (isset($params['redis_sentinel']) && !class_exists(\Predis\Client::class) && !class_exists(\RedisSentinel::class) && !class_exists(Sentinel::class)) {
             throw new CacheException('Redis Sentinel support requires one of: "predis/predis", "ext-redis >= 5.2", "ext-relay".');
         }
@@ -200,14 +194,14 @@ trait RedisTrait
                 \extension_loaded('relay') => Relay::class,
                 default => \Predis\Client::class,
             },
-            1 < \count($hosts) && \extension_loaded('redis') => \RedisArray::class,
+            1 < \count($hosts) && \extension_loaded('redis') => 1 < \count($hosts) ? \RedisArray::class : \Redis::class,
             \extension_loaded('redis') => \Redis::class,
             \extension_loaded('relay') => Relay::class,
             default => \Predis\Client::class,
         };
 
         if (isset($params['redis_sentinel']) && !is_a($class, \Predis\Client::class, true) && !class_exists(\RedisSentinel::class) && !class_exists(Sentinel::class)) {
-            throw new CacheException(\sprintf('Cannot use Redis Sentinel: class "%s" does not extend "Predis\Client" and neither ext-redis >= 5.2 nor ext-relay have been found.', $class));
+            throw new CacheException(sprintf('Cannot use Redis Sentinel: class "%s" does not extend "Predis\Client" and neither ext-redis >= 5.2 nor ext-relay have been found.', $class));
         }
 
         $isRedisExt = is_a($class, \Redis::class, true);
@@ -264,7 +258,7 @@ trait RedisTrait
                 } while (++$hostIndex < \count($hosts) && !$address);
 
                 if (isset($params['redis_sentinel']) && !$address) {
-                    throw new InvalidArgumentException(\sprintf('Failed to retrieve master information from sentinel "%s".', $params['redis_sentinel']), previous: $redisException ?? null);
+                    throw new InvalidArgumentException(sprintf('Failed to retrieve master information from sentinel "%s".', $params['redis_sentinel']), previous: $redisException ?? null);
                 }
 
                 try {
@@ -299,7 +293,7 @@ trait RedisTrait
                         restore_error_handler();
                     }
                     if (!$isConnected) {
-                        $error = preg_match('/^Redis::p?connect\(\): (.*)/', $error ?? $redis->getLastError() ?? '', $error) ? \sprintf(' (%s)', $error[1]) : '';
+                        $error = preg_match('/^Redis::p?connect\(\): (.*)/', $error ?? $redis->getLastError() ?? '', $error) ? sprintf(' (%s)', $error[1]) : '';
                         throw new InvalidArgumentException('Redis connection failed: '.$error.'.');
                     }
 
@@ -424,9 +418,9 @@ trait RedisTrait
                 $redis->getConnection()->setSentinelTimeout($params['timeout']);
             }
         } elseif (class_exists($class, false)) {
-            throw new InvalidArgumentException(\sprintf('"%s" is not a subclass of "Redis", "RedisArray", "RedisCluster", "Relay\Relay" nor "Predis\ClientInterface".', $class));
+            throw new InvalidArgumentException(sprintf('"%s" is not a subclass of "Redis", "RedisArray", "RedisCluster", "Relay\Relay" nor "Predis\ClientInterface".', $class));
         } else {
-            throw new InvalidArgumentException(\sprintf('Class "%s" does not exist.', $class));
+            throw new InvalidArgumentException(sprintf('Class "%s" does not exist.', $class));
         }
 
         return $redis;
@@ -622,7 +616,7 @@ trait RedisTrait
                 }
             });
         } elseif ($redis instanceof \RedisArray) {
-            $connections = $results = [];
+            $connections = $results = $ids = [];
             foreach ($generator() as $command => $args) {
                 $id = 'eval' === $command ? $args[1][0] : $args[0];
                 if (!isset($connections[$h = $redis->_target($id)])) {

@@ -1,9 +1,0 @@
-[submodule "plugin/xbCode"]
-	path = plugin/xbCode
-	url = git@gitcode.com:xbcode-plugn/xbCode.git
-[submodule "plugin/xbConfig"]
-	path = plugin/xbConfig
-	url = git@gitcode.com:xbcode-plugn/xbConfig.git
-[submodule "plugin/xbUpload"]
-	path = plugin/xbUpload
-	url = git@gitcode.com:xbcode-plugn/xbUpload.git

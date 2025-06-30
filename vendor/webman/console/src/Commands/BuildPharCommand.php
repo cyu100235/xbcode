@@ -4,33 +4,20 @@ namespace Webman\Console\Commands;
 
 use Phar;
 use RuntimeException;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+#[AsCommand('build:phar', 'Can be easily packaged a project into phar files. Easy to distribute and use.')]
 class BuildPharCommand extends Command
 {
-    protected static $defaultName = 'build:phar';
-    protected static $defaultDescription = 'Can be easily packaged a project into phar files. Easy to distribute and use.';
-
     protected $buildDir = '';
 
     public function __construct(?string $name = null)
     {
         parent::__construct($name);
         $this->buildDir = config('plugin.webman.console.app.build_dir', base_path() . '/build');
-    }
-
-    /**
-     * @return void
-     * @deprecated 暂时保留 phar:pack 命令，下一个版本再取消
-     */
-    protected function configure()
-    {
-        $this->setAliases([
-            'phar:pack',
-        ]);
-        parent::configure();
     }
 
     /**
@@ -138,7 +125,7 @@ __HALT_COMPILER();
         }
 
         if (ini_get('phar.readonly')) {
-            $command = static::$defaultName;
+            $command = $this->getName();
             throw new RuntimeException(
                 "The 'phar.readonly' is 'On', build phar must setting it 'Off' or exec with 'php -d phar.readonly=0 ./webman $command'"
             );

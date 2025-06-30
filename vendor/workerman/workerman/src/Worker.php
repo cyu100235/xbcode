@@ -26,6 +26,7 @@ use Workerman\Connection\ConnectionInterface;
 use Workerman\Connection\TcpConnection;
 use Workerman\Connection\UdpConnection;
 use Workerman\Coroutine;
+use Workerman\Coroutine\Context;
 use Workerman\Events\Event;
 use Workerman\Events\EventInterface;
 use Workerman\Events\Fiber;
@@ -60,7 +61,7 @@ class Worker
      *
      * @var string
      */
-    final public const VERSION = '5.1.0';
+    final public const VERSION = '5.1.3';
 
     /**
      * Status initial.
@@ -872,6 +873,7 @@ class Worker
             // Listen.
             if (!$worker->reusePort) {
                 $worker->listen();
+                $worker->pauseAccept();
             }
         }
     }
@@ -1008,7 +1010,7 @@ class Worker
         //Show version
         $jitStatus = function_exists('opcache_get_status') && (opcache_get_status()['jit']['on'] ?? false) === true ? 'on' : 'off';
         $version = str_pad('Workerman/' . static::VERSION, 24);
-        $version .= str_pad('PHP/' . PHP_VERSION . ' (Jit ' . $jitStatus . ')', 30);
+        $version .= str_pad('PHP/' . PHP_VERSION . ' (JIT ' . $jitStatus . ')', 30);
         $version .= php_uname('s') . '/' . php_uname('r') . PHP_EOL;
         return $version;
     }
@@ -1592,7 +1594,17 @@ class Worker
             restore_error_handler();
 
             // Add an empty timer to prevent the event-loop from exiting.
-            Timer::add(1000000, function (){});
+            Timer::add(0.8, function (){});
+
+            // Compatibility with the bug in Swow where the first request on Windows fails to trigger stream_select.
+            if (extension_loaded('swow')) {
+                Timer::delay(0.1 , function(){
+                    $stream = fopen(__FILE__, 'r');
+                    static::$globalEvent->onReadable($stream, function($stream) {
+                        static::$globalEvent->offReadable($stream);
+                    });
+                });
+            }
 
             // Display UI.
             static::safeEcho(str_pad($worker->name, 48) . str_pad($worker->getSocketName(), 36) . str_pad('1', 10) . "  [ok]\n");
@@ -1728,9 +1740,6 @@ class Worker
 
             // Init Timer.
             Timer::init(static::$globalEvent);
-
-            // Init TcpConnection.
-            TcpConnection::init();
 
             restore_error_handler();
 
@@ -2180,9 +2189,6 @@ class Worker
             return;
         }
 
-        // For child processes.
-        gc_collect_cycles();
-        gc_mem_caches();
         reset(static::$workers);
         /** @var static $worker */
         $worker = current(static::$workers);
@@ -2573,6 +2579,8 @@ class Worker
                 // Avoid rapid infinite loop exit.
                 sleep(1);
                 static::stopAll(250, $e);
+            } finally {
+                Context::destroy();
             }
         };
 

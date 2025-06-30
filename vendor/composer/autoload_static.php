@@ -4,32 +4,32 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit691f538563ac6695008ddc51b7722c80
+class ComposerStaticInit61291b8dd2155eeda6a89918c07f9ec9
 {
     public static $files = array (
-        '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
-        '253c157292f75eb38082b5acb06f3f01' => __DIR__ . '/..' . '/nikic/fast-route/src/functions.php',
-        'd2136ff22b54ac75cd96a40e0022218e' => __DIR__ . '/..' . '/workerman/webman-framework/src/support/helpers.php',
-        '9b552a3cc426e3287cc811caefa3cf53' => __DIR__ . '/..' . '/topthink/think-helper/src/helper.php',
-        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
-        '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
-        '8825ede83f2f289127722d4e842cf7e8' => __DIR__ . '/..' . '/symfony/polyfill-intl-grapheme/bootstrap.php',
-        'e69f7f6ee287b969198c3c9d6777bd38' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/bootstrap.php',
-        '662a729f963d39afe703c9d9b7ab4a8c' => __DIR__ . '/..' . '/symfony/polyfill-php83/bootstrap.php',
-        'b6b991a57620e2fb6b2f66f03fe9ddc2' => __DIR__ . '/..' . '/symfony/string/Resources/functions.php',
-        '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
+        '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
+        '60799491728b879e74601d83e38b2cad' => __DIR__ . '/..' . '/illuminate/collections/helpers.php',
         'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
         'a1105708a18b76903365ca1c4aa61b02' => __DIR__ . '/..' . '/symfony/translation/Resources/functions.php',
+        '72579e7bd17821bb1321b87411366eae' => __DIR__ . '/..' . '/illuminate/support/helpers.php',
+        '253c157292f75eb38082b5acb06f3f01' => __DIR__ . '/..' . '/nikic/fast-route/src/functions.php',
+        '9b552a3cc426e3287cc811caefa3cf53' => __DIR__ . '/..' . '/topthink/think-helper/src/helper.php',
+        'd2136ff22b54ac75cd96a40e0022218e' => __DIR__ . '/..' . '/workerman/webman-framework/src/support/helpers.php',
+        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
+        '8825ede83f2f289127722d4e842cf7e8' => __DIR__ . '/..' . '/symfony/polyfill-intl-grapheme/bootstrap.php',
+        'e69f7f6ee287b969198c3c9d6777bd38' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/bootstrap.php',
+        'b6b991a57620e2fb6b2f66f03fe9ddc2' => __DIR__ . '/..' . '/symfony/string/Resources/functions.php',
         '7448f3465e10b5f033e4babb31eb0b06' => __DIR__ . '/..' . '/topthink/think-orm/src/helper.php',
         '35fab96057f1bf5e7aba31a8a6d5fdde' => __DIR__ . '/..' . '/topthink/think-orm/stubs/load_stubs.php',
+        'ef65a1626449d89d0811cf9befce46f0' => __DIR__ . '/..' . '/illuminate/events/functions.php',
         '2ffd98f0768af7a16d85759bb5922585' => __DIR__ . '/..' . '/taoser/webman-validate/src/helper.php',
     );
 
     public static $prefixLengthsPsr4 = array (
-        'y' => 
+        'v' => 
         array (
-            'yzh52521\\EasyHttp\\' => 18,
+            'voku\\' => 5,
         ),
         't' => 
         array (
@@ -51,14 +51,13 @@ class ComposerStaticInit691f538563ac6695008ddc51b7722c80
         ),
         'W' => 
         array (
-            'Workerman\\Redis\\' => 16,
-            'Workerman\\RedisQueue\\' => 21,
             'Workerman\\Coroutine\\' => 20,
             'Workerman\\' => 10,
             'Webman\\ThinkOrm\\' => 16,
-            'Webman\\RedisQueue\\' => 18,
+            'Webman\\Redis\\' => 13,
             'Webman\\MultiSession\\' => 20,
             'Webman\\Log\\' => 11,
+            'Webman\\Event\\' => 13,
             'Webman\\Console\\' => 15,
             'Webman\\Captcha\\' => 15,
             'Webman\\Cache\\' => 13,
@@ -70,7 +69,6 @@ class ComposerStaticInit691f538563ac6695008ddc51b7722c80
         ),
         'S' => 
         array (
-            'Symfony\\Polyfill\\Php83\\' => 23,
             'Symfony\\Polyfill\\Php80\\' => 23,
             'Symfony\\Polyfill\\Mbstring\\' => 26,
             'Symfony\\Polyfill\\Intl\\Normalizer\\' => 33,
@@ -82,7 +80,6 @@ class ComposerStaticInit691f538563ac6695008ddc51b7722c80
             'Symfony\\Component\\VarExporter\\' => 30,
             'Symfony\\Component\\Translation\\' => 30,
             'Symfony\\Component\\String\\' => 25,
-            'Symfony\\Component\\HttpFoundation\\' => 33,
             'Symfony\\Component\\Console\\' => 26,
             'Symfony\\Component\\Cache\\' => 24,
             'Support\\View\\' => 13,
@@ -94,9 +91,8 @@ class ComposerStaticInit691f538563ac6695008ddc51b7722c80
         array (
             'Psr\\SimpleCache\\' => 16,
             'Psr\\Log\\' => 8,
-            'Psr\\Http\\Message\\' => 17,
-            'Psr\\Http\\Client\\' => 16,
             'Psr\\Container\\' => 14,
+            'Psr\\Clock\\' => 10,
             'Psr\\Cache\\' => 10,
             'PhpOption\\' => 10,
         ),
@@ -104,16 +100,22 @@ class ComposerStaticInit691f538563ac6695008ddc51b7722c80
         array (
             'Monolog\\' => 8,
         ),
+        'I' => 
+        array (
+            'Illuminate\\Support\\' => 19,
+            'Illuminate\\Redis\\' => 17,
+            'Illuminate\\Pipeline\\' => 20,
+            'Illuminate\\Events\\' => 18,
+            'Illuminate\\Contracts\\' => 21,
+            'Illuminate\\Container\\' => 21,
+            'Illuminate\\Bus\\' => 15,
+        ),
         'G' => 
         array (
-            'GuzzleHttp\\Psr7\\' => 16,
-            'GuzzleHttp\\Promise\\' => 19,
-            'GuzzleHttp\\' => 11,
             'GrahamCampbell\\ResultType\\' => 26,
         ),
         'F' => 
         array (
-            'FormBuilder\\' => 12,
             'Firebase\\JWT\\' => 13,
             'FastRoute\\' => 10,
         ),
@@ -124,6 +126,11 @@ class ComposerStaticInit691f538563ac6695008ddc51b7722c80
             'Doctrine\\Common\\Lexer\\' => 22,
             'Doctrine\\Common\\Annotations\\' => 28,
         ),
+        'C' => 
+        array (
+            'Carbon\\Doctrine\\' => 16,
+            'Carbon\\' => 7,
+        ),
         'A' => 
         array (
             'App\\' => 4,
@@ -131,9 +138,9 @@ class ComposerStaticInit691f538563ac6695008ddc51b7722c80
     );
 
     public static $prefixDirsPsr4 = array (
-        'yzh52521\\EasyHttp\\' => 
+        'voku\\' => 
         array (
-            0 => __DIR__ . '/..' . '/yzh52521/easyhttp/src',
+            0 => __DIR__ . '/..' . '/voku/portable-ascii/src/voku',
         ),
         'think\\' => 
         array (
@@ -149,8 +156,9 @@ class ComposerStaticInit691f538563ac6695008ddc51b7722c80
         'support\\' => 
         array (
             0 => __DIR__ . '/..' . '/webman/think-orm/src/support',
-            1 => __DIR__ . '/..' . '/webman/cache/src/support',
-            2 => __DIR__ . '/..' . '/workerman/webman-framework/src/support',
+            1 => __DIR__ . '/..' . '/webman/redis/src/support',
+            2 => __DIR__ . '/..' . '/webman/cache/src/support',
+            3 => __DIR__ . '/..' . '/workerman/webman-framework/src/support',
         ),
         'hg\\apidoc\\' => 
         array (
@@ -163,14 +171,6 @@ class ComposerStaticInit691f538563ac6695008ddc51b7722c80
         'app\\' => 
         array (
             0 => __DIR__ . '/../..' . '/app',
-        ),
-        'Workerman\\Redis\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/workerman/redis/src',
-        ),
-        'Workerman\\RedisQueue\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/workerman/redis-queue/src',
         ),
         'Workerman\\Coroutine\\' => 
         array (
@@ -185,9 +185,9 @@ class ComposerStaticInit691f538563ac6695008ddc51b7722c80
         array (
             0 => __DIR__ . '/..' . '/webman/think-orm/src',
         ),
-        'Webman\\RedisQueue\\' => 
+        'Webman\\Redis\\' => 
         array (
-            0 => __DIR__ . '/..' . '/webman/redis-queue/src',
+            0 => __DIR__ . '/..' . '/webman/redis/src',
         ),
         'Webman\\MultiSession\\' => 
         array (
@@ -196,6 +196,10 @@ class ComposerStaticInit691f538563ac6695008ddc51b7722c80
         'Webman\\Log\\' => 
         array (
             0 => __DIR__ . '/..' . '/webman/log/src',
+        ),
+        'Webman\\Event\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/webman/event/src',
         ),
         'Webman\\Console\\' => 
         array (
@@ -216,10 +220,6 @@ class ComposerStaticInit691f538563ac6695008ddc51b7722c80
         'Tinywan\\Jwt\\' => 
         array (
             0 => __DIR__ . '/..' . '/tinywan/jwt/src',
-        ),
-        'Symfony\\Polyfill\\Php83\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/polyfill-php83',
         ),
         'Symfony\\Polyfill\\Php80\\' => 
         array (
@@ -265,10 +265,6 @@ class ComposerStaticInit691f538563ac6695008ddc51b7722c80
         array (
             0 => __DIR__ . '/..' . '/symfony/string',
         ),
-        'Symfony\\Component\\HttpFoundation\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/symfony/http-foundation',
-        ),
         'Symfony\\Component\\Console\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/console',
@@ -301,18 +297,13 @@ class ComposerStaticInit691f538563ac6695008ddc51b7722c80
         array (
             0 => __DIR__ . '/..' . '/psr/log/src',
         ),
-        'Psr\\Http\\Message\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/psr/http-factory/src',
-            1 => __DIR__ . '/..' . '/psr/http-message/src',
-        ),
-        'Psr\\Http\\Client\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/psr/http-client/src',
-        ),
         'Psr\\Container\\' => 
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
+        ),
+        'Psr\\Clock\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/psr/clock/src',
         ),
         'Psr\\Cache\\' => 
         array (
@@ -326,25 +317,40 @@ class ComposerStaticInit691f538563ac6695008ddc51b7722c80
         array (
             0 => __DIR__ . '/..' . '/monolog/monolog/src/Monolog',
         ),
-        'GuzzleHttp\\Psr7\\' => 
+        'Illuminate\\Support\\' => 
         array (
-            0 => __DIR__ . '/..' . '/guzzlehttp/psr7/src',
+            0 => __DIR__ . '/..' . '/illuminate/support',
+            1 => __DIR__ . '/..' . '/illuminate/collections',
+            2 => __DIR__ . '/..' . '/illuminate/conditionable',
+            3 => __DIR__ . '/..' . '/illuminate/macroable',
         ),
-        'GuzzleHttp\\Promise\\' => 
+        'Illuminate\\Redis\\' => 
         array (
-            0 => __DIR__ . '/..' . '/guzzlehttp/promises/src',
+            0 => __DIR__ . '/..' . '/illuminate/redis',
         ),
-        'GuzzleHttp\\' => 
+        'Illuminate\\Pipeline\\' => 
         array (
-            0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
+            0 => __DIR__ . '/..' . '/illuminate/pipeline',
+        ),
+        'Illuminate\\Events\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/illuminate/events',
+        ),
+        'Illuminate\\Contracts\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/illuminate/contracts',
+        ),
+        'Illuminate\\Container\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/illuminate/container',
+        ),
+        'Illuminate\\Bus\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/illuminate/bus',
         ),
         'GrahamCampbell\\ResultType\\' => 
         array (
             0 => __DIR__ . '/..' . '/graham-campbell/result-type/src',
-        ),
-        'FormBuilder\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/xaboy/form-builder/src',
         ),
         'Firebase\\JWT\\' => 
         array (
@@ -370,6 +376,14 @@ class ComposerStaticInit691f538563ac6695008ddc51b7722c80
         array (
             0 => __DIR__ . '/..' . '/doctrine/annotations/lib/Doctrine/Common/Annotations',
         ),
+        'Carbon\\Doctrine\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/carbonphp/carbon-doctrine-types/src/Carbon/Doctrine',
+        ),
+        'Carbon\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon',
+        ),
         'App\\' => 
         array (
             0 => __DIR__ . '/../..' . '/app',
@@ -383,19 +397,8 @@ class ComposerStaticInit691f538563ac6695008ddc51b7722c80
     public static $classMap = array (
         'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
-        'DateError' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateError.php',
-        'DateException' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateException.php',
-        'DateInvalidOperationException' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateInvalidOperationException.php',
-        'DateInvalidTimeZoneException' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateInvalidTimeZoneException.php',
-        'DateMalformedIntervalStringException' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateMalformedIntervalStringException.php',
-        'DateMalformedPeriodStringException' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateMalformedPeriodStringException.php',
-        'DateMalformedStringException' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateMalformedStringException.php',
-        'DateObjectError' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateObjectError.php',
-        'DateRangeError' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/DateRangeError.php',
         'Normalizer' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/Resources/stubs/Normalizer.php',
-        'Override' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/Override.php',
         'PhpToken' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/PhpToken.php',
-        'SQLite3Exception' => __DIR__ . '/..' . '/symfony/polyfill-php83/Resources/stubs/SQLite3Exception.php',
         'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
         'UnhandledMatchError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
         'ValueError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',
@@ -405,10 +408,10 @@ class ComposerStaticInit691f538563ac6695008ddc51b7722c80
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit691f538563ac6695008ddc51b7722c80::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit691f538563ac6695008ddc51b7722c80::$prefixDirsPsr4;
-            $loader->fallbackDirsPsr4 = ComposerStaticInit691f538563ac6695008ddc51b7722c80::$fallbackDirsPsr4;
-            $loader->classMap = ComposerStaticInit691f538563ac6695008ddc51b7722c80::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit61291b8dd2155eeda6a89918c07f9ec9::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit61291b8dd2155eeda6a89918c07f9ec9::$prefixDirsPsr4;
+            $loader->fallbackDirsPsr4 = ComposerStaticInit61291b8dd2155eeda6a89918c07f9ec9::$fallbackDirsPsr4;
+            $loader->classMap = ComposerStaticInit61291b8dd2155eeda6a89918c07f9ec9::$classMap;
 
         }, null, ClassLoader::class);
     }

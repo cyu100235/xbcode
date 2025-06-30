@@ -30,6 +30,7 @@ class PhpFilesAdapter extends AbstractAdapter implements PruneableInterface
     }
 
     private \Closure $includeHandler;
+    private bool $appendOnly;
     private array $values = [];
     private array $files = [];
 
@@ -37,17 +38,14 @@ class PhpFilesAdapter extends AbstractAdapter implements PruneableInterface
     private static array $valuesCache = [];
 
     /**
-     * @param bool $appendOnly Set to `true` to gain extra performance when the items stored in this pool never expire.
-     *                         Doing so is encouraged because it fits perfectly OPcache's memory model.
+     * @param $appendOnly Set to `true` to gain extra performance when the items stored in this pool never expire.
+     *                    Doing so is encouraged because it fits perfectly OPcache's memory model.
      *
      * @throws CacheException if OPcache is not enabled
      */
-    public function __construct(
-        string $namespace = '',
-        int $defaultLifetime = 0,
-        ?string $directory = null,
-        private bool $appendOnly = false,
-    ) {
+    public function __construct(string $namespace = '', int $defaultLifetime = 0, ?string $directory = null, bool $appendOnly = false)
+    {
+        $this->appendOnly = $appendOnly;
         self::$startTime ??= $_SERVER['REQUEST_TIME'] ?? time();
         parent::__construct('', $defaultLifetime);
         $this->init($namespace, $directory);
@@ -56,7 +54,10 @@ class PhpFilesAdapter extends AbstractAdapter implements PruneableInterface
         };
     }
 
-    public static function isSupported(): bool
+    /**
+     * @return bool
+     */
+    public static function isSupported()
     {
         self::$startTime ??= $_SERVER['REQUEST_TIME'] ?? time();
 
@@ -216,7 +217,7 @@ class PhpFilesAdapter extends AbstractAdapter implements PruneableInterface
                 try {
                     $value = VarExporter::export($value, $isStaticValue);
                 } catch (\Exception $e) {
-                    throw new InvalidArgumentException(\sprintf('Cache key "%s" has non-serializable "%s" value.', $key, get_debug_type($value)), 0, $e);
+                    throw new InvalidArgumentException(sprintf('Cache key "%s" has non-serializable "%s" value.', $key, get_debug_type($value)), 0, $e);
                 }
             } elseif (\is_string($value)) {
                 // Wrap "N;" in a closure to not confuse it with an encoded `null`
@@ -225,7 +226,7 @@ class PhpFilesAdapter extends AbstractAdapter implements PruneableInterface
                 }
                 $value = var_export($value, true);
             } elseif (!\is_scalar($value)) {
-                throw new InvalidArgumentException(\sprintf('Cache key "%s" has non-serializable "%s" value.', $key, get_debug_type($value)));
+                throw new InvalidArgumentException(sprintf('Cache key "%s" has non-serializable "%s" value.', $key, get_debug_type($value)));
             } else {
                 $value = var_export($value, true);
             }
@@ -254,7 +255,7 @@ class PhpFilesAdapter extends AbstractAdapter implements PruneableInterface
         }
 
         if (!$ok && !is_writable($this->directory)) {
-            throw new CacheException(\sprintf('Cache directory is not writable (%s).', $this->directory));
+            throw new CacheException(sprintf('Cache directory is not writable (%s).', $this->directory));
         }
 
         return $ok;
@@ -276,7 +277,10 @@ class PhpFilesAdapter extends AbstractAdapter implements PruneableInterface
         return $this->doCommonDelete($ids);
     }
 
-    protected function doUnlink(string $file): bool
+    /**
+     * @return bool
+     */
+    protected function doUnlink(string $file)
     {
         unset(self::$valuesCache[$file]);
 
@@ -305,8 +309,10 @@ class PhpFilesAdapter extends AbstractAdapter implements PruneableInterface
  */
 class LazyValue
 {
-    public function __construct(
-        public string $file,
-    ) {
+    public string $file;
+
+    public function __construct(string $file)
+    {
+        $this->file = $file;
     }
 }
