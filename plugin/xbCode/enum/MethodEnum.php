@@ -1,0 +1,17 @@
+<?php
+namespace plugin\xbCode\enum;
+
+use plugin\xbCode\base\BaseEnum;
+
+/**
+ * 请求类型枚举
+ * @copyright 贵州积木云网络科技有限公司
+ * @author 楚羽幽 958416459@qq.com
+ */
+class MethodEnum extends BaseEnum
+{
+    const METHOD_TO_GET = 'GET';
+    const METHOD_TO_POST = 'POST';
+    const METHOD_TO_PUT = 'PUT';
+    const METHOD_TO_DELETE = 'DELETE';
+}

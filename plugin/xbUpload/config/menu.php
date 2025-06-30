@@ -1,0 +1,50 @@
+<?php
+
+return [
+  [
+    'title' => '系统配置',
+    'plugin' => 'xbCode',
+    'path' => 'Config',
+    'method' => 'GET',
+    'type' => '10',
+    'icon' => 'DashboardOutlined',
+    'params' => '',
+    'is_show' => '20',
+    'is_saas' => '10',
+    'is_system' => '10',
+    'state' => '20',
+    'sort' => 9999,
+    'children' => [
+      [
+        'title' => '上传设置',
+        'plugin' => 'xbUpload',
+        'path' => 'admin/Engine/index',
+        'method' => 'GET',
+        'type' => '20',
+        'icon' => '',
+        'params' => '',
+        'is_show' => '20',
+        'is_system' => '10',
+        'is_saas' => '10',
+        'state' => '20',
+        'sort' => 20,
+        'children' => [
+          [
+            'title' => '保存上传设置',
+            'plugin' => 'xbUpload',
+            'path' => 'admin/Engine/config',
+            'method' => 'GET,PUT',
+            'type' => '30',
+            'icon' => '',
+            'params' => '',
+            'is_show' => '10',
+            'is_system' => '10',
+            'is_saas' => '10',
+            'state' => '20',
+            'children' => [],
+          ],
+        ],
+      ],
+    ],
+  ],
+];

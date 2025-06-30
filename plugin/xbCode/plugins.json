@@ -1,0 +1,29 @@
+{
+    "title" : "积木云",
+    "name" : "xbCode",
+    "version" : "1.0.0",
+    "desc": "框架核心插件，所有插件都依赖于此插件",
+    "author":"积木云",
+    "composer": {
+        "Webman\\Event" : "webman/event",
+        "hg\\apidoc\\Controller": "hg/apidoc",
+        "Webman\\Log\\Middleware": "webman/log",
+        "Tinywan\\Jwt\\JwtToken": "tinywan/jwt",
+        "Webman\\Captcha\\CaptchaBuilder": "webman/captcha",
+        "Dotenv\\Dotenv": "vlucas/phpdotenv",
+        "yzh52521\\EasyHttp\\Http": "yzh52521/easyhttp",
+        "FormBuilder\\Form": "xaboy/form-builder",
+        "taoser\\Validate": "taoser/webman-validate",
+        "think\\Template": "topthink/think-template",
+        "support\\Cache": "webman/cache",
+        "Webman\\Redis\\RedisManager": "webman/redis",
+        "Illuminate\\Events\\Dispatcher": "illuminate/events",
+        "Webman\\Console\\Application": "webman/console",
+        "Symfony\\Component\\Cache\\Adapter\\FilesystemAdapter": "symfony/cache",
+        "Webman\\MultiSession\\Middleware": "webman/multi-session",
+        "Webman\\ThinkOrm\\ThinkOrm": "webman/think-orm"
+    },
+    "plugins": {
+        "xbUpload": "储存配置"
+    }
+}

@@ -1,0 +1,9 @@
+{
+    "title": "储存设置",
+    "name": "xbUpload",
+    "desc": "所有上传文件的存储设置基础依赖插件",
+    "version" : "1.0.0",
+    "author":"积木云",
+    "composer": {},
+    "plugins": {}
+}
