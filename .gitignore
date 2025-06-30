@@ -1,8 +1,13 @@
+/.vscode
+/.idea
+/.DS_Store
+/.phpunit.result.cache
+/.well-known
+/public/uploads/*
+/public/storage/*
 /runtime
 /.idea
-/.vscode
-/vendor
 *.log
-.env
+/.env
 /tests/tmp
 /tests/.phpunit.result.cache

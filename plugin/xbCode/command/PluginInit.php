@@ -83,7 +83,7 @@ class PluginInit extends Command
             $output->writeln("替换process配置文件完成...");
         }
         // 替换gitignore文件
-        $gitignorePath = dirname(__DIR__) . '/data/.gitignore';
+        $gitignorePath = dirname(__DIR__) . '/data/gitignore.tpl';
         if (file_exists($gitignorePath)) {
             copy($gitignorePath, base_path() . '/.gitignore');
             $output->writeln("替换.gitignore文件完成...");
