@@ -28,7 +28,7 @@
     "workerman/webman-framework": "^2.1",
     "monolog/monolog": "^2.0",
     "webman/console": "^2.1",
-    "webman/event": "*",
+    "webman/event": "^1.0",
     "hg/apidoc": "^5.3",
     "webman/log": "^2.1",
     "tinywan/jwt": "^1.11",
@@ -41,7 +41,9 @@
     "illuminate/events": "^10.48",
     "symfony/cache": "^6.4",
     "webman/multi-session": "^2.1",
-    "webman/think-orm": "^2.1"
+    "webman/think-orm": "^2.1",
+    "yzh52521/easyhttp": "^1.1",
+    "xaboy/form-builder": "^2.1"
   },
   "suggest": {
     "ext-event": "For better performance. "
