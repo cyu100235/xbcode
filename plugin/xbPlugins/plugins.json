@@ -1,0 +1,11 @@
+{
+    "title" : "积木云市场",
+    "name" : "xbPlugins",
+    "version" : "1.0.0",
+    "desc" : "积木云官方插件市场",
+    "author" : "积木云",
+    "composer": {},
+    "plugins": {
+        "xbCode": "积木云"
+    }
+}
