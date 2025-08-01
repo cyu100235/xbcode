@@ -1,4 +1,14 @@
 <?php
+/**
+ * 积木云渲染器
+ *
+ * @package  XbCode
+ * @author   楚羽幽 <958416459@qq.com>
+ * @version  1.0
+ * @license  Apache License 2.0
+ * @link     http://www.xbcode.net
+ * @document http://doc.xbcode.net
+ */
 namespace plugin\xbCode\app\admin\controller;
 
 use support\Request;
@@ -7,10 +17,10 @@ use plugin\xbCode\builder\Builder;
 use plugin\xbCode\app\model\Admin;
 use plugin\xbCode\utils\PasswdUtil;
 use plugin\xbCode\app\model\AdminRole;
-use plugin\xbCode\builder\Renders\Grid;
 use plugin\xbCode\builder\Renders\Form;
-use plugin\xbCode\builder\Components\Form\Group;
+use plugin\xbCode\builder\Renders\TableCrud;
 use plugin\xbCode\app\validate\AdminValidate;
+use plugin\xbCode\builder\Components\Form\Group;
 
 /**
  * 管理员管理
@@ -37,23 +47,19 @@ class AdminController extends XbController
                 ->paginate();
             return $this->successData($data);
         }
-        $builder = Builder::crud(function (Grid $builder) {
+        $builder = Builder::crud(function (TableCrud $builder) {
             $builder->useCRUD()->alwaysShowPagination(true);
-            $builder->setCRUDActionConfig('width', 130);
-            $builder->addHeaderDialogBtn('添加用户', xbUrl('Admin/add'), [
-                'dialog' => [
-                    'title' => '添加管理员用户',
-                    'size' => 'md',
-                ],
+            $builder->setActionConfig('width', 130);
+            $builder->addHeaderDialog('添加用户', xbUrl('Admin/add'), [
+                'title' => '添加管理员用户',
+                'size' => 'md',
             ])->level('primary');
 
-            $builder->addActionDialogBtn('修改', xbUrl('Admin/edit'), [
-                'dialog' => [
-                    'title' => '修改管理员用户',
-                    'size' => 'md',
-                ],
+            $builder->addRightActionDialog('修改', xbUrl('Admin/edit'), [
+                'title' => '修改管理员用户',
+                'size' => 'md',
             ])->level('primary');
-            $builder->addActionConfirmBtn('删除', xbUrl('Admin/del'))->level('danger');
+            $builder->addRightActionConfirm('删除', xbUrl('Admin/del'))->level('danger');
 
             $builder->addColumn('id', '序号', [
                 'width' => 80,
@@ -227,12 +233,12 @@ class AdminController extends XbController
         $roles = AdminRole::where('admin_id', $adminId)
             ->order('sort asc,id asc')
             ->column('title as label,id as value');
-        return Builder::form(function (Form $builder) use ($roles) {
+        $builder = Builder::form(function (Form $builder) use ($roles) {
             /** @var Group */
             $userGroup = Group::make()->className('flex-1');
             // Flex布局
             $builder->addRowFlex([
-                $builder->addRowUploadImage('avatar',''),
+                $builder->addRowUploadImage('avatar', ''),
                 $userGroup->body([
                     $builder->addRowInput('username', '登录账号')->columnRatio(12),
                     $builder->addRowInput('password', '登录密码')->className('mt-1')->password(),
@@ -244,5 +250,6 @@ class AdminController extends XbController
                 $builder->addRowInput('nickname', '用户昵称'),
             ]);
         });
+        return $builder;
     }
 }

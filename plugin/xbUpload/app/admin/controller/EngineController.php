@@ -12,16 +12,16 @@
 namespace plugin\xbUpload\app\admin\controller;
 
 use support\Request;
-use plugin\xbCode\builder\Builder;
 use plugin\xbCode\XbController;
-use plugin\xbCode\builder\Renders\Form;
-use plugin\xbCode\builder\Renders\Grid;
 use plugin\xbCode\api\ConfigApi;
-use plugin\xbUpload\api\EngineApi;
 use plugin\xbCode\api\ConfigView;
-use plugin\xbUpload\enum\UseStateEnum;
+use plugin\xbUpload\api\EngineApi;
+use plugin\xbCode\builder\Builder;
 use plugin\xbCode\api\ConfigChecked;
+use plugin\xbUpload\enum\UseStateEnum;
+use plugin\xbCode\builder\Renders\Form;
 use plugin\xbUpload\app\model\UploadEngine;
+use plugin\xbCode\builder\Renders\TableCrud;
 
 /**
  * 引擎管理
@@ -44,32 +44,28 @@ class EngineController extends XbController
             $data = EngineApi::getList();
             return $this->successData($data);
         }
-        $builder = Builder::crud(function (Grid $builder) {
+        $builder = Builder::crud(function (TableCrud $builder) {
             // 设置快速编辑
             $builder->useCRUD()->quickSaveItemApi(xbUrl('Engine/rowEdit'));
             // 设置操作按钮
-            $builder->setCRUDActionConfig('width', 200);
-            $builder->addActionDialogBtn('储存设置', xbUrl('Engine/config', ['name' => '${name}']), [
+            $builder->setActionConfig('width', 200);
+            $builder->addRightActionDialog('储存设置', xbUrl('Engine/config', ['name' => '${name}']), [
                 'dialog' => [
                     'title' => '储存引擎设置',
                     'size' => 'default',
                 ],
             ])->level('primary');
-            $builder->addActionLinkBtn('文件管理', xbUrl('Upload/index',[
-                'name' => '${name}'
+            $builder->addRightActionLink('文件管理', xbUrl('Upload/index', [
+                'name' => '${name}',
             ]))->isBack(xbUrl('Engine/index'))->level('primary');
 
             // 添加表格头部介绍
             $description = <<<STR
-            <el-alert type="warning" title="储存引擎介绍" :closable="false" style="margin-bottom: 10px;">
-                <div style="font-size:14px;line-height: 1.8rem;">
-                    <div>1.引擎储存方式分为 本地储存 和 对象存储 两种方式。</div>
-                    <div>2.使用对象存储，需要将public/uploads目录下的资源文件重新上传至新的对象存储空间。</div>
-                    <div>3.需将对象存储的图片域名添加到微信小程序官方后台request合法域名和downloadFile合法域名。</div>
-                </div>
-            </el-alert>
+                <div>1.引擎储存方式分为 本地储存 和 对象存储 两种方式。</div>
+                <div>2.使用对象存储，需要将public/uploads目录下的资源文件重新上传至新的对象存储空间。</div>
+                <div>3.需将对象存储的图片域名添加到微信小程序官方后台request合法域名和downloadFile合法域名。</div>
             STR;
-            $builder->addHeaderViewBody($description);
+            $builder->addHeaderPrompt($description)->title('温馨提示');
 
             // 添加表格列
             $builder->addColumn('title', '储存方式');
@@ -97,7 +93,7 @@ class EngineController extends XbController
         }
         // 获取当前选中
         $active = ConfigApi::get('upload.active', '');
-        if($active === $name){
+        if ($active === $name) {
             return $this->fail('不可取消，请直接启用其他引擎');
         }
         // 保存选中配置

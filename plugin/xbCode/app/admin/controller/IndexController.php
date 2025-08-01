@@ -43,22 +43,6 @@ class IndexController extends XbController
      */
     public function site(Request $request)
     {
-        // 获取站点配置
-        // $config = ConfigApi::get('system', []);
-        // // 获取版权配置
-        // $copyright = ConfigApi::get('copyright', []);
-        // if (!empty($copyright)) {
-        //     $config['login_beian'] = [
-        //         'system_name' => $config['web_name'] ?? '',
-        //         'system_url' => $config['web_url'] ?? '',
-        //         ...$copyright,
-        //     ];
-        // }
-        // // 工具栏配置
-        // $toolbar = xbUrl('Index/toolbar');
-        // $config['public_view']['toolbar'] = $toolbar;
-        // // 获取配置
-        // $data = AppsEntry::get($config);
         $data = [
             'web_name' => '积木云网络',
             'web_url' => 'https://www.xbcode.net',
@@ -88,6 +72,18 @@ class IndexController extends XbController
             ],
             'upload_api' => [
                 'upload' => Url::make('Upload/upload')->plugin('xbUpload')->slash(),
+                'index' => Url::make('Upload/index')->plugin('xbUpload')->slash(),
+                'add' => Url::make('Upload/add')->plugin('xbUpload')->slash(),
+                'edit' => Url::make('Upload/edit')->plugin('xbUpload')->slash(),
+                'del' => Url::make('Upload/del')->plugin('xbUpload')->slash(),
+                'move' => Url::make('Upload/move')->plugin('xbUpload')->slash(),
+                'chunk' => Url::make('Upload/chunk')->plugin('xbUpload')->slash(),
+            ],
+            'upload_cate_api' => [
+                'index' => Url::make('UploadCate/index')->plugin('xbUpload')->slash(),
+                'add' => Url::make('UploadCate/add')->plugin('xbUpload')->slash(),
+                'edit' => Url::make('UploadCate/edit')->plugin('xbUpload')->slash(),
+                'del' => Url::make('UploadCate/del')->plugin('xbUpload')->slash(),
             ],
         ];
         return $this->successRes($data);

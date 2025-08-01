@@ -21,7 +21,8 @@ namespace plugin\xbCode\builder\Components\Action;
  * @copyright 贵州积木云网络科技有限公司
  * @author 楚羽幽 958416459@qq.com
  * @link https://aisuda.bce.baidu.com/amis/zh-CN/components/action
- * @method $this api(string $value) 接口地址
+ * @method $this api(string|array $value) 接口地址
+ * @method $this block(bool $value) 将按钮宽度调整为其父宽度的选项
  */
 class DownloadAction extends AjaxAction
 {

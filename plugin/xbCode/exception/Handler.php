@@ -61,8 +61,8 @@ class Handler extends ExceptionHandler
             return $this->kickout($exception->getMessage());
         }
         // 其他异常处理响应
-        if (($exception instanceof BusinessException) && ($response = $exception->render($request))) {
-            return $response;
+        if ($exception instanceof BusinessException) {
+            return $this->fail($exception->getMessage());
         }
         // 返回JSON异常处理
         if ($request->isAjax() || $request->acceptJson()) {

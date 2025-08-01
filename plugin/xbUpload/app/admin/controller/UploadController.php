@@ -1,16 +1,27 @@
 <?php
+/**
+ * 积木云渲染器
+ *
+ * @package  XbCode
+ * @author   楚羽幽 <958416459@qq.com>
+ * @version  1.0
+ * @license  Apache License 2.0
+ * @link     http://www.xbcode.net
+ * @document http://doc.xbcode.net
+ */
 namespace plugin\xbUpload\app\admin\controller;
 
 use support\Request;
-use plugin\xbCode\builder\Builder;
 use plugin\xbUpload\api\Files;
 use plugin\xbCode\XbController;
-use plugin\xbCode\builder\Renders\Form;
-use plugin\xbCode\builder\Renders\Grid;
 use plugin\xbUpload\api\UploadApi;
+use plugin\xbCode\builder\Builder;
+use plugin\xbUpload\api\UploadChunk;
 use plugin\xbUpload\app\model\Upload;
 use plugin\xbUpload\enum\CategoryEnum;
 use plugin\xbUpload\enum\UploadExtEnum;
+use plugin\xbCode\builder\Renders\Form;
+use plugin\xbCode\builder\Renders\TableCrud;
 
 /**
  * 附件管理
@@ -32,7 +43,7 @@ class UploadController extends XbController
         if ($act) {
             $type = $request->get('_nav', '');
             $adapter = $request->get('name', '');
-    
+
             // 查询条件组装
             $where = [
                 // 查询系统附件
@@ -43,14 +54,14 @@ class UploadController extends XbController
             if ($type) {
                 $suffix = UploadExtEnum::dict();
                 $suffix = $suffix[$type] ?? '';
-                if($suffix){
+                if ($suffix) {
                     $where[] = ['format', 'in', $suffix];
                 }
             }
             $data = Upload::where($where)->order("update_at desc")->paginate();
             return $this->successData($data);
         }
-        $builder = Builder::crud(function (Grid $builder) {
+        $builder = Builder::crud(function (TableCrud $builder) {
             // 开启选择
             $builder->useCRUD()->selectable(true);
             // 开启多选
@@ -59,7 +70,7 @@ class UploadController extends XbController
             $builder->useCRUD()->id('crud-table');
 
             // 设置上传附件按钮
-            $builder->addHeaderUpload('上传附件',xbUrl('Upload/upload'), [
+            $builder->addHeaderDialog('上传附件', xbUrl('Upload/upload'), [
                 'id' => 'crud',
                 'onEvent' => [
                     'success' => [
@@ -71,11 +82,11 @@ class UploadController extends XbController
                 ],
             ]);
             // 设置扩展操作按钮
-            $builder->addBulkActionConfirm('批量删除',xbUrl('Upload/del'))->confirmText('是否确认批量删除该附件？')->level('danger');
+            $builder->addBulkActionConfirm('批量删除', xbUrl('Upload/del'))->confirmText('是否确认批量删除该附件？')->level('danger');
 
             // 设置操作按钮
-            $builder->setCRUDActionConfig('width', 200);
-            $builder->addActionDialogBtn('查看', xbUrl('Upload/show'),[
+            $builder->setActionConfig('width', 200);
+            $builder->addRightActionDialog('查看', xbUrl('Upload/show'), [
                 'dialog' => [
                     'title' => '查看附件',
                     'size' => 'default',
@@ -83,14 +94,14 @@ class UploadController extends XbController
                     'actions' => [],
                 ],
             ])->level('primary');
-            $builder->addActionDialogBtn('修改', xbUrl('Upload/edit'),[
+            $builder->addRightActionDialog('修改', xbUrl('Upload/edit'), [
                 'dialog' => [
                     'title' => '修改附件',
                     'size' => 'default',
                     'bodyClassName' => 'height-auto',
                 ]
             ])->level('primary');
-            $builder->addActionConfirmBtn('删除', xbUrl('Upload/del'))->level('danger');
+            $builder->addRightActionConfirm('删除', xbUrl('Upload/del'))->level('danger');
 
             // 添加表格列
             $builder->addColumn('id', '序号')->width('100px');
@@ -105,7 +116,7 @@ class UploadController extends XbController
         // 设置侧边栏
         $category = CategoryEnum::options();
         $category = array_merge([['value' => '', 'label' => '全部']], $category);
-        $builder->useNavs(xbUrl('Upload/index', $request->get()))->links($category);
+        $builder->addSidebars($category);
         return $this->successRes($builder);
     }
 
@@ -132,42 +143,6 @@ class UploadController extends XbController
         }
         $builder = $this->formView();
         $builder->setMethod('PUT');
-        $builder->setData($model);
-        return $this->successRes($builder);
-    }
-
-    /**
-     * 查看
-     * @param \support\Request $request
-     * @return \support\Response
-     * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 958416459@qq.com
-     */
-    public function show(Request $request)
-    {
-        $id = $request->get('id', '');
-        $model = Upload::where('id', $id)->find();
-        if (!$model) {
-            return $this->fail('该附件不存在');
-        }
-        $builder = Builder::form(function(Form $builder)use($model){
-            $builder->addRowInput('title', '附件名称');
-            $builder->addRowInput('name', '文件名称')->disabled(true);
-            $builder->addRowInput('format', '文件格式')->disabled(true);
-            $builder->addRowInput('size_format', '文件大小')->disabled(true);
-            $builder->addRowInput('adapter', '储存位置')->disabled(true);
-
-            $extEnum = UploadExtEnum::dict();
-            $imageExt = $extEnum['image'] ?? '';
-            if(str_contains($imageExt, $model->format)){
-                $builder->addRowImage('url', '图片预览', $model->url)
-                ->type('static-image')
-                ->thumbMode('cover')
-                ->showToolbar(true)
-                ->enlargeAble(true);
-            }
-        });
-        $builder->useForm()->static(true);
         $builder->setData($model);
         return $this->successRes($builder);
     }
@@ -203,6 +178,42 @@ class UploadController extends XbController
     }
 
     /**
+     * 查看
+     * @param \support\Request $request
+     * @return \support\Response
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function show(Request $request)
+    {
+        $id = $request->get('id', '');
+        $model = Upload::where('id', $id)->find();
+        if (!$model) {
+            return $this->fail('该附件不存在');
+        }
+        $builder = Builder::form(function (Form $builder) use ($model) {
+            $builder->addRowInput('title', '附件名称');
+            $builder->addRowInput('name', '文件名称')->disabled(true);
+            $builder->addRowInput('format', '文件格式')->disabled(true);
+            $builder->addRowInput('size_format', '文件大小')->disabled(true);
+            $builder->addRowInput('adapter', '储存位置')->disabled(true);
+
+            $extEnum = UploadExtEnum::dict();
+            $imageExt = $extEnum['image'] ?? '';
+            if (str_contains($imageExt, $model->format)) {
+                $builder->addRowImage('url', '图片预览', $model->url)
+                    ->type('static-image')
+                    ->thumbMode('cover')
+                    ->showToolbar(true)
+                    ->enlargeAble(true);
+            }
+        });
+        $builder->useForm()->static(true);
+        $builder->setData($model);
+        return $this->successRes($builder);
+    }
+
+    /**
      * 上传附件
      * @param \support\Request $request
      * @return \support\Response
@@ -221,7 +232,29 @@ class UploadController extends XbController
         }
         return $this->successRes($data);
     }
-    
+
+    /**
+     * 上传分片
+     * @param \support\Request $request
+     * @return \support\Response
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function chunk(Request $request)
+    {
+        $act = $request->get('_act');
+        if (empty($act)) {
+            return $this->fail('缺少操作参数');
+        }
+        $class = UploadChunk::make();
+        if (!method_exists($class, $act)) {
+            return $this->fail('操作方法不存在');
+        }
+        // 调用分片上传方法
+        $data = call_user_func([$class, $act], $request);
+        return $this->successRes($data);
+    }
+
     /**
      * 表单视图
      * @return Form
@@ -230,7 +263,7 @@ class UploadController extends XbController
      */
     private function formView()
     {
-        $builder = Builder::form(function(Form $builder){
+        $builder = Builder::form(function (Form $builder) {
             $builder->addRowInput('title', '附件名称');
             $builder->addRowInput('uri', '文件地址')->disabled(true);
             $builder->addRowInput('name', '文件名称')->disabled(true);

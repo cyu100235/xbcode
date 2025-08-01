@@ -38,7 +38,7 @@ use JsonSerializable;
  * @method $this onDelete(mixed $value) 删除时自定义处理
  * @method $this defaultAttr() 默认属性
  */
-class BaseSchema implements JsonSerializable
+abstract class BaseSchema implements JsonSerializable
 {
     /**
      * 渲染器类型

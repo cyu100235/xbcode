@@ -17,15 +17,16 @@ namespace plugin\xbCode\builder\Components\Form;
  * @author 楚羽幽 958416459@qq.com
  * @link https://aisuda.bce.baidu.com/amis/zh-CN/components/form/input-text
  * @method $this options(array $value) 选项组
- * @method $this source(string|ApiSchema $value) 动态选项组
- * @method $this autoComplete(string|ApiSchema $value) 自动补全
+ * @method $this copyable(array $value) 复制选项配置
+ * @method $this source(string|array $value) 动态选项组
+ * @method $this autoComplete(string|array $value) 自动补全
  * @method $this multiple(bool $value) 是否多选
  * @method $this delimiter(string $value) 拼接符
  * @method $this labelField(string $value) 选项标签字段
  * @method $this valueField(string $value) 选项值字段
  * @method $this joinValues(bool $value) 拼接值
  * @method $this extractValue(bool $value) 提取值
- * @method $this addOn(AddOnSchema $value) 输入框附加组件，比如附带一个提示文字，或者附带一个提交按钮。
+ * @method $this addOn(array $value) 输入框附加组件，比如附带一个提示文字，或者附带一个提交按钮。
  * @method $this trimContents(bool $value) 是否去除首尾空白文本
  * @method $this clearValueOnEmpty(bool $value) 文本内容为空时去掉这个值
  * @method $this creatable(bool $value) 是否可以创建，默认为可以，除非设置为 false 即只能选择选项中的值
@@ -44,38 +45,80 @@ namespace plugin\xbCode\builder\Components\Form;
  */
 class InputText extends FormBase
 {
+    /**
+     * 输入框类型
+     * @var string
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
     public string $type = 'input-text';
 
+    /**
+     * 邮箱类型
+     * @return InputText
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
     public function email(): InputText
     {
         $this->type = 'input-email';
         return $this;
     }
 
+    /**
+     * URL 类型
+     * @return InputText
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
     public function url(): InputText
     {
         $this->type = 'input-url';
         return $this;
     }
 
+    /**
+     * 密码类型
+     * @return InputText
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
     public function password(): InputText
     {
         $this->type = 'input-password';
         return $this;
     }
 
+    /**
+     * 日期类型
+     * @return InputText
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
     public function date(): InputText
     {
         $this->type = 'native-date';
         return $this;
     }
 
+    /**
+     * 时间类型
+     * @return InputText
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
     public function time(): InputText
     {
         $this->type = 'native-time';
         return $this;
     }
 
+    /**
+     * 数字类型
+     * @return InputText
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
     public function number(): InputText
     {
         $this->type = 'native-number';

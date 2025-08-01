@@ -20,6 +20,8 @@ namespace plugin\xbCode\builder\Components;
  * @method $this style(array $value) 外层 Dom 的样式
  * @method $this fit(string $value) 具体细节可以参考 MDN 文档
  * @method $this src(string $value) 图片地址
+ * @method $this width(int|string $value) 图片宽度
+ * @method $this height(int|string $value) 图片高度
  * @method $this defaultAvatar(string $value) 占位图
  * @method $this text(string $value) 文字
  * @method $this icon(string $value) 图标
@@ -35,18 +37,17 @@ class Avatar extends BaseSchema
 {
     public string $type = 'avatar';
 
+    /**
+     * 默认属性
+     * @return void
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
     public function defaultAttr()
     {
         if (!$this->src) {
             $name = $this->name;
             $this->src('${' . $name . '}');
         }
-
-    }
-
-    public function getValue($value)
-    {
-        // return admin_file_url($value);
-        return '';
     }
 }

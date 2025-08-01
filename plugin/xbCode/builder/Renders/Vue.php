@@ -13,7 +13,6 @@ namespace plugin\xbCode\builder\Renders;
 
 use JsonSerializable;
 use plugin\xbCode\builder\Components\Page;
-use plugin\xbCode\builder\Components\Form\AmisForm;
 use plugin\xbCode\builder\Components\Custom\Component;
 
 /**
@@ -37,7 +36,7 @@ class Vue implements JsonSerializable
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    private Component $componentView;
+    private Component $component;
 
     /**
      * 构造函数
@@ -47,12 +46,11 @@ class Vue implements JsonSerializable
     public function __construct()
     {
         $this->page = Page::make();
-        $this->form = AmisForm::make();
-        $this->componentView = new Component;
+        $this->component = new Component;
     }
 
     /**
-     * 创建Vue远程获取器
+     * 创建Vue组件实例
      * @param string $api
      * @param array $vars
      * @param array $option
@@ -102,7 +100,7 @@ class Vue implements JsonSerializable
      */
     public function useComponent(): Component
     {
-        return $this->componentView;
+        return $this->component;
     }
 
     /**
@@ -111,12 +109,24 @@ class Vue implements JsonSerializable
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public function jsonSerialize(): Page
+    public function create()
     {
-        $this->page->body([
-            $this->componentView,
+        $page = $this->page;
+        $page->body([
+            $this->component,
         ]);
-        // 返回页面
-        return $this->page;
+        // 返回页面组件实例
+        return $page;
+    }
+    
+    /**
+     * 将当前对象序列化为JSON格式
+     * @return Page
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function jsonSerialize():mixed
+    {
+        return $this->create();
     }
 }

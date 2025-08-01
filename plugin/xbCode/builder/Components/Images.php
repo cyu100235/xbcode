@@ -20,6 +20,8 @@ namespace plugin\xbCode\builder\Components;
  * @method $this defaultImage(string $value) 默认展示图片
  * @method $this value(string $value) 图片数组
  * @method $this source(string $value) 数据源
+ * @method $this width(string|int $value) 图片宽度
+ * @method $this height(string|int $value) 图片高度
  * @method $this delimiter(string $value) 分隔符，当 value 为字符串时，用该值进行分隔拆分
  * @method $this src(string $value) 预览图地址，支持数据映射获取对象中图片变量
  * @method $this originalSrc(string $value) 原图地址，支持数据映射获取对象中图片变量

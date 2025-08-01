@@ -1,9 +1,6 @@
 <template>
     <div class="xb-config">
-        <xbBuilder :schema="schema" v-if="schema || schema.length"></xbBuilder>
-        <div class="empty" v-else>
-            <el-empty description="获取配置项视图失败"></el-empty>
-        </div>
+        <xbBuilder :schema="schema" />
     </div>
 </template>
 
@@ -17,7 +14,7 @@ export default {
         return {
         }
     },
-    mounted() {
+    mounted() {        
     },
     methods: {
     },

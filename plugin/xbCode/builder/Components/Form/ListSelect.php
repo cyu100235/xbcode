@@ -25,6 +25,7 @@ namespace plugin\xbCode\builder\Components\Form;
  * @method $this extractValue(bool $value) 提取值
  * @method $this autoFill(array $value) 自动填充
  * @method $this listClassName(string $value) 支持配置 list div 的 css 类名。比如: flex justify-between
+ * @method $this imageClassName(string $value) 图片列表选择组件，支持配置图片的 css 类名，比如: thumb-lg
  */
 class ListSelect extends FormOptions
 {

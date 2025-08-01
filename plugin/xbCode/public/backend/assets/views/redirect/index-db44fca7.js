@@ -1,1 +1,0 @@
-import"../../vendor/vue-7c9b4e57.js";import{u as n,b as s}from"../../vendor/vue-router-776dd066.js";import{d as e,o as u,c as a}from"../../vendor/@vue-b9898b5a.js";const p=e({name:"/redirect"}),R=e({...p,setup(d){const t=n(),o=s(),{redirect:r}=t.query,c=decodeURIComponent(r)||"/";return o.push(c),(m,_)=>(u(),a("div",null," 正在重定向... "))}});export{R as default};

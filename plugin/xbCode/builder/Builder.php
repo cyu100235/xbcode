@@ -14,7 +14,7 @@ namespace plugin\xbCode\builder;
 use Exception;
 use plugin\xbCode\builder\Renders\Vue;
 use plugin\xbCode\builder\Renders\Form;
-use plugin\xbCode\builder\Renders\Grid;
+use plugin\xbCode\builder\Renders\TableCrud;
 
 /**
  * 渲染器
@@ -24,18 +24,17 @@ use plugin\xbCode\builder\Renders\Grid;
 class Builder
 {
     /**
-     * 表格渲染器
+     * 增删改查表格渲染器
      * @param callable $func
      * @param string $api
-     * @return Grid
+     * @return TableCrud
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public static function crud(callable $func, string $api = '')
     {
-        $api = static::getApi($api);
-        $api = "{$api}?_act=1";
-        return Grid::make($api, $func);
+        $api = static::getApi($api, ['_act' => 1]);
+        return TableCrud::make($func, $api)->setUrl($api);
     }
 
     /**
@@ -46,11 +45,10 @@ class Builder
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public static function form(callable $func, string $api = '')
+    public static function form(callable  $func, string $api = '')
     {
         $api = static::getApi($api);
-        $dialog = (int) request()->get('_dialog', 0) ? true : false;
-        return Form::make($func, $api)->dialog($dialog);
+        return Form::make($func, $api);
     }
 
     /**
@@ -139,19 +137,32 @@ class Builder
             ...$amis
         ]);
     }
-
+    
     /**
      * 获取接口地址
      * @param string $api
+     * @param array $query
      * @return string
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    protected static function getApi(string $api): string
+    protected static function getApi(string $api, array $querys = []): string
     {
         if (empty($api)) {
-            $api = request()->path();
+            $api = request()->fullUrl();
         }
-        return $api;
+        $urls = parse_url($api);
+        if (!isset($urls['path'])) {
+            throw new Exception('请设置正确的接口地址');
+        }
+        $path = $urls['path'];
+        $query = $urls['query'] ?? '';
+        parse_str($query, $params);
+        $params = empty($params) ? [] : $params;
+        $params = array_merge($params, $querys);
+        $query = http_build_query($params);
+        $query = $query ? "?{$query}" : '';
+        $url = "{$path}{$query}";
+        return $url;
     }
 }

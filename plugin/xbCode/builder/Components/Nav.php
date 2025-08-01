@@ -16,6 +16,7 @@ namespace plugin\xbCode\builder\Components;
  * @copyright 贵州积木云网络科技有限公司
  * @author 楚羽幽 958416459@qq.com
  * @link https://aisuda.bce.baidu.com/amis/zh-CN/components/nav
+ * @method $this name(string $value) 组件名称
  * @method $this mode(string $value) 设置导航模式，悬浮或者内联，默认内联模式
  * @method $this collapsed(bool $value) 控制导航是否缩起
  * @method $this indentSize(int $value) 层级缩进值，仅内联模式下生效

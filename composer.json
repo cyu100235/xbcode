@@ -34,16 +34,14 @@
     "tinywan/jwt": "^1.11",
     "webman/captcha": "^1.0",
     "vlucas/phpdotenv": "^5.6",
+    "yzh52521/easyhttp": "^1.1",
     "taoser/webman-validate": "^1.7",
     "topthink/think-template": "^3.0",
-    "webman/cache": "^2.1",
-    "webman/redis": "^2.1",
     "illuminate/events": "^10.48",
     "symfony/cache": "^6.4",
     "webman/multi-session": "^2.1",
-    "webman/think-orm": "^2.1",
-    "yzh52521/easyhttp": "^1.1",
-    "xaboy/form-builder": "^2.1"
+    "webman/think-cache": "~2.1",
+    "webman/think-orm": "~2.1"
   },
   "suggest": {
     "ext-event": "For better performance. "

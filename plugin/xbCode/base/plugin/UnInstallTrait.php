@@ -2,7 +2,6 @@
 namespace plugin\xbCode\base\plugin;
 
 use Exception;
-use think\facade\Db;
 use plugin\xbCode\api\Mysql;
 use plugin\xbCode\api\Menus;
 use plugin\xbDict\api\DictApi;
@@ -32,44 +31,12 @@ trait UnInstallTrait
         if (!file_exists($file)) {
             return;
         }
-        // 获取文件内容
-        $data = file_get_contents($file);
-        if (empty($data)) {
-            return;
-        }
-        $sql = explode(';', $data);
-        $prefix = config('plugin.xbCode.thinkorm.connections.mysql.prefix');
-        if (empty($prefix)) {
-            throw new Exception('获取数据库前缀错误');
-        }
-        $str1 = ['`xb_', '`php_', '`__PREFIX__'];
-        foreach ($sql as $value) {
-            // 检测是否是创建表语句
-            if (strrpos($value, 'CREATE TABLE') === false) {
-                continue;
-            }
-            // 匹配表名
-            if (!preg_match('/CREATE TABLE (.*)`/', $value, $match)) {
-                continue;
-            }
-            // 获取完整表名
-            $fullTableName = $match[1] ?? '';
-            if (empty($fullTableName)) {
-                continue;
-            }
-            // 替换表前缀
-            $tableName = str_replace($str1, '', $fullTableName);
-            // 检测表不存在
-            if (!Mysql::hasTable($tableName)) {
-                continue;
-            }
-            // 替换完整表前缀
-            $fullTableName = str_replace($str1, "{$prefix}", $fullTableName);
-            // 删除表
-            $sql = "DROP TABLE IF EXISTS {$fullTableName}";
-            // 执行SQL语句
-            Db::execute($sql);
-        }
+        //替换的表前缀
+        $prefix = ['xb_', 'php_', '__PREFIX__'];
+        // 获取SQL所有表名
+        $tableNames = Mysql::getSqlNames($file, $prefix);
+        // 批量删除表
+        Mysql::dropTables($tableNames);
     }
 
     /**
@@ -95,7 +62,9 @@ trait UnInstallTrait
     protected static function unInstallDict()
     {
         // 检测是否安装插件
-        PluginsApi::checkedThrow('xbDict');
+        if(!PluginsApi::exists('xbDict')){
+            return;
+        }
         // 获取插件名称
         $name = self::getCallPluginName();
         // 开始卸载字典数据
@@ -118,7 +87,9 @@ trait UnInstallTrait
             return;
         }
         // 检测是否安装插件
-        PluginsApi::checkedThrow('xbCrontab');
+        if(!PluginsApi::exists('xbCrontab')){
+            return;
+        }
         // 获取菜单数据
         $data = include $file;
         // 检测菜单数据

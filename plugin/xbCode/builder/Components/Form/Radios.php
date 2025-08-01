@@ -16,7 +16,7 @@ namespace plugin\xbCode\builder\Components\Form;
  * @copyright 贵州积木云网络科技有限公司
  * @author 楚羽幽 958416459@qq.com
  * @link https://aisuda.bce.baidu.com/amis/zh-CN/components/form/radios
- * @method $this options(string $value) 选项组
+ * @method $this options(array $value) 选项组
  * @method $this source(string $source) 动态选项组
  * @method $this labelField(string $labelField) 选项标签字段
  * @method $this valueField(string $valueField) 选项值字段

@@ -20,9 +20,9 @@ class Mysql
     public static function getConfig(array $config = [])
     {
         // 获取数据库配置
-        $thinkorm = config('think-orm',[]);
+        $thinkorm = config('think-orm', []);
         // 合并数据库配置至thinkorm
-        $database                         = $thinkorm['connections']['mysql'];
+        $database = $thinkorm['connections']['mysql'];
         $thinkorm['connections']['mysql'] = array_merge($database, $config);
         return $thinkorm;
     }
@@ -92,7 +92,7 @@ class Mysql
         $config = static::getConfig();
         // 获取数据库表前缀
         $prefix = $config['connections']['mysql']['prefix'] ?? '';
-        $tableNames = array_map(function ($item)use($prefix) {
+        $tableNames = array_map(function ($item) use ($prefix) {
             $item = str_replace($prefix, '', $item);
             $item = strtolower($item);
             return $item;
@@ -171,12 +171,12 @@ class Mysql
     public static function getTableList(array $ignore = [])
     {
         $tableNames = self::getTableNames();
-        $data       = [];
+        $data = [];
         foreach ($tableNames as $name) {
             if (in_array($name, $ignore)) {
                 continue;
             }
-            $table  = self::getTable($name);
+            $table = self::getTable($name);
             $data[] = [
                 'create_at' => $table['CREATE_TIME'],
                 'name' => $name,
@@ -202,6 +202,68 @@ class Mysql
     }
 
     /**
+     * 获取SQL文件所有表名
+     * @param string $path SQL文件路径
+     * @throws Exception
+     * @return array
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public static function getSqlNames(string $path, array $oldPrefix = [])
+    {
+        if (!file_exists($path)) {
+            throw new Exception('SQL文件不存在');
+        }
+        // 获取表前缀
+        $prefix = static::getConfig()['connections']['mysql']['prefix'] ?? '';
+        // 处理旧的表前缀
+        $oldPrefix = array_map(function ($item) {
+            return str_contains("`", $item) ? $item : "`{$item}`";
+        }, $oldPrefix);
+        // 读取SQL文件内容
+        $sql = file($path);
+        $data = [];
+        foreach ($sql as $value) {
+            if (!str_contains($value, 'CREATE TABLE ')) {
+                continue;
+            }
+            // 替换表前缀
+            $value = str_replace($oldPrefix, "`{$prefix}", $value);
+            // 匹配表名
+            $data[] = preg_replace('/^CREATE TABLE `?([a-zA-Z0-9_]+)`?.*/', '$1', $value);
+        }
+        return $data;
+    }
+
+    /**
+     * 批量删除数据表
+     * @param array $names
+     * @return bool
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public static function dropTables(array $names)
+    {
+        foreach ($names as $name) {
+            static::dropTable($name);
+        }
+        return true;
+    }
+
+    /**
+     * 删除数据表
+     * @param string $name
+     * @throws Exception
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public static function dropTable(string $name)
+    {
+        $name = trim($name);
+        return Db::execute("DROP TABLE IF EXISTS `{$name}`");
+    }
+
+    /**
      * 将.sql文件导入到mysql数据库
      * @param string $sqlFilePath SQL文件路径
      * @param string|array $oldPrefix 您的sql文件表前缀，空则使用__PREFIX__
@@ -218,21 +280,37 @@ class Mysql
         // 获取数据库表前缀
         $prefix = $prefix ?: config('thinkorm.connections.mysql.prefix', '');
 
-        //读取.sql文件内容
+        // 处理旧的表前缀
+        if ($oldPrefix && is_array($oldPrefix)) {
+            $oldPrefix = array_map(function ($item) {
+                return str_contains("`", $item) ? $item : "`{$item}`";
+            }, $oldPrefix);
+        } else {
+            $oldPrefix = str_contains("`", $oldPrefix) ? $oldPrefix : "`{$oldPrefix}`";
+            $oldPrefix = [$oldPrefix];
+        }
+
+        //读取文件内容
         $sqlContent = file($sqlFilePath);
 
         $tmp = '';
         // 执行每个SQL语句
         foreach ($sqlContent as $line) {
+            // 清除行首尾空格
+            $lineSql = trim($line);
             // 跳过空行和注释
-            if (trim($line) == '' || stripos(trim($line), '--') === 0 || stripos(trim($line), '/*') === 0) {
+            if ($lineSql == '' || str_contains($lineSql, '--')) {
                 continue;
+            }
+            // 检查是否出现批量注释
+            if (str_contains($lineSql, '/*')) {
+                throw new Exception('请手动删除/* */批量注释');
             }
             // 拼接SQL语句
             $tmp .= $line;
             // 如果语句以分号结尾，执行SQL语句
             if (substr(trim($line), -1) === ';') {
-                $tmp = str_ireplace($oldPrefix, $prefix, $tmp);
+                $tmp = str_ireplace($oldPrefix, "`{$prefix}", $tmp);
                 $tmp = str_ireplace('INSERT INTO ', 'INSERT IGNORE INTO ', $tmp);
                 Db::execute($tmp);
                 $tmp = '';
@@ -254,7 +332,7 @@ class Mysql
         $content .= "-- 表结构：{$tableName}\n";
         // 获取表结构
         $showTableInfo = Db::query("SHOW CREATE TABLE {$tableName}");
-        $sqlInfo       = $showTableInfo[0]['Create Table'] ?? '';
+        $sqlInfo = $showTableInfo[0]['Create Table'] ?? '';
         $content .= $sqlInfo . ";\n";
         // 是否导出表数据
         if ($withData) {
@@ -307,7 +385,7 @@ class Mysql
             fwrite($outputFile, "-- 表结构：$tableName\n");
             // 获取表结构
             $showTableInfo = Db::query("SHOW CREATE TABLE {$tableName}");
-            $sqlInfo       = $showTableInfo[0]['Create Table'] ?? '';
+            $sqlInfo = $showTableInfo[0]['Create Table'] ?? '';
             fwrite($outputFile, $sqlInfo . ";\n");
 
             if ($withData) {
@@ -330,7 +408,7 @@ class Mysql
             }
         }
     }
-    
+
     /**
      * 将mysql数据库表数据导出为.sql文件
      * @param string $file 导出的.sql文件路径

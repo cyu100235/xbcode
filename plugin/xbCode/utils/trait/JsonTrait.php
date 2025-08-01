@@ -92,15 +92,7 @@ trait JsonTrait
      */
     protected static function fail(mixed $msg, int $status = 404)
     {
-        return static::json($msg, $status, [], [
-            'eventName' => 'EVENT:NOTIFY',
-            'state' => false,
-            'eventData' => [
-                'type' => 'error',
-                'title' => '温馨提示',
-                'message' => $msg,
-            ],
-        ]);
+        return static::json($msg, $status);
     }
     
     /**
@@ -180,9 +172,7 @@ trait JsonTrait
         if(isset($result['current_page'])){
             $data['page'] = $result['current_page'];
         }
-        if(isset($result['total'])){
-            $data['total'] = $result['total'];
-        }
+        $data['total'] = $result['total'] ?? 0;
         return static::json('success', 0,$data, $option);
     }
 }

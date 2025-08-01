@@ -11,14 +11,12 @@
  */
 namespace plugin\xbCode\builder\Renders;
 
-use Closure;
-use JsonSerializable;
 use plugin\xbCode\builder\Components\Page;
-use plugin\xbCode\builder\Renders\Common\Router;
-use plugin\xbCode\builder\Renders\Form\FormView;
+use plugin\xbCode\builder\Renders\form\FormBase;
+use plugin\xbCode\builder\Renders\form\FormData;
 use plugin\xbCode\builder\Components\Form\AmisForm;
-use plugin\xbCode\builder\Renders\Form\base\FormData;
-use plugin\xbCode\builder\Renders\Common\HeaderToolbar;
+use plugin\xbCode\builder\Renders\form\layouts\FormLayout;
+use plugin\xbCode\builder\Renders\form\layouts\ToolbarLayout;
 
 /**
  * 表单渲染器
@@ -27,17 +25,19 @@ use plugin\xbCode\builder\Renders\Common\HeaderToolbar;
  * @link http://www.xbcode.net
  * @method $this name(string $value) 字符串注释示例
  */
-class Form implements JsonSerializable
+class Form extends Base
 {
-    // 页面工具栏实现
-    use HeaderToolbar;
-    // 表单组件实现
-    use FormView;
-    // 表单数据处理
+    // 工具栏布局
+    use ToolbarLayout;
+    // 表单布局
+    use FormLayout;
+    // 表单基础能力
+    use FormBase;
+    // 表单数据能力
     use FormData;
 
     /**
-     * 页面实例
+     * 页面组件
      * @var Page
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
@@ -45,15 +45,7 @@ class Form implements JsonSerializable
     protected Page $page;
 
     /**
-     * 路由组件
-     * @var Router
-     * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 958416459@qq.com
-     */
-    protected Router $router;
-
-    /**
-     * 表单实例
+     * 表单组件
      * @var AmisForm
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
@@ -69,121 +61,89 @@ class Form implements JsonSerializable
     protected bool $isDialog = false;
 
     /**
-     * 自定义布局
-     * @var array
-     * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 958416459@qq.com
-     */
-    protected array $customLayout = [];
-
-    /**
      * 构造函数
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public function __construct()
     {
-        $this->page = Page::make();
-        $this->form = AmisForm::make();
-        $this->router = Router::make();
+        // 初始化页面组件
+        $this->page = new Page;
+        // 初始化表单组件
+        $this->form = new AmisForm;
     }
 
     /**
-     * 创建表单实例
-     * @param callable $func 表单配置回调函数
-     * @param string $saveApi 保存接口地址
-     * @return Form
-     * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 958416459@qq.com
-     */
-    public static function make(callable $func, string $saveApi): Form
-    {
-        $form = new static();
-        $form->setApi($saveApi . '?id=${id}');
-        $func($form);
-        return $form;
-    }
-
-    /**
-     * 获取页面实例
-     * @return Page
-     * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 958416459@qq.com
-     */
-    public function usePage(): Page
-    {
-        return $this->page;
-    }
-
-    /**
-     * 获取路由组件
-     * @return Router
-     * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 958416459@qq.com
-     */
-    public function useRouter(): Router
-    {
-        return $this->router;
-    }
-
-    /**
-     * 获取表单实例
-     * @return AmisForm
-     * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 958416459@qq.com
-     */
-    public function useForm(): AmisForm
-    {
-        return $this->form;
-    }
-
-    /**
-     * 设置表单配置
-     * @param string $name
-     * @param mixed $value
+     * 初始化组件
      * @return void
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public function setConfig(string $name, mixed $value)
+    protected function init()
     {
-        $this->form->setVariable($name, $value);
+        // 设置初始化接口
+        $this->useForm()->initApi([
+            'api' => $this->url,
+            'method' => $this->method,
+        ]);
+        // 初始化表单弹窗状态
+        $this->dialog();
     }
 
     /**
-     * 获取是否弹窗模式
-     * @return bool
-     * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 958416459@qq.com
-     */
-    public function isDialog(): bool
-    {
-        return $this->isDialog;
-    }
-
-    /**
-     * 设置是否弹窗模式
-     * @param bool $dialog
+     * 创建表单渲染器
+     * @param callable $func
+     * @param string $url
      * @return Form
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public function dialog(bool $dialog = true): Form
+    public static function make(callable $func, string $url)
     {
+        $component = new static;
+        $component->setUrl($url);
+        $component->init();
+        $func($component);
+        return $component;
+    }
+
+    /**
+     * 获取表单组件实例
+     * @return AmisForm
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function useForm()
+    {
+        return $this->form;
+    }
+    
+    /**
+     * 设置弹窗模式状态
+     * @return Form
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected function dialog()
+    {
+        $dialog = false;
+        if(str_contains($this->url, '_dialog')) {
+            $dialog = true;
+        }
         $this->isDialog = $dialog;
         return $this;
     }
 
     /**
-     * 渲染表单
+     * 获取表单渲染器
      * @return mixed
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public function jsonSerialize(): mixed
+    public function create():mixed
     {
         // 弹窗模式
-        if ($this->isDialog()) {
+        if ($this->isDialog) {
             return $this->renderForm();
         }
         // 页面模式

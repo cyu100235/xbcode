@@ -23,9 +23,26 @@ use plugin\xbCode\builder\Components\Button;
  * @method $this label(string $value) 按钮文本
  * @method $this className(string $value) 外层 Dom 的类名
  * @method $this url(string $value) 点击跳转的地址，指定此属性 button 的行为和 a 链接一致
- * @method $this size(string $value) 弹窗尺寸，支持: xs、sm、md、lg、xl、full
+ * @method $this size(string $value) 弹窗尺寸
+ * - `xs` - 超小尺寸
+ * - `sm` - 小尺寸
+ * - `md` - 中等尺寸
+ * - `lg` - 大尺寸
+ * - `xl` - 超大尺寸
+ * - `full` - 全屏尺寸
  * @method $this actionType(string $value) 设置按钮类型
- * @method $this level(string $value) 设置按钮样式
+ * @method $this level(string $value) 按钮样式
+ * - `link` - 链接样式
+ * - `primary` - 主要按钮样式
+ * - `enhance` - 增强按钮样式
+ * - `secondary` - 次要按钮样式
+ * - `info` - 信息按钮样式
+ * - `success` - 成功按钮样式
+ * - `warning` - 警告按钮样式
+ * - `danger` - 危险按钮样式
+ * - `light` - 浅色按钮样式
+ * - `dark` - 深色按钮样式
+ * - `default` - 默认按钮样式
  * @method $this tooltip(string $value) 气泡提示内容
  * @method $this tooltipPlacement(string $value) 气泡框位置器
  * @method $this tooltipTrigger(string $value) 触发 tooltip
@@ -37,7 +54,6 @@ use plugin\xbCode\builder\Components\Button;
  * @method $this confirmText(string $value) 确认按钮文本
  * @method $this confirmLevel(string $value) 确认按钮样式
  * @method $this confirmType(string $value) 确认按钮类型
- * @method $this dialog(mixed $dialog) 弹框内容，格式可参考Dialog组件
  * @method $this nextCondition(mixed $value) 可以用来设置下一条数据的条件，默认为 true
  * @method $this reload(mixed $value) 是否刷新当前页面
  * @method $this redirect(mixed $value) 是否跳转到指定页面

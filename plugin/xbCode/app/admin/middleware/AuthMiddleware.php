@@ -2,11 +2,9 @@
 namespace plugin\xbCode\app\admin\middleware;
 
 use Exception;
-use Tinywan\Jwt\JwtToken;
 use Webman\Http\Request;
 use Webman\Http\Response;
 use Webman\MiddlewareInterface;
-use plugin\xbCode\app\model\AdminRole;
 use plugin\xbCode\utils\trait\JsonTrait;
 
 /**
@@ -68,26 +66,39 @@ class AuthMiddleware implements MiddlewareInterface
         if (in_array($pathInfo['action'], $noLogin)) {
             return;
         }
-        $token = $request->header('authorization');
-        if (empty($token)) {
+        $user = $request->session()->get('xbcode');
+        if (empty($user)) {
             throw new Exception('请登录后再操作', 12000);
         }
         try {
-            // 获取用户信息
-            $users = JwtToken::getExtend();
             // 获取管理员ID
-            $request->uid = $users['id'];
+            $request->uid = $user['id'] ?? '';
+            if(empty($request->uid)) {
+                throw new Exception('管理员标识参数错误');
+            }
             // 获取管理员角色ID
-            $roleId = $users['role_id'];
+            $roleId = $user['role_id'] ?? '';
             $request->role_id = $roleId;
+            if(empty($request->role_id)) {
+                throw new Exception('管理员角色标识参数错误');
+            }
             // 获取管理员账号
-            $username = $users['username'];
-            // 获取管理员状态
-            $adminState = $users['state'];
-            // 是否系统管理员
-            $isAdmin = $users['is_system'];
+            $username = $user['username'] ?? '';
             // 设置请求管理员账号
             $request->username = $username;
+            if(empty($request->username)) {
+                throw new Exception('管理员账号参数错误');
+            }
+            // 获取管理员状态
+            $adminState = $user['state'] ?? '';
+            if(empty($adminState)) {
+                throw new Exception('管理员状态参数错误');
+            }
+            // 是否系统管理员
+            $isAdmin = $user['is_system'] ?? '';
+            if(empty($isAdmin)) {
+                throw new Exception('管理员系统标识参数错误');
+            }
         } catch (\Throwable $th) {
             throw new Exception($th->getMessage(), 12000);
         }

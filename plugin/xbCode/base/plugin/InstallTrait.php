@@ -1,11 +1,9 @@
 <?php
 namespace plugin\xbCode\base\plugin;
 
-use Exception;
 use think\facade\Db;
 use plugin\xbCode\api\Menus;
 use plugin\xbCode\api\Mysql;
-use plugin\xbCode\api\Plugins;
 use plugin\xbDict\api\DictApi;
 use plugin\xbCode\api\ConfigApi;
 use plugin\xbCrontab\api\CrontabApi;

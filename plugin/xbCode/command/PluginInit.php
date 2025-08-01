@@ -70,6 +70,13 @@ class PluginInit extends Command
             copy($ormPath, base_path() . $ormShortPath);
             $output->writeln("替换TP-ORM配置文件完成...");
         }
+        // 替换TP-Cache
+        $cacheShortPath = '/config/think-cache.php';
+        $cachePath = dirname(__DIR__) . $cacheShortPath;
+        if (file_exists($cachePath)) {
+            copy($cachePath, base_path() . $cacheShortPath);
+            $output->writeln("替换TP-Cache配置文件完成...");
+        }
         // 替换REDIS配置文件
         $redisPath = dirname(__DIR__) . '/config/redis.php';
         if (file_exists($redisPath)) {

@@ -9,22 +9,22 @@
                     <div class="item">
                         <div class="xb-title">平台名称</div>
                         <div class="value">
-                            123
+                            {{ systemData?.web_name || 'XBCode' }}
                         </div>
                     </div>
                     <div class="item">
                         <div class="xb-title">当前版本</div>
                         <div class="value">
-                            456
+                            {{ systemData?.web_version || '1.0.0' }}
                         </div>
                     </div>
                     <div class="item">
                         <div class="xb-title">获取渠道</div>
                         <div class="value buttons">
-                            <el-button type="primary" size="small">
+                            <el-button type="primary" size="small" @click="hanldUrl('http://xbcode.net')">
                                 官方网站
                             </el-button>
-                            <el-button type="danger" size="small">
+                            <el-button type="warning" size="small" @click="hanldUrl('http://xbcode.net')">
                                 使用文档
                             </el-button>
                         </div>
@@ -159,7 +159,9 @@ export default {
             switchVisits: false,
         }
     },
-    mounted() {        
+    mounted() {      
+        this.systemData = this.$xbcode.siteApp.siteInfo
+          
         this.$nextTick(() => {
             setTimeout(() => {
                 // 初始化访问量趋势图（折线图）
@@ -367,6 +369,7 @@ export default {
 .workbench-container {
     height: 100%;
     display: flex;
+    gap:15px;
     flex-direction: column;
 
     .version-today {
@@ -469,7 +472,6 @@ export default {
     }
 
     .core-common {
-        margin-top: 15px;
         display: flex;
         gap: 15px;
 
@@ -565,7 +567,6 @@ export default {
         flex: 1;
         display: flex;
         gap: 15px;
-        margin-top: 15px;
 
         .visit-container {
             flex: 1;

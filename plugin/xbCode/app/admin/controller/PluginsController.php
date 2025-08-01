@@ -33,7 +33,7 @@ use plugin\xbCode\api\PluginsUninstallApi;
 class PluginsController extends XbController
 {
     /**
-     * 表格
+     * 插件列表
      * @param \support\Request $request
      * @return \support\Response
      * @copyright 贵州小白基地网络科技有限公司
@@ -160,7 +160,7 @@ class PluginsController extends XbController
         if ($request->isPost()) {
             $post = request()->post();
             // 保存配置
-            ConfigApi::set($name,$post);
+            ConfigApi::set($name, $post);
             // 返回数据
             return $this->success('保存成功');
         }
@@ -205,7 +205,7 @@ class PluginsController extends XbController
                         $children[] = $component;
                     }
                     $children[] = [
-                        'type'=> 'submit',
+                        'type' => 'submit',
                         'level' => 'primary',
                         'label' => '提交保存',
                         'primary' => true,
@@ -217,6 +217,7 @@ class PluginsController extends XbController
             }
             /** @var Tabs */
             $tabs = Tabs::make();
+            $tabs->className('p-5');
             $tabs->tabs($tabItem)->getVariables();
             $builder->addRowGroup([$tabs]);
             $builder->addFormButton();

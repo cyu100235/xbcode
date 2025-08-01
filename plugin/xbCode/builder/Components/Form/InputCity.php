@@ -16,6 +16,7 @@ namespace plugin\xbCode\builder\Components\Form;
  * @copyright 贵州积木云网络科技有限公司
  * @author 楚羽幽 958416459@qq.com
  * @link https://aisuda.bce.baidu.com/amis/zh-CN/components/form/input-city
+ * @method $this itemClassName(string $value) 子项类名称
  * @method $this allowCity(string $value) 是否允许选择城市，默认 true
  * @method $this allowDistrict(string $value) 是否允许选择区域，默认 true
  * @method $this searchable(bool $value) 是否出搜索框，默认 false

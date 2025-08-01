@@ -60,5 +60,9 @@ class InputFile extends FormBase
     {
         // 设置全局前端上传API
         $this->receiver('${UPLOAD_FILE_API}');
+        // 设置分块上传API
+        $this->startChunkApi('${UPLOAD_CHUNK_START_API}');
+        $this->chunkApi('${UPLOAD_CHUNK_API}');
+        $this->finishChunkApi('${UPLOAD_CHUNK_FINISH_API}');
     }
 }

@@ -20,20 +20,27 @@ use plugin\xbCode\builder\Components\BaseSchema;
  */
 class Component extends BaseSchema
 {
-    public string $type = 'xbComponentRender';
+    /**
+     * 组件类型
+     * @var string
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public string $type = 'xbRender';
 
     /**
      * 远程组件接口
      * @param string $url 组件接口地址
      * @param array $vars 附带变量
      * @param array $option 属性设置
+     * @param string $type 组件类型
      * @return static
      * @copyright 贵州猿创科技有限公司
      * @author 楚羽幽 416716328@qq.com
      */
-    public function url(string $url, array $vars = [], array $option = [])
+    public function url(string $url, array $vars = [], array $option = [], string $type = 'xbRemote')
     {
-        $this->type = 'xbComponentRemote';
+        $this->type = $type;
         $this->setVariable('url', $url);
         $this->setVariable('vars', $vars);
         $this->setVariables($option);
@@ -45,13 +52,14 @@ class Component extends BaseSchema
      * @param string $component 组件内容
      * @param array $vars 附带变量
      * @param array $option 属性设置
+     * @param string $type 组件类型
      * @return static
      * @copyright 贵州猿创科技有限公司
      * @author 楚羽幽 416716328@qq.com
      */
-    public function body(string $component, array $vars = [], array $option = [])
+    public function body(string $component, array $vars = [], array $option = [], string $type = 'xbRender')
     {
-        $this->type = 'xbComponentRender';
+        $this->type = $type;
         $this->setVariable('body', $component);
         $this->setVariable('vars', $vars);
         $this->setVariables($option);

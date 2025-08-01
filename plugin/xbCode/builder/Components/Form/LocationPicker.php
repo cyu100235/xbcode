@@ -19,6 +19,7 @@ namespace plugin\xbCode\builder\Components\Form;
  * @method $this value(mixed $value) 选中值
  * @method $this vendor(string $value) 地图厂商，目前只实现了百度地图和高德地图
  * @method $this ak(string $value) 百度/高德地图的 ak
+ * @method $this static(bool $value) 是否静态展示
  * @method $this clearable(bool $value) 输入框是否可清空
  * @method $this placeholder(string $value) 默认提示
  * @method $this autoSelectCurrentLoc(bool $value) 是否自动选中当前地理位置

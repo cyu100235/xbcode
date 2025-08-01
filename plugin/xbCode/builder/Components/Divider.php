@@ -21,7 +21,7 @@ namespace plugin\xbCode\builder\Components;
  * @method $this direction(string $value) 设置分割线的方向，支持horizontal和vertical
  * @method $this color(string $value) 设置分割线的颜色
  * @method $this rotate(int $value) 设置分割线的旋转角度
- * @method $this title(SchemaNode $value) 设置分割线的标题
+ * @method $this title(string|array $value) 设置分割线的标题
  * @method $this titleClassName(string $value) 设置分割线的标题类名
  * @method $this titlePosition(string $value) 设置分割线的标题位置，支持left、center和right
  */

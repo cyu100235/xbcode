@@ -3,9 +3,7 @@
 /.DS_Store
 /.phpunit.result.cache
 /.well-known
-/public/uploads/*
-/public/storage/*
-/runtime
+/public/attachment/*
 /.idea
 *.log
 /.env

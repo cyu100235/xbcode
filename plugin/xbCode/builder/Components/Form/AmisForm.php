@@ -33,7 +33,7 @@ use plugin\xbCode\builder\Components\BaseSchema;
  * @method $this wrapWithPanel(bool $value) 是否使用面板包裹
  * @method $this panelClassName(string $value) 面板类名
  * @method $this api(mixed $value) 提交数据的 API
- * @method $this initApi(string $value) 获取初始数据的 API
+ * @method $this initApi(string|array $value) 获取初始数据的 API
  * @method $this rules(array $value) 表单组合校验规则
  * @method $this interval(int $value) 刷新时间间隔
  * @method $this silentPolling(bool $value) 刷新时是否显示加载动画

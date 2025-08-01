@@ -18,6 +18,7 @@ namespace plugin\xbCode\builder\Components;
  * @link https://aisuda.bce.baidu.com/amis/zh-CN/components/button
  * @method $this id(string $value) 按钮ID
  * @method $this label(string $value) 按钮文本
+ * @method $this icon(string $value) 按钮图标
  * @method $this className(string $value) 外层 Dom 的类名
  * @method $this url(string $value) 点击跳转的地址，指定此属性 button 的行为和 a 链接一致
  * @method $this size(string $value) 设置按钮大小

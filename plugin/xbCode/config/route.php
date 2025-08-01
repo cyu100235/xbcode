@@ -55,9 +55,3 @@ Route::get('/app/{name}/preview.svg', function ($name) {
     // 输出图片
     return response()->withHeader('content-type', 'image/svg+xml')->file($path);
 });
-
-// 注册配置路由
-Route::add(['GET', 'PUT'], '/app/xbCode/admin/Setting/config/{path:.+}', [
-    \plugin\xbCode\app\admin\controller\SettingController::class,
-    'config'
-]);

@@ -24,9 +24,9 @@ use plugin\xbCode\api\MenuChecked;
 use plugin\xbCode\enum\MenuTypeEnum;
 use plugin\xbCode\app\model\AdminRule;
 use plugin\xbCode\builder\Renders\Form;
-use plugin\xbCode\builder\Renders\Grid;
-use plugin\xbCode\builder\Components\Form\InputKV;
+use plugin\xbCode\builder\Renders\TableCrud;
 use plugin\xbCode\app\validate\AdminRuleValidate;
+use plugin\xbCode\builder\Components\Form\InputKV;
 
 /**
  * 菜单管理
@@ -57,34 +57,31 @@ class AdminRuleController extends XbController
             ]);
             return $this->successData($data);
         }
-        $builder = Builder::crud(function (Grid $builder) {
+        $builder = Builder::crud(function (TableCrud $builder) {
             $builder->useCRUD()->expandConfig([
                 'expand' => 'all',
                 'expandAll' => true,
             ]);
-            $builder->setCRUDActionConfig('width', 150);
-            $builder->addHeaderDialogBtn('添加菜单', xbUrl('AdminRule/add'), [
-                'dialog' => [
-                    'title' => '添加菜单',
-                    'size' => 'lg',
-                ],
+            $builder->setActionConfig('width', 150);
+            $builder->addHeaderDialog('添加菜单', xbUrl('AdminRule/add'), [
+                'title' => '添加菜单',
+                'size' => 'lg',
             ])->level('primary');
-            $builder->addActionDialogBtn('修改', xbUrl('AdminRule/edit'), [
-                'dialog' => [
-                    'title' => '修改菜单',
-                    'size' => 'lg',
-                ],
+            $builder->addRightActionDialog('修改', xbUrl('AdminRule/edit'), [
+                'title' => '修改菜单',
+                'size' => 'lg',
             ])
                 ->disabledTip('系统菜单，禁止修改')
                 ->disabledOn('this.is_system == 20')
                 ->level('primary');
-            $builder->addActionConfirmBtn('删除', xbUrl('AdminRule/del'))
+            $builder->addRightActionConfirm('删除', xbUrl('AdminRule/del'))
                 ->disabledTip('系统菜单，禁止删除')
                 ->disabledOn('this.is_system == 20')
                 ->level('danger');
 
             // 设置表格列快速编辑
             $builder->useCRUD()->quickSaveItemApi(xbUrl('AdminRule/rowEdit'));
+            $builder->useCRUD()->quickSaveApi(xbUrl('AdminRule/rowEdit'));
             // 添加表格列
             $builder->addColumn('title', '菜单名称');
             $builder->addColumn('plugin', '插件标识');

@@ -17,8 +17,8 @@ namespace plugin\xbCode\builder\Components\Form;
  * @author 楚羽幽 958416459@qq.com
  * @link https://aisuda.bce.baidu.com/amis/zh-CN/components/form/switch
  * @method $this option(string $value) 选项说明
- * @method $this onText(string|IconSchema|SchemaCollection $value) 开启时开关显示的内容
- * @method $this offText(string|IconSchema|SchemaCollection $value) 关闭时开关显示的内容
+ * @method $this onText(string|array $value) 开启时开关显示的内容
+ * @method $this offText(string|array $value) 关闭时开关显示的内容
  * @method $this trueValue(bool|string|number $value) 标识真值
  * @method $this falseValue(bool|string|number $value) 标识假值
  * @method $this size(string $value) 开关大小，可选值 "sm" | "md"

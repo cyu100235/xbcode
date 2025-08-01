@@ -16,7 +16,7 @@ namespace plugin\xbCode\builder\Components\Form;
  * @copyright 贵州积木云网络科技有限公司
  * @author 楚羽幽 958416459@qq.com
  * @link https://aisuda.bce.baidu.com/amis/zh-CN/components/form/checkboxes
- * @method $this options(string $value) 选项组
+ * @method $this options(array $value) 选项组
  * @method $this source(string $value) 动态选项组
  * @method $this delimiter(string $value) 拼接符
  * @method $this labelField(string $value) 选项标签字段

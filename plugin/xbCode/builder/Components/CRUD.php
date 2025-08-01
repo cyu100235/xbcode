@@ -18,9 +18,9 @@ use plugin\xbCode\builder\Components\Table\Table;
  * @copyright 贵州积木云网络科技有限公司
  * @author 楚羽幽 958416459@qq.com
  * @link https://aisuda.bce.baidu.com/amis/zh-CN/components/crud
- * @method $this model(string $value) 设置表格模式
+ * @method $this mode(string $value) 设置表格模式
+ * @method $this border(bool $value) 是否有边框
  * @method $this title(string $value) 设置标题
- * @method $this bordered(bool $value) 设置是否有边框
  * @method $this expandConfig(array $value)  设置展开行配置，参数示例：expand，expandAll，accordion
  * @method $this className(string $value) 设置表格外层 Dom 的类名
  * @method $this api(mixed $value) 设置 CRUD 用来获取列表数据的 api

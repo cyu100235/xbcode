@@ -28,7 +28,7 @@ class UploadApi
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public static function upload(string $name = 'file',int $cid = 0, int $uid = 0, string $adapter = '')
+    public static function upload(string $name = 'file', int $cid = 0, int $uid = 0, string $adapter = '')
     {
         try {
             // 1.获取上传适配器
@@ -51,7 +51,7 @@ class UploadApi
             $driver->setUploadFile($name);
             $fileName = $driver->getFileName();
             $fileInfo = $driver->getFileInfo();
-            $ext      = $fileInfo['ext'] ?? '';
+            $ext = $fileInfo['ext'] ?? '';
             $md5 = md5_file($fileInfo['realPath']);
             // 5.检测文件是否已存在
             $where = [
@@ -60,14 +60,20 @@ class UploadApi
                 'uid' => $uid,
                 'adapter' => $config['default'],
             ];
-            $file = Upload::where($where)->find();
-            if ($file) {
+            $model = Upload::where($where)->find();
+            if ($model) {
                 // 检测文件是否存在
-                $filePath = public_path() . "/{$file->uri}";
+                $filePath = public_path() . "/{$model->uri}";
                 if (file_exists($filePath)) {
-                    $file->update_at = date('Y-m-d H:i:s');
-                    $file->save();
-                    return $file;
+                    $model->update_at = date('Y-m-d H:i:s');
+                    $model->value = Files::url($model->uri);
+                    $model->save();
+                    $data = $model->toArray();
+                    $url = Files::url($model->uri);
+                    $data['value'] = $url;
+                    $data['url'] = $url;
+                    $data['link'] = $url;
+                    return $data;
                 }
             }
             // 6.上传文件
@@ -77,12 +83,12 @@ class UploadApi
             }
             // 7.处理文件信息
             if (strlen($fileInfo['name']) > 128) {
-                $temp             = substr($fileInfo['name'], 0, 123);
-                $nameEnd          = substr($fileInfo['name'], strlen($fileInfo['name']) - 5, strlen($fileInfo['name']));
+                $temp = substr($fileInfo['name'], 0, 123);
+                $nameEnd = substr($fileInfo['name'], strlen($fileInfo['name']) - 5, strlen($fileInfo['name']));
                 $fileInfo['name'] = $temp . $nameEnd;
             }
-            // 8.保存文件信息
-            $file = Upload::create([
+            /** @var Upload 8.保存文件信息 */
+            $model = Upload::create([
                 'cid' => $cid,
                 'uid' => $uid,
                 'title' => $fileInfo['name'],
@@ -92,11 +98,17 @@ class UploadApi
                 'format' => $ext,
                 'adapter' => $config['default'],
                 'uri' => "{$saveDir}/{$fileName}",
-                'url' => Files::url($saveDir),
-                'value' => Files::url($saveDir),
             ]);
+            if (empty($model)) {
+                throw new Exception('上传文件失败，请稍后再试');
+            }
+            $data = $model->toArray();
+            $url = Files::url($data['uri']);
+            $data['url'] = $url;
+            $data['value'] = $url;
+            $data['link'] = $url;
             // 9.返回文件信息
-            return $file;
+            return $data;
         } catch (\Throwable $th) {
             throw $th;
         }
@@ -121,7 +133,7 @@ class UploadApi
         // 获取文件key
         $name = $name ?: 'file';
         // 获取文件
-        $file  = request()->file($name);
+        $file = request()->file($name);
         if (empty($file)) {
             throw new Exception('上传文件不存在');
         }
@@ -132,7 +144,7 @@ class UploadApi
             $fileName = $file->getUploadName();
             $hashName = "{$md5}.{$extension}";
             $filePath = "{$saveDir}/{$hashName}";
-        }else{
+        } else {
             $filePath = "{$saveDir}/{$fileName}";
         }
         // 验证文件并上传
@@ -152,7 +164,7 @@ class UploadApi
         ];
         return $data;
     }
-    
+
     /**
      * 下载文件
      * @param string $url 下载地址，示例：uploads/image/20250515
@@ -164,7 +176,7 @@ class UploadApi
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public static function download(string $url, string $savePath = null,int $uid = 0,int $cid = 0)
+    public static function download(string $url, string $savePath = null, int $uid = 0, int $cid = 0)
     {
         if (empty($url)) {
             throw new Exception('下载地址不能为空');
@@ -173,7 +185,7 @@ class UploadApi
         $extension = pathinfo($fileName, PATHINFO_EXTENSION);
         if (empty($savePath)) {
             $path = static::getUploadPath($extension);
-        }else{
+        } else {
             $path = $savePath;
         }
         // 储存目录
@@ -235,7 +247,7 @@ class UploadApi
     protected static function getUploadPath(string $extension)
     {
         $name = self::getDictDirName($extension);
-        return "uploads/{$name}/" . date('Ymd');
+        return "attachment/{$name}/" . date('Ymd');
     }
 
     /**

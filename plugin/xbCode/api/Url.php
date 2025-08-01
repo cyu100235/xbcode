@@ -129,6 +129,36 @@ class Url implements JsonSerializable
         $this->schema = $schema;
         return $this;
     }
+    
+    /**
+     * 获取协议类型
+     * @return string
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function getSchema(): string
+    {
+        if (empty($this->schema)) {
+            $header = request()->header();
+            $schema = 'http';
+            if (!empty($header['origin'])) {
+                if (str_contains($header['origin'], 'http://')) {
+                    $schema = 'http';
+                } elseif (str_contains($header['origin'], 'https://')) {
+                    $schema = 'https';
+                }
+            }
+            if (empty($schema) && !empty($header['referer'])) {
+                if (str_contains($header['referer'], 'http://')) {
+                    $schema = 'http';
+                } elseif (str_contains($header['referer'], 'https://')) {
+                    $schema = 'https';
+                }
+            }
+            $this->schema = $schema;
+        }
+        return $this->schema;
+    }
 
     /**
      * 设置生成域名

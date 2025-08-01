@@ -36,5 +36,4 @@ namespace plugin\xbCode\builder\Components\Form;
 class InputNumber extends FormBase
 {
     public string $type = 'input-number';
-
 }

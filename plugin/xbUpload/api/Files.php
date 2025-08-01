@@ -3,6 +3,7 @@ namespace plugin\xbUpload\api;
 
 use Exception;
 use think\facade\Db;
+use plugin\xbCode\api\Url;
 use plugin\xbCode\api\ConfigApi;
 use plugin\xbUpload\app\model\Upload;
 
@@ -43,7 +44,8 @@ class Files
             $adapter = Upload::where('uri', $uri)->value('adapter', 'local');
         }
         if ($adapter === 'local') {
-            $domain = '//'.request()->host();
+            $schema = Url::make('')->getSchema();
+            $domain = "{$schema}://".request()->host();
         } else {
             $domain = ConfigApi::get("upload.{$adapter}.domain", '');
         }

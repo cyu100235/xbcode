@@ -1,4 +1,14 @@
 <?php
+/**
+ * 积木云渲染器
+ *
+ * @package  XbCode
+ * @author   楚羽幽 <958416459@qq.com>
+ * @version  1.0
+ * @license  Apache License 2.0
+ * @link     http://www.xbcode.net
+ * @document http://doc.xbcode.net
+ */
 namespace plugin\xbCode\app\admin\controller;
 
 use support\Request;
@@ -9,7 +19,7 @@ use plugin\xbCode\builder\Builder;
 use plugin\xbCode\app\model\AdminRule;
 use plugin\xbCode\app\model\AdminRole;
 use plugin\xbCode\builder\Renders\Form;
-use plugin\xbCode\builder\Renders\Grid;
+use plugin\xbCode\builder\Renders\TableCrud;
 use plugin\xbCode\app\validate\AdminRoleValidate;
 use plugin\xbCode\builder\Components\Form\Transfer;
 
@@ -44,34 +54,23 @@ class AdminRoleController extends XbController
                 });
             return $this->successRes($data);
         }
-        $builder = Builder::crud(function (Grid $builder) {
+        $builder = Builder::crud(function (TableCrud $builder) {
             $builder->useCRUD()->alwaysShowPagination(true);
-            $builder->setCRUDActionConfig('width', '200px');
-            $builder->addHeaderDialogBtn('添加角色', xbUrl('AdminRole/add'), [
-                'dialog' => [
-                    'size' => 'default',
-                ],
+            $builder->setActionConfig('width', '200px');
+            $builder->addHeaderDialog('添加角色', xbUrl('AdminRole/add'), [
+                'title' => '添加角色',
             ])->level('primary');
-            $builder->addActionDialogBtn('权限', xbUrl('AdminRole/auth'), [
-                'dialog' => [
-                    'size' => 'lg',
-                    'title' => '给「${title}」分配权限',
-                ],
+            $builder->addRightActionDialog('权限', xbUrl('AdminRole/auth'), [
+                'size' => 'lg',
+                'title' => '给「${title}」分配权限',
             ])->level('success');
-            $builder->addActionDialogBtn('修改', xbUrl('AdminRole/edit'), [
-                'dialog' => [
-                    'title' => '修改角色',
-                    'size' => 'default',
-                ],
+            $builder->addRightActionDialog('修改', xbUrl('AdminRole/edit'), [
+                'title' => '修改角色',
             ])->level('primary');
-            $builder->addActionConfirmBtn('删除', xbUrl('AdminRole/del'))->level('danger');
+            $builder->addRightActionConfirm('删除', xbUrl('AdminRole/del'))->level('danger');
 
-            $builder->addColumn('id', '序号', [
-                'width' => 80,
-            ]);
-            $builder->addColumn('title', '角色名称', [
-                'minWidth' => 180,
-            ]);
+            $builder->addColumn('id', '序号')->width(80);
+            $builder->addColumn('title', '角色名称')->minWidth(180);
             $builder->addColumn('num', '管理员人数', [
                 'minWidth' => 100,
             ]);

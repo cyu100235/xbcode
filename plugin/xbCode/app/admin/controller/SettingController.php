@@ -11,11 +11,9 @@
  */
 namespace plugin\xbCode\app\admin\controller;
 
-use plugin\xbCode\api\Url;
 use support\Request;
 use plugin\xbCode\XbController;
-use plugin\xbCode\api\ConfigApi;
-use plugin\xbCode\api\ConfigView;
+use plugin\xbCode\trait\ConfigTrait;
 
 /**
  * 系统配置控制器
@@ -24,9 +22,7 @@ use plugin\xbCode\api\ConfigView;
  */
 class SettingController extends XbController
 {
-    public array $noLogin = [
-        'test'
-    ];
+    use ConfigTrait;
 
     /**
      * 配置项
@@ -35,34 +31,21 @@ class SettingController extends XbController
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public function config(Request $request)
+    public function system(Request $request)
     {
-        $type = $request->get('type', '');
-        $path = $request->route->param('path', '');
-        if(empty($path)) {
-            return $this->fail('配置路径不能为空');
-        }
-        if (request()->method() === 'PUT') {
-            $post = request()->post();
-            // 保存配置
-            ConfigApi::set($path,$post);
-            // 返回数据
-            return $this->success('保存成功');
-        }
-        $formData = ConfigApi::get($path, [], [
-            'layer' => false,
-            'replace' => false,
-        ]);
-        // 获取配置数据
-        $formData = ConfigApi::get("{$path}.*", []);
-        // 获取表单视图
-        $builder = ConfigView::formView($path, $type);
-        $builder->useForm()->wrapWithPanel(false);
-        $saveAPI = Url::make("Setting/config/{$path}");
-        $builder->setApi($saveAPI);
-        $builder->setMethod('PUT');
-        $builder->setData($formData);
-        return $this->successRes($builder);
+        return $this->normalConfig();
+    }
+
+    /**
+     * 版权信息
+     * @param \support\Request $request
+     * @return \support\Response
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 cy958416459@qq.com
+     */
+    public function copyright(Request $request)
+    {
+        return $this->normalConfig();
     }
 
     public function test()
