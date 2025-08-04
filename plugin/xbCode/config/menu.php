@@ -358,7 +358,7 @@ return [
         'children' => [
             [
                 'title' => '系统设置',
-                'path' => 'admin/Setting/config/xbCode/system',
+                'path' => 'admin/Setting/system',
                 'component' => 'form/index',
                 'method' => 'GET',
                 'type' => '20',
@@ -373,7 +373,7 @@ return [
             ],
             [
                 'title' => '版权设置',
-                'path' => 'admin/Setting/config/xbCode/copyright',
+                'path' => 'admin/Setting/copyright',
                 'component' => 'form/index',
                 'method' => 'GET',
                 'type' => '20',

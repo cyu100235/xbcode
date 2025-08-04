@@ -71,12 +71,12 @@ class SettingController extends XbController
         // p($data);
 
         // 配置项数据
-        $post = [
-            'web_name' => '测试网站',
-            'web_url' => 'https://www.example.com',
-            'web_logo' => 'uploads/logo.png',
-            'web_icp' => '黔ICP备12345678号-1',
-        ];
+        // $post = [
+        //     'web_name' => '测试网站',
+        //     'web_url' => 'https://www.example.com',
+        //     'web_logo' => 'uploads/logo.png',
+        //     'web_icp' => '黔ICP备12345678号-1',
+        // ];
         // 以分组名保存配置项
         // ConfigApi::set('system', $post);
         // 以配置文件路径保存配置项

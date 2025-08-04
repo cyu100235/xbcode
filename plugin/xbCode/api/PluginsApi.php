@@ -1,4 +1,14 @@
 <?php
+/**
+ * 积木云渲染器
+ *
+ * @package  XbCode
+ * @author   楚羽幽 <958416459@qq.com>
+ * @version  1.0
+ * @license  Apache License 2.0
+ * @link     http://www.xbcode.net
+ * @document http://doc.xbcode.net
+ */
 namespace plugin\xbCode\api;
 
 use Exception;
@@ -63,7 +73,7 @@ class PluginsApi
         // 如果传入了安装状态，则过滤数据
         $data = array_filter($data, function ($item) use ($installed) {
             // 如果未传入安装状态，则返回全部数据
-            if(!$installed){
+            if (!$installed) {
                 return true;
             }
             // 如果传入了安装状态，则根据状态过滤数据
@@ -312,5 +322,32 @@ class PluginsApi
         }
         $model->state = $value;
         return $model->save();
+    }
+
+    /**
+     * 安装插件记录
+     * @param string $name 插件标识
+     * @param array $data 插件数据
+     * @param string $state 状态值，10未启用，20已启用
+     * @throws \Exception
+     * @return bool
+     */
+    public static function install(string $name, array $data, string $state = '10')
+    {
+        $model = Plugins::where('name', $name)->find();
+        if (!$model) {
+            $model = new Plugins;
+        }
+        if (!in_array($state, ['10', '20'])) {
+            throw new Exception("插件 {$name} 状态值错误");
+        }
+        return $model->save([
+            'name' => $name,
+            'title' => $data['title'] ?? '积木云插件',
+            'version' => $data['version'] ?? '1.0.0',
+            'author' => $data['author'] ?? '积木云',
+            'desc' => $plugin['desc'] ?? '',
+            'state' => $state,
+        ]);
     }
 }

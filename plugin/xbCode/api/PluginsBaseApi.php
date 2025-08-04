@@ -280,17 +280,8 @@ abstract class PluginsBaseApi
         if(empty($plugin)) {
             throw new Exception('插件信息不存在');
         }
-        if(!$model = Plugins::where('name', $plugin['name'])->find()){
-            $model = new Plugins;
-        }
-        $model->save([
-            'name' => $plugin['name'],
-            'title' => $plugin['title'],
-            'version' => $plugin['version'],
-            'author' => $plugin['author'],
-            'desc' => $plugin['desc'] ?? '',
-            'state' => '10',
-        ]);
+        // 安装插件记录
+        PluginsApi::install($plugin['name'], $plugin);
         return $this->nextResult("名称：{$plugin['title']} 标识：{$plugin['name']}，作者：{$plugin['author']}--安装完成...");
     }
     

@@ -12,14 +12,15 @@
 namespace plugin\xbCode\app\install\utils;
 
 use Exception;
-use plugin\xbCode\utils\PasswdUtil;
 use support\Request;
+use think\facade\Db;
 use support\think\Cache;
 use plugin\xbCode\api\Mysql;
 use plugin\xbCode\api\Packages;
+use plugin\xbCode\api\PluginsApi;
 use plugin\xbCode\utils\FrameUtil;
+use plugin\xbCode\utils\PasswdUtil;
 use plugin\xbCode\utils\trait\JsonTrait;
-use think\facade\Db;
 
 /**
  * 环境检测规则
@@ -202,6 +203,12 @@ class InstallUtil
         $envConfig = str_replace($str1, $str2, $envConfig);
         // 写入配置文件
         file_put_contents($envPath, $envConfig);
+        // 获取插件信息
+        $xbCode = PluginsApi::get('xbCode');
+        $xbUpload = PluginsApi::get('xbUpload');
+        // 安装插件记录
+        PluginsApi::install($xbCode['name'], $xbCode, '20');
+        PluginsApi::install($xbUpload['name'], $xbUpload, '20');
         // 重启框架
         FrameUtil::delayReload(2);
         // 返回成功
