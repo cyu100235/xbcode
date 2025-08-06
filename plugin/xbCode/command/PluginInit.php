@@ -95,6 +95,12 @@ class PluginInit extends Command
             copy($gitignorePath, base_path() . '/.gitignore');
             $output->writeln("替换.gitignore文件完成...");
         }
+        // 复制开源协议
+        $licensePath = dirname(__DIR__) . '/LICENSE';
+        if (file_exists($licensePath)) {
+            copy($licensePath, base_path() . '/LICENSE');
+            $output->writeln("复制开源协议文件完成...");
+        }
         // 安装所有依赖
         Composer::install();
         // 安装完成
