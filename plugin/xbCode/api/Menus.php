@@ -39,9 +39,7 @@ class Menus
         if (!$model) {
             throw new Exception('管理员信息错误，请重新登录', 12000);
         }
-        $where = [
-            ['is_saas', '=', $isWeb],
-        ];
+        $where = [];
         // 检测非系统管理员
         if ($model['is_system'] !== '20') {
             // 获取角色菜单规则
@@ -112,7 +110,6 @@ class Menus
             // 查询自身是否有父级规则
             $where  = [
                 ['path', '=', $path],
-                ['is_saas', '=', $isWeb],
                 ['state', '=', '20'],
             ];
             $parent = AdminRule::where($where)->value('pid');
@@ -191,15 +188,6 @@ class Menus
                 if (empty($value['sort'])) {
                     $value['sort'] = 0;
                 }
-                if (empty($value['is_saas'])) {
-                    $value['is_saas'] = '20';
-                }
-                if (!class_exists('plugin\xbSaas\api\Install')) {
-                    $value['is_saas'] = '10';
-                }
-                if (!in_array($value['is_saas'], ['10', '20'])) {
-                    throw new Exception('菜单是否站点类型错误');
-                }
                 if (empty($value['icon'])) {
                     $value['icon'] = '';
                 }
@@ -215,7 +203,6 @@ class Menus
                 // 检测是否菜单是否存在
                 $where = [
                     'plugin' => $value['plugin'],
-                    'is_saas' => $value['is_saas'],
                     'path' => $value['path'],
                 ];
                 $model = AdminRule::where($where)->find();

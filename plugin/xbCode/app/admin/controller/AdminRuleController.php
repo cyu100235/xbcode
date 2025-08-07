@@ -46,9 +46,7 @@ class AdminRuleController extends XbController
     {
         $act = (int) $request->get('_act');
         if ($act) {
-            $where = [
-                'is_saas' => 10,
-            ];
+            $where = [];
             $data = AdminRule::where($where)->order('sort asc,id asc')->select()->toArray();
             $data = MenuChecked::menu2DToTree($data);
             $data = MenuChecked::unsetMenusFields($data, [
@@ -136,8 +134,6 @@ class AdminRuleController extends XbController
             $isWeb = $request->saas_appid ? '20' : '10';
             // 数据验证
             xbValidate(AdminRuleValidate::class, $post, 'add');
-            // 设置是否Sass菜单
-            $post['is_saas'] = $isWeb;
             // 设置父级菜单
             $post['pid'] = isset($post['pid']['value']) ? $post['pid']['value'] : $post['pid'];
             // 附带参数
@@ -275,7 +271,6 @@ class AdminRuleController extends XbController
     protected static function getCascaderOptions()
     {
         $where = [
-            ['is_saas', '=', '10'],
             ['type', '<>', '30']
         ];
         $data = AdminRule::where($where)->order('sort asc,id asc')->select()->toArray();

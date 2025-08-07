@@ -90,7 +90,6 @@ class MenuChecked
                 'params' => $value['params'],
                 'is_show' => $value['is_show'],
                 'is_system' => $value['is_system'],
-                'is_saas' => $value['is_saas'] ?? '10',
                 'sort' => $value['sort'] ?? 0,
             ];
             if (isset($value['id'])) {

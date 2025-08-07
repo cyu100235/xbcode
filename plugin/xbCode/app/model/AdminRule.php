@@ -68,7 +68,7 @@ class AdminRule extends Model
         if ($data && !$force) {
             return $data;
         }
-        $data = static::where('is_saas', '10')->column('*', 'path');
+        $data = static::column('*', 'path');
         $list = [];
         foreach ($data as $key => $value) {
             if (isset($value['plugin']) && $value['plugin']) {
