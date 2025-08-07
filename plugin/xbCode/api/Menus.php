@@ -159,7 +159,7 @@ class Menus
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    protected static function checkTopMenus(array $menus, string $name = 'xbCode')
+    public static function checkTopMenus(array $menus, string $name = 'xbCode')
     {
         // 处理顶级菜单归属权
         return array_map(function($item) use ($name) {

@@ -11,6 +11,7 @@
  */
 namespace plugin\xbCode\event;
 
+use plugin\xbCode\api\Menus;
 use plugin\xbCode\app\model\AdminRule;
 
 /**
@@ -31,5 +32,14 @@ class PluginStateEvent
         $name = $data['name'] ?? '';
         $value = $data['value'] ?? '';
         AdminRule::where('plugin', $name)->save(['state'=> $value]);
+        // 获取该插件顶级菜单
+        $menus = config("plugin.{$name}.menu",[]);
+        foreach ($menus as $val) {
+            $where = [
+                'path' => $val['path'],
+                'plugin' => $val['plugin'] ?? 'xbCode'
+            ];
+            AdminRule::where($where)->save(['state'=> $value]);
+        }
     }
 }
