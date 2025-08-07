@@ -403,4 +403,62 @@ class PluginsApi
             'state' => $state,
         ]);
     }
+
+    /**
+     * 获取所有插件依赖
+     * @return array[]
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public static function getAllPluginDepend()
+    {
+        // 获取已安装插件
+        $data = static::list('20');
+        $depends = [];
+        foreach ($data as $value) {
+            $depend = $value['plugins'] ?? [];
+            if (empty($depend)) {
+                continue;
+            }
+            $depends[$value['name']] = array_keys($depend);
+        }
+        return $depends;
+    }
+
+    /**
+     * 检测插件是否有子依赖
+     * @param string $name
+     * @return bool
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public static function hasPluginDepend(string $name)
+    {
+        $depends = static::getAllPluginDepend();
+        foreach ($depends as $value) {
+            if (in_array($name, $value)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 抛出插件依赖异常
+     * @param string $name
+     * @throws \Exception
+     * @return void
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public static function hasPluginDependThrow(string $name)
+    {
+        $depends = static::getAllPluginDepend();
+        foreach ($depends as $key => $value) {
+            if (in_array($name, $value)) {
+                $plugin = static::get($key);
+                throw new Exception("请先卸载插件：{$plugin['title']}（{$key}）");
+            }
+        }
+    }
 }

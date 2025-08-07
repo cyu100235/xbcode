@@ -14,6 +14,7 @@ namespace plugin\xbCode\base;
 use Exception;
 use plugin\xbCode\api\Composer;
 use plugin\xbCode\api\Packages;
+use plugin\xbCode\api\PluginsApi;
 use plugin\xbCode\base\plugin\InstallTrait;
 use plugin\xbCode\base\plugin\UnInstallTrait;
 
@@ -154,7 +155,7 @@ abstract class BasePlugin
     }
 
     /**
-     * 卸载后置
+     * 卸载前置
      * @param string $version 版本名称
      * @return array
      * @copyright 贵州小白基地网络科技有限公司
@@ -162,6 +163,10 @@ abstract class BasePlugin
      */
     public static function uninstallBefore(string $version): array
     {
+        // 获取当前插件名称
+        $name = static::getCallPluginName();
+        // 检查是否有依赖插件
+        PluginsApi::hasPluginDependThrow($name);
         // 返回数据给卸载
         return [];
     }
