@@ -131,7 +131,7 @@ class EngineApi
     public static function del(string $plugin, string $engine)
     {
         $where = [
-            'plugin' > $plugin,
+            'plugin' => $plugin,
             'name' => $engine,
         ];
         $model = UploadEngine::where($where)->find();

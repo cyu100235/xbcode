@@ -1,4 +1,14 @@
 <?php
+/**
+ * 积木云渲染器
+ *
+ * @package  XbCode
+ * @author   楚羽幽 <958416459@qq.com>
+ * @version  1.0
+ * @license  Apache License 2.0
+ * @link     http://www.xbcode.net
+ * @document http://doc.xbcode.net
+ */
 namespace plugin\xbCode\api;
 
 /**
@@ -43,7 +53,7 @@ class PluginsInstallApi extends PluginsBaseApi
         // 检查插件字段
         Packages::config($this->name);
         // 检查插件依赖
-        Packages::checked($this->name);
+        Packages::plugins($this->name);
         // 插件路径
         $pluginPath = base_path() . "/plugin/{$this->name}";
         // 检查可读权限
@@ -54,7 +64,7 @@ class PluginsInstallApi extends PluginsBaseApi
         if (!is_writable($pluginPath)) {
             throw new \Exception("插件目录不可写，请检查权限：{$pluginPath}");
         }
-        return $this->nextResult("插件预检完成...");
+        return $this->nextResult("预检完成，开始安装依赖...");
     }
 
     /**

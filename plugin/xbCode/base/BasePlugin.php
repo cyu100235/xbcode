@@ -1,10 +1,19 @@
 <?php
+/**
+ * 积木云渲染器
+ *
+ * @package  XbCode
+ * @author   楚羽幽 <958416459@qq.com>
+ * @version  1.0
+ * @license  Apache License 2.0
+ * @link     http://www.xbcode.net
+ * @document http://doc.xbcode.net
+ */
 namespace plugin\xbCode\base;
 
 use Exception;
 use plugin\xbCode\api\Composer;
 use plugin\xbCode\api\Packages;
-use plugin\xbCode\base\plugin\UpdateTrait;
 use plugin\xbCode\base\plugin\InstallTrait;
 use plugin\xbCode\base\plugin\UnInstallTrait;
 
@@ -17,8 +26,6 @@ abstract class BasePlugin
 {
     // 插件安装
     use InstallTrait;
-    // 插件更新
-    use UpdateTrait;
     // 插件卸载
     use UnInstallTrait;
 

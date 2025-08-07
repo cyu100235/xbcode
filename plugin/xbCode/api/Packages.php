@@ -1,4 +1,14 @@
 <?php
+/**
+ * 积木云渲染器
+ *
+ * @package  XbCode
+ * @author   楚羽幽 <958416459@qq.com>
+ * @version  1.0
+ * @license  Apache License 2.0
+ * @link     http://www.xbcode.net
+ * @document http://doc.xbcode.net
+ */
 namespace plugin\xbCode\api;
 
 use Exception;
@@ -102,7 +112,7 @@ class Packages
         }
         foreach ($data as $name => $value) {
             if (!PluginsApi::exists($name)) {
-                throw new Exception("插件安装类不存在", 4);
+                throw new Exception("{$name} 插件，安装类不存在", 4);
             }
             if (!PluginsApi::installed($name)) {
                 throw new Exception("请先安装 {$value} 插件", 5);
