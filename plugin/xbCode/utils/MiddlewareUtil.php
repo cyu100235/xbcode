@@ -26,9 +26,6 @@ class MiddlewareUtil
         '@' => [
             \plugin\xbCode\app\middleware\XbMiddleware::class,
         ],
-        'admin' => [
-            \plugin\xbCode\app\admin\middleware\AuthMiddleware::class,
-        ],
     ];
 
     /**
@@ -45,18 +42,22 @@ class MiddlewareUtil
         $pluginPrefix = self::$pluginPrefix;
         // 扫描模块
         $data = glob("{$pluginPath}/{$pluginPrefix}*/config/middleware.php");
-        $middlewares = static::$middlewares;
-        foreach ($data as $middlewarePath) {
-            $tempMiddleware = include $middlewarePath;
-            if (empty($tempMiddleware)) {
+        $middlewares = [];
+        foreach ($data as $file) {
+            $temp = include $file;
+            if (empty($temp)) {
                 continue;
             }
-            if (!is_array($tempMiddleware)) {
+            if (!is_array($temp)) {
                 continue;
             }
-            foreach ($tempMiddleware as $module => $value) {
+            foreach ($temp as $module => $value) {
+                // 跳过其他中间件
+                if (str_contains($module, '.')) {
+                    continue;
+                }
                 // 获取中间件
-                $middleware = array_unique(array_merge(static::$middlewares[$module] ?? [], $value));
+                $middleware = array_unique(array_merge($middlewares[$module] ?? [], $value));
                 $middlewares[$module] = $middleware;
             }
         }
@@ -80,11 +81,7 @@ class MiddlewareUtil
         // 获取模块中间件
         $moduleMiddleware = static::modulesMiddleware();
         // 获取所有模块中间件
-        $middlewares = [
-            '@' => [
-                ...static::$middlewares['@'] ?? [],
-            ],
-        ];
+        $middlewares = [];
         foreach ($data as $value) {
             // 获取插件名称
             $pluginName = basename(dirname($value, 3));
@@ -95,6 +92,8 @@ class MiddlewareUtil
             // 获取模块中间件
             $middlewares[$moduleKey] = $moduleMiddleware[$module] ?? [];
         }
+        // 追加超全局中间件
+        $middlewares['@'] = array_unique(array_merge(static::$middlewares['@'], $middlewares['@'] ?? []));
         return $middlewares;
     }
 }

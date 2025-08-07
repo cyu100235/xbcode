@@ -3,9 +3,9 @@ namespace plugin\xbCode\app\admin\controller;
 
 use Exception;
 use support\Request;
+use plugin\xbCode\api\Menus;
 use plugin\xbCode\api\AdminApi;
 use plugin\xbCode\XbController;
-use plugin\xbCode\api\AdminMenus;
 use Webman\Captcha\PhraseBuilder;
 use plugin\xbCode\app\model\Admin;
 use Webman\Captcha\CaptchaBuilder;
@@ -119,7 +119,7 @@ class PublicsController extends XbController
     public function menus(Request $request)
     {
         $uid = (int) $request->uid;
-        $data = AdminMenus::get($uid);
+        $data = Menus::get($uid);
         return $this->successRes($data);
     }
 

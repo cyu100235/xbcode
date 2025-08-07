@@ -76,6 +76,9 @@ class MenuChecked
     {
         foreach ($data as $key => $value) {
             xbValidate(AdminRuleValidate::class, $value, 'add');
+            if (empty($value['method'])) {
+                $value['method'] = 'GET';
+            }
             $value['method'] = is_array($value['method']) ? implode(',', $value['method']) : 'GET';
             $data[$key] = [
                 'id' => $value['id'],
@@ -157,6 +160,12 @@ class MenuChecked
         if (!isset($data['pid'])) {
             throw new Exception('菜单必须包含pid字段');
         }
+        if (empty($data['method'])) {
+            $data['method'] = 'GET';
+        }
+        if (empty($data['plugin'])) {
+            $data['plugin'] = request()->plugin ?? 'xbCode';
+        }
         // 替换路径
         if(!str_contains($data['path'], 'workbench')){
             $data['path'] = "app/{$data['plugin']}/{$data['path']}";            
@@ -164,11 +173,13 @@ class MenuChecked
         // 设置菜单请求类型
         $data['method'] = is_array($data['method']) ? current($data['method']) : 'GET';
         // 设置图标
-        $data['icon'] = isset($data['icon']) ? $data['icon'] : '';
+        $data['icon'] = $data['icon'] ?? '';
         // 设置是否系统菜单
-        $data['is_system'] = isset($data['is_system']) ? $data['is_system'] : '10';
+        $data['is_system'] = (string)($data['is_system'] ?? '10');
         // 是否默认菜单
-        $data['is_default'] = isset($data['is_default']) ? $data['is_default'] : '10';
+        $data['is_default'] = (string)($data['is_default'] ?? '10');
+        // 是否显示菜单
+        $data['is_show'] = (string)($data['is_show'] ?? '10');
         // 返回数据
         return $data;
     }

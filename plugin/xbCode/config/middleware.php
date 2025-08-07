@@ -1,3 +1,7 @@
 <?php
 
-return [];
+return [
+    'admin' => [
+        \plugin\xbCode\app\admin\middleware\AuthMiddleware::class,
+    ],
+];

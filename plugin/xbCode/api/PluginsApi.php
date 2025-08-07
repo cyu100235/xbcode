@@ -129,6 +129,9 @@ class PluginsApi
             $name = basename(dirname($item));
             // 插件信息
             $plugin = static::get($name);
+            if (empty($plugin)) {
+                continue;
+            }
             unset($plugin['path']);
             $data[] = $plugin;
         }
@@ -201,29 +204,47 @@ class PluginsApi
      */
     public static function get(string $name)
     {
+        try {
+            $plugin = static::getPluginThrow($name);
+        } catch (\Throwable $th) {
+            return [];
+        }
+        // 返回数据
+        return $plugin;
+    }
+
+    /**
+     * 获取插件信息并抛出异常
+     * @param string $name
+     * @throws Exception
+     * @copyright 贵州猿创科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public static function getPluginThrow(string $name)
+    {
         $filePath = base_path() . "/plugin/{$name}/plugins.json";
         if (!file_exists($filePath)) {
-            throw new Exception('插件不存在');
+            throw new Exception("{$name}插件不存在");
         }
         $content = file_get_contents($filePath);
         if (empty($content)) {
-            throw new Exception('插件信息文件内容为空');
+            throw new Exception("{$name}插件信息文件内容为空");
         }
         $plugin = json_decode($content, true);
         if (empty($plugin)) {
-            throw new Exception('解析插件信息失败');
+            throw new Exception("{$name}解析插件信息失败");
         }
         if (empty($plugin['title'])) {
-            throw new Exception('插件名称参数错误');
+            throw new Exception("{$name}插件名称参数错误");
         }
         if (empty($plugin['name'])) {
-            throw new Exception('插件标识参数错误');
+            throw new Exception("{$name}插件标识参数错误");
         }
         if (empty($plugin['version'])) {
-            throw new Exception('插件版本名称参数错误');
+            throw new Exception("{$name}插件版本名称参数错误");
         }
         if (empty($plugin['author'])) {
-            throw new Exception('插件作者参数错误');
+            throw new Exception("{$name}插件作者参数错误");
         }
         if (empty($plugin['desc'])) {
             $plugin['desc'] = '--';
