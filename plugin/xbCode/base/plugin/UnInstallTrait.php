@@ -1,13 +1,22 @@
 <?php
+/**
+ * 积木云渲染器
+ *
+ * @package  XbCode
+ * @author   楚羽幽 <958416459@qq.com>
+ * @version  1.0
+ * @license  Apache License 2.0
+ * @link     http://www.xbcode.net
+ * @document http://doc.xbcode.net
+ */
 namespace plugin\xbCode\base\plugin;
 
 use Exception;
 use plugin\xbCode\api\Mysql;
 use plugin\xbCode\api\Menus;
 use plugin\xbDict\api\DictApi;
-use plugin\xbCode\api\PluginsApi;
-use plugin\xbCrontab\api\CrontabApi;
 use plugin\xbCode\app\model\Config;
+use plugin\xbCrontab\api\CrontabApi;
 
 /**
  * 插件卸载方法
@@ -62,7 +71,7 @@ trait UnInstallTrait
     protected static function unInstallDict()
     {
         // 检测是否安装插件
-        if(!PluginsApi::exists('xbDict')){
+        if(!class_exists(DictApi::class)){
             return;
         }
         // 获取插件名称
@@ -86,14 +95,14 @@ trait UnInstallTrait
         if (!file_exists($file)) {
             return;
         }
-        // 检测是否安装插件
-        if(!PluginsApi::exists('xbCrontab')){
-            return;
-        }
         // 获取菜单数据
         $data = include $file;
         // 检测菜单数据
         if (empty($data)){
+            return;
+        }
+        // 检测是否安装插件
+        if(!class_exists(CrontabApi::class)){
             return;
         }
         // 开始卸载定时任务

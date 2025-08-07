@@ -1,4 +1,14 @@
 <?php
+/**
+ * 积木云渲染器
+ *
+ * @package  XbCode
+ * @author   楚羽幽 <958416459@qq.com>
+ * @version  1.0
+ * @license  Apache License 2.0
+ * @link     http://www.xbcode.net
+ * @document http://doc.xbcode.net
+ */
 namespace plugin\xbCode\base\plugin;
 
 use think\facade\Db;
@@ -71,7 +81,7 @@ trait InstallTrait
     protected static function installDict()
     {
         // 检测是否安装插件
-        if (!class_exists('plugin\xbDict\api\DictApi')) {
+        if (!class_exists('plugin\\xbDict\\api\\DictApi')) {
             return;
         }
         // 获取插件名称
