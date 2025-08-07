@@ -49,7 +49,6 @@ CREATE TABLE `xb_admin_rule` (
   `is_show` enum('10','20') NOT NULL DEFAULT '10' COMMENT '是否显示：10否，20是',
   `is_default` enum('10','20') NOT NULL DEFAULT '10' COMMENT '是否默认：10否，20是',
   `is_system` enum('10','20') NOT NULL DEFAULT '10' COMMENT '是否系统：10否，20是',
-  `is_saas` enum('10','20') NOT NULL DEFAULT '20' COMMENT '是否SAAS：10否，20是',
   `state` enum('10','20') NOT NULL DEFAULT '10' COMMENT '是否启用：10否，20是',
   `method` varchar(20) NOT NULL DEFAULT '' COMMENT '请求方式',
   `icon` varchar(50) NOT NULL DEFAULT '' COMMENT '菜单图标',
