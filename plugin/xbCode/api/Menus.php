@@ -152,16 +152,40 @@ class Menus
     }
 
     /**
+     * 处理顶级菜单归属权
+     * @param array $menus
+     * @param string $name
+     * @return array
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected static function checkTopMenus(array $menus, string $name = 'xbCode')
+    {
+        // 处理顶级菜单归属权
+        return array_map(function($item) use ($name) {
+            if (empty($item['plugin'])) {
+                $item['plugin'] = $name;
+            }
+            return $item;
+        }, $menus);
+    }
+
+    /**
      * 安装菜单
      * @param array $data 菜单数据
      * @param string $name 插件标识
+     * @param int $level 当前层级
      * @return void
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public static function install(array $data, string $name)
+    public static function install(array $data, string $name, int $level = 0)
     {
         try {
+            if ($level === 0) {
+                // 处理顶级菜单归属权
+                $data = static::checkTopMenus($data);
+            }
             foreach ($data as $value) {
                 if (empty($value['title'])) {
                     throw new Exception('缺少菜单标题');
@@ -227,7 +251,7 @@ class Menus
                         return $item;
                     }, $value['children']);
                     // 递归添加子级菜单
-                    static::install($children, $name);
+                    static::install($children, $name, $level + 1);
                 }
             }
         } catch (\Throwable $th) {
@@ -252,6 +276,8 @@ class Menus
         if (empty($menus)) {
             return true;
         }
+        // 处理顶级菜单归属权
+        $menus = static::checkTopMenus($menus);
         // 多维菜单转二维菜单格式
         $menus = MenuChecked::menuTreeTo2D($menus);
         // 查询所有顶级菜单

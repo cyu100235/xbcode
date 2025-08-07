@@ -2,7 +2,6 @@
 
 return [
   [
-    'plugin' => 'xbCode',
     'title' => '系统配置',
     'path' => 'Config',
     'method' => 'GET',
