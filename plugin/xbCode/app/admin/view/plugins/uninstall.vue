@@ -66,7 +66,7 @@ export default {
                     this.addStep(res?.data?.text ?? res?.msg, 'fail', 'error')
                 }
             }).catch(err => {
-                this.addStep(err?.msg ?? '未知错误', 'fail', 'error')
+                this.addStep(err?.message ?? err?.msg, 'fail', 'error')
             })
         },
         addStep(text, step, type = 'text') {

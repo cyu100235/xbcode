@@ -27,7 +27,7 @@ export default {
     },
     mounted() {
         this.progress.plugin = this.plugin;
-        this.addStep(`正在安装 【${this.plugin.title}】 插件...`, 'install')
+        this.addStep(`正在预检 【${this.plugin.title}】 插件...`, 'preChecked')
         setTimeout(() => {
             // 取第一个数组
             const step = this.steps[0]?.name ?? null;
@@ -66,7 +66,7 @@ export default {
                     this.addStep(res?.data?.text ?? res?.msg, 'fail', 'error')
                 }
             }).catch(err => {
-                this.addStep(err?.msg ?? '未知错误', 'fail', 'error')
+                this.addStep(err?.message ?? err?.msg, 'fail', 'error')
             })
         },
         addStep(text, step, type = 'text') {

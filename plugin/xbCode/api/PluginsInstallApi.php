@@ -16,6 +16,11 @@ class PluginsInstallApi extends PluginsBaseApi
      */
     protected $steps = [
         [
+            'title' => '预检插件',
+            'name' => 'preChecked',
+            'next' => 'install',
+        ],
+        [
             'title' => '安装数据',
             'name' => 'install',
             'next' => 'finish',
@@ -26,6 +31,31 @@ class PluginsInstallApi extends PluginsBaseApi
             'next' => 'success',
         ],
     ];
+
+    /**
+     * 预检插件
+     * @return array
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected function preChecked()
+    {
+        // 检查插件字段
+        Packages::config($this->name);
+        // 检查插件依赖
+        Packages::checked($this->name);
+        // 插件路径
+        $pluginPath = base_path() . "/plugin/{$this->name}";
+        // 检查可读权限
+        if (!is_readable($pluginPath)) {
+            throw new \Exception("插件目录不可读，请检查权限：{$pluginPath}");
+        }
+        // 检查可写权限
+        if (!is_writable($pluginPath)) {
+            throw new \Exception("插件目录不可写，请检查权限：{$pluginPath}");
+        }
+        return $this->nextResult("插件预检完成...");
+    }
 
     /**
      * 执行安装数据
