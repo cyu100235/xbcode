@@ -178,17 +178,49 @@ class PluginsApi
     }
 
     /**
-     * 插件安装检测并抛出异常
+     * 检测插件是否已安装
+     * @param string $name
+     * @return bool
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public static function installed(string $name)
+    {
+        $model = Plugins::where('name', $name)->find();
+        if (!$model) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 检测是否启用
+     * @param string $name
+     * @return bool
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public static function hasEnabled(string $name)
+    {
+        $model = Plugins::where('name', $name)->where('state', '20')->count();
+        if (!$model) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 插件检测并抛出异常
      * @param mixed $name
      * @throws \Exception
      * @return void
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public static function existsThrow(mixed $name)
+    public static function installedThrow(mixed $name)
     {
-        if (!static::exists($name)) {
-            throw new Exception("该插件 {$name} 不存在");
+        if (!static::installed($name)) {
+            throw new Exception("该插件 {$name} 未安装");
         }
     }
 

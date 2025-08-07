@@ -54,15 +54,15 @@ class Packages
 
     /**
      * 检查依赖包
-     * @param string $plugin 插件标识
+     * @param string $name 插件标识
      * @return void
      * @copyright 贵州小白基地网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public static function checked(string $plugin)
+    public static function checked(string $name)
     {
-        self::composer($plugin);
-        self::plugins($plugin);
+        static::plugins($name);
+        static::composer($name);
     }
 
     /**
@@ -75,7 +75,7 @@ class Packages
      */
     public static function composer(string $plugin)
     {
-        $data = self::getPackages($plugin, 'composer');
+        $data = static::getPackages($plugin, 'composer');
         if (empty($data)) {
             return;
         }
@@ -101,9 +101,11 @@ class Packages
             return;
         }
         foreach ($data as $name => $value) {
-            $class = "plugin\\{$name}\\api\\Install";
-            if (!class_exists($class)) {
-                throw new Exception("请先安装 {$value} 插件", 4);
+            if (!PluginsApi::exists($name)) {
+                throw new Exception("插件安装类不存在", 4);
+            }
+            if (!PluginsApi::installed($name)) {
+                throw new Exception("请先安装 {$value} 插件", 5);
             }
         }
     }
