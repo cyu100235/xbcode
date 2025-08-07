@@ -34,9 +34,6 @@ class Packages
         if (!isset($data['title'])) {
             throw new Exception("插件 {$name} 配置文件缺少 title 字段", 4);
         }
-        if (!isset($data['name'])) {
-            throw new Exception("插件 {$name} 配置文件缺少 name 字段", 4);
-        }
         if (!isset($data['version'])) {
             throw new Exception("插件 {$name} 配置文件缺少 version 字段", 5);
         }
@@ -46,6 +43,8 @@ class Packages
         if (!isset($data['desc'])) {
             throw new Exception("插件 {$name} 配置文件缺少 description 字段", 7);
         }
+        // 设置插件标识
+        $data['name'] = $name;
         // 解析版本编号
         $str = ['.', 'v','V','-'];
         $data['version_code'] = str_replace($str, '', $data['version']);

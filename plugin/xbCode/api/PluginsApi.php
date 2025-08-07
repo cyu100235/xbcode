@@ -12,6 +12,7 @@
 namespace plugin\xbCode\api;
 
 use Exception;
+use support\Log;
 use plugin\xbCode\app\model\Plugins;
 
 /**
@@ -55,6 +56,7 @@ class PluginsApi
      */
     public static function list(string $installed = '')
     {
+        $installed = in_array($installed, ['10', '20']) ? $installed : '10';
         $data = static::localPlugins();
         foreach ($data as $key => $value) {
             // 检测该插件是否已安装
@@ -72,11 +74,7 @@ class PluginsApi
         }
         // 如果传入了安装状态，则过滤数据
         $data = array_filter($data, function ($item) use ($installed) {
-            // 如果未传入安装状态，则返回全部数据
-            if (!$installed) {
-                return true;
-            }
-            // 如果传入了安装状态，则根据状态过滤数据
+            // 获取安装状态
             if ($installed === $item['install']) {
                 return true;
             }
@@ -207,6 +205,9 @@ class PluginsApi
         try {
             $plugin = static::getPluginThrow($name);
         } catch (\Throwable $th) {
+            if (DebugApi::status()) {
+                Log::info($th->getMessage());
+            }
             return [];
         }
         // 返回数据
@@ -237,9 +238,6 @@ class PluginsApi
         if (empty($plugin['title'])) {
             throw new Exception("{$name}插件名称参数错误");
         }
-        if (empty($plugin['name'])) {
-            throw new Exception("{$name}插件标识参数错误");
-        }
         if (empty($plugin['version'])) {
             throw new Exception("{$name}插件版本名称参数错误");
         }
@@ -249,6 +247,8 @@ class PluginsApi
         if (empty($plugin['desc'])) {
             $plugin['desc'] = '--';
         }
+        // 设置插件标识
+        $plugin['name'] = $name;
         // 解析插件依赖
         $pluginParse = $plugin['plugins'] ?? [];
         $plugin['plugins_list'] = array_values($pluginParse);

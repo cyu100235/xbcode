@@ -28,16 +28,9 @@ class Install extends BasePlugin
      */
     public static function install(string $version = '', mixed $context = null)
     {
-        // 安装数据库
-        static::installSql();
-        // 安装菜单
-        static::installMenus();
-        // 安装字典
-        static::installDict();
-        // 安装定时任务
-        static::installCrontab();
+        parent::install($version, $context);
         // 安装储存记录
-        EngineApi::init('local');
+        EngineApi::init(static::$engine);
     }
 
     /**
@@ -62,6 +55,7 @@ class Install extends BasePlugin
      */
     public static function uninstall(string $version = '', mixed $context = null)
     {
+        parent::uninstall($version, $context);
         // 插件标识
         $plugin = static::getCallPluginName();
         // 删除储存记录

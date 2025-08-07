@@ -102,7 +102,7 @@ export default {
                     {
                         icon: 'CodeSandboxOutlined',
                         name: 'plugins',
-                        label: '全部插件',
+                        label: '未安装插件',
                     },
                     {
                         icon: 'CompassOutlined',

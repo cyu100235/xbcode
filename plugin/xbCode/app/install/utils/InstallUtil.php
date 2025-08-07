@@ -32,6 +32,17 @@ class InstallUtil
     use JsonTrait;
 
     /**
+     * 系统插件
+     * @var array
+     * @copyright 贵州小白基地网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected $systemPlugins = [
+        'xbCode' => '核心插件',
+        'xbUpload' => '储存插件',
+    ];
+
+    /**
      * 安装表结构
      * @param \support\Request $request
      */
@@ -44,9 +55,7 @@ class InstallUtil
         // 安装索引
         $index = $request->get('total', 0);
         // 获取全部插件
-        $data = Packages::getPackages($request->plugin, 'plugins');
-        // 追加主应用插件
-        $data = array_merge(['xbCode' => '小白基础应用'], $data);
+        $data = $this->systemPlugins;
         // 检测全部数据表是否安装完成
         if ($index >= count($data)) {
             return $this->success("全部插件安装完成...", [
