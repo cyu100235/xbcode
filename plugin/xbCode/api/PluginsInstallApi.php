@@ -11,6 +11,8 @@
  */
 namespace plugin\xbCode\api;
 
+use Exception;
+
 /**
  * 插件安装接口类
  * @copyright 贵州小白基地网络科技有限公司
@@ -58,11 +60,11 @@ class PluginsInstallApi extends PluginsBaseApi
         $pluginPath = base_path() . "/plugin/{$this->name}";
         // 检查可读权限
         if (!is_readable($pluginPath)) {
-            throw new \Exception("插件目录不可读，请检查权限：{$pluginPath}");
+            throw new Exception("插件目录不可读，请检查权限：{$pluginPath}");
         }
         // 检查可写权限
         if (!is_writable($pluginPath)) {
-            throw new \Exception("插件目录不可写，请检查权限：{$pluginPath}");
+            throw new Exception("插件目录不可写，请检查权限：{$pluginPath}");
         }
         return $this->nextResult("预检完成，开始安装依赖...");
     }
@@ -76,6 +78,25 @@ class PluginsInstallApi extends PluginsBaseApi
     protected function install()
     {
         $this->script();
-        return $this->nextResult('安装数据完成...');
+        return $this->nextResult('恭喜您，安装数据完成...');
+    }
+    
+    /**
+     * 安装完成
+     * @throws \Exception
+     * @return array
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected function finish()
+    {
+        // 获取插件信息
+        $plugin = PluginsApi::get($this->name);
+        if(empty($plugin)) {
+            throw new Exception('插件信息不存在');
+        }
+        // 安装插件记录
+        PluginsApi::install($plugin['name'], $plugin);
+        return $this->nextResult("名称：{$plugin['title']}，标识：{$plugin['name']}，作者：{$plugin['author']} - 安装完成...");
     }
 }

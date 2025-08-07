@@ -48,20 +48,17 @@ export default {
                 version: this.progress.plugin.version,
             }).then(res => {
                 if (step.next === 'success') {
-                    this.addStep(step.text ?? '插件卸载完成...', 'success', 'success');
-                    setTimeout(() => {
-                        this.addStep('窗口将于3秒后关闭...', 'success', 'success');
-                    }, 800);
-                    setTimeout(() => {
+                    this.addStep(res?.data?.text ?? '插件卸载完成...', 'success', 'success');
+                    this.$xbcode.useConfirm('插件卸载完成...', '温馨提示', 'success', {
+                        showCancelButton: false,
+                    }).then(() => {
                         this.$emit('refresh');
                         this.$emit('close')
-                    }, 3800);
+                    })
                 } else if (step.next) {
                     this.addStep(res?.data.text ?? '插件卸载中...', step.next)
                     this.progress.step = step.next
-                    setTimeout(() => {
-                        this.install()
-                    }, 500);
+                    this.install()
                 } else {
                     this.addStep(res?.data?.text ?? res?.msg, 'fail', 'error')
                 }

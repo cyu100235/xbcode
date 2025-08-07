@@ -144,7 +144,7 @@ export default {
         },
         // 安装插件
         hanldInstall(item) {
-            this.$xbcode.useConfirm(`是否确定安装「${item.title}」插件？`, '温馨提示', 'error').then(() => {
+            this.$xbcode.useConfirm(`是否确定安装「${item.title}」插件？`, '温馨提示', 'success').then(() => {
                 this.$xbcode.useRemoteModal('app/xbCode/admin/Plugins/install', {}, {
                     plugin: item,
                     onRefresh: () => {
@@ -180,7 +180,7 @@ export default {
         },
         // 删除插件
         hanldDel(item) {
-            this.$xbcode.useConfirm(`是否确认要删除插件「${item.title}」？`, '温馨提示', 'error').then(() => {
+            this.$xbcode.useConfirm(`是否确认要删除插件「${item.title}」？请谨慎该操作`, '温馨提示', 'error').then(() => {
                 this.$xbcode.useDelete('app/xbCode/admin/Plugins/del', {
                     name: item.name,
                 }).then((res) => {

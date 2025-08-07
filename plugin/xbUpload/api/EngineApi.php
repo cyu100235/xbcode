@@ -90,7 +90,7 @@ class EngineApi
         xbValidate(EngineValidate::class, $data, 'edit');
         $model = UploadEngine::where('name', $engine)->find();
         if (!$model) {
-            throw new Exception('引擎不存在');
+            throw new Exception('云储存引擎不存在');
         }
         if (!$model->save($data)) {
             throw new Exception('编辑引擎失败');
@@ -136,7 +136,7 @@ class EngineApi
         ];
         $model = UploadEngine::where($where)->find();
         if (!$model) {
-            throw new Exception('引擎不存在');
+            throw new Exception('云储存引擎不存在');
         }
         if (!$model->delete()) {
             throw new Exception('删除引擎失败');

@@ -89,7 +89,7 @@ class EngineController extends XbController
         $name = $request->post('name', '');
         $model = UploadEngine::where('name', $name)->find();
         if (!$model) {
-            return $this->fail('引擎不存在');
+            return $this->fail('云储存引擎不存在');
         }
         // 获取当前选中
         $active = ConfigApi::get('upload.active', '');
@@ -116,7 +116,7 @@ class EngineController extends XbController
         $name = $request->get('name', '');
         $model = UploadEngine::where('name', $name)->find();
         if (!$model) {
-            return $this->fail('引擎不存在');
+            return $this->fail('云储存引擎不存在');
         }
         $fileName = 'upload';
         // 配置模板路径

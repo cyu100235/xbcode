@@ -1,8 +1,17 @@
 <?php
+/**
+ * 积木云渲染器
+ *
+ * @package  XbCode
+ * @author   楚羽幽 <958416459@qq.com>
+ * @version  1.0
+ * @license  Apache License 2.0
+ * @link     http://www.xbcode.net
+ * @document http://doc.xbcode.net
+ */
 namespace plugin\xbCode\api;
 
 use Exception;
-use plugin\xbCode\app\model\Plugins;
 use plugin\xbCode\utils\DirUtil;
 use plugin\xbCode\utils\ZipUtil;
 use plugin\xbUpload\api\UploadApi;
@@ -265,24 +274,6 @@ abstract class PluginsBaseApi
                 call_user_func([$class, "{$method}After"], $this->version, $context);
             }
         }
-    }
-
-    /**
-     * 安装完成
-     * @return array
-     * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 958416459@qq.com
-     */
-    protected function finish()
-    {
-        // 获取插件信息
-        $plugin = PluginsApi::get($this->name);
-        if(empty($plugin)) {
-            throw new Exception('插件信息不存在');
-        }
-        // 安装插件记录
-        PluginsApi::install($plugin['name'], $plugin);
-        return $this->nextResult("名称：{$plugin['title']} 标识：{$plugin['name']}，作者：{$plugin['author']}--安装完成...");
     }
     
     /**

@@ -11,6 +11,7 @@
  */
 namespace plugin\xbCode\api;
 
+use Exception;
 use plugin\xbCode\app\model\Plugins;
 
 /**
@@ -64,6 +65,11 @@ class PluginsUninstallApi extends PluginsBaseApi
         if ($model) {
             $model->delete();
         }
-        return $this->nextResult('插件卸载完成...');
+        // 获取插件信息
+        $plugin = PluginsApi::get($this->name);
+        if(empty($plugin)) {
+            throw new Exception('插件信息不存在');
+        }
+        return $this->nextResult("名称：{$plugin['title']}，标识：{$plugin['name']}，作者：{$plugin['author']} - 卸载完成...");
     }
 }
