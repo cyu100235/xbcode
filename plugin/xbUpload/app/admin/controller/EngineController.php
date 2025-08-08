@@ -97,7 +97,7 @@ class EngineController extends XbController
             return $this->fail('不可取消，请直接启用其他引擎');
         }
         // 保存选中配置
-        ConfigApi::set("upload", [
+        ConfigApi::set('upload', [
             'active' => $name,
         ]);
         // 返回数据
@@ -121,18 +121,30 @@ class EngineController extends XbController
         $fileName = 'upload';
         // 配置模板路径
         $path = "{$model['plugin']}/{$fileName}";
+        // 获取配置模板
+        $template = ConfigView::getConfigTemplate($path, 'config');
         if ($request->method() === 'PUT') {
             $post = $request->post();
-            $post["{$name}.type"] = $name;
             $state = (string) $request->post('state', '10');
             // 删除无用数据
             unset($post['state']);
             unset($post['type']);
+            // 数据验证
+            $validate = array_filter($template, function ($item) {
+                return $item['field'] === 'xbValidate' && !empty($item['value']);
+            });
+            $validate = current($validate)['value'] ?? '';
+            if ($validate) {
+                xbValidate($validate, $post);
+            }
             // 设置默认引擎
             if ($state === '20') {
                 ConfigApi::set($path, [
                     "active" => $name,
                 ]);
+            }
+            foreach ($post as $key => $value) {
+                $post["{$name}.{$key}"] = $value;
             }
             // 保存配置
             ConfigApi::set($path, $post);
@@ -147,13 +159,13 @@ class EngineController extends XbController
         $config = ConfigApi::get("{$path}.{$name}.*", []);
         // 替换键名
         $config = ConfigChecked::replaceKeys("{$name}.", $config);
-        // 获取配置模板
-        $template = ConfigView::getConfigTemplate($path, 'config');
         $builder = Builder::form(function (Form $builder) use ($template, $data, $active, $config) {
             // 添加表单行
             $builder->addRowInput("type", '储存方式', $data['title'], [
                 'static' => true,
             ]);
+            $state = $data['name'] === $active ? '20' : '10';
+            $builder->addRowRadio('state', '使用状态', $state)->options(UseStateEnum::options());
             foreach ($template as $value) {
                 $builder->addRow(
                     $value['type'] ?? 'InputText',
@@ -163,11 +175,10 @@ class EngineController extends XbController
                     $value['extra'],
                 );
             }
-            $state = $data['name'] === $active ? '20' : '10';
-            $builder->addRowRadio('state', '使用状态', $state)->options(UseStateEnum::options());
         });
         $builder->setApi(xbUrl('Engine/config', ['name' => $name]));
         $builder->setMethod('PUT');
+        $builder->setData($config);
         return $this->successRes($builder);
     }
 }

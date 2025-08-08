@@ -23,14 +23,6 @@ use plugin\xbCode\app\model\Config;
 class ConfigApi
 {
     /**
-     * 缓存时间
-     * @var int
-     * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 958416459@qq.com
-     */
-    protected static $expire = 3600;
-
-    /**
      * 获取配置项
      * @param string $name 配置键名
      * @param mixed $default 默认值
@@ -54,10 +46,8 @@ class ConfigApi
         }
         // 获取查询条件
         $where = static::getWhere($name);
-        // 缓存KEY
-        $key = static::getCacheKey($where);
         // 查询配置
-        $data = Config::where($where)->cache($key, static::$expire)->column('value', 'name');
+        $data = Config::where($where)->column('value', 'name');
         if (empty($data)) {
             return $default;
         }
@@ -159,8 +149,6 @@ class ConfigApi
             if (!$model->save($configData)) {
                 throw new Exception('配置保存失败');
             }
-            // 刷新缓存
-            static::refresh($field);
         }
     }
 
@@ -208,44 +196,5 @@ class ConfigApi
             $configName = implode('.', $temp);
         }
         return $configName;
-    }
-
-    /**
-     * 刷新缓存
-     * @param string $name 配置名称
-     * @return void
-     * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 958416459@qq.com
-     */
-    protected static function refresh(string $name = null)
-    {
-        // 站点ID
-        $saasAppid = request()->saas_appid ?? null;
-        // 查询条件
-        $where = [
-            ['saas_appid', '=', $saasAppid],
-        ];
-        if ($name) {
-            $where[] = ['name', 'like', "%{$name}%"];
-        }
-        // 缓存KEY
-        $key = static::getCacheKey($where);
-        // 查询强制刷新缓存
-        Config::where($where)->cacheForce($key, static::$expire)->column('value', 'name');
-    }
-
-    /**
-     * 获取缓存KEY
-     * @param array $condition
-     * @return string
-     * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 958416459@qq.com
-     */
-    protected static function getCacheKey(array $condition)
-    {
-        $key = json_encode($condition, 256);
-        $key = md5($key);
-        $key = "xb_config_{$key}";
-        return $key;
     }
 }
