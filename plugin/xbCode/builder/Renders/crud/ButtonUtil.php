@@ -174,7 +174,7 @@ trait ButtonUtil
      */
     protected function createButtonLink(string $title, string $url)
     {
-        $component = new LinkAction;
+        $component = new LinkAction($this->url);
         $component->level('primary');
         $component->label($title);
         $component->link($url);

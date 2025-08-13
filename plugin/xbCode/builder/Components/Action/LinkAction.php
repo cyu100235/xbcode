@@ -38,12 +38,32 @@ class LinkAction extends Button
     public string $actionType = 'link';
 
     /**
-     * 设置是否可返回上级
-     * @param bool $value
-     * @return static
+     * 跳转地址
+     * @var string
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
+    public string $link;
+
+    /**
+     * 所在地址
+     * @var string
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected string $toUrl;
+
+    /**
+     * 构造函数
+     * @param string $url
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function __construct(string $url)
+    {
+        $this->toUrl = $url;
+    }
+
     /**
      * 设置返回页面地址
      * @param string $path
@@ -53,10 +73,15 @@ class LinkAction extends Button
      */
     public function isBack(string $path = '')
     {
+        // 跳转地址
         $link = $this->link ?? '';
-        if($path){
-            $query = str_contains($link, '?') ? '&' : '?';
-            $link = "{$link}{$query}_redirect={$path}";
+        if ($path) {
+            $condition = str_contains($link, '?') ? '&' : '?';
+            $link = "{$path}{$condition}_redirect={$this->url}";
+        } else {
+            $url = strtok($this->toUrl, '?');
+            $condition = str_contains($link, '?') ? '&' : '?';
+            $link = "{$link}{$condition}_redirect={$url}";
         }
         $this->link = $link;
         return $this;
