@@ -202,7 +202,7 @@ trait FormLayout
         if ($title) {
             $component->label($title);
         }
-        if ($value) {
+        if ($value !== '' && $value !== null) {
             $component->value($value);
         }
 

@@ -16,8 +16,8 @@ class ConfigView
 {
     /**
      * 获取配置表单视图
-     * @param string $path
-     * @throws \Exception
+     * @param string $path 配置文件路径
+     * @param string $type 表单类型：config、tabs、sidebar
      * @return Form
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
@@ -85,7 +85,7 @@ class ConfigView
                     'body' => $children,
                 ];
             }
-            $builder->addLayout([
+            $builder->addRowGroup([
                 $tabs->tabs($tabContent)
             ]);
         });
@@ -135,7 +135,7 @@ class ConfigView
                     'body' => $children,
                 ];
             }
-            $builder->addLayout([
+            $builder->addRowGroup([
                 $tabs->tabs($tabContent),
             ]);
         });

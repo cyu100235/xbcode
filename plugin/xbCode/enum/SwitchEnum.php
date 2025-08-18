@@ -16,7 +16,7 @@ class SwitchEnum extends BaseEnum
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    const SWITCH_TO_10 = '未开启';
+    const SWITCH_TO_10 = '关闭';
 
     /**
      * 已开启
@@ -24,5 +24,5 @@ class SwitchEnum extends BaseEnum
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    const SWITCH_TO_20 = '已开启';
+    const SWITCH_TO_20 = '开启';
 }

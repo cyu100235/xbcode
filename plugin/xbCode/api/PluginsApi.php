@@ -56,15 +56,24 @@ class PluginsApi
      */
     public static function list(string $installed = '')
     {
-        $installed = in_array($installed, ['10', '20']) ? $installed : '10';
+        // 为NULL则获取全部
+        $installed = in_array($installed, ['10', '20']) ? $installed : null;
         $data = static::localPlugins();
         foreach ($data as $key => $value) {
+            // 初始排序
+            $value['sort'] = 0;
             // 检测该插件是否已安装
             $state = Plugins::where('name', $value['name'])->field('state')->find();
             // 是否已安装
             $value['install'] = $state ? '20' : '10';
+            if ($value['install'] === '20') {
+                $value['sort'] = 1;
+            }
             // 是否已启用
             $value['state'] = $state ? $state['state'] : '10';
+            if ($value['state'] === '20') {
+                $value['sort'] = 2;
+            }
             // 是否系统插件
             $value['is_system'] = in_array($value['name'], static::$systemPlugins) ? '20' : '10';
             // 是否有配置项
@@ -74,6 +83,10 @@ class PluginsApi
         }
         // 如果传入了安装状态，则过滤数据
         $data = array_filter($data, function ($item) use ($installed) {
+            // 是否获取全部
+            if ($installed === null) {
+                return true;
+            }
             // 获取安装状态
             if ($installed === $item['install']) {
                 return true;
@@ -82,6 +95,8 @@ class PluginsApi
         });
         // 重置数组索引
         $data = array_values($data);
+        // 重新排序
+        $data = list_sort_by($data, 'sort');
         // 返回数据
         return $data;
     }
@@ -323,7 +338,10 @@ class PluginsApi
         if (file_exists($targetPath)) {
             return true;
         }
-        $previewTemplatePath = dirname(__DIR__) . '/data/plugin/preview.tpl';
+        if (!class_exists('\\plugin\\xbDeveloper\\api\\Install')) {
+            return false;
+        }
+        $previewTemplatePath = base_path() . '/plugin/xbDeveloper/data/plugin/preview.tpl';
         if (!file_exists($previewTemplatePath)) {
             throw new Exception('预览图片模板不存在');
         }

@@ -44,7 +44,7 @@ class PluginsController extends XbController
         $act = $request->get('_act');
         if ($act) {
             $type = $request->get('type', '');
-            $installed = $type === 'installed' ? '20' : '';
+            $installed = $type === 'installed' ? '20' : '10';
             $data = PluginsApi::list($installed);
             return $this->successRes($data);
         }

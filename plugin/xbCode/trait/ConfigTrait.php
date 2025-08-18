@@ -12,6 +12,7 @@
 namespace plugin\xbCode\trait;
 
 use Exception;
+use plugin\xbCode\api\ConfigChecked;
 use plugin\xbCode\api\Url;
 use plugin\xbCode\api\ConfigApi;
 use plugin\xbCode\api\ConfigView;
@@ -32,7 +33,7 @@ trait ConfigTrait
      */
     public function normalConfig(string $group = '')
     {
-        if(empty($group)) {
+        if (empty($group)) {
             $plugin = request()->plugin;
             $action = request()->action;
             $group = "{$plugin}/{$action}";
@@ -40,6 +41,8 @@ trait ConfigTrait
         if (!method_exists($this, 'success') || !method_exists($this, 'fail')) {
             throw new Exception('必须在控制器内引入使用');
         }
+        // 获取分组名称
+        $groupName = ConfigApi::getGroupName($group);
         if (request()->method() === 'PUT') {
             $post = request()->post();
             // 保存配置
@@ -47,17 +50,12 @@ trait ConfigTrait
             // 返回数据
             return $this->success('保存成功');
         }
-        $formData = ConfigApi::get($group, [], [
-            'layer' => false,
-            'replace' => false,
-        ]);
         // 获取配置数据
         $formData = ConfigApi::get("{$group}.*", []);
-        // 获取表单视图
-        $builder = ConfigView::formView($group, $group);
+        // 获取普通表单视图
+        $builder = ConfigView::formView($group, 'config');
         $builder->useForm()->wrapWithPanel(false);
-        $saveAPI = Url::make("Setting/config/{$group}");
-        $builder->setApi($saveAPI);
+        $builder->setApi(Url::make("Setting/config/{$group}"));
         $builder->setMethod('PUT');
         $builder->setData($formData);
         return $this->successRes($builder);
