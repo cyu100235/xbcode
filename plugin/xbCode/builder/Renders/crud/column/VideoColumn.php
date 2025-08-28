@@ -12,11 +12,12 @@
 namespace plugin\xbCode\builder\Renders\crud\column;
 
 use plugin\xbCode\builder\Components\Video;
+use plugin\xbCode\builder\Components\Table\TableColumn;
 
 /**
  * 视频列
- * @copyright 贵州猿创科技有限公司
- * @author 楚羽幽 416716328@qq.com
+ * @copyright 贵州积木云网络科技有限公司
+ * @author 楚羽幽 958416459@qq.com
  */
 trait VideoColumn
 {
@@ -25,13 +26,13 @@ trait VideoColumn
      * @param string $name
      * @param string $label
      * @param callable|array $option
-     * @return Video
+     * @return TableColumn|Video
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public function addColumnVideo(string $name, string $label, callable|array $option= [])
     {
-        /** @var Video */
+        /** @var TableColumn|Video */
         $component = $this->useCustomColumn(Video::class, $name, $label, $option);
         return $component;
     }

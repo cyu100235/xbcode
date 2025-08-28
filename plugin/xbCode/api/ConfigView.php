@@ -175,25 +175,20 @@ class ConfigView
 
     /**
      * 获取配置模板数据
-     * @param string $path
-     * @param string $type
+     * @param string $path 配置路径：插件名称/配置文件
+     * @param string $type 配置类型：config普通，tab选项卡
      * @throws \Exception
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public static function getConfigTemplate(string $path, string $type)
     {
-        $paths = explode('/', $path);
-        if (empty($paths[0])) {
-            throw new Exception('获取配置模板失败，插件名称参数错误');
-        }
         // 获取插件名称
-        $plugin = $paths[0];
-        unset($paths[0]);
-        // 获取配置模板路径
-        $templatePath = implode('/', $paths);
+        $plugin = ConfigChecked::getPluginName($path);
+        // 获取分组名称
+        $groupName = ConfigChecked::getGroupName($path);
         // 获取模板文件
-        $filePath = "/plugin/{$plugin}/setting/{$templatePath}/{$type}.php";
+        $filePath = "/plugin/{$plugin}/setting/{$type}/{$groupName}.php";
         // 完整模板文件
         $fullPath = base_path() . $filePath;
         if (!file_exists($fullPath)) {

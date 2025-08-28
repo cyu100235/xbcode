@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'debug' => getenv('APP_DEBUG') === 'true',
+    'debug' => env('APP_DEBUG'),
     'controller_suffix' => 'Controller',
     'controller_reuse' => false,
 ];

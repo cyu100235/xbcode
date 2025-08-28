@@ -15,7 +15,7 @@ use plugin\xbCode\builder\Components\BaseSchema;
 
 /**
  * vditor编辑器组件
- * @copyright 贵州猿创科技有限公司
+ * @copyright 贵州积木云网络科技有限公司
  * @author 楚羽幽 958416459@qq.com
  * @link https://ld246.com/article/1549638745630#options-preview-markdown
  * @method $this options(array $config) 编辑器配置项

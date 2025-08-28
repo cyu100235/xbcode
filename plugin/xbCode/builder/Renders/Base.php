@@ -6,8 +6,8 @@ use plugin\xbCode\builder\Components\Page;
 
 /**
  * 积木云渲染器基类
- * @copyright 贵州猿创科技有限公司
- * @author 楚羽幽 416716328@qq.com
+ * @copyright 贵州积木云网络科技有限公司
+ * @author 楚羽幽 958416459@qq.com
  */
 abstract class Base implements JsonSerializable
 {
@@ -124,8 +124,8 @@ abstract class Base implements JsonSerializable
 
     /**
      * 获取JSON序列化数据
-     * @copyright 贵州猿创科技有限公司
-     * @author 楚羽幽 416716328@qq.com
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
      * @return array|Page
      */
     public function jsonSerialize(): mixed

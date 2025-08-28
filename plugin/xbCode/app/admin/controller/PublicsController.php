@@ -13,7 +13,7 @@ use plugin\xbCode\app\validate\AdminValidate;
 
 /**
  * 登录控制器
- * @copyright 贵州小白基地网络科技有限公司
+ * @copyright 贵州积木云网络网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
 class PublicsController extends XbController
@@ -31,7 +31,7 @@ class PublicsController extends XbController
      * 用户登录
      * @param \support\Request $request
      * @return \support\Response
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public function login(Request $request)
@@ -46,13 +46,13 @@ class PublicsController extends XbController
         // 返回数据
         return $this->successRes($data);
     }
-
+    
     /**
      * 获取图像验证码
      * @param \support\Request $request
-     * @return \support\Response
-     * @copyright 贵州小白基地网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @return bool|string
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
      */
     public function captcha(Request $request)
     {
@@ -71,9 +71,9 @@ class PublicsController extends XbController
         // 将验证码的值存储到session中
         $request->session()->set('captcha', $captcha);
         // 获得二维码base64内容
-        $img_content = $builder->inline();
+        $imgContent = $builder->get();
         // 输出图片内容
-        return response($img_content);
+        return $imgContent;
     }
 
     /**
@@ -81,7 +81,7 @@ class PublicsController extends XbController
      * @param \support\Request $request
      * @throws \Exception
      * @return \support\Response
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public function user(Request $request)
@@ -113,7 +113,7 @@ class PublicsController extends XbController
     /**
      * 获取管理员菜单
      * @return \support\Response
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public function menus(Request $request)

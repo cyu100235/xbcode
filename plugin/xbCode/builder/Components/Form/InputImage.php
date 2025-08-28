@@ -55,6 +55,6 @@ class InputImage extends FormBase
     public function __construct()
     {
         // 设置全局前端上传API
-        $this->receiver('${UPLOAD_IMAGE_API}');
+        $this->receiver('${UPLOAD_FILE_API}');
     }
 }

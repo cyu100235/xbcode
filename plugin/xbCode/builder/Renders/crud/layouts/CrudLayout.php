@@ -12,13 +12,11 @@
 namespace plugin\xbCode\builder\Renders\crud\layouts;
 
 use plugin\xbCode\builder\Renders\crud\ColumnUtil;
-use plugin\xbCode\builder\Renders\crud\column\UrlColumn;
 use plugin\xbCode\builder\Renders\crud\column\MapColumn;
 use plugin\xbCode\builder\Renders\crud\column\JsonColumn;
 use plugin\xbCode\builder\Renders\crud\column\DateColumn;
 use plugin\xbCode\builder\Renders\crud\column\IconColumn;
 use plugin\xbCode\builder\Renders\crud\column\CardColumn;
-use plugin\xbCode\builder\Renders\crud\column\LinkColumn;
 use plugin\xbCode\builder\Renders\crud\column\ImageColumn;
 use plugin\xbCode\builder\Renders\crud\column\InputColumn;
 use plugin\xbCode\builder\Renders\crud\column\AudioColumn;
@@ -28,8 +26,10 @@ use plugin\xbCode\builder\Renders\crud\column\StatusColumn;
 use plugin\xbCode\builder\Renders\crud\column\SwitchColumn;
 use plugin\xbCode\builder\Renders\crud\column\AvatarColumn;
 use plugin\xbCode\builder\Renders\crud\column\ImagesColumn;
+use plugin\xbCode\builder\Renders\crud\column\SelectColumn;
 use plugin\xbCode\builder\Renders\crud\column\DateTimeColumn;
 use plugin\xbCode\builder\Renders\crud\column\ProgressColumn;
+use plugin\xbCode\builder\Renders\crud\column\ActionButtonColumn;
 
 /**
  * 增删改查表格布局
@@ -38,10 +38,8 @@ use plugin\xbCode\builder\Renders\crud\column\ProgressColumn;
  */
 trait CrudLayout
 {
-    use ColumnUtil;
     use MapColumn;
-    use UrlColumn;
-    use LinkColumn;
+    use ColumnUtil;
     use DateColumn;
     use IconColumn;
     use CardColumn;
@@ -57,7 +55,9 @@ trait CrudLayout
     use AvatarColumn;
     use AvatarColumn;
     use ImagesColumn;
+    use SelectColumn;
     use DateTimeColumn;
     use ProgressColumn;
+    use ActionButtonColumn;
     use ActionButtonLayout;
 }

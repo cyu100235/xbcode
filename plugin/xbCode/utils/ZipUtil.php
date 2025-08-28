@@ -20,7 +20,7 @@ class ZipUtil
      * @param array $ignoreFiles 忽略文件
      * @throws \Exception
      * @return void
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public static function build(string $zipFilePath, string $extractTo, array $ignoreFiles = [])
@@ -52,7 +52,7 @@ class ZipUtil
      * @param array $files
      * @throws \Exception
      * @return void
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public static function buildFiles(string $zipFilePath, string $extractTo, array $files = [])
@@ -83,7 +83,7 @@ class ZipUtil
      * @param string $extractTo
      * @throws \Exception
      * @return void
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public static function unzip(string $zipFilePath, string $extractTo)

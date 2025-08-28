@@ -10,7 +10,7 @@ use plugin\xbCode\utils\trait\JsonTrait;
 
 /**
  * 插件服务基类提供
- * @copyright 贵州小白基地网络科技有限公司
+ * @copyright 贵州积木云网络网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
 abstract class BasePlugins
@@ -64,7 +64,7 @@ abstract class BasePlugins
      * @param int $version 版本编号
      * @param bool $isLocal 是否本地导入
      * @return mixed
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public function start(string $step, string $name, string $versionName, int $version,bool $isLocal = false)
@@ -91,7 +91,7 @@ abstract class BasePlugins
     /**
      * 下载插件包
      * @return void
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     protected function download()
@@ -115,7 +115,7 @@ abstract class BasePlugins
     /**
      * 解压插件包
      * @return void
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     protected function unzip()
@@ -149,7 +149,7 @@ abstract class BasePlugins
      * @param string $name
      * @param string $field
      * @return mixed
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     protected function localVersion(string $name, string $field = 'version_name')
@@ -161,7 +161,7 @@ abstract class BasePlugins
     /**
      * 执行安装脚本
      * @return void
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     protected function script()
@@ -204,7 +204,7 @@ abstract class BasePlugins
     /**
      * 操作完成
      * @return void
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     abstract protected function complete();
@@ -218,6 +218,6 @@ abstract class BasePlugins
      */
     protected function installed()
     {
-        PluginsApi::addRecord($this->pluginName, $this->isLocal ? '20' : '10');
+        PluginsApi::make()->addRecord($this->pluginName, $this->isLocal ? '20' : '10');
     }
 }

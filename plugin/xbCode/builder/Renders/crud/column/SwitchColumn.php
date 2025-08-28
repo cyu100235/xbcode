@@ -12,11 +12,12 @@
 namespace plugin\xbCode\builder\Renders\crud\column;
 
 use plugin\xbCode\builder\Components\Form\AmisSwitch;
+use plugin\xbCode\builder\Components\Table\TableColumn;
 
 /**
  * 开关列
- * @copyright 贵州猿创科技有限公司
- * @author 楚羽幽 416716328@qq.com
+ * @copyright 贵州积木云网络科技有限公司
+ * @author 楚羽幽 958416459@qq.com
  */
 trait SwitchColumn
 {
@@ -33,7 +34,7 @@ trait SwitchColumn
      * - `saveImmediately` 是否立即保存，默认为`true`
      * @param callable|array $option
      * @throws \Exception
-     * @return AmisSwitch
+     * @return TableColumn|AmisSwitch
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
@@ -42,9 +43,12 @@ trait SwitchColumn
         if (empty($this->useCRUD()->quickSaveItemApi)) {
             throw new \Exception('请先设置【quickSaveItemApi】接口地址');
         }
-        /** @var AmisSwitch */
+        /** @var TableColumn|AmisSwitch */
         $component = $this->useCustomColumn(AmisSwitch::class, $name, $label, $option);
+        $component->width(120);
         $component->actionType('ajax');
+        $component->align('center');
+        $component->vAlign('middle');
         $component->quickEdit([
             'type' => 'switch',
             'mode' => 'inline',

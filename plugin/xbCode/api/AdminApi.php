@@ -55,9 +55,8 @@ class AdminApi
     public static function accountLogin(string $username, string $password, string $captcha = null)
     {
         // 是否开启验证码
-        // $isVcode = AppsEntry::get()['public_api']['captcha'] ?? '';
-        $isVcode = '';
-        if ($isVcode && class_exists('Webman\Captcha\CaptchaBuilder')) {
+        $isCatch = ConfigApi::make('system')->get('captcha_state', '10');
+        if ($isCatch === '20' && class_exists('Webman\Captcha\CaptchaBuilder')) {
             // 验证码效验
             if (empty($captcha)) {
                 throw new Exception('请填写验证码');

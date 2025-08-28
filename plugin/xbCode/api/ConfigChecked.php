@@ -11,8 +11,8 @@
  */
 namespace plugin\xbCode\api;
 
+use Exception;
 use plugin\xbUpload\api\Files;
-use plugin\xbCode\app\model\Config;
 
 /**
  * 配置数据处理接口类
@@ -21,41 +21,6 @@ use plugin\xbCode\app\model\Config;
  */
 class ConfigChecked
 {
-    /**
-     * 保存配置
-     * @param string $group
-     * @param string $name
-     * @param mixed $value
-     * @return array
-     * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
-     */
-    public static function saveConfig(string $group, string $name, mixed $value)
-    {
-        if (is_array($value)) {
-            $value = json_encode($value, 256);
-        }
-        $saasAppid = request()->saasAppid ?? null;
-        $where = [
-            'group' => $group,
-            'name' => $name,
-            'saas_appid' => $saasAppid
-        ];
-        $data  = Config::where($where)->find();
-        if (empty($data)) {
-            $model = new Config;
-            $model->save([
-                'saas_appid' => $saasAppid,
-                'group' => $group,
-                'name' => $name,
-                'value' => $value
-            ]);
-        } else {
-            Config::where($where)->save(['value' => $value]);
-        }
-        return $value;
-    }
-
     /**
      * 替换键名
      * @param string $name
@@ -87,7 +52,7 @@ class ConfigChecked
     public static function replaceFileUrl(array $data)
     {
         foreach ($data as $key => $value) {
-            if ($value && strpos($value, 'uploads/') !== false) {
+            if ($value && strpos($value, 'attachment/') !== false) {
                 $data[$key] = Files::url($value);
             }
         }
@@ -107,8 +72,8 @@ class ConfigChecked
         foreach ($data as $field => $value) {
             if (strrpos($field, '.') !== false) {
                 // 解析层级键值
-                $dataField   = explode('.', $field);
-                $resutil     = self::createNestedArray($dataField, $value);
+                $dataField = explode('.', $field);
+                $resutil = self::createNestedArray($dataField, $value);
                 $configValue = array_merge_recursive($configValue, $resutil);
             } else {
                 $configValue[$field] = $value;
@@ -127,12 +92,54 @@ class ConfigChecked
      */
     protected static function createNestedArray(array $data, mixed $config)
     {
-        $data2   = [];
+        $data2 = [];
         $current = &$data2;
         foreach ($data as $field) {
             $current = &$current[$field];
         }
         $current = $config;
         return $data2;
+    }
+
+    /**
+     * 获取插件名称
+     * @param string $path
+     * @throws \Exception
+     * @return string
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public static function getPluginName(string $path)
+    {
+        if (str_contains($path, '/')) {
+            $parts = explode('/', $path);
+            return current($parts);
+        }
+        if (str_contains($path, '.')) {
+            $parts = explode('.', $path);
+            return current($parts);
+        }
+        throw new Exception("{$path} - 插件名称获取失败");
+    }
+
+    /**
+     * 获取分组名称
+     * @param string $path
+     * @throws \Exception
+     * @return string
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public static function getGroupName(string $path)
+    {
+        if (str_contains($path, '/')) {
+            $parts = explode('/', $path);
+            return end($parts);
+        }
+        if (str_contains($path, '.')) {
+            $parts = explode('.', $path);
+            return end($parts);
+        }
+        throw new Exception("{$path} - 分组名称获取失败");
     }
 }

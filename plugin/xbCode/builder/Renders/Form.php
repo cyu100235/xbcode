@@ -127,7 +127,7 @@ class Form extends Base
     protected function dialog()
     {
         $dialog = false;
-        if(str_contains($this->url, '_dialog')) {
+        if(str_contains($this->url, '_replace')) {
             $dialog = true;
         }
         $this->isDialog = $dialog;

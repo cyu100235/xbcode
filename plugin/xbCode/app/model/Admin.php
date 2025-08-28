@@ -21,7 +21,7 @@ class Admin extends Model
     /**
      * 关联角色
      * @return \think\model\relation\HasOne
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     protected function role()
@@ -33,12 +33,12 @@ class Admin extends Model
      * 设置头像地址
      * @param mixed $value
      * @return mixed
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     protected function setAvatarAttr($value)
     {
-        if ($value && PluginsApi::exists('xbUpload')) {
+        if ($value && PluginsApi::make()->exists('xbUpload')) {
             $value = Files::path($value);
         }
         return $value;
@@ -48,12 +48,12 @@ class Admin extends Model
      * 获取头像地址
      * @param mixed $value
      * @return mixed
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     protected function getAvatarAttr($value)
     {
-        if ($value && PluginsApi::exists('xbUpload')) {
+        if ($value && PluginsApi::make()->exists('xbUpload')) {
             $value = Files::url($value);
         }
         return $value;
@@ -63,7 +63,7 @@ class Admin extends Model
      * 设置密码
      * @param mixed $value
      * @return mixed
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     protected function setPasswordAttr($value)

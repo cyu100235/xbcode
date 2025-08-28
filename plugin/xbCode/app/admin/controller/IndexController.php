@@ -1,14 +1,25 @@
 <?php
+/**
+ * 积木云渲染器
+ *
+ * @package  XbCode
+ * @author   楚羽幽 <958416459@qq.com>
+ * @version  1.0
+ * @license  Apache License 2.0
+ * @link     http://www.xbcode.net
+ * @document http://doc.xbcode.net
+ */
 namespace plugin\xbCode\app\admin\controller;
 
+use plugin\xbCode\api\ConfigApi;
+use plugin\xbCode\api\Env;
 use support\Request;
-use plugin\xbCode\api\Url;
-use plugin\xbCode\builder\Builder;
+use plugin\xbCode\api\AppEntry;
 use plugin\xbCode\XbController;
 
 /**
  * 首页控制器
- * @copyright 贵州小白基地网络科技有限公司
+ * @copyright 贵州积木云网络网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
 class IndexController extends XbController
@@ -26,7 +37,7 @@ class IndexController extends XbController
      * 首页视图
      * @param \support\Request $request
      * @return \support\Response
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public function index(Request $request)
@@ -38,54 +49,13 @@ class IndexController extends XbController
      * 站点信息
      * @param \support\Request $request
      * @return \support\Response
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public function site(Request $request)
     {
-        $data = [
-            'web_name' => '积木云网络',
-            'web_url' => 'https://www.xbcode.net',
-            'web_logo' => '',
-            'web_desc' => '积木云是一个基于 Vue3 + Vite + Element-Plus 的后台管理系统模板，集成了多种常用功能和组件，帮助开发者快速搭建高效的管理系统。',
-            'web_icp' => '粤ICP备2023000000号',
-            'web_police' => '粤公网安备 4400000000000号',
-            'web_police_code' => '4400000000000',
-            'web_version' => '1.0.0',
-            'about_name' => '贵州积木云网络科技有限公司',
-            'about_url' => 'https://www.xbcode.net',
-            'login_data' => [
-                'login_title' => '总后台登录',
-                'login_desc' => '欢迎使用积木云后台管理系统',
-            ],
-            'public_api' => [
-                'captcha' => Url::make('publics/captcha'),
-                'login' => xbUrl('publics/login'),
-                'user' => xbUrl('publics/user'),
-                'menus' => xbUrl('publics/menus'),
-                'layouts' => xbUrl('publics/layouts'),
-            ],
-            'public_view' => [
-                'workbench' => xbUrl('Index/workbench'),
-                'toolbar' => xbUrl('Index/toolbar'),
-                'user' => xbUrl('Admin/profile'),
-            ],
-            'upload_api' => [
-                'upload' => Url::make('Upload/upload')->plugin('xbUpload')->slash(),
-                'index' => Url::make('Upload/index')->plugin('xbUpload')->slash(),
-                'add' => Url::make('Upload/add')->plugin('xbUpload')->slash(),
-                'edit' => Url::make('Upload/edit')->plugin('xbUpload')->slash(),
-                'del' => Url::make('Upload/del')->plugin('xbUpload')->slash(),
-                'move' => Url::make('Upload/move')->plugin('xbUpload')->slash(),
-                'chunk' => Url::make('Upload/chunk')->plugin('xbUpload')->slash(),
-            ],
-            'upload_cate_api' => [
-                'index' => Url::make('UploadCate/index')->plugin('xbUpload')->slash(),
-                'add' => Url::make('UploadCate/add')->plugin('xbUpload')->slash(),
-                'edit' => Url::make('UploadCate/edit')->plugin('xbUpload')->slash(),
-                'del' => Url::make('UploadCate/del')->plugin('xbUpload')->slash(),
-            ],
-        ];
+        $builder = AppEntry::make();
+        $data = $builder->get();
         return $this->successRes($data);
     }
 
@@ -98,18 +68,49 @@ class IndexController extends XbController
      */
     public function toolbar(Request $request)
     {
-        return $this->successRes(Builder::display());
+        return $this->getView($request, 'toolbar');
     }
 
     /**
      * 获取工作台远程视图
      * @param \support\Request $request
      * @return \support\Response
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public function workbench(Request $request)
     {
-        return $this->successRes(Builder::display());
+        return $this->getView($request, 'workbench');
+    }
+
+    /**
+     * 获取插件动态视图
+     * @param \support\Request $request
+     * @param string $type
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected function getView(Request $request, string $type)
+    {
+        $data = glob(base_path() . "/plugin/**/config/{$type}.php");
+        if (empty($data)) {
+            return $this->display();
+        }
+        $config = current($data);
+        if (!file_exists($config)) {
+            return $this->display();
+        }
+        $plugin = basename(dirname($config, 2));
+        $workbench = require $config;
+        if (empty($workbench[0]) || empty($workbench[1])) {
+            return $this->display();
+        }
+        $class = new $workbench[0];
+        $method = $workbench[1];
+        if (!method_exists($class, $method)) {
+            return $this->display();
+        }
+        $request->plugin = $plugin;
+        return $class->$method($request);
     }
 }

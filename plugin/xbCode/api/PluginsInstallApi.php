@@ -15,7 +15,7 @@ use Exception;
 
 /**
  * 插件安装接口类
- * @copyright 贵州小白基地网络科技有限公司
+ * @copyright 贵州积木云网络网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
 class PluginsInstallApi extends PluginsBaseApi
@@ -91,12 +91,12 @@ class PluginsInstallApi extends PluginsBaseApi
     protected function finish()
     {
         // 获取插件信息
-        $plugin = PluginsApi::get($this->name);
+        $plugin = PluginsApi::make()->get($this->name);
         if(empty($plugin)) {
             throw new Exception('插件信息不存在');
         }
         // 安装插件记录
-        PluginsApi::install($plugin['name'], $plugin);
+        PluginsApi::make()->install($plugin['name'], $plugin);
         return $this->nextResult("名称：{$plugin['title']}，标识：{$plugin['name']}，作者：{$plugin['author']} - 安装完成...");
     }
 }

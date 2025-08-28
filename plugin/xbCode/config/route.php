@@ -24,7 +24,7 @@ if ($pluginHome) {
 Route::get('/', $homeConfig);
 
 // 注册总后台
-$module = getenv('ADMIN_URL') ?: 'backend';
+$module = env('ADMIN_URL', 'backend');
 Route::get("/{$module}", [\plugin\xbCode\app\admin\controller\IndexController::class, 'index']);
 Route::group("/{$module}", function () {
     Route::get('/', [\plugin\xbCode\app\admin\controller\IndexController::class, 'index']);

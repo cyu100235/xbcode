@@ -37,7 +37,7 @@ trait HeaderToolbar
      */
     public function addHeaderDialog(string $title, string $url, callable|array $option = [])
     {
-        $url = $this->APIURL($url, ['_dialog' => 1]);
+        $url = $this->APIURL($url);
         $component = $this->createButtonDialog($title, $url, $option);
         $this->headerToolbar[] = $component;
         return $component;
@@ -71,7 +71,7 @@ trait HeaderToolbar
      */
     public function addHeaderDrawer(string $title, string $url, callable|array $option = [])
     {
-        $url = $this->APIURL($url, ['_dialog' => 1]);
+        $url = $this->APIURL($url);
         $component = $this->createButtonDrawer($title, $url, $option);
         $this->headerToolbar[] = $component;
         return $component;

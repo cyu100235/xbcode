@@ -12,6 +12,7 @@
 namespace plugin\xbCode\builder\Components\Action;
 
 use plugin\xbCode\builder\Components\Button;
+use plugin\xbCode\builder\Components\Service;
 
 /**
  * 弹窗行为
@@ -61,4 +62,27 @@ use plugin\xbCode\builder\Components\Button;
 class DialogAction extends Button
 {
     public string $actionType = 'dialog';
+
+    /**
+     * 模态框弹窗
+     * @param string $url 视图URL
+     * @param string $label 按钮文本
+     * @param array $option 弹窗配置
+     * @return static
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function dialogModel(string $url, string $label, array $option = [])
+    {
+        $this->level('primary');
+        $this->label($label);
+        $dialog = array_merge([
+            'title' => '信息模态框',
+            'size' => 'md',
+        ], $option, [
+            'body' => Service::make()->schemaApi($url)
+        ]);
+        $this->dialog($dialog);
+        return $this;
+    }
 }

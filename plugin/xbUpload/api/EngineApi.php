@@ -8,7 +8,7 @@ use plugin\xbUpload\app\validate\EngineValidate;
 
 /**
  * 引擎接口
- * @copyright 贵州小白基地网络科技有限公司
+ * @copyright 贵州积木云网络网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
 class EngineApi
@@ -22,7 +22,7 @@ class EngineApi
     public static function getList()
     {
         // 选中启用
-        $active = ConfigApi::get('upload.active', '');
+        $active = ConfigApi::make('upload')->get('active', '');
         return UploadEngine::order('sort asc, id asc')
             ->select()
             ->each(function ($item) use ($active) {
@@ -30,7 +30,7 @@ class EngineApi
             })
             ->toArray();
     }
-    
+
     /**
      * 初始化安装记录
      * @param string $engine
@@ -41,10 +41,10 @@ class EngineApi
     public static function init(string $engine = '')
     {
         // 安装配置项
-        ConfigApi::set('upload',[
+        ConfigApi::make('upload')->set([
             'active' => $engine
         ]);
-        ConfigApi::set('upload',[
+        ConfigApi::make('upload')->set([
             'local.type' => 'local'
         ]);
         // 初始化安装储存记录
@@ -103,17 +103,17 @@ class EngineApi
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public static function getConfig(string $engine = null)
+    public static function getConfig(string $adapter = null)
     {
         $engines = UploadEngine::column('name,plugin');
-        $default = ConfigApi::get('upload.active', '');
+        $default = $adapter ?: ConfigApi::make('upload')->get('active', 'local');
         $data = [
-            'default' => empty($engine) ? $default : $engine,
+            'default' => $default,
             'engine' => [],
         ];
         foreach ($engines as $value) {
-            $config = ConfigApi::get("upload.{$value['name']}.", []);
-            $data['engine'][$value['name']] = $config;
+            $config = ConfigApi::make('upload')->get($value['name']);
+            $data['engine'][$value['name']] = $config ?: [];
             $data['engine'][$value['name']]['plugin'] = $value['plugin'];
         }
         return $data;

@@ -32,13 +32,12 @@ use plugin\xbCode\builder\Components\BaseSchema;
  * @method $this align(string $value) 设置单元格对齐方式 left | right | center | justify
  * @method $this headerAlign(string $value) 设置表头单元格对齐方式 left | right | center | justify
  * @method $this vAlign(string $value) 设置单元格垂直对齐方式 top | middle | bottom
- * @method $this textOverflow(string $value) 设置文本溢出后展示形式
  * @method $this sortable(bool $value) 是否可排序
  * @method $this searchable(bool|array $value) 是否可快速搜索，开启autoGenerateFilter后，searchable支持配置Schema
  * @method $this filterable(bool|array $value) 是否可快速搜索，options属性为静态选项，支持设置source属性从接口获取选项
  * @method $this quickEdit(bool|array $value) 快速编辑，一般需要配合quickSaveApi接口使用
  * @method $this quickEditEnabledOn(string $value) 开启快速编辑条件表达式
- * @method $this textOverflow(string $value) 文本溢出后展示形式，默认换行处理。可选值 ellipsis 溢出隐藏展示， noWrap 不换行展示(仅在列为静态文本时生效)
+ * @method $this textOverflow(string $value) 文本溢出后展示形式，默认：default换行处理，ellipsis溢出隐藏展示， noWrap不换行展示(仅在列为静态文本时生效)
  */
 class TableColumn extends BaseSchema
 {

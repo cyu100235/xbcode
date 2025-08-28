@@ -16,7 +16,7 @@ use plugin\xbCode\app\model\Plugins;
 
 /**
  * 插件卸载接口类
- * @copyright 贵州小白基地网络科技有限公司
+ * @copyright 贵州积木云网络网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
 class PluginsUninstallApi extends PluginsBaseApi
@@ -66,7 +66,7 @@ class PluginsUninstallApi extends PluginsBaseApi
             $model->delete();
         }
         // 获取插件信息
-        $plugin = PluginsApi::get($this->name);
+        $plugin = PluginsApi::make()->get($this->name);
         if(empty($plugin)) {
             throw new Exception('插件信息不存在');
         }

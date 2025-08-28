@@ -202,9 +202,7 @@ trait FormLayout
         if ($title) {
             $component->label($title);
         }
-        if ($value !== '' && $value !== null) {
-            $component->value($value);
-        }
+        $component->value($value);
 
         // 设置组件提示占位符
         $componentType = null;

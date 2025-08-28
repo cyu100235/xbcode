@@ -4,7 +4,7 @@ namespace plugin\xbCode\utils;
 
 /**
  * 密码工具类
- * @copyright 贵州小白基地网络科技有限公司
+ * @copyright 贵州积木云网络网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
 class PasswdUtil
@@ -14,7 +14,7 @@ class PasswdUtil
      * @param string $password 密码
      * @param string $key 密钥
      * @return string
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public static function create(string $password, string $key = 'xbcode'): string

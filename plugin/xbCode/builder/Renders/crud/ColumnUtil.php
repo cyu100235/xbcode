@@ -27,30 +27,28 @@ trait ColumnUtil
      * @author 楚羽幽 958416459@qq.com
      */
     protected array $columns = [];
-    
+
     /**
      * 使用自定义组件列
-     * @param string $type
+     * @param mixed $type
      * @param string $name
      * @param string $title
      * @return TableColumn
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    protected function useCustomColumn(string $type, string $name, string $title, callable|array $option = [])
+    protected function useCustomColumn(mixed $component, string $name, string $title, callable|array $option = [])
     {
-        if($type) {
+        if(!is_object($component)){
             /** @var TableColumn */
-            $component = new $type;
-        } else {
-            $component = new TableColumn;
+            $component = new $component;
         }
         $component->name($name);
         $component->label($title);
         if (is_array($option)) {
             // 如果是数组，则设置变量
             $component->setVariables($option);
-        }else{
+        } else {
             $option($component);
         }
         $this->columns[] = $component;

@@ -74,8 +74,8 @@ class InputTree extends FormOptions
     /**
      * 展开树形选择框
      * @return static
-     * @copyright 贵州猿创科技有限公司
-     * @author 楚羽幽 416716328@qq.com
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
      */
     public function inputTree()
     {
@@ -86,8 +86,8 @@ class InputTree extends FormOptions
     /**
      * 树形选择框
      * @return static
-     * @copyright 贵州猿创科技有限公司
-     * @author 楚羽幽 416716328@qq.com
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
      */
     public function treeSelect()
     {

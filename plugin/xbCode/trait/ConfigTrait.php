@@ -41,17 +41,15 @@ trait ConfigTrait
         if (!method_exists($this, 'success') || !method_exists($this, 'fail')) {
             throw new Exception('必须在控制器内引入使用');
         }
-        // 获取分组名称
-        $groupName = ConfigApi::getGroupName($group);
         if (request()->method() === 'PUT') {
             $post = request()->post();
             // 保存配置
-            ConfigApi::set($group,$post);
+            ConfigApi::make($group)->set($post);
             // 返回数据
             return $this->success('保存成功');
         }
         // 获取配置数据
-        $formData = ConfigApi::get("{$group}.*", []);
+        $formData = ConfigApi::make($group)->get();
         // 获取普通表单视图
         $builder = ConfigView::formView($group, 'config');
         $builder->useForm()->wrapWithPanel(false);

@@ -56,8 +56,9 @@ trait ActionButtonLayout
      */
     public function addRightActionDialog(string $title, string $url, callable|array $option = [])
     {
-        $url = $this->getRightActionAPI($url, 'get', ['_dialog' => 1]);
+        $url = $this->getRightActionAPI($url, 'get');
         $component = $this->createButtonDialog($title, $url, $option);
+        $component->level('link');
         $this->actionButtons[] = $component;
         return $component;
     }
@@ -74,6 +75,7 @@ trait ActionButtonLayout
     {
         $url = $this->getRightActionAPI($url);
         $component = $this->createButtonDownload($title, $url);
+        $component->level('link');
         $this->actionButtons[] = $component;
         return $component;
     }
@@ -89,8 +91,9 @@ trait ActionButtonLayout
      */
     public function addRightActionDrawer(string $title, string $url, callable|array $option = [])
     {
-        $url = $this->getRightActionAPI($url, 'get', ['_dialog' => 1]);
+        $url = $this->getRightActionAPI($url, 'get');
         $component = $this->createButtonDrawer($title, $url, $option);
+        $component->level('link');
         $this->actionButtons[] = $component;
         return $component;
     }
@@ -107,8 +110,10 @@ trait ActionButtonLayout
      */
     public function addRightActionConfirm(string $title, string $url, string $content = '是否确认操作该数据？', string $cTitle = '温馨提示')
     {
-        $url = $this->getRightActionAPI($url, 'get', ['_dialog' => 1]);
+        $url = $this->getRightActionAPI($url, 'get');
         $component = $this->createButtonConfirm($title, $url, $content, $cTitle);
+        $component->level('link');
+        $component->className('text-danger');
         $this->actionButtons[] = $component;
         return $component;
     }
@@ -125,6 +130,7 @@ trait ActionButtonLayout
     {
         $url = $this->getRightActionAPI($url, '');
         $component = $this->createButtonLink($title, $url);
+        $component->level('link');
         $this->actionButtons[] = $component;
         return $component;
     }
@@ -142,6 +148,7 @@ trait ActionButtonLayout
     {
         $url = $this->getRightActionAPI($url, '');
         $component = $this->createButtonUrl($title, $url, $target);
+        $component->level('link');
         $this->actionButtons[] = $component;
         return $component;
     }
@@ -163,6 +170,13 @@ trait ActionButtonLayout
         $query = $urls['query'] ?? '';
         if (empty($path)) {
             throw new \Exception('请设置正确的右侧操作API地址');
+        }
+        // 检测是否存在方法
+        if (str_contains($path, ':')) {
+            $temp = explode(':', $path);
+            $method = isset($temp[0]) ? basename(strtoupper($temp[0])) : '';
+            // 重置URL
+            $path = str_replace("{$method}:", '', $path);
         }
         parse_str($query, $params);
         // 获取主键

@@ -43,43 +43,8 @@ class SettingController extends XbController
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public function copyright(Request $request)
+    public function webicp(Request $request)
     {
         return $this->normalConfig();
-    }
-
-    public function test()
-    {
-        // 查询全部配置
-        // $config = ConfigApi::get();
-        // 分组查询
-        // $data = ConfigApi::get('system');
-        // 配置文件查询
-        // $data = ConfigApi::get('xbCode/system');
-        // 获取某条配置
-        // $data = ConfigApi::get('system.web_name');
-        // 获取多条配置项(不做任何处理)
-        // $data = ConfigApi::get('system.web_name,system.web_url');
-        // 获取多条配置项(处理层级解析)
-        // $data = ConfigApi::get('system.web_name,system.web_url');
-        // 获取多层级配置
-        // $data = ConfigApi::get('system.web_name');
-        // 获取分组旗下配置
-        // $data = ConfigApi::get('upload.local.*', []);
-        // 解析配置多层级
-        // $data = ConfigChecked::getConfigValue($data);
-        // p($data);
-
-        // 配置项数据
-        // $post = [
-        //     'web_name' => '测试网站',
-        //     'web_url' => 'https://www.example.com',
-        //     'web_logo' => 'uploads/logo.png',
-        //     'web_icp' => '黔ICP备12345678号-1',
-        // ];
-        // 以分组名保存配置项
-        // ConfigApi::set('system', $post);
-        // 以配置文件路径保存配置项
-        // ConfigApi::set('xbCode/system', $post);
     }
 }

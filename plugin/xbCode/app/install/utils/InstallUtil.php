@@ -24,7 +24,7 @@ use plugin\xbCode\utils\trait\JsonTrait;
 
 /**
  * 环境检测规则
- * @copyright 贵州小白基地网络科技有限公司
+ * @copyright 贵州积木云网络网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
 class InstallUtil
@@ -34,7 +34,7 @@ class InstallUtil
     /**
      * 系统插件
      * @var array
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     protected $systemPlugins = [
@@ -213,11 +213,11 @@ class InstallUtil
         // 写入配置文件
         file_put_contents($envPath, $envConfig);
         // 获取插件信息
-        $xbCode = PluginsApi::get('xbCode');
-        $xbUpload = PluginsApi::get('xbUpload');
+        $xbCode = PluginsApi::make()->get('xbCode');
+        $xbUpload = PluginsApi::make()->get('xbUpload');
         // 安装插件记录
-        PluginsApi::install($xbCode['name'], $xbCode, '20');
-        PluginsApi::install($xbUpload['name'], $xbUpload, '20');
+        PluginsApi::make()->install($xbCode['name'], $xbCode, '20');
+        PluginsApi::make()->install($xbUpload['name'], $xbUpload, '20');
         // 重启框架
         FrameUtil::delayReload(2);
         // 返回成功

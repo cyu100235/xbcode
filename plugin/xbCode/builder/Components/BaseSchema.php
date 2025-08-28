@@ -43,16 +43,16 @@ abstract class BaseSchema implements JsonSerializable
     /**
      * 渲染器类型
      * @var string
-     * @copyright 贵州猿创科技有限公司
-     * @author 楚羽幽 416716328@qq.com
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
      */
     public string $type;
 
     /**
      * 创建组件
      * @return BaseSchema
-     * @copyright 贵州猿创科技有限公司
-     * @author 楚羽幽 416716328@qq.com
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
      */
     public static function make(): static
     {
@@ -64,8 +64,8 @@ abstract class BaseSchema implements JsonSerializable
      * @param string $name
      * @param mixed $value
      * @return static
-     * @copyright 贵州猿创科技有限公司
-     * @author 楚羽幽 416716328@qq.com
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
      */
     public function setVariable(string $name, mixed $value)
     {
@@ -91,8 +91,8 @@ abstract class BaseSchema implements JsonSerializable
     /**
      * 获取组件属性
      * @param string $name
-     * @copyright 贵州猿创科技有限公司
-     * @author 楚羽幽 416716328@qq.com
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
      */
     public function getVariable(string $name)
     {
@@ -118,8 +118,8 @@ abstract class BaseSchema implements JsonSerializable
      * @param string $name
      * @param mixed $value
      * @return static
-     * @copyright 贵州猿创科技有限公司
-     * @author 楚羽幽 416716328@qq.com
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
      */
     public function __set(string $name, $value)
     {
@@ -130,8 +130,8 @@ abstract class BaseSchema implements JsonSerializable
     /**
      * 转换为多层级数组
      * @param array $data
-     * @copyright 贵州猿创科技有限公司
-     * @author 楚羽幽 416716328@qq.com
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
      */
     protected function arrayToNested(array $data)
     {
@@ -146,8 +146,8 @@ abstract class BaseSchema implements JsonSerializable
      * 获取组件属性
      * @param mixed $name
      * @return void
-     * @copyright 贵州猿创科技有限公司
-     * @author 楚羽幽 416716328@qq.com
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
      */
     public function __get($name)
     {
@@ -160,8 +160,8 @@ abstract class BaseSchema implements JsonSerializable
      * @param mixed $arguments
      * @throws \InvalidArgumentException
      * @return static
-     * @copyright 贵州猿创科技有限公司
-     * @author 楚羽幽 416716328@qq.com
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
      */
     public function __call($name, $arguments)
     {
@@ -181,8 +181,8 @@ abstract class BaseSchema implements JsonSerializable
     /**
      * 组件序列化
      * @return array
-     * @copyright 贵州猿创科技有限公司
-     * @author 楚羽幽 416716328@qq.com
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
      */
     public function jsonSerialize(): array
     {

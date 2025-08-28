@@ -6,7 +6,7 @@ use plugin\xbCode\app\model\AdminRule;
 
 /**
  * 菜单数据接口
- * @copyright 贵州小白基地网络科技有限公司
+ * @copyright 贵州积木云网络网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
 class MenuData
@@ -15,7 +15,7 @@ class MenuData
      * 递归获取子菜单ID
      * @param int $id
      * @return array
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public static function getChildrenIds(int $id)
@@ -32,7 +32,7 @@ class MenuData
      * 验证菜单数据
      * @param array $data
      * @return void
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public static function validateMenus(array $data)

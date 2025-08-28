@@ -12,11 +12,12 @@
 namespace plugin\xbCode\builder\Renders\crud\column;
 
 use plugin\xbCode\builder\Components\Form\InputNumber;
+use plugin\xbCode\builder\Components\Table\TableColumn;
 
 /**
  * 数字输入列
- * @copyright 贵州猿创科技有限公司
- * @author 楚羽幽 416716328@qq.com
+ * @copyright 贵州积木云网络科技有限公司
+ * @author 楚羽幽 958416459@qq.com
  */
 trait NumberColumn
 {
@@ -25,13 +26,13 @@ trait NumberColumn
      * @param string $name
      * @param string $label
      * @param callable|array $option
-     * @return InputNumber
+     * @return TableColumn|InputNumber
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public function addColumnNumber(string $name, string $label, callable|array $option = [])
     {
-        /** @var InputNumber */
+        /** @var TableColumn|InputNumber */
         $component = $this->useCustomColumn(InputNumber::class, $name, $label, $option);
         return $component;
     }

@@ -11,24 +11,33 @@
  */
 namespace plugin\xbCode\api;
 
+use Cache;
 use Exception;
 use support\Log;
 use plugin\xbCode\app\model\Plugins;
 
 /**
  * 插件接口类
- * @copyright 贵州小白基地网络科技有限公司
+ * @copyright 贵州积木云网络网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
 class PluginsApi
 {
+    /**
+     * 插件列表缓存键名
+     * @var string
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected $keyName = 'xb_plugins_list';
+
     /**
      * 系统插件-禁止操作
      * @var array
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    protected static $systemPlugins = [
+    protected $systemPlugins = [
         'xbCode',
         'xbUpload',
     ];
@@ -39,7 +48,7 @@ class PluginsApi
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    private static $bgColor = [
+    private $bgColor = [
         '#7B64FF',
         '#F44E3B',
         '#FB9E00',
@@ -48,17 +57,28 @@ class PluginsApi
     ];
 
     /**
+     * 实例化
+     * @return static
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public static function make()
+    {
+        return new static;
+    }
+
+    /**
      * 获取本地插件列表
      * @param string $installed 10未安装，20已安装，不传则获取全部
      * @return array
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public static function list(string $installed = '')
+    public function list(string $installed = '')
     {
         // 为NULL则获取全部
         $installed = in_array($installed, ['10', '20']) ? $installed : null;
-        $data = static::localPlugins();
+        $data = $this->localPlugins();
         foreach ($data as $key => $value) {
             // 初始排序
             $value['sort'] = 0;
@@ -75,9 +95,9 @@ class PluginsApi
                 $value['sort'] = 2;
             }
             // 是否系统插件
-            $value['is_system'] = in_array($value['name'], static::$systemPlugins) ? '20' : '10';
+            $value['is_system'] = in_array($value['name'], $this->systemPlugins) ? '20' : '10';
             // 是否有配置项
-            $value['has_config'] = empty(static::config($value['name'])) ? '10' : '20';
+            $value['has_config'] = empty($this->config($value['name'])) ? '10' : '20';
             // 重设数据
             $data[$key] = $value;
         }
@@ -108,7 +128,7 @@ class PluginsApi
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public static function config(string $name, string $file = 'panel')
+    public function config(string $name, string $file = 'panel')
     {
         $path = base_path() . "/plugin/{$name}/api/Install.php";
         if (!file_exists($path)) {
@@ -132,7 +152,7 @@ class PluginsApi
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public static function localPlugins()
+    public function localPlugins()
     {
         $dir = base_path() . '/plugin/xb*/plugins.json';
         $files = glob($dir);
@@ -141,7 +161,7 @@ class PluginsApi
             // 获取插件标识
             $name = basename(dirname($item));
             // 插件信息
-            $plugin = static::get($name);
+            $plugin = $this->get($name);
             if (empty($plugin)) {
                 continue;
             }
@@ -157,11 +177,47 @@ class PluginsApi
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public static function pluginNames()
+    public function pluginNames()
     {
-        $plugins = static::localPlugins();
+        $plugins = $this->localPlugins();
         $data = array_column($plugins, 'name');
         return $data;
+    }
+
+    /**
+     * 获取已安装插件名称列表
+     * @return array
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function installedNames()
+    {
+        $plugins = $this->list('20');
+        if (empty($plugins)) {
+            return [];
+        }
+        $plugins = array_column($plugins, 'name');
+        return $plugins;
+    }
+
+    /**
+     * 获取已启用插件名称列表
+     * @return array|bool
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function enabledNames()
+    {
+        $list = $this->list('20');
+        if (empty($list)) {
+            return false;
+        }
+        $enabled = array_filter($list, function ($plugin) {
+            return $plugin['state'] === '20';
+        });
+        $enabled = array_values($enabled);
+        $enabled = array_column($enabled, 'name');
+        return $enabled;
     }
 
     /**
@@ -171,7 +227,7 @@ class PluginsApi
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public static function previewUrl(string $name)
+    public function previewUrl(string $name)
     {
         return Url::make('preview.svg')->plugin($name)->module('')->domain()->get();
     }
@@ -183,7 +239,7 @@ class PluginsApi
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public static function exists(mixed $name)
+    public function exists(mixed $name)
     {
         $class = "\\plugin\\{$name}\\api\\Install";
         if (!class_exists($class)) {
@@ -199,10 +255,13 @@ class PluginsApi
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public static function installed(string $name)
+    public function installed(string $name)
     {
-        $model = Plugins::where('name', $name)->find();
-        if (!$model) {
+        $list = $this->installedNames();
+        if (empty($list)) {
+            return false;
+        }
+        if (!in_array($name, $list)) {
             return false;
         }
         return true;
@@ -215,10 +274,13 @@ class PluginsApi
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public static function hasEnabled(string $name)
+    public function hasEnabled(string $name)
     {
-        $model = Plugins::where('name', $name)->where('state', '20')->count();
-        if (!$model) {
+        $list = $this->enabledNames();
+        if (empty($list)) {
+            return false;
+        }
+        if (!in_array($name, $list)) {
             return false;
         }
         return true;
@@ -229,28 +291,33 @@ class PluginsApi
      * @param mixed $name
      * @throws \Exception
      * @return void
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
-    public static function installedThrow(mixed $name)
+    public function installedThrow(mixed $name)
     {
-        if (!static::installed($name)) {
+        if (!$this->installed($name)) {
             throw new Exception("该插件 {$name} 未安装");
         }
     }
 
     /**
      * 获取插件信息
-     * @param string $name
+     * @param string $name 插件标识
+     * @param bool $fullPath 是否获取完整地址
      * @throws \Exception
      * @return array
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public static function get(string $name)
+    public function get(string $name, bool $fullPath = false)
     {
         try {
-            $plugin = static::getPluginThrow($name);
+            $plugin = $this->getPluginThrow($name);
+            if (!$fullPath) {
+                unset($plugin['preview_path']);
+                unset($plugin['plugin_path']);
+            }
         } catch (\Throwable $th) {
             if (DebugApi::status()) {
                 Log::info($th->getMessage());
@@ -265,10 +332,10 @@ class PluginsApi
      * 获取插件信息并抛出异常
      * @param string $name
      * @throws Exception
-     * @copyright 贵州猿创科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public static function getPluginThrow(string $name)
+    public function getPluginThrow(string $name)
     {
         $filePath = base_path() . "/plugin/{$name}/plugins.json";
         if (!file_exists($filePath)) {
@@ -314,12 +381,11 @@ class PluginsApi
         $previewPath = $pluginPath . '/preview.svg';
         if (!file_exists($previewPath)) {
             // 创建预览图
-            static::createPreview($plugin);
+            $this->createPreview($plugin);
         }
-        $plugin['preview'] = xbUrl("app/{$plugin['name']}/preview.svg", [], [
-            'domain' => true,
-            'module' => false,
-        ]);
+        $plugin['preview'] = "/app/{$plugin['name']}/preview.svg";
+        $plugin['preview_path'] = $previewPath;
+        $plugin['plugin_path'] = $pluginPath;
         // 返回数据
         return $plugin;
     }
@@ -332,7 +398,7 @@ class PluginsApi
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public static function createPreview(array $plugin)
+    public function createPreview(array $plugin)
     {
         $targetPath = base_path() . "/plugin/{$plugin['name']}/preview.svg";
         if (file_exists($targetPath)) {
@@ -349,7 +415,7 @@ class PluginsApi
         if (empty($previewContent)) {
             return false;
         }
-        $bgColor = static::getRandBgColor();
+        $bgColor = $this->getRandBgColor();
         $str1 = [
             '积木云',
             '#FE9200',
@@ -368,9 +434,9 @@ class PluginsApi
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    private static function getRandBgColor()
+    private function getRandBgColor()
     {
-        return static::$bgColor[array_rand(static::$bgColor)];
+        return $this->bgColor[array_rand($this->bgColor)];
     }
 
     /**
@@ -382,7 +448,7 @@ class PluginsApi
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public static function state(string $name, string $value)
+    public function state(string $name, string $value)
     {
         $model = Plugins::where('name', $name)->find();
         if (!$model) {
@@ -403,7 +469,7 @@ class PluginsApi
      * @throws \Exception
      * @return bool
      */
-    public static function install(string $name, array $data, string $state = '10')
+    public function install(string $name, array $data, string $state = '10')
     {
         $model = Plugins::where('name', $name)->find();
         if (!$model) {
@@ -428,10 +494,10 @@ class PluginsApi
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public static function getAllPluginDepend()
+    public function getAllPluginDepend()
     {
         // 获取已安装插件
-        $data = static::list('20');
+        $data = $this->list('20');
         $depends = [];
         foreach ($data as $value) {
             $depend = $value['plugins'] ?? [];
@@ -450,9 +516,9 @@ class PluginsApi
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public static function hasPluginDepend(string $name)
+    public function hasPluginDepend(string $name)
     {
-        $depends = static::getAllPluginDepend();
+        $depends = $this->getAllPluginDepend();
         foreach ($depends as $value) {
             if (in_array($name, $value)) {
                 return true;
@@ -469,12 +535,12 @@ class PluginsApi
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public static function hasPluginDependThrow(string $name)
+    public function hasPluginDependThrow(string $name)
     {
-        $depends = static::getAllPluginDepend();
+        $depends = $this->getAllPluginDepend();
         foreach ($depends as $key => $value) {
             if (in_array($name, $value)) {
-                $plugin = static::get($key);
+                $plugin = $this->get($key);
                 throw new Exception("请先卸载插件：{$plugin['title']}（{$key}）");
             }
         }

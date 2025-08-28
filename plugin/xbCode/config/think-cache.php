@@ -1,7 +1,7 @@
 <?php
 return [
     // 默认缓存驱动
-    'default' => getenv('CACHE_TYPE') ?: 'file',
+    'default' => env('CACHE_TYPE', 'file'),
     // 缓存连接方式配置
     'stores'  => [
         // redis缓存
@@ -9,13 +9,13 @@ return [
             // 驱动方式
             'type' => 'redis',
             // 服务器地址
-            'host' => getenv('REDIS_HOST') ?: '127.0.0.1',
+            'host' => env('REDIS_HOST', '127.0.0.1'),
             // 缓存前缀
-            'prefix' => getenv('REDIS_PREFIX') ?: 'jm_',
+            'prefix' => env('REDIS_PREFIX', 'xb_'),
             // 端口
-            'port' => getenv('REDIS_PORT') ?: 6379,
+            'port' => env('REDIS_PORT', 6379),
             // 密码
-            'password' => getenv('REDIS_PASSWORD') ?: '',
+            'password' => env('REDIS_PASSWORD', ''),
             // 默认缓存有效期 0表示永久缓存
             'expire'     => 0,
             // Thinkphp官方没有这个参数，由于生成的tag键默认不过期，如果tag键数量很大，避免长时间占用内存，可以设置一个超过其他缓存的过期时间，0为不设置

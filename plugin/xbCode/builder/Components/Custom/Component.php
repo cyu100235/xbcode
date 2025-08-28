@@ -35,8 +35,8 @@ class Component extends BaseSchema
      * @param array $option 属性设置
      * @param string $type 组件类型
      * @return static
-     * @copyright 贵州猿创科技有限公司
-     * @author 楚羽幽 416716328@qq.com
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
      */
     public function url(string $url, array $vars = [], array $option = [], string $type = 'xbRemote')
     {
@@ -54,8 +54,8 @@ class Component extends BaseSchema
      * @param array $option 属性设置
      * @param string $type 组件类型
      * @return static
-     * @copyright 贵州猿创科技有限公司
-     * @author 楚羽幽 416716328@qq.com
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
      */
     public function body(string $component, array $vars = [], array $option = [], string $type = 'xbRender')
     {

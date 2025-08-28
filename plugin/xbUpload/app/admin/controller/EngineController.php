@@ -25,7 +25,7 @@ use plugin\xbCode\builder\Renders\TableCrud;
 
 /**
  * 引擎管理
- * @copyright 贵州小白基地网络科技有限公司
+ * @copyright 贵州积木云网络网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
 class EngineController extends XbController
@@ -34,7 +34,7 @@ class EngineController extends XbController
      * 引擎列表
      * @param \support\Request $request
      * @return \support\Response
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public function index(Request $request)
@@ -70,9 +70,7 @@ class EngineController extends XbController
             // 添加表格列
             $builder->addColumn('title', '储存方式');
             $builder->addColumn('desc', '储存介绍');
-            $builder->addColumnSwitch('state', '默认使用', [
-                'trueValue' => '20',
-            ]);
+            $builder->addColumnSwitch('state', '默认使用', UseStateEnum::switch());
         });
         return $this->successRes($builder);
     }
@@ -92,12 +90,12 @@ class EngineController extends XbController
             return $this->fail('云储存引擎不存在');
         }
         // 获取当前选中
-        $active = ConfigApi::get('upload.active', '');
+        $active = ConfigApi::make('upload')->get('active', '');
         if ($active === $name) {
             return $this->fail('不可取消，请直接启用其他引擎');
         }
         // 保存选中配置
-        ConfigApi::set('upload', [
+        ConfigApi::make('upload')->set([
             'active' => $name,
         ]);
         // 返回数据
@@ -108,7 +106,7 @@ class EngineController extends XbController
      * 配置引擎
      * @param \support\Request $request
      * @return \support\Response
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public function config(Request $request)
@@ -139,7 +137,7 @@ class EngineController extends XbController
             }
             // 设置默认引擎
             if ($state === '20') {
-                ConfigApi::set($path, [
+                ConfigApi::make($path)->set([
                     "active" => $name,
                 ]);
             }
@@ -147,16 +145,16 @@ class EngineController extends XbController
                 $post["{$name}.{$key}"] = $value;
             }
             // 保存配置
-            ConfigApi::set($path, $post);
+            ConfigApi::make($path)->set($post);
             // 返回数据
             return $this->success('保存配置成功');
         }
         // 转换数据为数组
         $data = $model->toArray();
         // 获取当前使用
-        $active = ConfigApi::get("{$fileName}.active", '');
+        $active = ConfigApi::make($fileName)->get('active', '');
         // 获取配置数据
-        $config = ConfigApi::get("{$path}.{$name}.*", []);
+        $config = ConfigApi::make($path)->get($name, []);
         // 替换键名
         $config = ConfigChecked::replaceKeys("{$name}.", $config);
         $builder = Builder::form(function (Form $builder) use ($template, $data, $active, $config) {

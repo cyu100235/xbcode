@@ -5,7 +5,7 @@ use Exception;
 
 /**
  * 输出日志接口
- * @copyright 贵州小白基地网络科技有限公司
+ * @copyright 贵州积木云网络网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
 class LogApi
@@ -43,7 +43,7 @@ class LogApi
      * @param string $message 输出消息
      * @param string $type 类型
      * @return void
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     private static function console(string $message, string $type = 'INFO')
@@ -67,7 +67,7 @@ class LogApi
      * @param string $title
      * @param string $content
      * @return void
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     private static function addLog(string $title,string $content)

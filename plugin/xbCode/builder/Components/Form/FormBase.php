@@ -38,7 +38,7 @@ use plugin\xbCode\builder\Components\BaseSchema;
  * @method $this inline(string $value) 设置是否内联布局
  * @method $this inputClassName(string $value) 设置输入框 CSS 类名
  * @method $this placeholder(string $value) 设置占位符
- * @method $this required(string $value) 设置是否必填
+ * @method $this required(bool $value) 设置是否必填
  * @method $this requiredOn(string $value) 设置必填条件
  * @method $this validationErrors(string $value) 设置验证错误信息
  * @method $this validations(string $value) 设置验证规则

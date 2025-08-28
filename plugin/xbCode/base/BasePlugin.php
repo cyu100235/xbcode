@@ -20,7 +20,7 @@ use plugin\xbCode\base\plugin\UnInstallTrait;
 
 /**
  * 插件基类
- * @copyright 贵州小白基地网络科技有限公司
+ * @copyright 贵州积木云网络网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
 abstract class BasePlugin
@@ -52,7 +52,7 @@ abstract class BasePlugin
      * 安装前置
      * @param string $version 版本名称
      * @return void
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public static function installBefore(string $version)
@@ -82,7 +82,7 @@ abstract class BasePlugin
      * @param string $version 版本名称
      * @param mixed $context 从<安装之前>返回的上下文
      * @return array
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public static function install(string $version, mixed $context = null)
@@ -111,7 +111,7 @@ abstract class BasePlugin
      * @param string $version 版本名称
      * @param mixed $context 从<安装>返回的上下文
      * @return void
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public static function installAfter(string $version, mixed $context = null)
@@ -123,7 +123,7 @@ abstract class BasePlugin
      * 更新前置
      * @param string $version 版本名称
      * @return array
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public static function updateBefore(string $version)
@@ -137,7 +137,7 @@ abstract class BasePlugin
      * @param string $version 版本名称
      * @param mixed $context 从<安装>返回的上下文
      * @return array
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     abstract public static function update(string $version, mixed $context = null);
@@ -147,7 +147,7 @@ abstract class BasePlugin
      * @param string $version 版本名称
      * @param mixed $context 从<安装>返回的上下文
      * @return void
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public static function updateAfter(string $version, mixed $context = null)
@@ -158,7 +158,7 @@ abstract class BasePlugin
      * 卸载前置
      * @param string $version 版本名称
      * @return array
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public static function uninstallBefore(string $version): array
@@ -166,7 +166,7 @@ abstract class BasePlugin
         // 获取当前插件名称
         $name = static::getCallPluginName();
         // 检查是否有依赖插件
-        PluginsApi::hasPluginDependThrow($name);
+        PluginsApi::make()->hasPluginDependThrow($name);
         // 返回数据给卸载
         return [];
     }
@@ -176,7 +176,7 @@ abstract class BasePlugin
      * @param string $version 版本名称
      * @param mixed $context 从<卸载之前>返回的上下文
      * @return array
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public static function uninstall(string $version, mixed $context = null)
@@ -200,7 +200,7 @@ abstract class BasePlugin
      * @param string $version 版本名称
      * @param mixed $context 从<卸载>返回的上下文
      * @return void
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public static function uninstallAfter(string $version, mixed $context = null)

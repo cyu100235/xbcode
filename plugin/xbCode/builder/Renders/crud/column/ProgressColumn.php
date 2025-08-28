@@ -12,6 +12,7 @@
 namespace plugin\xbCode\builder\Renders\crud\column;
 
 use plugin\xbCode\builder\Components\Progress;
+use plugin\xbCode\builder\Components\Table\TableColumn;
 
 /**
  * 进度条列
@@ -25,13 +26,13 @@ trait ProgressColumn
      * @param string $name
      * @param string $label
      * @param callable|array $option
-     * @return Progress
+     * @return TableColumn|Progress
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public function addColumnProgress(string $name, string $label, callable|array $option= [])
     {
-        /** @var Progress */
+        /** @var TableColumn|Progress */
         $component = $this->useCustomColumn(Progress::class, $name, $label, $option);
         return $component;
     }

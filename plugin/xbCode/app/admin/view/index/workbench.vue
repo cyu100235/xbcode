@@ -130,7 +130,7 @@ export default {
                 {
                     title: '网站配置',
                     icon: '/app/xbCode/static/image/workbench/web.png',
-                    path: '/app/xbCode/admin/Setting/config/xbCode/system',
+                    path: '/app/xbCode/admin/Setting/system',
                 },
                 {
                     title: '上传设置',
@@ -350,14 +350,14 @@ export default {
         // 跳转页面
         hanldUrl(url) {
             // 检测是否链接
-            if (url.includes('http') || url.includes('https')) {
+            if (url.includes('http://') || url.includes('https://')) {
                 window.open(url)
                 return
             }
             this.$router.push({
                 path: url,
                 query: {
-                    redirect: this.$route.fullPath
+                    _redirect: this.$route.fullPath
                 },
             })
         },

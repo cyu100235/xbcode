@@ -6,8 +6,8 @@ use \ZipArchive;
 
 /**
  * 原生PHP-ZipArchive打包管理器
- * @author 贵州小白基地网络科技有限公司
- * @copyright (c) 贵州小白基地网络科技有限公司
+ * @author 贵州积木云网络网络科技有限公司
+ * @copyright (c) 贵州积木云网络网络科技有限公司
  */
 class PhpZipArchiveUtil implements ZipInterface
 {
@@ -19,8 +19,8 @@ class PhpZipArchiveUtil implements ZipInterface
 
     /**
      * 构造函数
-     * @author 贵州小白基地网络科技有限公司
-     * @copyright 贵州小白基地网络科技有限公司
+     * @author 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      */
     public function __construct()
     {
@@ -36,8 +36,8 @@ class PhpZipArchiveUtil implements ZipInterface
      * @param string $extractTo 打包目标路径
      * @param array $ignoreFiles 需要忽略的绝对目录路径或者文件（可选）
      * @return void
-     * @author 贵州小白基地网络科技有限公司
-     * @copyright 贵州小白基地网络科技有限公司
+     * @author 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      */
     public function build(string $zipFilePath, string $extractTo, array $ignoreFiles = [])
     {
@@ -61,8 +61,8 @@ class PhpZipArchiveUtil implements ZipInterface
      * @param string $zipFilePath
      * @param array $files
      * @return void
-     * @author 贵州小白基地网络科技有限公司
-     * @copyright 贵州小白基地网络科技有限公司
+     * @author 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      */
     public function buildFiles(string $zipFilePath, string $extractTo, array $files)
     {
@@ -95,8 +95,8 @@ class PhpZipArchiveUtil implements ZipInterface
      * @param string $zipPath
      * @param array $ignoreFiles
      * @return void
-     * @author 贵州小白基地网络科技有限公司
-     * @copyright 贵州小白基地网络科技有限公司
+     * @author 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      */
     private function addFileToZip(ZipArchive $zip, string $extractTo, string $zipPath = '/', array $ignoreFiles = [], $local_parent_path = null)
     {
@@ -128,8 +128,8 @@ class PhpZipArchiveUtil implements ZipInterface
      * @param string $zipFilePath 压缩包路径
      * @param string $tarGetPath 解压至目标路径
      * @return void
-     * @author 贵州小白基地网络科技有限公司
-     * @copyright 贵州小白基地网络科技有限公司
+     * @author 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      */
     public function unzip(string $zipFilePath, string $tarGetPath)
     {

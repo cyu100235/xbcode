@@ -12,11 +12,12 @@
 namespace plugin\xbCode\builder\Renders\crud\column;
 
 use plugin\xbCode\builder\Components\Json;
+use plugin\xbCode\builder\Components\Table\TableColumn;
 
 /**
  * JSON列
- * @copyright 贵州猿创科技有限公司
- * @author 楚羽幽 416716328@qq.com
+ * @copyright 贵州积木云网络科技有限公司
+ * @author 楚羽幽 958416459@qq.com
  */
 trait JsonColumn
 {
@@ -25,13 +26,13 @@ trait JsonColumn
      * @param string $name
      * @param string $label
      * @param callable|array $option
-     * @return Json
+     * @return TableColumn|Json
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public function addColumnJson(string $name, string $label, callable|array $option = [])
     {
-        /** @var Json */
+        /** @var TableColumn|Json */
         $component = $this->useCustomColumn(Json::class, $name, $label, $option);
         return $component;
     }

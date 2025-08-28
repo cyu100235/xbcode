@@ -3,7 +3,7 @@ namespace plugin\xbCode\app\install\utils;
 
 /**
  * 环境检测规则
- * @copyright 贵州小白基地网络科技有限公司
+ * @copyright 贵州积木云网络网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
 class EnvironmentUtil
@@ -11,7 +11,7 @@ class EnvironmentUtil
     /**
      * 获取目录权限
      * @return mixed
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     private static function getDirData()
@@ -42,7 +42,7 @@ class EnvironmentUtil
     /**
      * 获取需要验证的开启函数
      * @return mixed
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     private static function getVerifyFun()
@@ -59,7 +59,7 @@ class EnvironmentUtil
     /**
      * 获取需要验证的扩展
      * @return mixed
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     private static function getVerifyExtra()
@@ -98,7 +98,7 @@ class EnvironmentUtil
     /**
      * 获取环境检测数据
      * @return array
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     private static function getEnvironment()
@@ -149,7 +149,7 @@ class EnvironmentUtil
     /**
      * 获取环境检测数据
      * @return array
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public static function get()

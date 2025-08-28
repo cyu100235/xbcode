@@ -160,7 +160,7 @@ trait InstallTrait
                 $field = "{$group}.{$value['field']}";
                 $data[$field] = $value['value'];
             }
-            ConfigApi::set($group,$data);
+            ConfigApi::make($group)->set($data);
         }
     }
 }

@@ -30,7 +30,7 @@ use plugin\xbCode\builder\Components\Form\InputKV;
 
 /**
  * 菜单管理
- * @copyright 贵州小白基地网络科技有限公司
+ * @copyright 贵州积木云网络网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
 class AdminRuleController extends XbController
@@ -39,7 +39,7 @@ class AdminRuleController extends XbController
      * 表格
      * @param \support\Request $request
      * @return \support\Response
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public function index(Request $request)
@@ -64,18 +64,18 @@ class AdminRuleController extends XbController
             $builder->addHeaderDialog('添加菜单', xbUrl('AdminRule/add'), [
                 'title' => '添加菜单',
                 'size' => 'lg',
-            ])->level('primary');
+            ])
+            ->level('primary');
             $builder->addRightActionDialog('修改', xbUrl('AdminRule/edit'), [
                 'title' => '修改菜单',
                 'size' => 'lg',
             ])
                 ->disabledTip('系统菜单，禁止修改')
-                ->disabledOn('this.is_system == 20')
-                ->level('primary');
+                ->disabledOn('this.is_system == 20');
             $builder->addRightActionConfirm('删除', xbUrl('AdminRule/del'))
                 ->disabledTip('系统菜单，禁止删除')
                 ->disabledOn('this.is_system == 20')
-                ->level('danger');
+                ->style(['color' => 'red']);
 
             // 设置表格列快速编辑
             $builder->useCRUD()->quickSaveItemApi(xbUrl('AdminRule/rowEdit'));
@@ -84,14 +84,11 @@ class AdminRuleController extends XbController
             $builder->addColumn('title', '菜单名称');
             $builder->addColumn('plugin', '插件标识');
             $builder->addColumn('path', '路由地址');
-            $builder->addColumnMap('type', '菜单类型', MenuTypeEnum::dict());
+            $builder->addColumnMap('type', '菜单类型', MenuTypeEnum::dict())->width(80);
             $builder->addColumn('method', '请求类型');
             $builder->addColumnIcon('icon', '菜单图标');
-            $builder->addColumnMap('state', '是否启用', StateEnum::dict([
-                '10' => "<span class='label label-danger'>{value}</span>",
-                '20' => "<span class='label label-success'>{value}</span>",
-            ]));
-            $builder->addColumnMap('is_show', '是否显示', ShowEnum::dict());
+            $builder->addColumnMap('state', '是否启用', StateEnum::dict())->width(80);
+            $builder->addColumnMap('is_show', '是否显示', ShowEnum::dict())->width(80);
             $builder->addColumnInput('sort', '菜单排序')->width(100);
         });
         return $this->successRes($builder);
@@ -123,7 +120,7 @@ class AdminRuleController extends XbController
      * 添加
      * @param \support\Request $request
      * @return \support\Response
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public function add(Request $request)
@@ -159,7 +156,7 @@ class AdminRuleController extends XbController
      * 修改
      * @param \support\Request $request
      * @return \support\Response
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public function edit(Request $request)
@@ -209,7 +206,7 @@ class AdminRuleController extends XbController
      * 删除
      * @param \support\Request $request
      * @return \support\Response
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public function del(Request $request)
@@ -265,7 +262,7 @@ class AdminRuleController extends XbController
     /**
      * 获取多级选项
      * @return array<int|string>[]
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     protected static function getCascaderOptions()

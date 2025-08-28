@@ -12,6 +12,7 @@
 namespace plugin\xbCode\builder\Renders\form\rows;
 
 use plugin\xbCode\builder\Components\Form\InputCity;
+use plugin\xbCode\builder\Components\Form\NestedSelect;
 
 /**
  * 城市表单项
@@ -26,15 +27,15 @@ trait CityRow
      * @param string $title
      * @param mixed $value
      * @param callable|array $option
-     * @return InputCity
+     * @return NestedSelect
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public function addRowCity(string $field, string $title, mixed $value = '', callable|array $option = [])
     {
-        /** @var InputCity */
-        $component = $this->addRow(InputCity::class, $field, $title, $value, $option);
-        $component->itemClassName('min-w-xs');
+        /** @var NestedSelect */
+        $component = $this->addRow(NestedSelect::class, $field, $title, $value, $option);
+        $component->onlyLeaf(true);
         return $component;
     }
 }

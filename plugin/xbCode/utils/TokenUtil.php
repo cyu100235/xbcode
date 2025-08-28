@@ -6,7 +6,7 @@ use Tinywan\Jwt\JwtToken;
 
 /**
  * 令牌工具类
- * @copyright 贵州小白基地网络科技有限公司
+ * @copyright 贵州积木云网络网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
 class TokenUtil
@@ -17,7 +17,7 @@ class TokenUtil
      * @param int $expire 过期时间
      * @param string $client 客户端类型
      * @return array
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public static function create(array $data, int $expire = 86400, string $client = 'web')
@@ -28,15 +28,8 @@ class TokenUtil
         if (!isset($data['state'])) {
             throw new Exception('参数错误，缺少状态');
         }
-        // 构建数据
-        $data  = array_merge($data, [
-            // 唯一ID
-            'id' => $data['id'],
-            // 状态
-            'state' => $data['state'],
-            // 过期时间
-            'access_exp' => $expire,
-        ], $data);
+        // 追加数据
+        $data['expire_time'] = $expire;
         // 转小写
         $client = strtolower($client);
         if ($client === 'mobile') {
@@ -53,7 +46,7 @@ class TokenUtil
     /**
      * 刷新token
      * @return array
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public static function refreshToken()

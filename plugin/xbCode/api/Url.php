@@ -51,12 +51,28 @@ class Url implements JsonSerializable
     protected string $domain = '';
 
     /**
-     * 是否生成模块地址
+     * 模块名称
      * @var string
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     protected string $module = '';
+
+    /**
+     * 控制器名称
+     * @var string
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected string $controller = 'Index';
+
+    /**
+     * 操作方法名称
+     * @var string
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected string $action = 'index';
 
     /**
      * 生成前缀斜杠
@@ -87,6 +103,8 @@ class Url implements JsonSerializable
         $class->path = $path;
         $class->plugin(request()->plugin ?: 'xbCode');
         $class->module(request()->app);
+        $class->controller();
+        $class->action();
         $class->slash();
         return $class;
     }
@@ -129,7 +147,7 @@ class Url implements JsonSerializable
         $this->schema = $schema;
         return $this;
     }
-    
+
     /**
      * 获取协议类型
      * @return string
@@ -169,7 +187,7 @@ class Url implements JsonSerializable
      */
     public function domain(string $domain = '')
     {
-        if(empty($this->schema)){
+        if (empty($this->schema)) {
             $this->schema();
         }
         $this->domain = $domain ?: request()->host();
@@ -178,14 +196,46 @@ class Url implements JsonSerializable
 
     /**
      * 设置模块名称
-     * @param string $module
+     * @param string $value
      * @return static
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public function module(string $module)
+    public function module(string $value)
     {
-        $this->module = $module;
+        $this->module = $value;
+        return $this;
+    }
+
+    /**
+     * 设置控制器
+     * @param string $value
+     * @return static
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function controller(string $value = null)
+    {
+        if (empty($value)) {
+            $controller = request()->controller;
+            $_suffix = config('plugin.xbCode.app.controller_suffix', 'Controller');
+            $value = basename(str_replace('\\', '/', $controller));
+            $value = str_replace($_suffix, '', $value);
+        }
+        $this->controller = $value;
+        return $this;
+    }
+
+    /**
+     * 设置操作方法
+     * @param string $value
+     * @return static
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function action(string $value = null)
+    {
+        $this->action = $value ?: request()->action;
         return $this;
     }
 
@@ -224,16 +274,35 @@ class Url implements JsonSerializable
     protected function create()
     {
         $path = trim($this->path, '/');
-        $url = "{SCHEMA}://{DOMAIN}{SLASH}app/{PLUGIN}/{MODULE}/{$path}";
-        // 替换插件名称
-        $url = $this->plugin ? str_replace('{PLUGIN}', $this->plugin, $url) : str_replace('{PLUGIN}/', '', $url);
-        // 替换模块名称
-        $url = $this->module ? str_replace('{MODULE}', $this->module, $url) : str_replace('{MODULE}/', '', $url);
+        $expl = explode('/', $path);
+        switch (count($expl)) {
+            case 1:
+                $this->action = $expl[0];
+                break;
+            case 2:
+                $this->controller = $expl[0];
+                $this->action = $expl[1];
+                break;
+            case 3:
+                $this->module = $expl[0];
+                $this->controller = $expl[1];
+                $this->action = $expl[2];
+                break;
+        }
+        $url = "{SCHEMA}://{DOMAIN}{SLASH}app/{PLUGIN}/{MODULE}/{CONTROLER}/{ACTION}";
         // 替换协议
         $url = $this->schema ? str_replace('{SCHEMA}', $this->schema, $url) : str_replace('{SCHEMA}://', '', $url);
         // 替换域名
         $url = $this->domain ? str_replace('{DOMAIN}', $this->domain, $url) : str_replace('{DOMAIN}', '', $url);
-        $url = $this->domain ? str_replace('{SLASH}', '/' , $url) : $url;
+        $url = $this->domain ? str_replace('{SLASH}', '/', $url) : $url;
+        // 替换插件名称
+        $url = $this->plugin ? str_replace('{PLUGIN}', $this->plugin, $url) : str_replace('{PLUGIN}/', '', $url);
+        // 替换模块名称
+        $url = $this->module ? str_replace('{MODULE}', $this->module, $url) : str_replace('{MODULE}/', '', $url);
+        // 替换控制器
+        $url = $this->controller ? str_replace('{CONTROLER}', $this->controller, $url) : str_replace('{CONTROLER}/', '', $url);
+        // 替换方法名
+        $url = $this->action ? str_replace('{ACTION}', $this->action, $url) : str_replace('{ACTION}', '', $url);
         // 处理前斜杠
         $url = $this->slash ? str_replace('{SLASH}', '/', $url) : str_replace('{SLASH}', '', $url);
         // 处理携带参数
@@ -266,14 +335,14 @@ class Url implements JsonSerializable
     {
         return $this->create();
     }
-    
+
     /**
      * 将对象序列化为字符串
      * @return string
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public function jsonSerialize():string
+    public function jsonSerialize(): string
     {
         return $this->create();
     }

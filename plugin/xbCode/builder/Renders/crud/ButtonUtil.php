@@ -11,6 +11,7 @@
  */
 namespace plugin\xbCode\builder\Renders\crud;
 
+use plugin\xbCode\builder\Components\Service;
 use plugin\xbCode\builder\Components\Action\UrlAction;
 use plugin\xbCode\builder\Components\Action\LinkAction;
 use plugin\xbCode\builder\Components\Action\AjaxAction;
@@ -20,7 +21,6 @@ use plugin\xbCode\builder\Components\Action\DialogAction;
 use plugin\xbCode\builder\Components\Action\DrawerAction;
 use plugin\xbCode\builder\Components\Action\ReloadAction;
 use plugin\xbCode\builder\Components\Action\DownloadAction;
-use plugin\xbCode\builder\Components\Service;
 
 /**
  * 行为按钮组件
@@ -29,18 +29,6 @@ use plugin\xbCode\builder\Components\Service;
  */
 trait ButtonUtil
 {
-    /**
-     * 创建请求行为按钮
-     * @return AjaxAction
-     * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 958416459@qq.com
-     */
-    protected function createButtonAjax()
-    {
-        $component = new AjaxAction;
-        return $component;
-    }
-
     /**
      * 创建确认行为按钮
      * @param string $title
@@ -53,7 +41,7 @@ trait ButtonUtil
      */
     protected function createButtonConfirm(string $title, string $url, string $content, string $cTitle)
     {
-        $component = $this->createButtonAjax();
+        $component = new AjaxAction;
         $component->label($title);
         $component->api($this->APIURL($url));
         $component->confirmTitle($cTitle);
@@ -73,15 +61,8 @@ trait ButtonUtil
     protected function createButtonDialog(string $title, string $url, callable|array $option = [])
     {
         $component = new DialogAction;
-        $component->level('primary');
         $component->label($title);
-        $dialog = [
-            'title' => $title,
-            'size' => 'md',
-            ...$option,
-            'body' => Service::make()->schemaApi($this->APIURL($url)),
-        ];
-        $component->dialog($dialog);
+        $component->dialogModel($url, $title, $option);
         return $component;
     }
 
@@ -210,6 +191,17 @@ trait ButtonUtil
      */
     protected function APIURL(string $url, array $querys = [])
     {
+        $method = 'GET';
+        // 检测是否有请求类型
+        if (str_contains($url, ':')) {
+            list($method, $path) = explode(':', $url);
+            $method = strtoupper($method);
+        }
+        // 解析URL
+        $temp = parse_url($url);
+        $path = $temp['path'] ?? '';
+        $query = $temp['query'] ?? '';
+        $url = $query ? "{$path}?{$query}" : $path;
         $urls = parse_url($url);
         if (!isset($urls['path'])) {
             throw new \Exception('请设置正确的接口地址');
@@ -221,7 +213,7 @@ trait ButtonUtil
         $params = array_merge($params, $querys);
         $query = http_build_query($params);
         $query = $query ? "?{$query}" : '';
-        $url = "GET:{$path}{$query}";
+        $url = "{$method}:{$path}{$query}";
         return $url;
     }
 }

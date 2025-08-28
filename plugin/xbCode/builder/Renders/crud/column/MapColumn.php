@@ -12,6 +12,7 @@
 namespace plugin\xbCode\builder\Renders\crud\column;
 
 use plugin\xbCode\builder\Components\Mapping;
+use plugin\xbCode\builder\Components\Table\TableColumn;
 
 /**
  * 映射列组件
@@ -28,15 +29,17 @@ trait MapColumn
      * - `key` 映射键名
      * - `value` 映射数据（支持HTML）
      * @param callable|array $option
-     * @return Mapping
+     * @return TableColumn|Mapping
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public function addColumnMap(string $name, string $label, array $mapping, callable|array $option = [])
     {
-        /** @var Mapping */
+        /** @var TableColumn|Mapping */
         $component = $this->useCustomColumn(Mapping::class, $name, $label, $option);
         $component->map($mapping);
+        $component->align('center');
+        $component->vAlign('middle');
         return $component;
     }
 }

@@ -8,7 +8,7 @@ use app\process\Monitor;
 
 /**
  * 框架工具类
- * @copyright 贵州小白基地网络科技有限公司
+ * @copyright 贵州积木云网络网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
 class FrameUtil
@@ -17,7 +17,7 @@ class FrameUtil
      * 延迟重启
      * @param int $second
      * @return void
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public static function delayReload(int $second)
@@ -32,7 +32,7 @@ class FrameUtil
      * @param int $second 延迟秒数
      * @param callable $callback 回调函数
      * @return void
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public static function pcntlAlarm(int $second, callable $callback)
@@ -46,7 +46,7 @@ class FrameUtil
     /**
      * 平滑启动
      * @return bool
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public static function reload()
@@ -72,7 +72,7 @@ class FrameUtil
     /**
      * 停止服务
      * @return void
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public static function stop()
@@ -83,7 +83,7 @@ class FrameUtil
     /**
      * 暂停文件监控
      * @return void
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public static function pauseFileMonitor()
@@ -96,7 +96,7 @@ class FrameUtil
     /**
      * 恢复文件监控
      * @return void
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public static function resumeFileMonitor()
@@ -109,7 +109,7 @@ class FrameUtil
     /**
      * 解析nginx配置文件
      * @param string $file
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public static function xbGetNginxConf(string $file)
@@ -130,7 +130,7 @@ class FrameUtil
      * 获取服务端口号
      * @param int $default
      * @return int
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public static function xbServerPort(int $default = 39000)

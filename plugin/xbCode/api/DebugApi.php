@@ -1,8 +1,6 @@
 <?php
 namespace plugin\xbCode\api;
 
-use Exception;
-
 /**
  * 调试状态
  * @copyright 贵州积木云网络科技有限公司
@@ -18,7 +16,7 @@ class DebugApi
      */
     public static function status()
     {
-        $debug = getenv('APP_DEBUG') === 'true';
+        $debug = (bool)env('APP_DEBUG');
         return $debug;
     }
 }

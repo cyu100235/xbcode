@@ -3,6 +3,7 @@
 namespace plugin\xbUpload\api;
 
 use Exception;
+use plugin\xbCode\api\Mysql;
 use think\facade\Db;
 use plugin\xbUpload\api\Files;
 use plugin\xbCode\api\ConfigApi;
@@ -12,7 +13,7 @@ use plugin\xbUpload\enum\UploadExtEnum;
 
 /**
  * 附件接口类
- * @copyright 贵州小白基地网络科技有限公司
+ * @copyright 贵州积木云网络网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
 class UploadApi
@@ -25,7 +26,7 @@ class UploadApi
      * @param string $adapter 适配器
      * @throws \Exception
      * @return array|Upload|\think\db\Query|\think\Model
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public static function upload(string $name = 'file', int $cid = 0, int $uid = 0, string $adapter = '')
@@ -33,15 +34,17 @@ class UploadApi
         try {
             // 1.获取上传适配器
             if (empty($adapter)) {
-                $adapter = ConfigApi::get('upload.active', 'local');
+                $adapter = ConfigApi::make('upload')->get('active', 'local');
             }
             // 2.检测是否站点上传
             $appid = request()->saas_appid ?? null;
             if ($appid) {
-                // 本地储存权限检测
-                $local = Db::name('web_site')->where('id', $appid)->value('local', '10');
-                if ($local === '10' && $adapter === 'local') {
-                    throw new Exception('您没有上传本地储存权限');
+                if (Mysql::hasTable('web_site')) {
+                    // 本地储存权限检测
+                    $local = Db::name('web_site')->where('id', $appid)->value('local', '10');
+                    if ($local === '10' && $adapter === 'local') {
+                        throw new Exception('您没有上传本地储存权限');
+                    }
                 }
             }
             // 3.获取上传配置
@@ -241,7 +244,7 @@ class UploadApi
      * 获取上传文件储存路径
      * @param string $extension
      * @return string
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     protected static function getUploadPath(string $extension)
@@ -254,7 +257,7 @@ class UploadApi
      * 获取上传文件储存目录名
      * @param string $extension
      * @return mixed
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     protected static function getDictDirName(string $extension)

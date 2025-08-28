@@ -31,7 +31,15 @@ trait FilterLayout
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    protected string $filterTitlte = '';
+    protected string $filterTitlte = '搜索查询';
+
+    /**
+     * 筛选查询是否包裹在面板
+     * @var bool
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected bool $wrapWithPanel = false;
 
     /**
      * 筛选查询列表
@@ -197,6 +205,18 @@ trait FilterLayout
     }
 
     /**
+     * 设置筛选查询是否包裹在面板
+     * @param bool $value
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function setFilterWrapWithPanel(bool $value)
+    {
+        $this->wrapWithPanel = $value;
+        return $this;
+    }
+
+    /**
      * 设置筛选查询标题
      * @param string $title 标题内容
      * @return void
@@ -246,11 +266,18 @@ trait FilterLayout
      */
     protected function getFilter()
     {
-        $filter = [
-            'title' => $this->filterTitlte,
-            'body' => $this->filter,
-            'actions' => $this->filterButtons,
+        if (empty($this->filter)) {
+            return $this->filter;
+        }
+        $formFilter = [
+            'type' => 'form',
+            'wrapWithPanel' => $this->wrapWithPanel,
+            'body' => array_merge($this->filter, $this->filterButtons),
+            'className' => $this->wrapWithPanel ? '' : 'xb-form-filter',
         ];
-        return count($this->filter) > 0 ? $filter : [];
+        if ($this->filterTitlte) {
+            $formFilter['title'] = $this->filterTitlte;
+        }
+        return $formFilter;
     }
 }

@@ -12,11 +12,12 @@
 namespace plugin\xbCode\builder\Renders\crud\column;
 
 use plugin\xbCode\builder\Components\Custom\XbIcon;
+use plugin\xbCode\builder\Components\Table\TableColumn;
 
 /**
  * 表格列组件
- * @copyright 贵州猿创科技有限公司
- * @author 楚羽幽 416716328@qq.com
+ * @copyright 贵州积木云网络科技有限公司
+ * @author 楚羽幽 958416459@qq.com
  */
 trait IconColumn
 {
@@ -25,13 +26,13 @@ trait IconColumn
      * @param string $name
      * @param string $label
      * @param callable|array $option
-     * @return XbIcon
+     * @return TableColumn|XbIcon
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public function addColumnIcon(string $name, string $label, callable|array $option = [])
     {
-        /** @var XbIcon */
+        /** @var TableColumn|XbIcon */
         $component = $this->useCustomColumn(XbIcon::class, $name, $label, $option);
         return $component;
     }

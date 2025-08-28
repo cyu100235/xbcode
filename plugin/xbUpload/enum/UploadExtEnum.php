@@ -10,59 +10,46 @@ use plugin\xbCode\base\BaseEnum;
  */
 class UploadExtEnum extends BaseEnum
 {
-    /**
-     * 图片类型
-     * @var string
-     * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 958416459@qq.com
-     */
-    const IMAGE = 'jpg,jpeg,png,gif';
-
-    /**
-     * 视频类型
-     * @var string
-     * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 958416459@qq.com
-     */
-    const VIDEO = 'mp4,avi,rmvb,mkv,flv';
-
-    /**
-     * 文档类型
-     * @var string
-     * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 958416459@qq.com
-     */
-    const DOC = 'doc,docx,xls,xlsx,ppt,pptx,pdf,txt,pem';
-
-    /**
-     * 音频类型
-     * @var string
-     * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 958416459@qq.com
-     */
-    const AUDIO = 'mp3,wav,flac,ape,alac';
-
-    /**
-     * 字体类型
-     * @var string
-     * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 958416459@qq.com
-     */
-    const FONT = 'ttf,otf,woff,woff2,eot';
-
-    /**
-     * 压缩包类型
-     * @var string
-     * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 958416459@qq.com
-     */
-    const ZIP = 'zip,rar,7z,tar,gz,bz2';
-
-    /**
-     * 其他类型
-     * @var string
-     * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 958416459@qq.com
-     */
-    const OTHER = '*';
+    const IMAGE = [
+        'label' => '图片',
+        'value' => 'image',
+        'ext' => 'jpg,jpeg,png,gif',
+        'style' => 'success',
+    ];
+    const VIDEO = [
+        'label'=> '视频',
+        'value' => 'video',
+        'ext' => 'mp4,avi,rmvb,mkv,flv',
+        'style' => 'info',
+    ];
+    const DOC = [
+        'label' => '文档',
+        'value'=> 'doc',
+        'ext' => 'doc,docx,xls,xlsx,ppt,pptx,pdf,txt,pem',
+        'style' => 'primary',
+    ];
+    const AUDIO = [
+        'label' => '音频',
+        'value' => 'audio',
+        'ext' => 'mp3,wav,flac,ape,alac',
+        'style' => 'warning',
+    ];
+    const FONT = [
+        'label' => '字体',
+        'value' => 'font',
+        'ext' => 'ttf,otf,woff,woff2,eot',
+        'style' => 'danger',
+    ];
+    const ZIP = [
+        'label' => '压缩',
+        'value' => 'zip',
+        'ext' => 'zip,rar,7z,tar,gz,bz2',
+        'style' => 'secondary',
+    ];
+    const OTHER = [
+        'label' => '其他',
+        'value' => 'other',
+        'ext' => '',
+        'style' => 'light',
+    ];
 }

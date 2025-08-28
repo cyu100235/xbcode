@@ -6,7 +6,7 @@ use support\Log;
 
 /**
  * 目录工具类
- * @copyright 贵州小白基地网络科技有限公司
+ * @copyright 贵州积木云网络网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
 class DirUtil
@@ -16,7 +16,7 @@ class DirUtil
      * @param string $dirPath 目录路径
      * @param array $exclude 排除文件
      * @return array
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public static function getDirFileData(string $dirPath, array $exclude = [])
@@ -54,7 +54,7 @@ class DirUtil
      * @param mixed $default
      * @throws \Exception
      * @return array
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public static function getFileContent(string $file, mixed $default = null)

@@ -82,7 +82,7 @@ class PluginsApi
             ->each(function ($item) {
                 $item['install'] = '20';
                 $item['update'] = '10';
-                $item['logo'] = PluginsApi::getLocalPluginPreview($item['name']);
+                $item['logo'] = PluginsApi::make()->getLocalPluginPreview($item['name']);
                 return $item;
             })->toArray();
         return $data;
@@ -103,7 +103,7 @@ class PluginsApi
             $update = $names[$item['name']] ?? '10';
             $item['install'] = '20';
             $item['update'] = $update;
-            $item['logo'] = PluginsApi::getLocalPluginPreview($item['name']);
+            $item['logo'] = PluginsApi::make()->getLocalPluginPreview($item['name']);
             return $item;
         }, $data);
         return $data;

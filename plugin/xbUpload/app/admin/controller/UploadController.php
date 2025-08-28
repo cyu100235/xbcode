@@ -25,7 +25,7 @@ use plugin\xbCode\builder\Renders\TableCrud;
 
 /**
  * 附件管理
- * @copyright 贵州小白基地网络科技有限公司
+ * @copyright 贵州积木云网络网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
 class UploadController extends XbController
@@ -34,7 +34,7 @@ class UploadController extends XbController
      * 列表
      * @param \support\Request $request
      * @return \support\Response
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public function index(Request $request)
@@ -114,7 +114,7 @@ class UploadController extends XbController
             $builder->addColumn('create_at', '上传时间')->width('180px');
         });
         // 设置侧边栏
-        $category = CategoryEnum::options();
+        $category = UploadExtEnum::options();
         $category = array_merge([['value' => '', 'label' => '全部']], $category);
         $builder->addSidebars($category);
         return $this->successRes($builder);
@@ -124,7 +124,7 @@ class UploadController extends XbController
      * 修改
      * @param \support\Request $request
      * @return \support\Response
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public function edit(Request $request)
@@ -151,7 +151,7 @@ class UploadController extends XbController
      * 删除
      * @param \support\Request $request
      * @return \support\Response
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public function del(Request $request)
@@ -217,7 +217,7 @@ class UploadController extends XbController
      * 上传附件
      * @param \support\Request $request
      * @return \support\Response
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public function upload(Request $request)

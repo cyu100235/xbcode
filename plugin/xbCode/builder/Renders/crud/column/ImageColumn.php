@@ -12,11 +12,12 @@
 namespace plugin\xbCode\builder\Renders\crud\column;
 
 use plugin\xbCode\builder\Components\Image;
+use plugin\xbCode\builder\Components\Table\TableColumn;
 
 /**
  * 图片列
- * @copyright 贵州猿创科技有限公司
- * @author 楚羽幽 416716328@qq.com
+ * @copyright 贵州积木云网络科技有限公司
+ * @author 楚羽幽 958416459@qq.com
  */
 trait ImageColumn
 {
@@ -25,15 +26,18 @@ trait ImageColumn
      * @param string $name
      * @param string $label
      * @param callable|array $option
-     * @return Image
+     * @return TableColumn|Image
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public function addColumnImage(string $name, string $label, callable|array $option = [])
     {
-        /** @var Image */
+        /** @var TableColumn|Image */
         $component = $this->useCustomColumn(Image::class, $name, $label, $option);
         $component->width(30);
+        $component->height(30);
+        $component->align('center');
+        $component->vAlign('middle');
         return $component;
     }
 }

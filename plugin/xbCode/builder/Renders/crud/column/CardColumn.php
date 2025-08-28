@@ -11,39 +11,49 @@
  */
 namespace plugin\xbCode\builder\Renders\crud\column;
 
+use Exception;
 use plugin\xbCode\builder\Components\Card;
+use plugin\xbCode\builder\Components\Table\TableColumn;
 
 /**
  * 表格列组件
- * @copyright 贵州猿创科技有限公司
- * @author 楚羽幽 416716328@qq.com
+ * @copyright 贵州积木云网络科技有限公司
+ * @author 楚羽幽 958416459@qq.com
  */
 trait CardColumn
 {
     /**
      * 添加卡片列
-     * @param string $name
-     * @param string $label
-     * @param array $fields
-     * @param callable|array $option
-     * @return Card
+     * @param string $name 列名
+     * @param string $label 列标签
+     * @param array $fields 卡片字段
+     * - title 标题
+     * - subTitle 副标题
+     * - image 图片URL
+     * @param callable|array $option 列配置选项
+     * @return TableColumn|Card
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public function addColumnCard(string $name, string $label, array $fields = [], callable|array $option= [])
+    public function addColumnCard(string $name, string $label, array $fields, callable|array $option = [])
     {
-        /** @var Card */
-        $component = $this->useCustomColumn(Card::class,$name, $label, $option);
+        /** @var TableColumn|Card */
+        $component = $this->useCustomColumn(Card::class, $name, $label, $option);
         // 设置卡片属性
-        $title = $fields['title'] ?? 'title';
-        $subTitle = $fields['subtitle'] ?? 'subtitle';
-        $image = $fields['image'] ?? 'image';
-        $component->header([
-            'title' => "<%= this.{$title} %>",
-            'subTitle' => "<%= this.{$subTitle} %>",
-            'avatar' => "<%= this.{$image} %>",
-            'avatarClassName' => 'pull-left thumb-md avatar b-3x m-r',
-        ]);
+        if (empty($fields['title'])) {
+            throw new Exception('请设置单元格卡片标题');
+        }
+        $data = [
+            'title' => "<%= this.{$fields['title']} %>",
+            'avatarClassName' => 'thumb-sm',
+        ];
+        if (!empty($fields['subTitle'])) {
+            $data['description'] = "<%= this.{$fields['subTitle']} %>";
+        }
+        if (!empty($fields['image'])) {
+            $data['avatar'] = '${' . $fields['image'] . '|raw}';
+        }
+        $component->header($data);
         return $component;
     }
 }

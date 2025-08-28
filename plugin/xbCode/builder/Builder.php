@@ -89,11 +89,11 @@ class Builder
         $path = "{$template}.{$suffix}";
         // 获取视图内容
         if (!file_exists($path)) {
-            throw new Exception("视图文件不存在：{$file}");
+            throw new Exception("视图文件不存在：{$file}.{$suffix}");
         }
         $content = file_get_contents($path);
         if (empty($content)) {
-            throw new Exception("视图文件内容为空：{$file}");
+            throw new Exception("视图文件内容为空：{$file}.{$suffix}");
         }
         // 渲染器
         $result = Vue::view($content, $vars, $amis);

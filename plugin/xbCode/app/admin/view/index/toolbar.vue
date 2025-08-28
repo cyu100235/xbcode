@@ -19,7 +19,7 @@ export default {
     },
     methods: {
         hanldHome() {
-            window.location.href = '/'
+            window.open('/');
         },
     },
 }

@@ -12,11 +12,12 @@
 namespace plugin\xbCode\builder\Renders\crud\column;
 
 use plugin\xbCode\builder\Components\Audio;
+use plugin\xbCode\builder\Components\Table\TableColumn;
 
 /**
  * 音频列
- * @copyright 贵州猿创科技有限公司
- * @author 楚羽幽 416716328@qq.com
+ * @copyright 贵州积木云网络科技有限公司
+ * @author 楚羽幽 958416459@qq.com
  */
 trait AudioColumn
 {
@@ -25,13 +26,13 @@ trait AudioColumn
      * @param string $name
      * @param string $label
      * @param callable|array $option
-     * @return Audio
+     * @return TableColumn|Audio
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public function addColumnAudio(string $name, string $label, callable|array $option = [])
     {
-        /** @var Audio */
+        /** @var TableColumn|Audio */
         $component = $this->useCustomColumn(Audio::class, $name, $label, $option);
         return $component;
     }

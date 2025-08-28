@@ -1,15 +1,17 @@
 <?php
+use plugin\xbCode\api\Url;
+
 /**
  * 打印数据
  * @param mixed $data
  * @param string $remarks
  * @return void
- * @copyright 贵州小白基地网络科技有限公司
+ * @copyright 贵州积木云网络网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
 function p(mixed $data, string $remarks = '')
 {
-    $debug = getenv('APP_DEBUG') === 'true';
+    $debug = (bool) env('APP_DEBUG');
     if ($debug) {
         if (empty($remarks)) {
             $remarks = '打印数据';
@@ -29,7 +31,7 @@ function p(mixed $data, string $remarks = '')
  * @param array $data
  * @param string $scene
  * @return void
- * @copyright 贵州小白基地网络科技有限公司
+ * @copyright 贵州积木云网络网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
 function xbValidate($validate, array $data, string $scene = '')
@@ -48,64 +50,40 @@ function xbValidate($validate, array $data, string $scene = '')
 
 /**
  * 生成URL地址
- * @param string $url 路由地址
- * @param array $query 附带参数
- * @param array $option 配置选项
+ * @param string $url
+ * @param array $query
+ * @param array $option
+ * - plugin: 插件名称(默认:当前插件)
  * - slash: 是否拼接前斜杠(默认:是)
- * - domain: 是否生成完整域名(默认:否)
- * - module: 是否拼接模块名称(默认:是)
- * - escape: 是否转义query参数(默认:否)
+ * - domain: 是否生成完整域名(默认:当前域名)
+ * - module: 是否拼接模块名称(默认:当前模块)
+ * - encode: 是否转义query参数(默认:否)
  * @return string
  * @copyright 贵州积木云网络科技有限公司
  * @author 楚羽幽 958416459@qq.com
  */
 function xbUrl(string $url, array $query = [], array $option = [])
 {
-    // 是否拼接前斜杠(默认:是)
+    $plugin = $option['plugin'] ?? request()->plugin ?: 'xbCode';
     $slash = $option['slash'] ?? true;
-    // 是否生成完整域名(默认:否)
-    $domain = $option['domain'] ?? false;
-    // 是否拼接模块名称(默认:是)
-    $module = $option['module'] ?? true;
-    // 是否转义query参数(默认:否)
-    $escape = $option['escape'] ?? false;
-
-    if ($module) {
-        // 获取插件名称
-        $plugin = request()->plugin;
-        // 获取模块名称
-        $moduleName = request()->app;
-        // 拼接模块地址
-        $url = "app/{$plugin}/{$moduleName}/{$url}";
-    }else{
-        // 无模块地址
-        $url = $domain ? $url : "app/{$url}";
-    }
-    // 是否拼接前斜杠
-    if ($slash) {
-        $url = '/' . $url;
-    }
-    // 是否生成完整域名
+    $domain = $option['domain'] ?? '';
+    $module = $option['module'] ?? request()->app ?: '';
+    $encode = $option['encode'] ?? false;
+    $builder = Url::make($url);
+    $builder->query($query);
+    $builder->encode($encode);
+    $builder->plugin($plugin);
+    $builder->slash($slash);
     if ($domain) {
-        $domainUrl = request()->host();
-        $domainUrl = "http://{$domainUrl}";
-        // 如果slash已经拼接了，后面就不要在拼接了
-        $domainUrl = $slash ? $domainUrl : "{$domainUrl}/";
-        $url = $domainUrl . $url;
+        $builder->domain($domain);
     }
-    // 拼接地址栏参数
-    if ($query) {
-        // 如果query参数是字符串，则直接使用(默认是转义)
-        $query = http_build_query($query);
-        $url .= '?' . ($escape ? $query : urldecode($query));
-    }
-    // 返回地址
-    return $url;
+    $builder->module($module);
+    return $builder->get();
 }
 /**
  * 获取应用名称
  * @return string|null
- * @copyright 贵州小白基地网络科技有限公司
+ * @copyright 贵州积木云网络网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
 function xbAppName()
@@ -121,7 +99,7 @@ function xbAppName()
  * @param int $size
  * @param int $decimals
  * @return string
- * @copyright 贵州小白基地网络科技有限公司
+ * @copyright 贵州积木云网络网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
 function get_size(int $size, int $decimals = 2): string
@@ -143,7 +121,7 @@ function get_size(int $size, int $decimals = 2): string
  * @param string $field 排序的字段名
  * @param string $sortby 排序类型
  * @return array|bool
- * @copyright 贵州小白基地网络科技有限公司
+ * @copyright 贵州积木云网络网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
 function list_sort_by(array $list, string $field, string $sortby = 'asc')
@@ -174,7 +152,7 @@ function list_sort_by(array $list, string $field, string $sortby = 'asc')
  * 获取请求信息
  * @param mixed $path
  * @return array
- * @copyright 贵州小白基地网络科技有限公司
+ * @copyright 贵州积木云网络网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
 function xbPathInfo($path)

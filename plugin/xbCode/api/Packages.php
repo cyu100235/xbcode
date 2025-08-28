@@ -15,7 +15,7 @@ use Exception;
 
 /**
  * 依赖包检测
- * @copyright 贵州小白基地网络科技有限公司
+ * @copyright 贵州积木云网络网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
 class Packages
@@ -66,7 +66,7 @@ class Packages
      * 检查依赖包
      * @param string $name 插件标识
      * @return void
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public static function checked(string $name)
@@ -80,7 +80,7 @@ class Packages
      * @param string $plugin 插件标识
      * @throws \Exception
      * @return void
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public static function composer(string $plugin)
@@ -101,7 +101,7 @@ class Packages
      * @param string $plugin 插件标识
      * @throws \Exception
      * @return void
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public static function plugins(string $plugin)
@@ -111,10 +111,10 @@ class Packages
             return;
         }
         foreach ($data as $name => $value) {
-            if (!PluginsApi::exists($name)) {
+            if (!PluginsApi::make()->make()->exists($name)) {
                 throw new Exception("{$name} 插件，安装类不存在", 4);
             }
-            if (!PluginsApi::installed($name)) {
+            if (!PluginsApi::make()->installed($name)) {
                 throw new Exception("请先安装 {$value} 插件", 5);
             }
         }
@@ -125,7 +125,7 @@ class Packages
      * @param string $plugin 插件标识
      * @param string $type 数据类型
      * @throws \Exception
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public static function getPackages(string $plugin, string $type)

@@ -12,6 +12,7 @@
 namespace plugin\xbCode\builder\Renders\crud\column;
 
 use plugin\xbCode\builder\Components\Form\InputText;
+use plugin\xbCode\builder\Components\Table\TableColumn;
 
 /**
  * 输入框列
@@ -27,7 +28,7 @@ trait InputColumn
      * @param array $quickEdit
      * @param callable|array $option
      * @throws \Exception
-     * @return InputText
+     * @return TableColumn|InputText
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
@@ -36,7 +37,7 @@ trait InputColumn
         if (empty($this->useCRUD()->quickSaveItemApi)) {
             throw new \Exception('请先设置【quickSaveItemApi】接口地址');
         }
-        /** @var InputText */
+        /** @var TableColumn|InputText */
         $component = $this->addColumn($name, $label, $option);
         $component->quickEdit([
             'type' => 'input-text',

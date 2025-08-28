@@ -12,11 +12,12 @@
 namespace plugin\xbCode\builder\Renders\crud\column;
 
 use plugin\xbCode\builder\Components\Status;
+use plugin\xbCode\builder\Components\Table\TableColumn;
 
 /**
  * 表格列组件
- * @copyright 贵州猿创科技有限公司
- * @author 楚羽幽 416716328@qq.com
+ * @copyright 贵州积木云网络科技有限公司
+ * @author 楚羽幽 958416459@qq.com
  */
 trait StatusColumn
 {
@@ -25,14 +26,16 @@ trait StatusColumn
      * @param string $name
      * @param string $label
      * @param callable|array $option
-     * @return Status
+     * @return TableColumn|Status
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public function addColumnStatus(string $name, string $label, callable|array $option = [])
     {
-        /** @var Status */
+        /** @var TableColumn|Status */
         $component = $this->useCustomColumn(Status::class, $name, $label, $option);
+        $component->align('center');
+        $component->vAlign('middle ');
         return $component;
     }
 }

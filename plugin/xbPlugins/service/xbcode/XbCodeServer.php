@@ -7,7 +7,7 @@ use Psr\Http\Message\ResponseInterface;
 
 /**
  * 接口基类
- * @copyright 贵州小白基地网络科技有限公司
+ * @copyright 贵州积木云网络网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
 class XbCodeServer
@@ -15,7 +15,7 @@ class XbCodeServer
     /**
      * 实例
      * @var XbCodeServer|null
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     protected static $_instance = null;
@@ -23,7 +23,7 @@ class XbCodeServer
     /**
      * 获取实例
      * @return XbCodeServer
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public static function instance()
@@ -37,7 +37,7 @@ class XbCodeServer
     /**
      * 获取请求对象
      * @return \yzh52521\EasyHttp\Request
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     protected static function request()

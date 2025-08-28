@@ -347,8 +347,8 @@ return [
                 'children' => [],
             ],
             [
-                'title' => '版权设置',
-                'path' => 'admin/Setting/copyright',
+                'title' => '备案设置',
+                'path' => 'admin/Setting/webicp',
                 'component' => 'form/index',
                 'method' => 'GET',
                 'type' => '20',

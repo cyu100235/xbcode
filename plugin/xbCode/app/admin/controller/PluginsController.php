@@ -27,7 +27,7 @@ use plugin\xbCode\api\PluginsUninstallApi;
 
 /**
  * 本地插件
- * @copyright 贵州小白基地网络科技有限公司
+ * @copyright 贵州积木云网络网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
 class PluginsController extends XbController
@@ -36,7 +36,7 @@ class PluginsController extends XbController
      * 插件列表
      * @param \support\Request $request
      * @return \support\Response
-     * @copyright 贵州小白基地网络科技有限公司
+     * @copyright 贵州积木云网络网络科技有限公司
      * @author 楚羽幽 cy958416459@qq.com
      */
     public function index(Request $request)
@@ -45,7 +45,7 @@ class PluginsController extends XbController
         if ($act) {
             $type = $request->get('type', '');
             $installed = $type === 'installed' ? '20' : '10';
-            $data = PluginsApi::list($installed);
+            $data = PluginsApi::make()->list($installed);
             return $this->successRes($data);
         }
         return $this->successRes(Builder::display());
@@ -135,7 +135,7 @@ class PluginsController extends XbController
         $name = $request->post('name', '');
         $value = $request->post('value', '');
         $message = $value === '20' ? '启用' : '禁用';
-        if (!PluginsApi::state($name, $value)) {
+        if (!PluginsApi::make()->state($name, $value)) {
             return $this->fail("{$message}失败");
         }
         // 触发插件状态事件
@@ -157,17 +157,18 @@ class PluginsController extends XbController
     {
         $name = $request->get('name', '');
         $file = 'panel';
+        $path = "{$name}/{$file}";
         if ($request->isPost()) {
             $post = request()->post();
             // 保存配置
-            ConfigApi::set($name, $post);
+            ConfigApi::make($path)->set($post);
             // 返回数据
             return $this->success('保存成功');
         }
         // 获取配置项规则
-        $config = PluginsApi::config($name, $file);
+        $config = PluginsApi::make()->config($name, $file);
         // 获取配置数据
-        $configData = ConfigApi::get($name, []);
+        $configData = ConfigApi::make($path)->get();
         // 创建表单视图
         $builder = Builder::form(function (Form $builder) use ($config) {
             $tabItem = [];
