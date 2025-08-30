@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 150" width="200" height="150">
+<rect width="200" height="150" fill="#FE9200"></rect>
+<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="monospace" font-size="28px" fill="#FFFFFF">
+积木云
+</text>
+</svg>
