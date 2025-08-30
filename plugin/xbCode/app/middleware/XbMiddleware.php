@@ -34,7 +34,7 @@ class XbMiddleware implements MiddlewareInterface
     public function process(Request $request, callable $handler): Response
     {
         // 检测是否安装
-        if (!Install::checked() && strpos($request->path(), '/install') === false) {
+        if (!Install::checked() && !str_contains($request->path(), '/install')) {
             return redirect('/install/');
         }
         // 继续向洋葱芯穿越，直至执行控制器得到响应

@@ -14,6 +14,7 @@ namespace plugin\xbCode\app\middleware;
 use Exception;
 use Webman\Http\Request;
 use Webman\Http\Response;
+use plugin\xbCode\api\Install;
 use Webman\MiddlewareInterface;
 use plugin\xbCode\api\PluginsApi;
 
@@ -51,6 +52,10 @@ class PluginMiddleware implements MiddlewareInterface
      */
     protected function pluginValidate(Request $request)
     {
+        // 检测是否安装
+        if (!Install::checked()) {
+            return;
+        }
         // 获取插件标识
         $pluginNmae = $request->plugin;
         if (empty($pluginNmae)) {
