@@ -168,7 +168,6 @@ class ConfigApi
             $this->group = ConfigChecked::getGroupName($this->group);
         } catch (\Throwable $th) {
         }
-        print_r($data);
         foreach ($data as $field => $value) {
             // 查询条件
             $where = [
