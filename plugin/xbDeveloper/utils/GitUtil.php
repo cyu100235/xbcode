@@ -2,7 +2,6 @@
 namespace plugin\xbDeveloper\utils;
 
 use Exception;
-use support\Log;
 
 /**
  * GIT工具类
@@ -15,12 +14,13 @@ class GitUtil
      * 克隆仓库
      * @param string $url 仓库地址
      * @param string $targetPath 克隆路径
+     * @param string $branch 分支名称
      * @throws \Exception
-     * @return void
+     * @return string|bool|null
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public static function clone(string $url, string $targetPath)
+    public static function clone(string $url, string $targetPath, string $branch = '')
     {
         // 验证函数是否开启
         self::verifyExec('shell_exec');
@@ -31,11 +31,15 @@ class GitUtil
         $url = escapeshellcmd($url);
         // 克隆命令
         $command = "git clone {$url} {$targetPath} 2>&1";
+        if (!empty($branch)) {
+            $command = "git clone -b {$branch} {$url} {$targetPath} 2>&1";
+        }
         // 执行命令
         $output = shell_exec($command);
         if (empty($output)) {
             throw new Exception("克隆失败，请检查仓库地址");
         }
+        return $output;
     }
 
     /**

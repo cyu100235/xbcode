@@ -20,13 +20,6 @@ use plugin\xbCode\app\model\Config;
  * @copyright 贵州积木云网络科技有限公司
  * @author 楚羽幽 cy958416459@qq.com
  */
-/**
- * 配置接口类
- * @copyright 贵州积木云网络科技有限公司
- * @author 楚羽幽 958416459@qq.com
- * @link http://www.xbcode.net
- * @method $this group(string $value) 分组名称
- */
 class ConfigApi
 {
     /**
@@ -178,12 +171,17 @@ class ConfigApi
             if (!$model) {
                 $model = new Config;
             }
-            // 检测是否附件
-            if (str_starts_with($value, 'http://') || str_starts_with($value, 'https://')) {
-                $value = Files::path($value) ?: $value;
+            // 检测是字符串URL
+            if (is_string($value) && $value) {
+                if (filter_var($value, FILTER_VALIDATE_URL) !== false) {
+                    $value = Files::path($value) ?: $value;
+                }
             }
             if (is_array($value) && !empty($value)) {
                 $value = array_map(function ($item) {
+                    if (empty($item)) {
+                        return $item;
+                    }
                     try {
                         // 检测是否URL地址
                         $value = Files::path($item);

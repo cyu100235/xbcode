@@ -182,11 +182,10 @@ trait ActionButtonLayout
         // 获取主键
         $primaryKey = $this->primaryKey ?? 'id';
         // 重新组装URL
-        $data = [
-            ...$params,
-            ...$querys,
-            $primaryKey => '${' . $primaryKey . '}',
-        ];
+        $data = array_merge($params, $querys);
+        if (!str_contains($url, '${')) {
+            $data = array_merge($data, [$primaryKey => '${' . $primaryKey . '}']);
+        }
         $path = $method ? "{$method}:{$path}" : $path;
         $url = "{$path}?" . urldecode(http_build_query($data));
         return $url;
