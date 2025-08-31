@@ -82,7 +82,11 @@ Redis
 
 ### ⚡ 系统演示
 
-![后台界面](https://xbase-1256522594.cos.ap-chongqing.myqcloud.com/demo.png)
+![登录界面](/plugin/xbCode/preview/1.png)
+![工作台界面](/plugin/xbCode/preview/2.png)
+![插件界面](/plugin/xbCode/preview/3.png)
+![管理员账号](/plugin/xbCode/preview/4.png)
+![系统设置](/plugin/xbCode/preview/5.png)
 
 系统演示： http://demo.xbcode.net/admin 账号：admin 密码：123456
 
