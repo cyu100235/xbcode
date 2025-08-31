@@ -8,7 +8,7 @@ use plugin\xbUpload\api\Files;
 /**
  * 附件模型
  * @copyright 贵州积木云网络网络科技有限公司
- * @author 楚羽幽 cy958416459@qq.com
+ * @author 楚羽幽 958416459@qq.com
  */
 class Upload extends Model
 {
@@ -24,7 +24,7 @@ class Upload extends Model
      * @param mixed $data
      * @return string
      * @copyright 贵州积木云网络网络科技有限公司
-     * @Email cy958416459@qq.com
+     * @Email 958416459@qq.com
      * @DateTime 2023-04-30
      */
     protected function getUrlAttr($value, $data)
@@ -38,7 +38,7 @@ class Upload extends Model
      * @param mixed $data
      * @return mixed
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     protected function getSizeFormatAttr($value, $data)
     {

@@ -8,7 +8,7 @@ use plugin\xbCode\app\validate\AdminRuleValidate;
 /**
  * 菜单数据处理接口
  * @copyright 贵州积木云网络网络科技有限公司
- * @author 楚羽幽 cy958416459@qq.com
+ * @author 楚羽幽 958416459@qq.com
  */
 class MenuChecked
 {
@@ -18,7 +18,7 @@ class MenuChecked
      * @param bool $isLevel 数据是否树状结构
      * @return mixed
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public static function parseMenu(array $data, bool $isLevel = false)
     {
@@ -107,7 +107,7 @@ class MenuChecked
      * @param array $menus 二维菜单数组
      * @return array
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public static function menu2DToTree(array $data)
     {
@@ -120,7 +120,7 @@ class MenuChecked
      * @param array $menus 树形菜单数组
      * @return array
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public static function menuTreeTo2D(array $menus, int $pid = 0, int $id = 1)
     {
@@ -149,7 +149,7 @@ class MenuChecked
      * @param array $menus
      * @return array
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     protected static function parseMenuData(array $data)
     {
@@ -189,7 +189,7 @@ class MenuChecked
      * @param string $key
      * @return array
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     protected static function getMenuKey(array $data, string $key = '')
     {
@@ -212,7 +212,7 @@ class MenuChecked
      * @param mixed $data
      * @return mixed
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     protected static function resetKeys($array)
     {
@@ -231,7 +231,7 @@ class MenuChecked
      * @param array $data
      * @return array
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     protected static function parseMenusTreeData(array $data)
     {

@@ -10,7 +10,7 @@ use plugin\xbUpload\app\model\Upload;
 /**
  * 附件服务类
  * @copyright 贵州积木云网络网络科技有限公司
- * @author 楚羽幽 cy958416459@qq.com
+ * @author 楚羽幽 958416459@qq.com
  */
 class Files
 {
@@ -21,7 +21,7 @@ class Files
      * @param mixed $default
      * @return mixed
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public static function url(mixed $uri, string $adapter = '', $default = '')
     {
@@ -59,7 +59,7 @@ class Files
      * @param mixed $default
      * @return string
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public static function path(mixed $url, mixed $default = '')
     {
@@ -95,7 +95,7 @@ class Files
      * @throws \Exception
      * @return void
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public static function delete(array|string $uri, string $adapter = '')
     {
@@ -128,7 +128,7 @@ class Files
      * @param mixed $uri
      * @return string
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public static function format($domain, $uri)
     {

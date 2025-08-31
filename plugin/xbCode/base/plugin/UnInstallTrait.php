@@ -21,7 +21,7 @@ use plugin\xbCrontab\api\CrontabApi;
 /**
  * 插件卸载方法
  * @copyright 贵州积木云网络科技有限公司
- * @author 楚羽幽 cy958416459@qq.com
+ * @author 楚羽幽 958416459@qq.com
  */
 trait UnInstallTrait
 {
@@ -29,7 +29,7 @@ trait UnInstallTrait
      * 卸载数据库
      * @return void
      * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     protected static function unInstallSql()
     {
@@ -52,7 +52,7 @@ trait UnInstallTrait
      * 卸载菜单
      * @return void
      * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     protected static function unInstallMenus()
     {
@@ -66,7 +66,7 @@ trait UnInstallTrait
      * 卸载字典
      * @return void
      * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     protected static function unInstallDict()
     {
@@ -84,7 +84,7 @@ trait UnInstallTrait
      * 卸载定时任务
      * @return void
      * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     protected static function unInstallCrontab()
     {
@@ -113,7 +113,7 @@ trait UnInstallTrait
      * 卸载配置项
      * @return void
      * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     protected static function unInstallConfig()
     {

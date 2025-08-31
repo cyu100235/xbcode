@@ -11,7 +11,7 @@ use plugin\xbCode\utils\trait\JsonTrait;
 /**
  * 插件服务基类提供
  * @copyright 贵州积木云网络网络科技有限公司
- * @author 楚羽幽 cy958416459@qq.com
+ * @author 楚羽幽 958416459@qq.com
  */
 abstract class BasePlugins
 {
@@ -65,7 +65,7 @@ abstract class BasePlugins
      * @param bool $isLocal 是否本地导入
      * @return mixed
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public function start(string $step, string $name, string $versionName, int $version,bool $isLocal = false)
     {
@@ -92,7 +92,7 @@ abstract class BasePlugins
      * 下载插件包
      * @return void
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     protected function download()
     {
@@ -116,7 +116,7 @@ abstract class BasePlugins
      * 解压插件包
      * @return void
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     protected function unzip()
     {
@@ -150,7 +150,7 @@ abstract class BasePlugins
      * @param string $field
      * @return mixed
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     protected function localVersion(string $name, string $field = 'version_name')
     {
@@ -162,7 +162,7 @@ abstract class BasePlugins
      * 执行安装脚本
      * @return void
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     protected function script()
     {
@@ -205,7 +205,7 @@ abstract class BasePlugins
      * 操作完成
      * @return void
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     abstract protected function complete();
 

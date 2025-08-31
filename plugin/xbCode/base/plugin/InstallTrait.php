@@ -21,7 +21,7 @@ use plugin\xbCrontab\api\CrontabApi;
 /**
  * 安装插件方法
  * @copyright 贵州积木云网络科技有限公司
- * @author 楚羽幽 cy958416459@qq.com
+ * @author 楚羽幽 958416459@qq.com
  */
 trait InstallTrait
 {
@@ -29,7 +29,7 @@ trait InstallTrait
      * 安装数据库
      * @return void
      * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     protected static function installSql()
     {
@@ -51,7 +51,7 @@ trait InstallTrait
      * 安装菜单
      * @return void
      * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     protected static function installMenus()
     {
@@ -76,7 +76,7 @@ trait InstallTrait
      * 安装字典
      * @return void
      * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     protected static function installDict()
     {
@@ -94,7 +94,7 @@ trait InstallTrait
      * 安装定时任务
      * @return void
      * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     protected static function installCrontab()
     {
@@ -123,7 +123,7 @@ trait InstallTrait
      * 安装配置项
      * @return void
      * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     protected static function installConfig()
     {

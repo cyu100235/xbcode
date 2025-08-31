@@ -9,7 +9,7 @@ use think\Paginator;
 /**
  * JSON构造类
  * @copyright 贵州积木云网络网络科技有限公司
- * @author 楚羽幽 cy958416459@qq.com
+ * @author 楚羽幽 958416459@qq.com
  */
 trait JsonTrait
 {
@@ -21,7 +21,7 @@ trait JsonTrait
      * @param mixed $option
      * @return Response
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     protected static function json(mixed $msg, mixed $status, $data = [], array $option = [])
     {
@@ -75,7 +75,7 @@ trait JsonTrait
      * @param mixed $data
      * @return Response
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     protected static function successRes(mixed $data, array $option = [])
     {
@@ -88,7 +88,7 @@ trait JsonTrait
      * @param int $status
      * @return Response
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     protected static function fail(mixed $msg, int $status = 404)
     {

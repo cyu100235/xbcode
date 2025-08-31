@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * 导出插件
  * @copyright 贵州积木云网络网络科技有限公司
- * @author 楚羽幽 cy958416459@qq.com
+ * @author 楚羽幽 958416459@qq.com
  */
 class PluginExport extends Command
 {
@@ -22,7 +22,7 @@ class PluginExport extends Command
      * 配置命令
      * @return void
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     protected function configure()
     {
@@ -36,7 +36,7 @@ class PluginExport extends Command
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      * @return int
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {

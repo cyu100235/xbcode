@@ -1,4 +1,14 @@
 <?php
+/**
+ * 积木云渲染器
+ *
+ * @package  XbCode
+ * @author   楚羽幽 <958416459@qq.com>
+ * @version  1.0
+ * @license  Apache License 2.0
+ * @link     http://www.xbcode.net
+ * @document http://doc.xbcode.net
+ */
 namespace plugin\xbDeveloper\utils;
 
 use Exception;
@@ -6,7 +16,7 @@ use Exception;
 /**
  * GIT工具类
  * @copyright 贵州积木云网络网络科技有限公司
- * @author 楚羽幽 cy958416459@qq.com
+ * @author 楚羽幽 958416459@qq.com
  */
 class GitUtil
 {
@@ -43,11 +53,36 @@ class GitUtil
     }
 
     /**
+     * 拉取更新
+     * @param string $path
+     * @throws \Exception
+     * @return bool|string|null
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public static function pull(string $path)
+    {
+        // 验证函数是否开启
+        self::verifyExec('shell_exec');
+        if (!is_dir($path)) {
+            throw new Exception('仓库目录不存在');
+        }
+        // 克隆命令
+        $command = "cd {$path} && git pull 2>&1";
+        // 执行命令
+        $output = shell_exec($command);
+        if (empty($output)) {
+            throw new Exception("拉取更新失败，请检查仓库地址");
+        }
+        return $output;
+    }
+
+    /**
      * 验证函数是否开启
      * @param string $funName
      * @return void
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public static function verifyExec(string $funName = 'exec')
     {

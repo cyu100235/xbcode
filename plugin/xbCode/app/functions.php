@@ -7,7 +7,7 @@ use plugin\xbCode\api\Url;
  * @param string $remarks
  * @return void
  * @copyright 贵州积木云网络网络科技有限公司
- * @author 楚羽幽 cy958416459@qq.com
+ * @author 楚羽幽 958416459@qq.com
  */
 function p(mixed $data, string $remarks = '')
 {
@@ -32,7 +32,7 @@ function p(mixed $data, string $remarks = '')
  * @param string $scene
  * @return void
  * @copyright 贵州积木云网络网络科技有限公司
- * @author 楚羽幽 cy958416459@qq.com
+ * @author 楚羽幽 958416459@qq.com
  */
 function xbValidate($validate, array $data, string $scene = '')
 {
@@ -84,7 +84,7 @@ function xbUrl(string $url, array $query = [], array $option = [])
  * 获取应用名称
  * @return string|null
  * @copyright 贵州积木云网络网络科技有限公司
- * @author 楚羽幽 cy958416459@qq.com
+ * @author 楚羽幽 958416459@qq.com
  */
 function xbAppName()
 {
@@ -100,7 +100,7 @@ function xbAppName()
  * @param int $decimals
  * @return string
  * @copyright 贵州积木云网络网络科技有限公司
- * @author 楚羽幽 cy958416459@qq.com
+ * @author 楚羽幽 958416459@qq.com
  */
 function get_size(int $size, int $decimals = 2): string
 {
@@ -122,7 +122,7 @@ function get_size(int $size, int $decimals = 2): string
  * @param string $sortby 排序类型
  * @return array|bool
  * @copyright 贵州积木云网络网络科技有限公司
- * @author 楚羽幽 cy958416459@qq.com
+ * @author 楚羽幽 958416459@qq.com
  */
 function list_sort_by(array $list, string $field, string $sortby = 'asc')
 {
@@ -153,7 +153,7 @@ function list_sort_by(array $list, string $field, string $sortby = 'asc')
  * @param mixed $path
  * @return array
  * @copyright 贵州积木云网络网络科技有限公司
- * @author 楚羽幽 cy958416459@qq.com
+ * @author 楚羽幽 958416459@qq.com
  */
 function xbPathInfo($path)
 {

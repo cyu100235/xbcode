@@ -17,7 +17,7 @@ use plugin\xbUpload\api\Files;
 /**
  * 配置数据处理接口类
  * @copyright 贵州积木云网络科技有限公司
- * @author 楚羽幽 cy958416459@qq.com
+ * @author 楚羽幽 958416459@qq.com
  */
 class ConfigChecked
 {
@@ -64,7 +64,7 @@ class ConfigChecked
      * @param array $data
      * @return array
      * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public static function getConfigValue(array $data)
     {
@@ -88,7 +88,7 @@ class ConfigChecked
      * @param mixed $config
      * @return array
      * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     protected static function createNestedArray(array $data, mixed $config)
     {

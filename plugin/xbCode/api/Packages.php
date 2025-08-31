@@ -16,7 +16,7 @@ use Exception;
 /**
  * 依赖包检测
  * @copyright 贵州积木云网络网络科技有限公司
- * @author 楚羽幽 cy958416459@qq.com
+ * @author 楚羽幽 958416459@qq.com
  */
 class Packages
 {
@@ -67,7 +67,7 @@ class Packages
      * @param string $name 插件标识
      * @return void
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public static function checked(string $name)
     {
@@ -81,7 +81,7 @@ class Packages
      * @throws \Exception
      * @return void
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public static function composer(string $plugin)
     {
@@ -102,7 +102,7 @@ class Packages
      * @throws \Exception
      * @return void
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public static function plugins(string $plugin)
     {
@@ -126,7 +126,7 @@ class Packages
      * @param string $type 数据类型
      * @throws \Exception
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public static function getPackages(string $plugin, string $type)
     {

@@ -22,7 +22,7 @@ class Admin extends Model
      * 关联角色
      * @return \think\model\relation\HasOne
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     protected function role()
     {
@@ -34,7 +34,7 @@ class Admin extends Model
      * @param mixed $value
      * @return mixed
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     protected function setAvatarAttr($value)
     {
@@ -49,7 +49,7 @@ class Admin extends Model
      * @param mixed $value
      * @return mixed
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     protected function getAvatarAttr($value)
     {
@@ -64,7 +64,7 @@ class Admin extends Model
      * @param mixed $value
      * @return mixed
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     protected function setPasswordAttr($value)
     {

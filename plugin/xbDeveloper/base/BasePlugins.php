@@ -7,7 +7,7 @@ use plugin\xbCode\utils\trait\JsonTrait;
 /**
  * 插件服务基类提供
  * @copyright 贵州积木云网络科技有限公司
- * @author 楚羽幽 cy958416459@qq.com
+ * @author 楚羽幽 958416459@qq.com
  */
 abstract class BasePlugins
 {
@@ -53,7 +53,7 @@ abstract class BasePlugins
      * @param string $method 执行安装方法
      * @return mixed
      * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public function start(string $step, string $name, string $versionName, int $version, string $method = '')
     {
@@ -81,7 +81,7 @@ abstract class BasePlugins
      * 执行安装脚本
      * @return void
      * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     protected function script()
     {
@@ -126,7 +126,7 @@ abstract class BasePlugins
      * @throws \Exception
      * @return void
      * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     protected function installMethod(string $method)
     {
@@ -151,7 +151,7 @@ abstract class BasePlugins
      * 操作完成
      * @return void
      * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     abstract protected function complete();
 }

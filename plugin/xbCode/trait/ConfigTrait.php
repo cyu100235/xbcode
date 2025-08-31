@@ -20,7 +20,7 @@ use plugin\xbCode\api\ConfigView;
 /**
  * 系统配置控制器
  * @copyright 贵州积木云网络科技有限公司
- * @author 楚羽幽 cy958416459@qq.com
+ * @author 楚羽幽 958416459@qq.com
  */
 trait ConfigTrait
 {
@@ -29,7 +29,7 @@ trait ConfigTrait
      * @param \support\Request $request
      * @return \support\Response
      * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public function normalConfig(string $group = '')
     {

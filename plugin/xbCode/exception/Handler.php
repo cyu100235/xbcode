@@ -12,7 +12,7 @@ use support\exception\BusinessException;
 /**
  * 全局异常处理
  * @copyright 贵州积木云网络网络科技有限公司
- * @author 楚羽幽 cy958416459@qq.com
+ * @author 楚羽幽 958416459@qq.com
  */
 class Handler extends ExceptionHandler
 {
@@ -32,7 +32,7 @@ class Handler extends ExceptionHandler
      * @param \Throwable $exception
      * @return void
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public function report(Throwable $exception)
     {
@@ -45,7 +45,7 @@ class Handler extends ExceptionHandler
      * @param \Throwable $exception
      * @return \Webman\Http\Response
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public function render(Request $request, Throwable $exception): Response
     {

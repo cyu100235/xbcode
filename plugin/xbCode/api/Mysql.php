@@ -7,7 +7,7 @@ use Exception;
 /**
  * 最方便的mysql操作类,可以便捷导入.sql文件和将数据库导出为.sql文件
  * @copyright 贵州积木云网络科技有限公司
- * @author 楚羽幽 cy958416459@qq.com
+ * @author 楚羽幽 958416459@qq.com
  */
 class Mysql
 {
@@ -32,7 +32,7 @@ class Mysql
      * @param array $config
      * @return void
      * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public static function connect(array $config)
     {
@@ -46,7 +46,7 @@ class Mysql
      * @param string $sql
      * @return array
      * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public static function query(string $sql)
     {
@@ -58,7 +58,7 @@ class Mysql
      * @param string $sql
      * @return int
      * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public static function execute(string $sql)
     {
@@ -69,7 +69,7 @@ class Mysql
      * 获取数据库所有表名
      * @return array
      * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public static function getTableNames()
     {
@@ -110,7 +110,7 @@ class Mysql
      * @param string $name
      * @return mixed
      * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public static function getTable(string $name)
     {
@@ -127,7 +127,7 @@ class Mysql
      * @param string $name
      * @return array
      * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public static function getColumns(string $name)
     {
@@ -153,7 +153,7 @@ class Mysql
      * @param string $tableName
      * @return array
      * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public static function getColumnName(string $tableName)
     {
@@ -166,7 +166,7 @@ class Mysql
      * @param array $ignore
      * @return array[]
      * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public static function getTableList(array $ignore = [])
     {
@@ -194,7 +194,7 @@ class Mysql
      * @param string $tableName
      * @return mixed
      * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public static function getTablesRows(string $tableName)
     {
@@ -270,7 +270,7 @@ class Mysql
      * @param string $prefix 最终创建表前缀，空则使用配置文件的前缀
      * @return void
      * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public static function importSql(string $sqlFilePath, string|array $oldPrefix = '__PREFIX__', string $prefix = '')
     {
@@ -324,7 +324,7 @@ class Mysql
      * @param bool $withData
      * @return string
      * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public static function tablePreviewSql(string $tableName, bool $withData = true)
     {
@@ -364,7 +364,7 @@ class Mysql
      * @param array $tables 要导出的表名数组(默认为空，即导出所有表)
      * @return void
      * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public static function exportSql(string $file, bool $withData = true, array $tables = [])
     {
@@ -415,7 +415,7 @@ class Mysql
      * @param array $tables 要导出的表名数组(默认为空，即导出所有表)
      * @return void
      * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public static function exportData(string $file, array $tables = [])
     {

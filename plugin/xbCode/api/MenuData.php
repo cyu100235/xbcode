@@ -7,7 +7,7 @@ use plugin\xbCode\app\model\AdminRule;
 /**
  * 菜单数据接口
  * @copyright 贵州积木云网络网络科技有限公司
- * @author 楚羽幽 cy958416459@qq.com
+ * @author 楚羽幽 958416459@qq.com
  */
 class MenuData
 {
@@ -16,7 +16,7 @@ class MenuData
      * @param int $id
      * @return array
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public static function getChildrenIds(int $id)
     {

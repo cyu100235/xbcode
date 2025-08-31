@@ -19,7 +19,7 @@ use plugin\xbCode\app\model\Plugins;
 /**
  * 插件接口类
  * @copyright 贵州积木云网络网络科技有限公司
- * @author 楚羽幽 cy958416459@qq.com
+ * @author 楚羽幽 958416459@qq.com
  */
 class PluginsApi
 {
@@ -292,7 +292,7 @@ class PluginsApi
      * @throws \Exception
      * @return void
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public function installedThrow(mixed $name)
     {

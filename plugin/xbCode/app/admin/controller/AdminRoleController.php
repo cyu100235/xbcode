@@ -26,7 +26,7 @@ use plugin\xbCode\builder\Components\Form\Transfer;
 /**
  * 角色管理
  * @copyright 贵州积木云网络网络科技有限公司
- * @author 楚羽幽 cy958416459@qq.com
+ * @author 楚羽幽 958416459@qq.com
  */
 class AdminRoleController extends XbController
 {
@@ -35,7 +35,7 @@ class AdminRoleController extends XbController
      * @param \support\Request $request
      * @return \support\Response
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public function index(Request $request)
     {
@@ -89,7 +89,7 @@ class AdminRoleController extends XbController
      * @param \support\Request $request
      * @return \support\Response
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public function add(Request $request)
     {
@@ -125,7 +125,7 @@ class AdminRoleController extends XbController
      * @param \support\Request $request
      * @return \support\Response
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public function edit(Request $request)
     {
@@ -156,7 +156,7 @@ class AdminRoleController extends XbController
      * @param \support\Request $request
      * @return \support\Response
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public function del(Request $request)
     {
@@ -185,7 +185,7 @@ class AdminRoleController extends XbController
      * @param \support\Request $request
      * @return \support\Response
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public function auth(Request $request)
     {

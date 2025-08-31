@@ -24,7 +24,7 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
  * 2.执行安装脚本
  * 3.执行安装完成
  * @copyright 贵州积木云网络网络科技有限公司
- * @author 楚羽幽 cy958416459@qq.com
+ * @author 楚羽幽 958416459@qq.com
  */
 class PluginInstall extends Command
 {
@@ -35,7 +35,7 @@ class PluginInstall extends Command
      * 配置命令
      * @return void
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     protected function configure()
     {
@@ -49,7 +49,7 @@ class PluginInstall extends Command
      * @param \Symfony\Component\Console\Output\OutputInterface $output
      * @return int
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {

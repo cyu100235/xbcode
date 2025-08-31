@@ -6,7 +6,7 @@ use plugin\xbUpload\service\Server;
 /**
  * 本地文件驱动
  * @copyright 贵州积木云网络网络科技有限公司
- * @author 楚羽幽 cy958416459@qq.com
+ * @author 楚羽幽 958416459@qq.com
  */
 class LocalServer extends Server
 {    
@@ -15,7 +15,7 @@ class LocalServer extends Server
      * @param string $path
      * @return bool
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public function upload($path)
     {

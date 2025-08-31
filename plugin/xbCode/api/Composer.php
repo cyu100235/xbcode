@@ -16,7 +16,7 @@ use Exception;
 /**
  * Composer接口
  * @copyright 贵州积木云网络网络科技有限公司
- * @author 楚羽幽 cy958416459@qq.com
+ * @author 楚羽幽 958416459@qq.com
  */
 class Composer
 {
@@ -25,7 +25,7 @@ class Composer
      * @param string $name
      * @return void
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public static function install(string $name = '')
     {
@@ -57,7 +57,7 @@ class Composer
      * 获取composer依赖
      * @param string $name
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     private static function getComposerPackages(string $name = '')
     {
@@ -101,7 +101,7 @@ class Composer
      * @throws \Exception
      * @return array
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     private static function installComposerPackage(string $package)
     {

@@ -10,7 +10,7 @@ use plugin\xbCode\builder\Renders\Form;
 /**
  * 配置视图接口类
  * @copyright 贵州积木云网络科技有限公司
- * @author 楚羽幽 cy958416459@qq.com
+ * @author 楚羽幽 958416459@qq.com
  */
 class ConfigView
 {

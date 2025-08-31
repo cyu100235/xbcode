@@ -18,7 +18,7 @@ class SystemZipCmdUtil implements ZipInterface
      * @param string $extractTo 解压路径
      * @return void
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public static function unzip(string $zipFile, string $extractTo)
     {
@@ -47,7 +47,7 @@ class SystemZipCmdUtil implements ZipInterface
      * @param string $extractTo 解压路径
      * @return string
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public static function getUnzipCmd(string $zipFile, string $extractTo)
     {
@@ -68,7 +68,7 @@ class SystemZipCmdUtil implements ZipInterface
      * @param array $ignoreFiles 需要忽略的目录或者文件
      * @return void
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public static function build(string $zipFile, string $extractTo, array $ignoreFiles = [])
     {
@@ -135,7 +135,7 @@ class SystemZipCmdUtil implements ZipInterface
      * @param array $ignoreFiles 需要忽略的目录或者文件
      * @return string
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public static function getZipBuildCmd(string $zipFile, string $extractTo, array $ignoreFiles = [])
     {

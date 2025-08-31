@@ -14,7 +14,7 @@ use plugin\xbUpload\enum\UploadExtEnum;
 /**
  * 附件接口类
  * @copyright 贵州积木云网络网络科技有限公司
- * @author 楚羽幽 cy958416459@qq.com
+ * @author 楚羽幽 958416459@qq.com
  */
 class UploadApi
 {
@@ -27,7 +27,7 @@ class UploadApi
      * @throws \Exception
      * @return array|Upload|\think\db\Query|\think\Model
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     public static function upload(string $name = 'file', int $cid = 0, int $uid = 0, string $adapter = '')
     {
@@ -245,7 +245,7 @@ class UploadApi
      * @param string $extension
      * @return string
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     protected static function getUploadPath(string $extension)
     {
@@ -258,7 +258,7 @@ class UploadApi
      * @param string $extension
      * @return mixed
      * @copyright 贵州积木云网络网络科技有限公司
-     * @author 楚羽幽 cy958416459@qq.com
+     * @author 楚羽幽 958416459@qq.com
      */
     protected static function getDictDirName(string $extension)
     {
