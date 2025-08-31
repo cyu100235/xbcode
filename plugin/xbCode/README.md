@@ -88,6 +88,7 @@ Redis
 ![管理员账号](/plugin/xbCode/preview/4.png)
 ![系统设置](/plugin/xbCode/preview/5.png)
 
+<b style="color:red;">当前域名正在备案中，请稍后访问。</b>
 系统演示： http://demo.xbcode.net/admin 账号：admin 密码：123456
 
 ---
