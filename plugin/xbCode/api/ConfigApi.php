@@ -31,6 +31,14 @@ class ConfigApi
     protected string $group = '';
 
     /**
+     * 附件目录
+     * @var string
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected string $attachment = 'attachment/';
+
+    /**
      * 是否解析层级数据
      * @var bool
      * @copyright 贵州积木云网络科技有限公司
@@ -172,10 +180,8 @@ class ConfigApi
                 $model = new Config;
             }
             // 检测是字符串URL
-            if (is_string($value) && $value) {
-                if (filter_var($value, FILTER_VALIDATE_URL) !== false) {
-                    $value = Files::path($value) ?: $value;
-                }
+            if (is_string($value) && $value && str_contains($value, $this->attachment)) {
+                $value = Files::path($value) ?: $value;
             }
             if (is_array($value) && !empty($value)) {
                 $value = array_map(function ($item) {
@@ -183,8 +189,10 @@ class ConfigApi
                         return $item;
                     }
                     try {
-                        // 检测是否URL地址
-                        $value = Files::path($item);
+                        // 检测是否附件路径
+                        if (str_contains($item, $this->attachment)) {
+                            $value = Files::path($item);
+                        }
                     } catch (\Throwable $th) {
                         $value = json_encode($item, 256);
                     }
