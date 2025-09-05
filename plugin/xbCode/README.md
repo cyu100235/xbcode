@@ -1,20 +1,6 @@
-<div align="center">
-
+<center>
 基于 **渐进式动态页面构建渲染研发框架** 快速创建属于你自己的系统
-
-</div>
-
-<div align="center" style="display: flex;justify-content: center;gap:15px;">
-    <a href="https://xbcode.net/">
-        <img src="https://img.shields.io/badge/license-Apache%202-blue.svg" />
-    </a>
-    <a href="https://xbcode.net/">
-        <img src="https://img.shields.io/badge/Edition-4.5-blue.svg" />
-    </a>
-     <a href="https://xbcode.net/">
-        <img src="https://img.shields.io/badge/Download-150m-red.svg" />
-    </a>
-</div>
+</center>
 
 ### 🌈 框架介绍
 
@@ -38,6 +24,7 @@ QQ 群：592808248
 - [√] 表格 Excel 导出
 - [√] 自定义任务队列
 - [√] 部门权限管理（支持数据权限）
+- [×] 低代码可视化UI界面
 - [×] 一键 CURD 代码
 - [×] 更多功能正在加紧中...
 
@@ -57,7 +44,7 @@ MySQL >= 5.7或8.0
 Redis
 ```
 
-> <p>温馨提示：</p>虚拟空间不支持，推荐使用 bt 宝塔面板，服务器推荐阿里云 ecs 或腾讯云 cvm 云服务器
+> ***温馨提示：***虚拟空间不支持，推荐使用 bt 宝塔面板，服务器推荐阿里云 ecs 或腾讯云 cvm 云服务器
 
 ### 🔨 宝塔安装（推荐使用）
 
