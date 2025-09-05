@@ -181,6 +181,10 @@ class Menus
      */
     public static function install(array $data, string $name, int $level = 0)
     {
+        // 检测是否已安装saas插件
+        if (PluginsApi::make()->installed('xbSaas')) {
+            return;
+        }
         try {
             if ($level === 0) {
                 // 处理顶级菜单归属权

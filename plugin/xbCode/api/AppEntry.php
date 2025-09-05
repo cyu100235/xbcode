@@ -14,7 +14,7 @@ namespace plugin\xbCode\api;
 use JsonSerializable;
 
 /**
- * 应用入口接口类
+ * 应用接口类
  * @copyright 贵州积木云网络科技有限公司
  * @author 楚羽幽 958416459@qq.com
  */
