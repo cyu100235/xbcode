@@ -74,7 +74,6 @@ class PluginsCreate
         'setting/config/basis.php',
         'setting/tabs/panel.php',
         'plugins.json',
-        'preview.svg',
         'install.sql',
     ];
 
