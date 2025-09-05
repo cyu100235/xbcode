@@ -12,6 +12,7 @@
 namespace plugin\xbDeveloper\api;
 
 use Exception;
+use plugin\xbCode\api\PluginPreviewApi;
 use plugin\xbDeveloper\utils\GitUtil;
 
 /**
@@ -122,6 +123,9 @@ class PluginsCreate
         if (empty($data['author'])) {
             $data['author'] = '积木云';
         }
+        if (empty($data['gradient'])) {
+            $data['gradient'] = false;
+        }
         // 数据验证
         if (strpos($data['name'], '/') !== false) {
             throw new Exception('插件标识名称错误，名称不能包含字符 /');
@@ -157,7 +161,7 @@ class PluginsCreate
             unlink($previewPath);
         }
         // 重新创建插件预览图
-        \plugin\xbCode\api\PluginsApi::make()->createPreview($data);
+        PluginPreviewApi::make()->create($data);
     }
 
     /**

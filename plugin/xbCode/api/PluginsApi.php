@@ -11,7 +11,6 @@
  */
 namespace plugin\xbCode\api;
 
-use Cache;
 use Exception;
 use support\Log;
 use plugin\xbCode\app\model\Plugins;
@@ -40,20 +39,6 @@ class PluginsApi
     protected $systemPlugins = [
         'xbCode',
         'xbUpload',
-    ];
-
-    /**
-     * 预览图背景色
-     * @var array
-     * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 958416459@qq.com
-     */
-    private $bgColor = [
-        '#7B64FF',
-        '#F44E3B',
-        '#FB9E00',
-        '#68BC00',
-        '#16A5A5',
     ];
 
     /**
@@ -381,62 +366,13 @@ class PluginsApi
         $previewPath = $pluginPath . '/preview.svg';
         if (!file_exists($previewPath)) {
             // 创建预览图
-            $this->createPreview($plugin);
+            PluginPreviewApi::make()->create($plugin);
         }
         $plugin['preview'] = "/app/{$plugin['name']}/preview.svg";
         $plugin['preview_path'] = $previewPath;
         $plugin['plugin_path'] = $pluginPath;
         // 返回数据
         return $plugin;
-    }
-
-    /**
-     * 创建预览图
-     * @param string $filePath
-     * @param array $plugin
-     * @return bool
-     * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 958416459@qq.com
-     */
-    public function createPreview(array $plugin)
-    {
-        $targetPath = base_path() . "/plugin/{$plugin['name']}/preview.svg";
-        if (file_exists($targetPath)) {
-            return true;
-        }
-        if (!class_exists('\\plugin\\xbDeveloper\\api\\Install')) {
-            return false;
-        }
-        $previewTemplatePath = base_path() . '/plugin/xbDeveloper/data/plugin/preview.tpl';
-        if (!file_exists($previewTemplatePath)) {
-            throw new Exception('预览图片模板不存在');
-        }
-        $previewContent = file_get_contents($previewTemplatePath);
-        if (empty($previewContent)) {
-            return false;
-        }
-        $bgColor = $this->getRandBgColor();
-        $str1 = [
-            '积木云',
-            '#FE9200',
-        ];
-        $str2 = [
-            $plugin['title'],
-            $bgColor,
-        ];
-        $previewContent = str_replace($str1, $str2, $previewContent);
-        file_put_contents($targetPath, $previewContent);
-        return true;
-    }
-
-    /**
-     * 获取随机背景色
-     * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 958416459@qq.com
-     */
-    private function getRandBgColor()
-    {
-        return $this->bgColor[array_rand($this->bgColor)];
     }
 
     /**

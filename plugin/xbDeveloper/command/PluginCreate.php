@@ -13,12 +13,12 @@ namespace plugin\xbDeveloper\command;
 
 use plugin\xbDeveloper\api\PluginsCreate;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Symfony\Component\Console\Question\Question;
 
 /**
  * 创建插件
@@ -61,12 +61,22 @@ class PluginCreate extends Command
         // 插件标识
         $question = new Question('插件标识 (name)：');
         $name = $helper->ask($input, $output, $question);
+        // 检测标识必须字母+数字
+        if (!preg_match('/^[a-zA-Z0-9]+$/', $name)) {
+            throw new \Exception('插件标识只能是字母+数字，不能包含特殊字符');
+        }
         // 插件标题
         $question = new Question('作者名称 (author)：');
         $author = $helper->ask($input, $output, $question);
         // 插件标题
         $question = new Question('一句话描述 (3-30字)：');
         $desc = $helper->ask($input, $output, $question);
+        // 渐变色背景
+        $question = new ConfirmationQuestion('渐变色预览图？(y/n)：');
+        $gradient = $helper->ask($input, $output, $question);
+        $gradientText = $gradient ? '是' : '否';
+
+
         try {
             // 标识首字母转大写
             $name = ucfirst($name);
@@ -74,14 +84,15 @@ class PluginCreate extends Command
 
             // 创建参数
             $data = [
-                'title'=> $title,
-                'name'=> $name,
-                'author'=> $author,
-                'desc' => $desc
+                'title' => $title,
+                'name' => $name,
+                'author' => $author,
+                'desc' => $desc,
+                'gradient' => $gradient,
             ];
             // 数据验证
             PluginsCreate::validate($data);
-            
+
             // 输出插件创建信息
             echo "\n";
             $output->writeln("<info>----------插件信息----------</info>");
@@ -89,12 +100,15 @@ class PluginCreate extends Command
             $output->writeln("<info>插件标识：{$name}</info>");
             $output->writeln("<info>作者名称：{$author}</info>");
             $output->writeln("<info>一句话描述：{$desc}</info>");
+            $output->writeln("<info>是否使用渐变色背景：{$gradientText}</info>");
             $output->writeln("<info>----------插件信息----------</info>");
+            echo "\n";
             // 创建确认提示
-            $question = new ConfirmationQuestion('是否创建插件？默认:n (y/n)', false);
+            $question = new ConfirmationQuestion('认真确认信息后，是否创建插件？(y/n)', false);
             if (!$helper->ask($input, $output, $question)) {
                 return self::SUCCESS;
             }
+            echo "\n";
             // 开始创建插件
             $output->writeln("正在创建 {$name} 插件...");
             PluginsCreate::create($data, true);
