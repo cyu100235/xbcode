@@ -29,10 +29,10 @@ class BaseEnum
     public static function switch()
     {
         $data = [
-            'onText' => static::getLabel('20'),
-            'offText' => static::getLabel('10'),
-            'trueValue' => static::getValue('20'),
-            'falseValue' => static::getValue('10'),
+            'onText' => static::getFieldValue('20', null,'label'),
+            'offText' => static::getFieldValue('10', null,'label'),
+            'trueValue' => static::getFieldValue('20', null,'value'),
+            'falseValue' => static::getFieldValue('10', null,'value'),
         ];
         return $data;
     }
@@ -107,33 +107,20 @@ class BaseEnum
         $data = array_column($data, $name);
         return $data;
     }
-
+    
     /**
-     * 获取枚举值
+     * 获取枚举字段值
      * @param string $value
      * @param mixed $default
-     * @copyright 贵州积木云网络科技有限公司
+     * @param string $field
+     * @copyright 贵州猿创科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public static function getValue(string $value, mixed $default = null)
+    public static function getFieldValue(string $value, mixed $default = null, string $field = 'value')
     {
         $data = static::toArray();
         $dict = array_column($data, null, 'value');
-        return isset($dict[$value]['value']) ? $dict[$value]['value'] : $default;
-    }
-
-    /**
-     * 获取枚举键
-     * @param string $value
-     * @param mixed $default
-     * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 958416459@qq.com
-     */
-    public static function getLabel(string $value, mixed $default = null)
-    {
-        $data = static::toArray();
-        $dict = array_column($data, null, 'value');
-        return isset($dict[$value]['label']) ? $dict[$value]['label'] : $default;
+        return isset($dict[$value][$field]) ? $dict[$value][$field] : $default;
     }
 
     /**

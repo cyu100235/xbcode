@@ -116,7 +116,7 @@ trait InstallTrait
             return;
         }
         // 开始安装定时任务
-        CrontabApi::install($data, $plugin);
+        CrontabApi::make()->install($plugin);
     }
 
     /**

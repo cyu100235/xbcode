@@ -11,6 +11,7 @@
         "Webman\\Captcha\\CaptchaBuilder": "webman/captcha",
         "Dotenv\\Dotenv": "vlucas/phpdotenv",
         "yzh52521\\EasyHttp\\Http": "yzh52521/easyhttp",
+        "Brick\\VarExporter\\VarExporter" : "brick/varexporter",
         "taoser\\Validate": "taoser/webman-validate",
         "think\\Template": "topthink/think-template",
         "Illuminate\\Events\\Dispatcher": "illuminate/events",

@@ -106,7 +106,7 @@ trait UnInstallTrait
             return;
         }
         // 开始卸载定时任务
-        CrontabApi::uninstall($data, $plugin);
+        CrontabApi::make()->uninstall($plugin);
     }
 
     /**
