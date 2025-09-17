@@ -5,14 +5,14 @@
                 <div class="xb-tabs">
                     <div class="item" :class="{ active: item.name === tabs.active }" v-for="item in tabs.list"
                         :key="item.name" @click="handleTabChange(item.name)">
-                        <xbIcons :icon="item.icon" />
+                        <XbIcons :icon="item.icon" />
                         <span class="text">{{ item.label }}</span>
                     </div>
                 </div>
                 <div class="user">
                     <el-button type="primary" @click="hanldImport">
                         <template #icon>
-                            <xbIcons icon="Plus" />
+                            <XbIcons icon="Plus" />
                         </template>
                         <span>导入插件</span>
                     </el-button>
@@ -39,42 +39,42 @@
                             <div class="buttons">
                                 <el-button type="primary" link v-if="item.install === '10'" @click="hanldInstall(item)">
                                     <template #icon>
-                                        <xbIcons icon="Plus" />
+                                        <XbIcons icon="Plus" />
                                     </template>
                                     <span>安装</span>
                                 </el-button>
                                 <el-button type="info" link v-if="item.install === '20' && item.has_config === '20'"
                                     @click="hanldConfig(item)">
                                     <template #icon>
-                                        <xbIcons icon="Setting" />
+                                        <XbIcons icon="Setting" />
                                     </template>
                                     <span>配置</span>
                                 </el-button>
                                 <el-button type="success" :disabled="item.is_system === '20'" v-if="item.install === '20' && item.state === '10'"
                                     @click="setPluginState(item, '20')" link>
                                     <template #icon>
-                                        <xbIcons icon="Check" />
+                                        <XbIcons icon="Check" />
                                     </template>
                                     <span>启用</span>
                                 </el-button>
                                 <el-button type="warning" :disabled="item.is_system === '20'" v-if="item.install === '20' && item.state === '20'"
                                     @click="setPluginState(item, '10')" link>
                                     <template #icon>
-                                        <xbIcons icon="Close" />
+                                        <XbIcons icon="Close" />
                                     </template>
                                     <span>禁用</span>
                                 </el-button>
                                 <el-button type="danger" :disabled="item.is_system === '20'"
                                     v-if="item.install === '20'" @click="hanldUninstall(item)" link>
                                     <template #icon>
-                                        <xbIcons icon="Delete" />
+                                        <XbIcons icon="Delete" />
                                     </template>
                                     <span>卸载</span>
                                 </el-button>
                                 <el-button type="danger" v-if="item.is_system === '10' && item.install === '10'"
                                     @click="hanldDel(item)" link>
                                     <template #icon>
-                                        <xbIcons icon="Delete" />
+                                        <XbIcons icon="Delete" />
                                     </template>
                                     <span>删除</span>
                                 </el-button>

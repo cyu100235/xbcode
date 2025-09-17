@@ -3,7 +3,7 @@
         <div class="body-container">
             <el-upload class="xb-upload" v-bind="uploadProps" v-if="!progress.step">
                 <div class="description">
-                    <xbIcons icon="Upload" size="32" />
+                    <XbIcons icon="Upload" size="32" />
                     <div class="description-text">将插件压缩包拖到此处，或点击上传</div>
                 </div>
             </el-upload>

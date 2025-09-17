@@ -42,7 +42,7 @@ trait PromptLayout
         $component->closable(false);
         $component->content($content);
         $this->prompt[] = [
-            'type' => 'xbPrompt',
+            'type' => 'XbPrompt',
             'props' => $component,
         ];
         return $component;

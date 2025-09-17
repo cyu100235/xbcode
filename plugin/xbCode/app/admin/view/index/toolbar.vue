@@ -3,7 +3,7 @@
         <div class="header-tools">
             <!-- 首页 -->
             <div class="item" @click="hanldHome()">
-                <xbIcons class="icon" icon="Monitor" size="20" color="#555" />
+                <XbIcons class="icon" icon="Monitor" size="20" color="#555" />
             </div>
         </div>
     </div>

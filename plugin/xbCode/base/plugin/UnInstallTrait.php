@@ -148,7 +148,7 @@ trait UnInstallTrait
                 if ($value['field'] === 'config' && $value['type'] === 'type') {
                     continue;
                 }
-                if ($value['type'] === 'xbTitle') {
+                if ($value['type'] === 'XbTitle') {
                     continue;
                 }
                 $where = [

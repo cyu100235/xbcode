@@ -24,5 +24,5 @@ use plugin\xbCode\builder\Components\BaseSchema;
  */
 class XbIconPicker extends BaseSchema
 {
-    public string $type = 'xbIconsPicker';
+    public string $type = 'XbIconsPicker';
 }

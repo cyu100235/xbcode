@@ -22,5 +22,5 @@ namespace plugin\xbCode\builder\Components\Form;
  */
 class IconPicker extends FormBase
 {
-    public string $type = 'xbIconsPicker';
+    public string $type = 'XbIconsPicker';
 }

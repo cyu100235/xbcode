@@ -23,5 +23,5 @@ namespace plugin\xbCode\builder\Components;
  */
 class Icon extends BaseSchema
 {
-    public string $type = 'xbIcons';
+    public string $type = 'XbIcons';
 }

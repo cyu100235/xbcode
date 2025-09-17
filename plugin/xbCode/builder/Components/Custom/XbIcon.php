@@ -24,7 +24,7 @@ use plugin\xbCode\builder\Components\BaseSchema;
  */
 class XbIcon extends BaseSchema
 {
-    public string $type = 'xbIcons';
+    public string $type = 'XbIcons';
 
     /**
      * 设置表单图标展示

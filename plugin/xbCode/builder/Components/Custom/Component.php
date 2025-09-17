@@ -26,7 +26,7 @@ class Component extends BaseSchema
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public string $type = 'xbRender';
+    public string $type = 'XbRender';
 
     /**
      * 远程组件接口
@@ -38,7 +38,7 @@ class Component extends BaseSchema
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public function url(string $url, array $vars = [], array $option = [], string $type = 'xbRemote')
+    public function url(string $url, array $vars = [], array $option = [], string $type = 'XbRemote')
     {
         $this->type = $type;
         $this->setVariable('url', $url);
@@ -57,7 +57,7 @@ class Component extends BaseSchema
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public function body(string $component, array $vars = [], array $option = [], string $type = 'xbRender')
+    public function body(string $component, array $vars = [], array $option = [], string $type = 'XbRender')
     {
         $this->type = $type;
         $this->setVariable('body', $component);

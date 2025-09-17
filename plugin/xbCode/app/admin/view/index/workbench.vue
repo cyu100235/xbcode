@@ -96,8 +96,8 @@
                 </div>
                 <div class="content">
                     <div class="action" @click="hanldSwitchVisits">
-                        <xbIcons icon="TurnOff" size="24" v-if="switchVisits" />
-                        <xbIcons icon="Open" size="24" v-else="switchVisits" />
+                        <XbIcons icon="TurnOff" size="24" v-if="switchVisits" />
+                        <XbIcons icon="Open" size="24" v-else="switchVisits" />
                     </div>
                     <div id="visit-cake"></div>
                 </div>
