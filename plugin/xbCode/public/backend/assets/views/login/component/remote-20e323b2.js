@@ -1,0 +1,1 @@
+import"../../../vendor/vue-b5f628c3.js";import{d as e,o,c as t}from"../../../vendor/@vue-209dae6a.js";const n=e({name:"/login/component/remote"}),s=e({...n,props:{url:{},method:{default:"get"},params:{default:()=>({})}},setup(r){return(a,p)=>(o(),t("div",null,"远程组件登录页面"))}});export{s as _};

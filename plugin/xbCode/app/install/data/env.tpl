@@ -1,0 +1,36 @@
+# 是否开启调试模式
+APP_DEBUG = false
+
+# CPU运行核心数
+APP_CPU_LIMIT = 2
+
+# 是否开启登录验证码
+CAPTCHA_LOGIN = true
+
+# 是否宝塔环境
+BT_ENV_STATE = {BT_ENV_STATE}
+# 宝塔环境标识
+BT_ENV_NAME = {BT_ENV_NAME}
+
+# 后台登录地址
+ADMIN_URL = backend
+
+# 数据库配置
+DB_HOST = {HOSTNAME}
+DB_NAME = {DATABASE}
+DB_USER = {USERNAME}
+DB_PASS = {PASSWORD}
+DB_PORT = {HOSTPORT}
+DB_CHARSET = utf8mb4
+DB_CHARSET_CI = utf8mb4_general_ci
+DB_PREFIX = {PREFIX}
+
+# 缓存类型
+CACHE_TYPE = file
+
+# redis配置
+REDIS_HOST = {REDIS_HOST}
+REDIS_PORT = {REDIS_PORT}
+REDIS_PASSWORD = {REDIS_PASSWD}
+REDIS_DB = 0
+REDIS_PREFIX = {REDIS_PREFIX}

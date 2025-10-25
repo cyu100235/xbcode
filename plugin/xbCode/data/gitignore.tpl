@@ -1,0 +1,11 @@
+/.vscode
+/.idea
+/.DS_Store
+/.phpunit.result.cache
+/.well-known
+/public/attachment/*
+/.idea
+*.log
+/.env
+/tests/tmp
+/tests/.phpunit.result.cache

@@ -1,0 +1,20 @@
+Create by 小白基地
+
+plugin.json为插件信息文件
+
+插件目录说明
+ - api ------ 接口目录，主要与其他插件对接，非网络请求接口
+ - app ------ 应用目录
+ - app/queue ------ 队列任务目录
+ - app/admin/controller ------ 后台控制器目录
+ - app/admin/view ------ 后台视图目录
+ - app/admin/view/index ------ 后台首页视图目录
+ - app/home/controller ------ 默认控制器目录
+ - app/model ------ 模型目录
+ - config ------ 配置目录
+ - enum ------ 枚举目录
+ - data ------ 数据目录
+ - public ------ 公共目录
+ - setting ------ 设置目录
+ - setting/config ------ 普通设置目录
+ - setting/tabs ------ 选项卡设置目录

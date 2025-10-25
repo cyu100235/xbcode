@@ -1,0 +1,9 @@
+{
+    "title": "开发者辅助",
+    "name": "xbDeveloper",
+    "desc": "开发者创建、安装、更新、调试插件",
+    "version" : "1.0.0",
+    "author":"积木云",
+    "composer": {},
+    "plugins": {}
+}
