@@ -204,10 +204,10 @@ class InstallUtil
             $database['port'],
             $database['prefix'],
             // Redis配置
-            $redis['host'],
-            $redis['port'],
-            $redis['password'],
-            $redis['prefix'],
+            $redis['host'] ?? '127.0.0.1',
+            $redis['port'] ?? '6379',
+            $redis['password'] ?? '',
+            $redis['prefix'] ?? 'xb_',
         ];
         $envConfig = str_replace($str1, $str2, $envConfig);
         // 写入配置文件

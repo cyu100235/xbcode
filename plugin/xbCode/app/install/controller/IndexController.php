@@ -113,8 +113,7 @@ class IndexController extends XbController
         }
         try {
             $database = $post['database'];
-            $redisData = $post['redis'];
-            if (empty($database) || empty($redisData)) {
+            if (empty($database)) {
                 throw new Exception('参数错误');
             }
             if (empty($database['host'])) {
@@ -145,6 +144,7 @@ class IndexController extends XbController
             } catch (\Throwable $e) {
                 throw new Exception($e->getMessage(), $e->getCode());
             }
+            Cache::set('install_database', $database, 3600);
         } catch (\Throwable $th) {
             // 检测是否数据库连接失败
             $errorCode = [
@@ -158,10 +158,18 @@ class IndexController extends XbController
             if (in_array($th->getCode(), $errorCode)) {
                 return $this->fail('数据库连接失败，请检查数据库配置');
             }
-            // 返回错误
+            // 返回错误信息
             return $this->fail($th->getMessage());
         }
+        if (empty($post['redis'])) {
+            return $this->fail('Redis配置参数错误');
+        }
+        $state = $post['redis']['enabled'] ?? '20';
+        if ($state === '10') {
+            return $this->success('数据验证成功，跳过Redis配置');
+        }
         try {
+            $redisData = $post['redis'];
             // 验证redis
             if (!isset($redisData['host']) || empty($redisData['host'])) {
                 throw new Exception('请输入Redis主机地址');
@@ -176,27 +184,25 @@ class IndexController extends XbController
                 throw new Exception('Redis扩展未安装');
             }
             // 创建Redis实例
-            $redis = new Redis([
-                'host'       => $redisData['host'] ?? '127.0.0.1',
-                'port'       => $redisData['port'] ?? 6379,
-                'password'   => $redisData['password'] ?? '',
-                'select'     => 0,
-                'timeout'    => 0,
-                'expire'     => 0,
+            new Redis([
+                'host' => $redisData['host'] ?? '127.0.0.1',
+                'port' => $redisData['port'] ?? 6379,
+                'password' => $redisData['password'] ?? '',
+                'select' => 0,
+                'timeout' => 0,
+                'expire' => 0,
                 'persistent' => false,
-                'prefix'     => $redisData['prefix'] ?? 'xbCode:',
+                'prefix' => $redisData['prefix'] ?? 'xbCode:',
                 'tag_prefix' => 'tag:',
-                'serialize'  => [],
+                'serialize' => [],
             ]);
+            Cache::set('install_redis', $redisData, 3600);
         } catch (\Throwable $th) {
             if (strpos($th->getMessage(), 'password')) {
                 throw new Exception('Redis密码错误');
             }
-            throw $th;
+            throw new Exception("Redis错误：{$th->getMessage()}");
         }
-        // 缓存数据
-        Cache::set('install_database', $database, 3600);
-        Cache::set('install_redis', $redisData, 3600);
         // 返回成功
         return $this->success('数据验证成功');
     }
@@ -214,7 +220,7 @@ class IndexController extends XbController
             return $this->fail('参数错误');
         }
         // 检测数据库配置缓存是否生效
-        if (!Cache::get('install_database') || !Cache::get('install_redis')) {
+        if (!Cache::get('install_database')) {
             return $this->fail('请重新填写数据库配置');
         }
         $site = $post['site'];
