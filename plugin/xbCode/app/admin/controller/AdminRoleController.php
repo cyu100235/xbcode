@@ -25,7 +25,7 @@ use plugin\xbCode\builder\Components\Form\Transfer;
 
 /**
  * 角色管理
- * @copyright 贵州积木云网络网络科技有限公司
+ * @copyright 贵州积木云网络科技有限公司
  * @author 楚羽幽 958416459@qq.com
  */
 class AdminRoleController extends XbController
@@ -34,7 +34,7 @@ class AdminRoleController extends XbController
      * 表格
      * @param \support\Request $request
      * @return \support\Response
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public function index(Request $request)
@@ -88,7 +88,7 @@ class AdminRoleController extends XbController
      * 添加
      * @param \support\Request $request
      * @return \support\Response
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public function add(Request $request)
@@ -124,7 +124,7 @@ class AdminRoleController extends XbController
      * 修改
      * @param \support\Request $request
      * @return \support\Response
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public function edit(Request $request)
@@ -155,7 +155,7 @@ class AdminRoleController extends XbController
      * 删除
      * @param \support\Request $request
      * @return \support\Response
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public function del(Request $request)
@@ -184,7 +184,7 @@ class AdminRoleController extends XbController
      * 分配权限
      * @param \support\Request $request
      * @return \support\Response
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public function auth(Request $request)

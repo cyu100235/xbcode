@@ -5,8 +5,8 @@ use taoser\Validate;
 
 /**
  * 菜单验证器
- * @author 贵州积木云网络网络科技有限公司
- * @copyright (c) 贵州积木云网络网络科技有限公司
+ * @author 贵州积木云网络科技有限公司
+ * @copyright (c) 贵州积木云网络科技有限公司
  */
 class AdminRuleValidate extends Validate
 {

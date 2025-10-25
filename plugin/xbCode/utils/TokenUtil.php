@@ -6,7 +6,7 @@ use Tinywan\Jwt\JwtToken;
 
 /**
  * 令牌工具类
- * @copyright 贵州积木云网络网络科技有限公司
+ * @copyright 贵州积木云网络科技有限公司
  * @author 楚羽幽 958416459@qq.com
  */
 class TokenUtil
@@ -17,7 +17,7 @@ class TokenUtil
      * @param int $expire 过期时间
      * @param string $client 客户端类型
      * @return array
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public static function create(array $data, int $expire = 86400, string $client = 'web')
@@ -46,7 +46,7 @@ class TokenUtil
     /**
      * 刷新token
      * @return array
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public static function refreshToken()

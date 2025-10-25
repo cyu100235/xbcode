@@ -20,7 +20,7 @@ use plugin\xbCode\api\PluginsApi;
 
 /**
  * 插件检测
- * @copyright 贵州积木云网络网络科技有限公司
+ * @copyright 贵州积木云网络科技有限公司
  * @author 楚羽幽 958416459@qq.com
  */
 class PluginMiddleware implements MiddlewareInterface
@@ -30,7 +30,7 @@ class PluginMiddleware implements MiddlewareInterface
      * @param \Webman\Http\Request $request
      * @param callable $handler
      * @return \Webman\Http\Response
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public function process(Request $request, callable $handler): Response

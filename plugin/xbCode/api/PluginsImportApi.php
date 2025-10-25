@@ -3,7 +3,7 @@ namespace plugin\xbCode\api;
 
 /**
  * 插件安装接口类
- * @copyright 贵州积木云网络网络科技有限公司
+ * @copyright 贵州积木云网络科技有限公司
  * @author 楚羽幽 958416459@qq.com
  */
 class PluginsImportApi extends PluginsBaseApi

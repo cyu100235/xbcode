@@ -6,7 +6,7 @@ use plugin\xbCode\app\model\AdminRule;
 
 /**
  * 资源菜单操作
- * @copyright 贵州积木云网络网络科技有限公司
+ * @copyright 贵州积木云网络科技有限公司
  * @author 楚羽幽 958416459@qq.com
  */
 class MenuResponse
@@ -17,7 +17,7 @@ class MenuResponse
      * @param array $data
      * @throws \Exception
      * @return void
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public static function addResponse(array $parent, array $data)
@@ -82,7 +82,7 @@ class MenuResponse
     /**
      * 获取资源菜单选项
      * @return array
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public static function responseOption()

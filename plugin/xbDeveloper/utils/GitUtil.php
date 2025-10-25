@@ -15,7 +15,7 @@ use Exception;
 
 /**
  * GIT工具类
- * @copyright 贵州积木云网络网络科技有限公司
+ * @copyright 贵州积木云网络科技有限公司
  * @author 楚羽幽 958416459@qq.com
  */
 class GitUtil
@@ -81,7 +81,7 @@ class GitUtil
      * 验证函数是否开启
      * @param string $funName
      * @return void
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public static function verifyExec(string $funName = 'exec')

@@ -7,7 +7,7 @@ use plugin\xbCode\utils\trait\JsonTrait;
 
 /**
  * 控制器基类
- * @copyright 贵州积木云网络网络科技有限公司
+ * @copyright 贵州积木云网络科技有限公司
  * @author 楚羽幽 958416459@qq.com
  */
 class XbController
@@ -17,7 +17,7 @@ class XbController
 
     /**
      * 构造方法
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public function __construct()
@@ -29,7 +29,7 @@ class XbController
     /**
      * 初始化方法
      * @return void
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     protected function init()

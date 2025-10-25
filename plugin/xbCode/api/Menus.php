@@ -1,6 +1,6 @@
 <?php
 /**
- * 贵州积木云网络网络科技有限公司
+ * 贵州积木云网络科技有限公司
  *
  * @package  XbCode
  * @author   楚羽幽 <958416459@qq.com>
@@ -19,7 +19,7 @@ use plugin\xbCode\app\model\AdminRule;
 
 /**
  * 菜单安装/卸载接口
- * @copyright 贵州积木云网络网络科技有限公司
+ * @copyright 贵州积木云网络科技有限公司
  * @author 楚羽幽 958416459@qq.com
  */
 class Menus
@@ -30,7 +30,7 @@ class Menus
      * @param int $adminId 管理员ID
      * @param string $isWeb Saas应用菜单，10=系统菜单，20=Saas应用菜单
      * @throws \Exception
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public static function get(int $adminId, string $isWeb = '10')
@@ -87,7 +87,7 @@ class Menus
     /**
      * 获取角色权限
      * @param int $roleId 角色ID
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public static function getRoleRules(int $roleId)
@@ -134,7 +134,7 @@ class Menus
      * @param int $pid 父级菜单ID
      * @param mixed $rules 菜单规则
      * @return mixed
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public static function getParentRules(int $pid, array $rules = [])
@@ -176,7 +176,7 @@ class Menus
      * @param string $name 插件标识
      * @param int $level 当前层级
      * @return void
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public static function install(array $data, string $name, int $level = 0)
@@ -267,7 +267,7 @@ class Menus
      * 卸载菜单
      * @param string $name 插件标识，为空自动识别插件标识
      * @return bool
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public static function uninstall(string $name = null)

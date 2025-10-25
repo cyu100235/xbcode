@@ -16,7 +16,7 @@ use plugin\xbCode\Model;
 
 /**
  * 菜单规则
- * @copyright 贵州积木云网络网络科技有限公司
+ * @copyright 贵州积木云网络科技有限公司
  * @author 楚羽幽 958416459@qq.com
  */
 class AdminRule extends Model
@@ -25,7 +25,7 @@ class AdminRule extends Model
      * 设置请求类型数据
      * @param mixed $value
      * @return mixed
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     protected function setMethodAttr($value)
@@ -43,7 +43,7 @@ class AdminRule extends Model
      * 获取请求类型数据
      * @param mixed $value
      * @return string
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     protected function getMethodAttr($value)
@@ -58,7 +58,7 @@ class AdminRule extends Model
      * 获取菜单字典
      * @param bool $force 是否强制刷新
      * @return mixed
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public static function getMenuDict(bool $force = false)

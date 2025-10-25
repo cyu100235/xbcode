@@ -25,7 +25,7 @@ use plugin\xbCode\builder\Renders\TableCrud;
 
 /**
  * 引擎管理
- * @copyright 贵州积木云网络网络科技有限公司
+ * @copyright 贵州积木云网络科技有限公司
  * @author 楚羽幽 958416459@qq.com
  */
 class EngineController extends XbController
@@ -34,7 +34,7 @@ class EngineController extends XbController
      * 引擎列表
      * @param \support\Request $request
      * @return \support\Response
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public function index(Request $request)
@@ -106,7 +106,7 @@ class EngineController extends XbController
      * 配置引擎
      * @param \support\Request $request
      * @return \support\Response
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public function config(Request $request)

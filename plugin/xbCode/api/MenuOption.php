@@ -6,7 +6,7 @@ use plugin\xbCode\app\model\AdminRule;
 
 /**
  * 菜单选项接口
- * @copyright 贵州积木云网络网络科技有限公司
+ * @copyright 贵州积木云网络科技有限公司
  * @author 楚羽幽 958416459@qq.com
  */
 class MenuOption
@@ -14,7 +14,7 @@ class MenuOption
     /**
      * 获取联级选项
      * @return array<int|string>[]
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public static function getCascaderOptions()
@@ -35,7 +35,7 @@ class MenuOption
      * 获取子级选项
      * @param array $data
      * @return array
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public static function getChildrenOptions(array $data): array

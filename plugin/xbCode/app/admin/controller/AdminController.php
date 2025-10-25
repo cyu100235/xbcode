@@ -24,7 +24,7 @@ use plugin\xbCode\builder\Components\Form\Group;
 
 /**
  * 管理员管理
- * @copyright 贵州积木云网络网络科技有限公司
+ * @copyright 贵州积木云网络科技有限公司
  * @author 楚羽幽 958416459@qq.com
  */
 class AdminController extends XbController
@@ -81,7 +81,7 @@ class AdminController extends XbController
      * 添加
      * @param \support\Request $request
      * @return \support\Response
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public function add(Request $request)
@@ -109,7 +109,7 @@ class AdminController extends XbController
      * 修改
      * @param \support\Request $request
      * @return \support\Response
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public function edit(Request $request)
@@ -146,7 +146,7 @@ class AdminController extends XbController
      * 删除
      * @param \support\Request $request
      * @return \support\Response
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public function del(Request $request)
@@ -171,7 +171,7 @@ class AdminController extends XbController
      * 修改个人资料
      * @param \support\Request $request
      * @return \support\Response
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public function profile(Request $request)

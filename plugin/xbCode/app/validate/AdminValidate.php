@@ -5,7 +5,7 @@ use taoser\Validate;
 
 /**
  * 管理员验证器
- * @copyright 贵州积木云网络网络科技有限公司
+ * @copyright 贵州积木云网络科技有限公司
  * @author 楚羽幽 958416459@qq.com
  */
 class AdminValidate extends Validate
@@ -34,7 +34,7 @@ class AdminValidate extends Validate
     /**
      * 登录
      * @return AdminValidate
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     protected function sceneLogin()
@@ -48,7 +48,7 @@ class AdminValidate extends Validate
     /**
      * 添加
      * @return AdminValidate
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     protected function sceneAdd()
@@ -64,7 +64,7 @@ class AdminValidate extends Validate
     /**
      * 编辑
      * @return AdminValidate
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     protected function sceneEdit()
@@ -81,7 +81,7 @@ class AdminValidate extends Validate
     /**
      * 个人资料
      * @return AdminValidate
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     protected function sceneProfile()

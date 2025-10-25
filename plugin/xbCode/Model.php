@@ -17,7 +17,7 @@ use plugin\xbCode\base\BaseModel;
 
 /**
  * 通用模型
- * @copyright 贵州积木云网络网络科技有限公司
+ * @copyright 贵州积木云网络科技有限公司
  * @author 楚羽幽 958416459@qq.com
  */
 class Model extends BaseModel
@@ -43,7 +43,7 @@ class Model extends BaseModel
      * 全局查询范围
      * @param mixed $query
      * @return void
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public function scopeAppid($query)
@@ -56,7 +56,7 @@ class Model extends BaseModel
      * 新增和更新都会触发
      * @param mixed $model
      * @return void
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public static function onBeforeWrite($model)
@@ -68,7 +68,7 @@ class Model extends BaseModel
      * 删除前事件
      * @param mixed $model
      * @return void
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public static function onBeforeDelete($model)
@@ -81,7 +81,7 @@ class Model extends BaseModel
      * @param mixed $model 模型
      * @param bool $isQuery 是否是查询
      * @return void
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     private static function setAppid($model, bool $isQuery = false)

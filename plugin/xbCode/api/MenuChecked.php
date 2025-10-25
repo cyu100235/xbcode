@@ -7,7 +7,7 @@ use plugin\xbCode\app\validate\AdminRuleValidate;
 
 /**
  * 菜单数据处理接口
- * @copyright 贵州积木云网络网络科技有限公司
+ * @copyright 贵州积木云网络科技有限公司
  * @author 楚羽幽 958416459@qq.com
  */
 class MenuChecked
@@ -17,7 +17,7 @@ class MenuChecked
      * @param array $data 菜单数据
      * @param bool $isLevel 数据是否树状结构
      * @return mixed
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public static function parseMenu(array $data, bool $isLevel = false)
@@ -106,7 +106,7 @@ class MenuChecked
      * 二维数组转树形结构
      * @param array $menus 二维菜单数组
      * @return array
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public static function menu2DToTree(array $data)
@@ -119,7 +119,7 @@ class MenuChecked
      * 树形结构转二维数组
      * @param array $menus 树形菜单数组
      * @return array
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public static function menuTreeTo2D(array $menus, int $pid = 0, int $id = 1)
@@ -148,7 +148,7 @@ class MenuChecked
      * 解析菜单数据
      * @param array $menus
      * @return array
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     protected static function parseMenuData(array $data)
@@ -188,7 +188,7 @@ class MenuChecked
      * @param array $data
      * @param string $key
      * @return array
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     protected static function getMenuKey(array $data, string $key = '')
@@ -211,7 +211,7 @@ class MenuChecked
      * 重置多层级数组的下标
      * @param mixed $data
      * @return mixed
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     protected static function resetKeys($array)
@@ -230,7 +230,7 @@ class MenuChecked
      * 解析树状菜单数据
      * @param array $data
      * @return array
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     protected static function parseMenusTreeData(array $data)

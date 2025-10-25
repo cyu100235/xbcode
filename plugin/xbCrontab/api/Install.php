@@ -16,7 +16,7 @@ use plugin\xbCode\base\BasePlugin;
 
 /**
  * 插件安装类
- * @copyright 贵州积木云网络网络科技有限公司
+ * @copyright 贵州积木云网络科技有限公司
  * @author 楚羽幽 958416459@qq.com
  */
 class Install extends BasePlugin
@@ -26,7 +26,7 @@ class Install extends BasePlugin
      * @param string $version
      * @param mixed $context
      * @return void
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public static function install(string $version = '', mixed $context = null)
@@ -41,7 +41,7 @@ class Install extends BasePlugin
      * @param string $version
      * @param mixed $context
      * @return void
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public static function update(string $version = '', mixed $context = null)
@@ -53,7 +53,7 @@ class Install extends BasePlugin
      * @param string $version
      * @param mixed $context
      * @return void
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public static function uninstall(string $version = '', mixed $context = null)

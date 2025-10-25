@@ -18,7 +18,7 @@ use plugin\xbCrontab\app\validate\CrontabValidate;
 
 /**
  * 定时任务接口类
- * @copyright 贵州积木云网络网络科技有限公司
+ * @copyright 贵州积木云网络科技有限公司
  * @author 楚羽幽 958416459@qq.com
  */
 class CrontabApi

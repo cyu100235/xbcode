@@ -6,8 +6,8 @@ use Exception;
 
 /**
  * 执行系统命令ZIP管理器
- * @author 贵州积木云网络网络科技有限公司
- * @copyright 贵州积木云网络网络科技有限公司
+ * @author 贵州积木云网络科技有限公司
+ * @copyright 贵州积木云网络科技有限公司
  * @email 958416459@qq.com
  */
 class SystemZipCmdUtil implements ZipInterface
@@ -17,7 +17,7 @@ class SystemZipCmdUtil implements ZipInterface
      * @param string $zipFile 压缩包路径
      * @param string $extractTo 解压路径
      * @return void
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public static function unzip(string $zipFile, string $extractTo)
@@ -46,7 +46,7 @@ class SystemZipCmdUtil implements ZipInterface
      * @param string $zipFile 压缩包路径
      * @param string $extractTo 解压路径
      * @return string
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public static function getUnzipCmd(string $zipFile, string $extractTo)
@@ -67,7 +67,7 @@ class SystemZipCmdUtil implements ZipInterface
      * @param string $extractTo 打包的目标目录
      * @param array $ignoreFiles 需要忽略的目录或者文件
      * @return void
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public static function build(string $zipFile, string $extractTo, array $ignoreFiles = [])
@@ -100,8 +100,8 @@ class SystemZipCmdUtil implements ZipInterface
      * @param array $files 需要打包的文件
      * @throws \Exception
      * @return void
-     * @author 贵州积木云网络网络科技有限公司
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @author 贵州积木云网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @email 958416459@qq.com
      */
     public static function buildFiles(string $zipFilePath, string $extractTo, array $files)
@@ -134,7 +134,7 @@ class SystemZipCmdUtil implements ZipInterface
      * @param string $extractTo 打包的目标目录，存在小写逗号时，表示打包指定文件
      * @param array $ignoreFiles 需要忽略的目录或者文件
      * @return string
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public static function getZipBuildCmd(string $zipFile, string $extractTo, array $ignoreFiles = [])
@@ -204,8 +204,8 @@ class SystemZipCmdUtil implements ZipInterface
      * 指定打包文件
      * @param string $extractTo
      * @return void
-     * @author 贵州积木云网络网络科技有限公司
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @author 贵州积木云网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @email 958416459@qq.com
      */
     public static function appointFiles(string &$extractTo)
@@ -224,8 +224,8 @@ class SystemZipCmdUtil implements ZipInterface
      * @param string $default
      * @param array $extraDirs
      * @return string
-     * @author 贵州积木云网络网络科技有限公司
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @author 贵州积木云网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @email 958416459@qq.com
      */
     public static function findCmd(string $name, string $default = null, array $extraDirs = [])

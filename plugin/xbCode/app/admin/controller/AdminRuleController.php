@@ -30,7 +30,7 @@ use plugin\xbCode\builder\Components\Form\InputKV;
 
 /**
  * 菜单管理
- * @copyright 贵州积木云网络网络科技有限公司
+ * @copyright 贵州积木云网络科技有限公司
  * @author 楚羽幽 958416459@qq.com
  */
 class AdminRuleController extends XbController
@@ -39,7 +39,7 @@ class AdminRuleController extends XbController
      * 表格
      * @param \support\Request $request
      * @return \support\Response
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public function index(Request $request)
@@ -120,7 +120,7 @@ class AdminRuleController extends XbController
      * 添加
      * @param \support\Request $request
      * @return \support\Response
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public function add(Request $request)
@@ -156,7 +156,7 @@ class AdminRuleController extends XbController
      * 修改
      * @param \support\Request $request
      * @return \support\Response
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public function edit(Request $request)
@@ -206,7 +206,7 @@ class AdminRuleController extends XbController
      * 删除
      * @param \support\Request $request
      * @return \support\Response
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public function del(Request $request)
@@ -262,7 +262,7 @@ class AdminRuleController extends XbController
     /**
      * 获取多级选项
      * @return array<int|string>[]
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     protected static function getCascaderOptions()

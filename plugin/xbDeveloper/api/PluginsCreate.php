@@ -17,7 +17,7 @@ use plugin\xbDeveloper\utils\GitUtil;
 
 /**
  * 插件创建接口
- * @copyright 贵州积木云网络网络科技有限公司
+ * @copyright 贵州积木云网络科技有限公司
  * @author 楚羽幽 958416459@qq.com
  */
 class PluginsCreate
@@ -324,7 +324,7 @@ class PluginsCreate
      * 创建插件说明文件
      * @param string $pluginPath
      * @return void
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     private static function mkPluginRemarks(string $pluginPath)
@@ -346,7 +346,7 @@ class PluginsCreate
      * @param string $content
      * @param string $name
      * @return void
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     private static function mkdir(string $path, string $content, string $name)
@@ -365,7 +365,7 @@ class PluginsCreate
      * @param string $name
      * @throws \Exception
      * @return void
-     * @copyright 贵州积木云网络网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     private static function createFile(string $path, string $name)
