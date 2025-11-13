@@ -48,8 +48,10 @@ Redis
 
 ### 🔨 宝塔安装（推荐使用）
 
+[Gitee开源地址](https://gitee.com/xbcode_net/xbcode)
+
 ```
-1、gitee或github克隆项目代码
+1、gitee或github克隆项目代码，
 2、进入站点目录，执行命令：git submodule update --recursive
 3、宝塔-网站-PHP项目-添加站点-选择异步项目
 4、填写绑定域名-填写数据库创建-填写启动命令：php webman start 点击《确定》
