@@ -55,8 +55,7 @@ Redis
 
 2、进入站点目录，执行以下命令
 
-git submodule init
-git submodule update --recursive
+git submodule update --init --recursive
 
 3、宝塔-网站-PHP项目-添加站点-选择异步项目
 
