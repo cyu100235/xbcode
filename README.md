@@ -51,14 +51,22 @@ Redis
 [Gitee开源地址](https://gitee.com/xbcode_net/xbcode)
 
 ```
-1、gitee或github克隆项目代码，
-2、进入站点目录，执行命令：git submodule update --recursive
+1、gitee或github克隆项目代码
+
+2、进入站点目录，执行以下命令
+
+git submodule init
+git submodule update --recursive
+
 3、宝塔-网站-PHP项目-添加站点-选择异步项目
+
 4、填写绑定域名-填写数据库创建-填写启动命令：php webman start 点击《确定》
+
 5、点击选择刚才创建的站点-服务管理-运行目录-选择public
-6、复制项目代码根目录下的nginx.rewrite内容到刚才创建的站点伪静态（必须确保该内容中的端口未被占用）
-7、将项目代码上传至站点根目录
-8、访问刚才填写的域名进行安装，示例：demo.xbcode.net
+
+5、点击选择刚才创建的站点-配置文件-伪静态配置文件-填写：include /站点目录/nginx.conf;
+
+7、访问刚才填写的域名进行安装，示例：demo.xbcode.net
 ```
 
 ### 官方导航
