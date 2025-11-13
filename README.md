@@ -69,9 +69,13 @@ Redis
 ### ⚡ 系统演示
 
 ![登录界面](https://gitee.com/xbcode-plugin/xbCode/raw/main/preview/1.png)
+
 ![工作台界面](https://gitee.com/xbcode-plugin/xbCode/raw/main/preview/2.png)
+
 ![插件界面](https://gitee.com/xbcode-plugin/xbCode/raw/main/preview/3.png)
+
 ![管理员账号](hhttps://gitee.com/xbcode-plugin/xbCode/raw/main/preview/4.png)
+
 ![系统设置](https://gitee.com/xbcode-plugin/xbCode/raw/main/preview/5.png)
 
 <b style="color:red;">当前域名正在备案中，请稍后访问。</b>
