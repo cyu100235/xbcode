@@ -1,9 +1,0 @@
-{
-    "title": "定时任务",
-    "name": "xbCrontab",
-    "desc": "通用定时任务处理器",
-    "version" : "0.0.0",
-    "author":"积木云",
-    "composer": {},
-    "plugins": {}
-}
