@@ -74,7 +74,7 @@ Redis
 
 ![插件界面](https://gitee.com/xbcode-plugin/xbCode/raw/main/preview/3.png)
 
-![管理员账号](hhttps://gitee.com/xbcode-plugin/xbCode/raw/main/preview/4.png)
+![管理员账号](https://gitee.com/xbcode-plugin/xbCode/raw/main/preview/4.png)
 
 ![系统设置](https://gitee.com/xbcode-plugin/xbCode/raw/main/preview/5.png)
 
