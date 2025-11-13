@@ -68,11 +68,11 @@ Redis
 
 ### ⚡ 系统演示
 
-![登录界面](/xbcode-plugin/xbCode/blob/main/preview/1.png)
-![工作台界面](/xbcode-plugin/xbCode/blob/main/preview/2.png)
-![插件界面](/xbcode-plugin/xbCode/blob/main/preview/3.png)
-![管理员账号](/xbcode-plugin/xbCode/blob/main/preview/4.png)
-![系统设置](/xbcode-plugin/xbCode/blob/main/preview/5.png)
+![登录界面](https://gitee.com/xbcode-plugin/xbCode/blob/main/preview/1.png)
+![工作台界面](https://gitee.com/xbcode-plugin/xbCode/blob/main/preview/2.png)
+![插件界面](https://gitee.com/xbcode-plugin/xbCode/blob/main/preview/3.png)
+![管理员账号](https://gitee.com/xbcode-plugin/xbCode/blob/main/preview/4.png)
+![系统设置](https://gitee.com/xbcode-plugin/xbCode/blob/main/preview/5.png)
 
 <b style="color:red;">当前域名正在备案中，请稍后访问。</b>
 系统演示： http://demo.xbcode.net/admin 账号：admin 密码：123456
