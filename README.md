@@ -1,20 +1,6 @@
-<div align="center">
-
+<center>
 基于 **渐进式动态页面构建渲染研发框架** 快速创建属于你自己的系统
-
-</div>
-
-<div align="center" style="display: flex;justify-content: center;gap:15px;">
-    <a href="https://xbcode.net/">
-        <img src="https://img.shields.io/badge/license-Apache%202-blue.svg" />
-    </a>
-    <a href="https://xbcode.net/">
-        <img src="https://img.shields.io/badge/Edition-4.5-blue.svg" />
-    </a>
-     <a href="https://xbcode.net/">
-        <img src="https://img.shields.io/badge/Download-150m-red.svg" />
-    </a>
-</div>
+</center>
 
 ### 🌈 框架介绍
 
@@ -38,6 +24,7 @@ QQ 群：592808248
 - [√] 表格 Excel 导出
 - [√] 自定义任务队列
 - [√] 部门权限管理（支持数据权限）
+- [×] 低代码可视化UI界面
 - [×] 一键 CURD 代码
 - [×] 更多功能正在加紧中...
 
@@ -57,18 +44,19 @@ MySQL >= 5.7或8.0
 Redis
 ```
 
-> <p>温馨提示：</p>虚拟空间不支持，推荐使用 bt 宝塔面板，服务器推荐阿里云 ecs 或腾讯云 cvm 云服务器
+> ***温馨提示：***虚拟空间不支持，推荐使用 bt 宝塔面板，服务器推荐阿里云 ecs 或腾讯云 cvm 云服务器
 
 ### 🔨 宝塔安装（推荐使用）
 
 ```
-1、官网订单内下载项目代码
-2、宝塔-网站-PHP项目-添加站点-选择异步项目
-3、填写绑定域名-填写数据库创建-填写启动命令：php webman start 点击《确定》
-4、点击选择刚才创建的站点-服务管理-运行目录-选择public
-5、复制项目代码根目录下的nginx.rewrite内容到刚才创建的站点伪静态（必须确保该内容中的端口未被占用）
-6、将项目代码上传至站点根目录
-7、访问刚才填写的域名进行安装，示例：demo.xbcode.net
+1、gitee或github克隆项目代码
+2、进入项目目录，执行命令：git submodule update --recursive
+3、宝塔-网站-PHP项目-添加站点-选择异步项目
+4、填写绑定域名-填写数据库创建-填写启动命令：php webman start 点击《确定》
+5、点击选择刚才创建的站点-服务管理-运行目录-选择public
+6、复制项目代码根目录下的nginx.rewrite内容到刚才创建的站点伪静态（必须确保该内容中的端口未被占用）
+7、将项目代码上传至站点根目录
+8、访问刚才填写的域名进行安装，示例：demo.xbcode.net
 ```
 
 ### 官方导航
