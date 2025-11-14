@@ -1,4 +1,5 @@
-/xbCode/.git
-/xbCrontab/.git
-/xbDeveloper/.git
-/xbUpload/.git
+/xbCode
+/xbCrontab
+/xbDeveloper
+/xbUpload
+*
