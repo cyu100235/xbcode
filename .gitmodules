@@ -1,12 +1,12 @@
 [submodule "plugin/xbCode"]
 	path = plugin/xbCode
-	url = git@gitee.com:xbcode-plugin/xbCode.git
+	url = https://gitee.com/xbcode-plugin/xbCode.git
 [submodule "plugin/xbUpload"]
 	path = plugin/xbUpload
-	url = git@gitee.com:xbcode-plugin/xbUpload.git
+	url = https://gitee.com/xbcode-plugin/xbUpload.git
 [submodule "plugin/xbCrontab"]
 	path = plugin/xbCrontab
-	url = git@gitee.com:xbcode-plugin/xbCrontab.git
+	url = https://gitee.com/xbcode-plugin/xbCrontab.git
 [submodule "plugin/xbDeveloper"]
 	path = plugin/xbDeveloper
-	url = git@gitee.com:xbcode-plugin/xbDeveloper.git
+	url = https://gitee.com/xbcode-plugin/xbDeveloper.git
