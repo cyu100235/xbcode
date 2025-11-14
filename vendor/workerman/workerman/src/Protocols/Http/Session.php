@@ -17,19 +17,16 @@ declare(strict_types=1);
 namespace Workerman\Protocols\Http;
 
 use Exception;
-use Random\RandomException;
 use RuntimeException;
+use Throwable;
 use Workerman\Protocols\Http\Session\FileSessionHandler;
 use Workerman\Protocols\Http\Session\SessionHandlerInterface;
 use function array_key_exists;
 use function ini_get;
 use function is_array;
 use function is_scalar;
-use function preg_match;
 use function random_int;
-use function serialize;
 use function session_get_cookie_params;
-use function unserialize;
 
 /**
  * Class Session
@@ -157,18 +154,27 @@ class Session
     protected bool $isSafe = true;
 
     /**
+     * Session serialize_handler
+     * @var array|string[]
+     */
+    protected array $serializer = ['serialize', 'unserialize'];
+
+    /**
      * Session constructor.
      *
      * @param string $sessionId
      */
     public function __construct(string $sessionId)
     {
+        if (extension_loaded('igbinary') && ini_get('session.serialize_handler') == 'igbinary') {
+            $this->serializer = ['igbinary_serialize', 'igbinary_unserialize'];
+        }
         if (static::$handler === null) {
             static::initHandler();
         }
         $this->sessionId = $sessionId;
         if ($data = static::$handler->read($sessionId)) {
-            $this->data = unserialize($data);
+            $this->data = $this->serializer[1]($data);
         }
     }
 
@@ -321,7 +327,7 @@ class Session
             if (empty($this->data)) {
                 static::$handler->destroy($this->sessionId);
             } else {
-                static::$handler->write($this->sessionId, serialize($this->data));
+                static::$handler->write($this->sessionId, $this->serializer[0]($this->data));
             }
         } elseif (static::$autoUpdateTimestamp) {
             $this->refresh();
@@ -435,7 +441,7 @@ class Session
      * __destruct.
      *
      * @return void
-     * @throws RandomException
+     * @throws Throwable
      */
     public function __destruct()
     {
