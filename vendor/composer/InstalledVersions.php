@@ -32,7 +32,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '28ddcad8550ae27abfa5029d37b4bd68e01de831',
+    'reference' => '5116889b38eb7e719e5c1ce39ed0f11c7eab0eb2',
     'name' => 'workerman/webman',
   ),
   'versions' => 
@@ -427,12 +427,12 @@ private static $installed = array (
     ),
     'symfony/console' => 
     array (
-      'pretty_version' => 'v7.3.6',
-      'version' => '7.3.6.0',
+      'pretty_version' => 'v6.4.27',
+      'version' => '6.4.27.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'c28ad91448f86c5f6d9d2c70f0cf68bf135f252a',
+      'reference' => '13d3176cf8ad8ced24202844e9f95af11e2959fc',
     ),
     'symfony/deprecation-contracts' => 
     array (
@@ -499,12 +499,12 @@ private static $installed = array (
     ),
     'symfony/string' => 
     array (
-      'pretty_version' => 'v7.3.4',
-      'version' => '7.3.4.0',
+      'pretty_version' => 'v6.4.26',
+      'version' => '6.4.26.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'f96476035142921000338bad71e5247fbc138872',
+      'reference' => '5621f039a71a11c87c106c1c598bdcd04a19aeea',
     ),
     'symfony/translation' => 
     array (
@@ -533,12 +533,12 @@ private static $installed = array (
     ),
     'symfony/var-exporter' => 
     array (
-      'pretty_version' => 'v7.3.4',
-      'version' => '7.3.4.0',
+      'pretty_version' => 'v6.4.26',
+      'version' => '6.4.26.0',
       'aliases' => 
       array (
       ),
-      'reference' => '0f020b544a30a7fe8ba972e53ee48a74c0bc87f4',
+      'reference' => '466fcac5fa2e871f83d31173f80e9c2684743bfc',
     ),
     'taoser/webman-validate' => 
     array (
@@ -718,7 +718,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '28ddcad8550ae27abfa5029d37b4bd68e01de831',
+      'reference' => '5116889b38eb7e719e5c1ce39ed0f11c7eab0eb2',
     ),
     'workerman/webman-framework' => 
     array (
