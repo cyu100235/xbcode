@@ -1,6 +1,7 @@
 <?php
 use plugin\xbCode\utils\MiddlewareUtil;
 
-$middlewares = MiddlewareUtil::modules();
-
-return $middlewares;
+if (!class_exists(MiddlewareUtil::class)) {
+    return [];
+}
+return MiddlewareUtil::modules();

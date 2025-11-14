@@ -1,10 +1,10 @@
 <?php
 return [
     'default' => [
-        'host' => getenv('REDIS_HOST') ?: '127.0.0.1',
-        'password' => getenv('REDIS_PASSWORD') ?: null,
-        'port' => getenv('REDIS_PORT') ?: 6379,
-        'database' => getenv('REDIS_DB') ?: 0,
+        'host' => env('REDIS_HOST', '127.0.0.1'),
+        'password' => env('REDIS_PASSWORD'),
+        'port' => env('REDIS_PORT', 6379),
+        'database' => env('REDIS_DB', 0),
         'pool' => [
             'max_connections' => 5,
             'min_connections' => 1,
