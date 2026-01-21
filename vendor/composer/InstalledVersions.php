@@ -32,7 +32,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '5116889b38eb7e719e5c1ce39ed0f11c7eab0eb2',
+    'reference' => 'ed95cdcf3503d2ce64ec00d610138850ec638c6b',
     'name' => 'workerman/webman',
   ),
   'versions' => 
@@ -207,6 +207,15 @@ private static $installed = array (
       array (
       ),
       'reference' => 'c12e4f1d8a1fbecdc1e0fa4dc9fe17b4315832e9',
+    ),
+    'illuminate/redis' => 
+    array (
+      'pretty_version' => 'v10.49.0',
+      'version' => '10.49.0.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'f13f1e03469598055e140a79e0cb31b3874164a4',
     ),
     'illuminate/support' => 
     array (
@@ -666,6 +675,15 @@ private static $installed = array (
       ),
       'reference' => 'a6529aad9ba004bf0c522a784465775212db30b4',
     ),
+    'webman/redis' => 
+    array (
+      'pretty_version' => 'v2.1.3',
+      'version' => '2.1.3.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '559eb1692d39c6fef5cf526223fff728be6c0fb9',
+    ),
     'webman/think-cache' => 
     array (
       'pretty_version' => 'v2.1.2',
@@ -718,7 +736,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '5116889b38eb7e719e5c1ce39ed0f11c7eab0eb2',
+      'reference' => 'ed95cdcf3503d2ce64ec00d610138850ec638c6b',
     ),
     'workerman/webman-framework' => 
     array (

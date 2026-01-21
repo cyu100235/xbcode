@@ -1,7 +1,8 @@
 <?php
 use plugin\xbCode\utils\MiddlewareUtil;
 
-if (!class_exists(MiddlewareUtil::class)) {
+try {
+    return MiddlewareUtil::modules();
+} catch (\Throwable $th) {
     return [];
 }
-return MiddlewareUtil::modules();

@@ -12,16 +12,18 @@
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  */
 
-
-use Webman\Channel\Server;
-use Workerman\Protocols\Frame;
-
 return [
-    'server' => [
-        'listen'  => 'frame://0.0.0.0:2206',
-        'protocol' => Frame::class,
-        'handler' => Server::class,
-        'reloadable' => false,
-        'count' => 1, // 必须是1
+    'default' => [
+        'password' => '',
+        'host' => '127.0.0.1',
+        'port' => 6379,
+        'database' => 0,
+        'pool' => [
+            'max_connections' => 5,
+            'min_connections' => 1,
+            'wait_timeout' => 3,
+            'idle_timeout' => 60,
+            'heartbeat_interval' => 50,
+        ],
     ]
 ];
