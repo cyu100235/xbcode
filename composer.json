@@ -45,7 +45,9 @@
     "brick/varexporter": "^0.6.0",
     "workerman/crontab": "^1.0",
     "webman/channel": "^2.1",
-    "webman/redis": "^2.1"
+    "webman/redis": "^2.1",
+    "webman/database": "v2.1.8",
+    "webman/redis-queue": "^2.1"
   },
   "suggest": {
     "ext-event": "For better performance. "

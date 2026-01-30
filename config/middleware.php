@@ -1,8 +1,12 @@
 <?php
-use plugin\xbCode\utils\MiddlewareUtil;
 
 try {
-    return MiddlewareUtil::modules();
+    return [
+        '@' => [
+            \plugin\xbCode\app\middleware\XbMiddleware::class,
+            \plugin\xbCode\app\middleware\PluginMiddleware::class,
+        ],
+    ];
 } catch (\Throwable $th) {
     return [];
 }
