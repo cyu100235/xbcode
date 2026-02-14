@@ -28,6 +28,8 @@ return [
             'prefix' => getenv('DB_PREFIX') ?: 'xb_',
             // 断线重连
             'break_reconnect' => true,
+            // 监听SQL日志
+            'trigger_sql' => env('APP_DEBUG', false),
             // 自定义基础查询类
             'query' => \plugin\xbCode\base\BaseQuery::class,
             // 自定义分页类

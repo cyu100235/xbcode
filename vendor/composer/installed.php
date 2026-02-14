@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => 'bd8114e4010edc316d6e9e7251ebbc72dd83f2d1',
+    'reference' => 'a43d98a426f76002c8a315244fd3dd8f9546f07e',
     'name' => 'workerman/webman',
   ),
   'versions' => 
@@ -91,33 +91,6 @@
       array (
       ),
       'reference' => '3ba905c11371512af9d9bdd27d99b782216b6945',
-    ),
-    'guzzlehttp/guzzle' => 
-    array (
-      'pretty_version' => '7.10.0',
-      'version' => '7.10.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'b51ac707cfa420b7bfd4e4d5e510ba8008e822b4',
-    ),
-    'guzzlehttp/promises' => 
-    array (
-      'pretty_version' => '2.3.0',
-      'version' => '2.3.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '481557b130ef3790cf82b713667b43030dc9c957',
-    ),
-    'guzzlehttp/psr7' => 
-    array (
-      'pretty_version' => '2.8.0',
-      'version' => '2.8.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '21dc724a0583619cd1652f673303492272778051',
     ),
     'guzzlehttp/uri-template' => 
     array (
@@ -381,54 +354,6 @@
         0 => '1.0',
       ),
     ),
-    'psr/http-client' => 
-    array (
-      'pretty_version' => '1.0.3',
-      'version' => '1.0.3.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'bb5906edc1c324c9a05aa0873d40117941e5fa90',
-    ),
-    'psr/http-client-implementation' => 
-    array (
-      'provided' => 
-      array (
-        0 => '1.0',
-      ),
-    ),
-    'psr/http-factory' => 
-    array (
-      'pretty_version' => '1.1.0',
-      'version' => '1.1.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '2b4765fddfe3b508ac62f829e852b1501d3f6e8a',
-    ),
-    'psr/http-factory-implementation' => 
-    array (
-      'provided' => 
-      array (
-        0 => '1.0',
-      ),
-    ),
-    'psr/http-message' => 
-    array (
-      'pretty_version' => '2.0',
-      'version' => '2.0.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '402d35bcb92c70c026d1a6a9883f06b2ead23d71',
-    ),
-    'psr/http-message-implementation' => 
-    array (
-      'provided' => 
-      array (
-        0 => '1.0',
-      ),
-    ),
     'psr/log' => 
     array (
       'pretty_version' => '3.0.2',
@@ -461,15 +386,6 @@
       array (
         0 => '1.0|2.0|3.0',
       ),
-    ),
-    'ralouphie/getallheaders' => 
-    array (
-      'pretty_version' => '3.0.3',
-      'version' => '3.0.3.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '120b605dfeb996808c31b6477290a714d356e822',
     ),
     'symfony/cache' => 
     array (
@@ -931,7 +847,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => 'bd8114e4010edc316d6e9e7251ebbc72dd83f2d1',
+      'reference' => 'a43d98a426f76002c8a315244fd3dd8f9546f07e',
     ),
     'workerman/webman-framework' => 
     array (
@@ -950,15 +866,6 @@
       array (
       ),
       'reference' => '9b83bdf9fd0eaff9419a240b47da870447583112',
-    ),
-    'yzh52521/easyhttp' => 
-    array (
-      'pretty_version' => 'v1.1.3',
-      'version' => '1.1.3.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '02bcf47eaf723520fa3905d0e6f1852168fe646c',
     ),
   ),
 );

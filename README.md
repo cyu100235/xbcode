@@ -51,25 +51,22 @@ Redis
 [Gitee开源地址](https://gitee.com/xbcode_net/xbcode)
 
 ```
-1、宝塔-网站-PHP项目-添加站点-选择异步项目-填写站点信息-确定
+1、打开《积木云官网》下载源代码
+
+2、宝塔-网站-PHP项目-添加站点-选择异步项目-填写站点信息-确定
 填写域名，示例：demo.xbcode.net（您的域名）
 设置PHP版本：8.1
 设置运行用户：root
 填写启动命令：php webman start
 
-2、打开站点目录，执行命令（必须是SSH地址）
-git clone git@gitee.com:xbcode-plugin/xbCode.git .
+3、选择站点目录所有文件-右键-选择批量修改权限-所有者www-设置为755
 
-3、打开站点目录终端，执行命令：git submodule update --init --recursive
+4、点击选择刚才创建的站点-服务管理-运行目录-选择public
 
-4、选择站点目录所有文件-右键-选择批量修改权限-所有者root-设置为755
-
-5、点击选择刚才创建的站点-服务管理-运行目录-选择public
-
-6、点击选择刚才创建的站点-配置文件-伪静态配置文件-填写（路径设置为您自己的站点目录）
+5、点击选择刚才创建的站点-配置文件-伪静态配置文件-填写（路径设置为您自己的站点目录）
 include /www/wwwroot/demo.xbcode.net/nginx.conf;
 
-7、访问刚才填写的域名进行安装，示例：demo.xbcode.net
+6、访问刚才填写的域名进行安装，示例：demo.xbcode.net
 ```
 
 ### 官方导航
@@ -81,15 +78,15 @@ include /www/wwwroot/demo.xbcode.net/nginx.conf;
 
 ### ⚡ 系统演示
 
-![登录界面](https://gitee.com/xbcode-plugin/xbCode/raw/main/preview/1.png)
+![登录界面](/app/xbCode/preview/1.png)
 
-![工作台界面](https://gitee.com/xbcode-plugin/xbCode/raw/main/preview/2.png)
+![工作台界面](/app/xbCode/preview/2.png)
 
-![插件界面](https://gitee.com/xbcode-plugin/xbCode/raw/main/preview/3.png)
+![插件界面](/app/xbCode/preview/3.png)
 
-![管理员账号](https://gitee.com/xbcode-plugin/xbCode/raw/main/preview/4.png)
+![管理员账号](/app/xbCode/preview/4.png)
 
-![系统设置](https://gitee.com/xbcode-plugin/xbCode/raw/main/preview/5.png)
+![系统设置](/app/xbCode/preview/5.png)
 
 <b style="color:red;">当前域名正在备案中，请稍后访问。</b>
 系统演示： http://demo.xbcode.net/admin 账号：admin 密码：123456
