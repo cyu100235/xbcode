@@ -97,20 +97,20 @@ task('deploy:update_code', function () {
 });
 
 // 初始化并更新 Git 子模块（首次部署及后续更新都可复用）
-// task('deploy:submodule', function () {
-//     run('cd {{release_path}} && git submodule sync --recursive');
-//     run('cd {{release_path}} && git submodule update --init --recursive');
-// });
+task('deploy:submodule', function () {
+    run('cd {{release_path}} && git submodule sync --recursive');
+    run('cd {{release_path}} && git submodule update --init --recursive');
+});
 
 // 首次部署后可手动执行：dep webman:start prod
-// task('webman:start', function () {
-//     run('cd {{current_path}} && {{bin/php}} webman start -d');
-// });
+task('webman:start', function () {
+    run('cd {{current_path}} && {{bin/php}} webman start -d');
+});
 
 // 常规发布结束后重启 webman
-// task('webman:restart', function () {
-//     run('cd {{current_path}} && {{bin/php}} webman restart -d || {{bin/php}} webman start -d');
-// });
+task('webman:restart', function () {
+    run('cd {{current_path}} && {{bin/php}} webman restart -d || {{bin/php}} webman start -d');
+});
 
 // 查看进程状态（排障时很有用）
 task('webman:status', function () {
@@ -121,7 +121,7 @@ task('webman:status', function () {
 after('deploy:failed', 'deploy:unlock');
 
 // 代码拉取后更新子模块
-// after('deploy:update_code', 'deploy:submodule');
+after('deploy:update_code', 'deploy:submodule');
 
 // 部署成功后重启
-// after('deploy:success', 'webman:restart');
+after('deploy:success', 'webman:restart');
