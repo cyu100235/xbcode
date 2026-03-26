@@ -3,6 +3,68 @@ namespace Deployer;
 
 require 'recipe/common.php';
 
+/*
+|--------------------------------------------------------------------------
+| 日常部署命令速查（在项目根目录执行）
+|--------------------------------------------------------------------------
+|
+| 0) 先确认配置和连通性
+|    vendor/bin/dep config prod
+|    vendor/bin/dep ssh prod
+|
+| 1) 查看可用命令/任务树
+|    vendor/bin/dep list
+|    vendor/bin/dep tree deploy
+|
+| 2) 首次部署（目标主机：prod）
+|    vendor/bin/dep deploy:setup prod
+|    vendor/bin/dep deploy prod
+|    vendor/bin/dep webman:start prod
+|
+| 3) 常规发布
+|    vendor/bin/dep deploy prod
+|
+| 4) 发布前检查（可选）
+|    vendor/bin/dep deploy:info prod
+|    vendor/bin/dep deploy:check_remote prod
+|
+| 5) 查看发布记录
+|    vendor/bin/dep releases prod
+|
+| 6) 回滚到上一版本
+|    vendor/bin/dep rollback prod
+|
+| 7) 回滚到指定版本（先看 releases，再指定 revision）
+|    vendor/bin/dep releases prod
+|    vendor/bin/dep rollback prod --revision=12
+|
+| 8) 仅预览执行计划（不真正执行）
+|    vendor/bin/dep deploy prod --plan
+|    vendor/bin/dep rollback prod --revision=12 --plan
+|
+| 9) 异常中断后手动解锁
+|    vendor/bin/dep deploy:unlock prod
+|
+| 10) Webman 运维命令
+|    vendor/bin/dep webman:status prod
+|    vendor/bin/dep webman:restart prod
+|
+| 11) 远程执行临时命令（排障）
+|    vendor/bin/dep run prod 'cd {{current_path}} && php -v'
+|
+| 12) 按需指定分支/标签发布
+|    vendor/bin/dep deploy prod --branch=main
+|    vendor/bin/dep deploy prod --tag=v1.2.3
+|
+| 13) 控制并行度/记录日志（多主机时更常用）
+|    vendor/bin/dep deploy prod --limit=1
+|    vendor/bin/dep deploy prod --log=deploy.log
+|
+| 14) 显示更详细输出（排障常用）
+|    vendor/bin/dep deploy prod -vvv
+|
+*/
+
 // 项目名
 set('application', 'xbcode');
 
