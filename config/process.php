@@ -10,7 +10,7 @@ $monitor = [
     base_path() . '/.env',
 ];
 // 调试模式增加插件目录监听
-if (env('APP_DEBUG')) {
+if (env('APP_DEBUG', false)) {
     $monitor[] = base_path() . '/plugin';
 }
 

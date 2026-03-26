@@ -1,5 +1,2 @@
-/xbCode
-/xbCrontab
-/xbDeveloper
-/xbUpload
 *
+!.gitignore

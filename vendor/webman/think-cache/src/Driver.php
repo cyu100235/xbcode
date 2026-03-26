@@ -236,7 +236,7 @@ abstract class Driver implements CacheHandlerInterface
         if (is_numeric($data)) {
             return (string) $data;
         }
-
+        
         $serialize = $this->options['serialize'][0] ?? "serialize";
 
         return $serialize($data);

@@ -1,22 +1,14 @@
-# JSON Web Token (JWT) for webman plugin
+# 🚀  JSON Web Token (JWT)
 
-Json web token (JWT), 是为了在网络应用环境间传递声明而执行的一种基于JSON的开放标准（(RFC 7519)，该token被设计为紧凑且安全的，特别适用于分布式站点的单点登录（SSO）场景。
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/tinywan/redis-stream.svg?style=flat-square)](https://packagist.org/packages/tinywan/jwt)
+[![Total Downloads](https://img.shields.io/packagist/dt/tinywan/redis-stream.svg?style=flat-square)](https://packagist.org/packages/tinywan/jwt)
+[![License](https://img.shields.io/packagist/l/tinywan/redis-stream.svg?style=flat-square)](https://packagist.org/packages/tinywan/jwt)
+[![PHP Version](https://img.shields.io/badge/php-%3E%3D7.4-blue.svg)](https://www.php.net)
+[![zread](https://img.shields.io/badge/Ask_Zread-_.svg?style=flat&color=00b0aa&labelColor=000000&logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTQuOTYxNTYgMS42MDAxSDIuMjQxNTZDMS44ODgxIDEuNjAwMSAxLjYwMTU2IDEuODg2NjQgMS42MDE1NiAyLjI0MDFWNC45NjAxQzEuNjAxNTYgNS4zMTM1NiAxLjg4ODEgNS42MDAxIDIuMjQxNTYgNS42MDAxSDQuOTYxNTZDNS4zMTUwMiA1LjYwMDEgNS42MDE1NiA1LjMxMzU2IDUuNjAxNTYgNC45NjAxVjIuMjQwMUM1LjYwMTU2IDEuODg2NjQgNS4zMTUwMiAxLjYwMDEgNC45NjE1NiAxLjYwMDFaIiBmaWxsPSIjZmZmIi8%2BCjxwYXRoIGQ9Ik00Ljk2MTU2IDEwLjM5OTlIMi4yNDE1NkMxLjg4ODEgMTAuMzk5OSAxLjYwMTU2IDEwLjY4NjQgMS42MDE1NiAxMS4wMzk5VjEzLjc1OTlDMS42MDE1NiAxNC4xMTM0IDEuODg4MSAxNC4zOTk5IDIuMjQxNTYgMTQuMzk5OUg0Ljk2MTU2QzUuMzE1MDIgMTQuMzk5OSA1LjYwMTU2IDE0LjExMzQgNS42MDE1NiAxMy43NTk5VjExLjAzOTlDNS42MDE1NiAxMC42ODY0IDUuMzE1MDIgMTAuMzk5OSA0Ljk2MTU2IDEwLjM5OTlaIiBmaWxsPSIjZmZmIi8%2BCjxwYXRoIGQ9Ik0xMy43NTg0IDEuNjAwMUgxMS4wMzg0QzEwLjY4NSAxLjYwMDEgMTAuMzk4NCAxLjg4NjY0IDEwLjM5ODQgMi4yNDAxVjQuOTYwMUMxMC4zOTg0IDUuMzEzNTYgMTAuNjg1IDUuNjAwMSAxMS4wMzg0IDUuNjAwMUgxMy43NTg0QzE0LjExMTkgNS42MDAxIDE0LjM5ODQgNS4zMTM1NiAxNC4zOTg0IDQuOTYwMVYyLjI0MDFDMTQuMzk4NCAxLjg4NjY0IDE0LjExMTkgMS42MDAxIDEzLjc1ODQgMS42MDAxWiIgZmlsbD0iI2ZmZiIvPgo8cGF0aCBkPSJNNCAxMkwxMiA0TDQgMTJaIiBmaWxsPSIjZmZmIi8%2BCjxwYXRoIGQ9Ik00IDEyTDEyIDQiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIxLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgo8L3N2Zz4K&logoColor=ffffff)](https://zread.ai/Tinywan/webman-jwt)
 
-JWT的声明一般被用来在身份提供者和服务提供者间传递被认证的用户身份信息，以便于从资源服务器获取资源，也可以增加一些额外的其它业务逻辑所必须的声明信息，该token也可直接被用于认证，也可被加密。
+JWT 是为了在网络应用环境间传递声明而执行的一种基于JSON的开放标准（(RFC 7519)，该token被设计为紧凑且安全的，特别适用于分布式站点的单点登录（SSO）场景。
 
-## 认证&授权流程
-
-![image](https://user-images.githubusercontent.com/14959876/159104533-f51f0a57-e085-44ab-84d7-363a4bb1eda9.png)
-
-## 签名流程
-
-1. 用户使用用户名和口令到认证服务器上请求认证。
-2. 认证服务器验证用户名和口令后，以服务器端生成JWT Token，这个token的生成过程如下：
-  	- 认证服务器还会生成一个 Secret Key（密钥）
- 	- 对JWT Header和JWT Payload分别求Base64。在Payload可能包括了用户的抽象ID和的过期时间。
-  	- 用密钥对JWT签名 `HMAC-SHA256(SecretKey, Base64UrlEncode(JWT-Header)+'.'+Base64UrlEncode(JWT-Payload))`	
-3. 然后把 `base64(header).base64(payload).signature` 作为 JWT token返回客户端。
-4. 客户端使用JWT Token向应用服务器发送相关的请求。这个JWT Token就像一个临时用户权证一样。
+> 注：从 `1.14.0` 版本开始，出于安全考虑新增了密钥长度验证。`1.14.0` 以下版本，基本不检查长度。`1.14.0` 及以上版本：强制检查。
 
 ## 安装
 
@@ -101,7 +93,7 @@ $token = Tinywan\Jwt\JwtToken::generateToken($user);
 var_dump(json_encode($token));
 ```
 
-7、获取当前用户信息（模型）
+7、获取当前用户信息（模型）需要插件大于版本 `>=1.2.4`
 ```php
 $user = Tinywan\Jwt\JwtToken::getUser();
 ```
@@ -166,7 +158,15 @@ $extend = [
 $token = Tinywan\Jwt\JwtToken::generateToken($extend);
 ```
 
-11、令牌过期错误码
+11、各个算法的最小长度要求（`HS*` 系列最常见）。插件大于版本 `>=1.14.0` 强制要求
+
+| 算法    | 最低密钥长度（字节） | 字符数参考（UTF-8） | 推荐生成方式                  |
+|---------|-----------------------|----------------------|--------------------------------|
+| HS256   | 32 字节              | ≥32 字符            | `bin2hex(random_bytes(32))` → 64 hex 字符 |
+| HS384   | 48 字节              | ≥48 字符            | `random_bytes(48)`            |
+| HS512   | 64 字节              | ≥64 字符            | `random_bytes(64)`            |
+
+12、令牌过期错误码
 
 * 访问令牌
   * 身份验证令牌无效：`401011`
@@ -284,3 +284,17 @@ Jwt 可帮助你以标准的方式轻松、快速地处理安全性，而无需�
 前端将该令牌临时存储在某处。
 - 用户单击前端以转到前端 Web 应用程序的另一部分。
 - 前端需要从 API 获取更多数据。但它需要对该特定端点进行身份验证。因此，为了使用我们的 API 进行身份验证，它会发送`Authorization`一个值为`Bearer`加上令牌的标头。如果令牌包含`foobar`，则`Authorization`标头的内容将为：`Bearer foobar`。`注意：中间是有个空格`。
+
+## 认证&授权流程
+
+![image](https://user-images.githubusercontent.com/14959876/159104533-f51f0a57-e085-44ab-84d7-363a4bb1eda9.png)
+
+## 签名流程
+
+1. 用户使用用户名和口令到认证服务器上请求认证。
+2. 认证服务器验证用户名和口令后，以服务器端生成JWT Token，这个token的生成过程如下：
+    - 认证服务器还会生成一个 Secret Key（密钥）
+    - 对JWT Header和JWT Payload分别求Base64。在Payload可能包括了用户的抽象ID和的过期时间。
+    - 用密钥对JWT签名 `HMAC-SHA256(SecretKey, Base64UrlEncode(JWT-Header)+'.'+Base64UrlEncode(JWT-Payload))`
+3. 然后把 `base64(header).base64(payload).signature` 作为 JWT token返回客户端。
+4. 客户端使用JWT Token向应用服务器发送相关的请求。这个JWT Token就像一个临时用户权证一样。

@@ -61,7 +61,7 @@ class Worker
      *
      * @var string
      */
-    final public const VERSION = '5.1.6';
+    final public const VERSION = '5.1.10';
 
     /**
      * Status initial.
@@ -247,6 +247,8 @@ class Worker
 
     /**
      * Store all connections of clients.
+     *
+     * @internal Framework internal API
      *
      * @var TcpConnection[]
      */
@@ -1605,7 +1607,7 @@ class Worker
             // Compatibility with the bug in Swow where the first request on Windows fails to trigger stream_select.
             if (extension_loaded('swow')) {
                 Timer::delay(0.1 , function(){
-                    $stream = fopen(__FILE__, 'r');
+                    $stream = tmpfile();
                     static::$globalEvent->onReadable($stream, function($stream) {
                         static::$globalEvent->offReadable($stream);
                     });
@@ -2555,8 +2557,12 @@ class Worker
         [$scheme, $address] = explode(':', $this->socketName, 2);
         // Check application layer protocol class.
         if (!isset(self::BUILD_IN_TRANSPORTS[$scheme])) {
+            // Validate scheme contains only safe characters for class name resolution.
+            if (!preg_match('/^[a-zA-Z][a-zA-Z0-9]*$/', $scheme)) {
+                throw new RuntimeException("Invalid protocol scheme '$scheme'");
+            }
             $scheme = ucfirst($scheme);
-            $this->protocol = $scheme[0] === '\\' ? $scheme : 'Protocols\\' . $scheme;
+            $this->protocol = 'Protocols\\' . $scheme;
             if (!class_exists($this->protocol)) {
                 $this->protocol = "Workerman\\Protocols\\$scheme";
                 if (!class_exists($this->protocol)) {

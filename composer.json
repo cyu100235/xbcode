@@ -1,75 +1,92 @@
 {
-  "name": "workerman/webman",
-  "type": "project",
-  "keywords": [
-    "high performance",
-    "http service"
-  ],
-  "homepage": "https://www.workerman.net",
-  "license": "MIT",
-  "description": "High performance HTTP Service Framework.",
-  "authors": [
-    {
-      "name": "walkor",
-      "email": "walkor@workerman.net",
-      "homepage": "https://www.workerman.net",
-      "role": "Developer"
-    }
-  ],
-  "support": {
-    "email": "walkor@workerman.net",
-    "issues": "https://github.com/walkor/webman/issues",
-    "forum": "https://wenda.workerman.net/",
-    "wiki": "https://workerman.net/doc/webman",
-    "source": "https://github.com/walkor/webman"
-  },
-  "require": {
-    "php": ">=8.1",
-    "workerman/webman-framework": "^2.1",
-    "monolog/monolog": "^2.0",
-    "webman/console": "^2.1",
-    "webman/event": "^1.0",
-    "hg/apidoc": "^5.3",
-    "webman/log": "^2.1",
-    "tinywan/jwt": "^1.11",
-    "webman/captcha": "^1.0",
-    "vlucas/phpdotenv": "^5.6",
-    "taoser/webman-validate": "^1.7",
-    "topthink/think-template": "^3.0",
-    "illuminate/events": "^10.48",
-    "symfony/cache": "^6.4",
-    "webman/multi-session": "^2.1",
-    "webman/think-cache": "~2.1",
-    "webman/think-orm": "~2.1",
-    "brick/varexporter": "^0.6.0",
-    "workerman/crontab": "^1.0",
-    "webman/channel": "^2.1",
-    "webman/redis": "^2.1",
-    "webman/database": "v2.1.8",
-    "webman/redis-queue": "^2.1"
-  },
-  "suggest": {
-    "ext-event": "For better performance. "
-  },
-  "autoload": {
-    "psr-4": {
-      "": "./",
-      "app\\": "./app",
-      "App\\": "./app",
-      "app\\View\\Components\\": "./app/view/components"
-    }
-  },
-  "scripts": {
-    "post-package-install": [
-      "support\\Plugin::install"
+    "name": "xbcode/xbcode",
+    "type": "project",
+    "keywords": [
+        "xbCode",
+        "xbCode-plugin",
+        "plugin"
     ],
-    "post-package-update": [
-      "support\\Plugin::install"
+    "homepage": "http://www.xbcode.net",
+    "license": "Apache-2.0",
+    "description": "积木云核心框架，提供插件化开发基础能力",
+    "authors": [
+        {
+            "name": "贵州积木云网络科技有限公司",
+            "email": "958416459@qq.com",
+            "role": "Developer"
+        },
+        {
+            "name": "楚羽幽",
+            "email": "958416459@qq.com",
+            "role": "Developer"
+        }
     ],
-    "pre-package-uninstall": [
-      "support\\Plugin::uninstall"
-    ]
-  },
-  "minimum-stability": "dev",
-  "prefer-stable": true
+    "support": {
+        "email": "958416459@qq.com",
+        "qq": "958416459",
+        "wechat": "cyu107761",
+        "issues": "https://gitee.com/xbcode_net/xbcode/issues",
+        "source": "http://www.xbcode.net"
+    },
+    "require": {
+        "php": ">=8.1",
+        "workerman/webman-framework": "^2.1",
+        "monolog/monolog": "^2.0",
+        "webman/console": "^2.1",
+        "webman/event": "^1.0",
+        "hg/apidoc": "^5.3",
+        "webman/log": "^2.1",
+        "tinywan/jwt": "^1.11",
+        "webman/captcha": "^1.0",
+        "vlucas/phpdotenv": "^5.6",
+        "taoser/webman-validate": "^1.7",
+        "topthink/think-template": "^3.0",
+        "illuminate/events": "^10.48",
+        "symfony/cache": "^6.4",
+        "webman/multi-session": "^2.1",
+        "webman/think-cache": "~2.1",
+        "webman/think-orm": "~2.1",
+        "brick/varexporter": "^0.6.0",
+        "workerman/crontab": "^1.0",
+        "webman/channel": "^2.1",
+        "webman/redis": "^2.1",
+        "webman/database": "v2.1.8",
+        "webman/redis-queue": "^2.1",
+        "symfony/workflow": "~6.4.32",
+        "symfony/property-access": "~6.4.32",
+        "symfony/process": "~6.4.33",
+        "guzzlehttp/guzzle": "7.10.0"
+    },
+    "suggest": {
+        "ext-event": "For better performance. "
+    },
+    "autoload": {
+        "psr-4": {
+            "": "./",
+            "app\\": "./app",
+            "App\\": "./app",
+            "app\\View\\Components\\": "./app/view/components"
+        }
+    },
+    "scripts": {
+        "post-package-install": [
+            "support\\Plugin::install"
+        ],
+        "post-package-update": [
+            "support\\Plugin::install"
+        ],
+        "pre-package-uninstall": [
+            "support\\Plugin::uninstall"
+        ]
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require-dev": {
+        "deployer/deployer": "^7.5"
+    },
+    "config": {
+        "audit": {
+            "block-insecure": false
+        }
+    }
 }

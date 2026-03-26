@@ -174,7 +174,7 @@ class Session
         }
         $this->sessionId = $sessionId;
         if ($data = static::$handler->read($sessionId)) {
-            $this->data = $this->serializer[1]($data);
+            $this->data = $this->safeDeserialize($data);
         }
     }
 
@@ -418,6 +418,22 @@ class Session
     }
 
     /**
+     * Safely deserialize session data, preventing object instantiation.
+     *
+     * @param string $data
+     * @return array
+     */
+    protected function safeDeserialize(string $data): array
+    {
+        if ($this->serializer[1] === 'unserialize') {
+            $result = unserialize($data, ['allowed_classes' => false]);
+        } else {
+            $result = ($this->serializer[1])($data);
+        }
+        return is_array($result) ? $result : [];
+    }
+
+    /**
      * GC sessions.
      *
      * @return void
@@ -428,11 +444,12 @@ class Session
     }
 
     /**
-     * __wakeup.
+     * __unserialize.
      *
+     * @param array $data
      * @return void
      */
-    public function __wakeup()
+    public function __unserialize(array $data): void
     {
         $this->isSafe = false;
     }

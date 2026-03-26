@@ -7,15 +7,20 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use Webman\Console\Application;
+use Webman\Console\Commands\Concerns\ServiceCommandExecutor;
+use Webman\Console\Messages;
+use Webman\Console\Util;
 
 #[AsCommand('stop', 'Stop worker. Use mode -g to stop gracefully.')]
 class StopCommand extends Command
 {
+    use ServiceCommandExecutor;
+
     protected function configure() : void
     {
-        $this
-            ->addOption('graceful', 'g',InputOption::VALUE_NONE, 'graceful stop');
+        $messages = Util::selectLocaleMessages(Messages::getServiceMessages());
+        $this->setDescription($messages['stop_desc']);
+        $this->addOption('graceful', 'g',InputOption::VALUE_NONE, $messages['graceful_stop']);
     }
 
     /**
@@ -25,11 +30,6 @@ class StopCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        if (\class_exists(\Support\App::class)) {
-            \Support\App::run();
-            return self::SUCCESS;
-        }
-        Application::run();
-        return self::SUCCESS;
+        return $this->executeServiceCommand();
     }
 }
