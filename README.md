@@ -12,6 +12,16 @@ xbCode 基于渐进式动态页面构建渲染框架，支持在线安装插件�
 
 QQ 群：592808248
 
+### 开源地址
+
+Gitee开源地址：https://gitee.com/xbcode_net/xbcode
+github开源地址：https://github.com/cyu100235/xbcode
+
+```
+下载源代码时，切记必须使用以下命令，否则克隆出来的插件代码会是空的
+git clone --recurse-submodules https://gitee.com/xbcode_net/xbcode.git
+```
+
 ### ☘ 功能特性
 
 - [√] 基于 Webman 应用插件化系统
@@ -48,10 +58,14 @@ Redis
 
 ### 🔨 宝塔安装（推荐使用）
 
-[Gitee开源地址](https://gitee.com/xbcode_net/xbcode)
-
 ```
-1、打开《积木云官网》下载源代码
+1、获取源代码
+
+方式二：
+使用命令下载：git clone --recurse-submodules https://gitee.com/xbcode_net/xbcode.git
+
+方式一：
+打开《积木云官网》下载源代码
 
 2、宝塔-网站-PHP项目-添加站点-选择异步项目-填写站点信息-确定
 填写域名，示例：demo.xbcode.net（您的域名）
