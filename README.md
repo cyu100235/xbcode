@@ -12,9 +12,10 @@ xbCode 基于渐进式动态页面构建渲染框架，支持在线安装插件�
 
 QQ 群：592808248
 
-### 开源地址
+### 🌈开源地址
 
 Gitee开源地址：https://gitee.com/xbcode_net/xbcode
+
 github开源地址：https://github.com/cyu100235/xbcode
 
 ```
