@@ -50,7 +50,7 @@ git clone --recurse-submodules https://gitee.com/xbcode_net/xbcode.git
 
 ```
 Nignx（必须）
-PHP 8.1（必须）
+PHP 8.2（必须）
 MySQL >= 5.7或8.0
 Redis
 ```
@@ -93,15 +93,15 @@ include /www/wwwroot/demo.xbcode.net/nginx.conf;
 
 ### ⚡ 系统演示
 
-![登录界面](/app/xbCode/preview/1.png)
+![登录界面](/public/preview/1.png)
 
-![工作台界面](/app/xbCode/preview/2.png)
+![工作台界面](/public/preview/2.png)
 
-![插件界面](/app/xbCode/preview/3.png)
+![插件界面](/public/preview/3.png)
 
-![管理员账号](/app/xbCode/preview/4.png)
+![管理员账号](/public/preview/4.png)
 
-![系统设置](/app/xbCode/preview/5.png)
+![系统设置](/public/preview/5.png)
 
 <b style="color:red;">当前域名正在备案中，请稍后访问。</b>
 系统演示： http://demo.xbcode.net/admin 账号：admin 密码：123456
@@ -140,7 +140,7 @@ include /www/wwwroot/demo.xbcode.net/nginx.conf;
 
 All rights reserved。
 
-xbcode 商标和著作权所有者为贵州积木云网络科技有限公司。
+xbcode 商标和著作权所有者为贵州云铺网络科技有限公司。
 
 感谢每一位贡献代码的朋友。
 
