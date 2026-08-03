@@ -1,0 +1,40 @@
+<svg width="300" height="300" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="uploadBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#fa709a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#fee140;stop-opacity:1" />
+    </linearGradient>
+    <filter id="blur">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2" />
+    </filter>
+  </defs>
+  
+  <!-- 背景渐变 -->
+  <rect width="300" height="300" fill="url(#uploadBg)"/>
+  
+  <!-- 装饰圆形 - 玻璃拟态效果 -->
+  <circle cx="75" cy="80" r="65" fill="#ffffff" opacity="0.1" filter="url(#blur)"/>
+  <circle cx="240" cy="215" r="85" fill="#ffffff" opacity="0.08" filter="url(#blur)"/>
+  
+  <!-- 中心图标容器 -->
+  <g transform="translate(150, 150)">
+    <!-- 图标背景圆 - 玻璃效果 -->
+    <circle cx="0" cy="0" r="70" fill="#ffffff" opacity="0.25"/>
+    <circle cx="0" cy="0" r="70" fill="url(#uploadBg)" opacity="0.3"/>
+    
+    <!-- 上传图标 -->
+    <g transform="scale(1.1)">
+      <!-- 云朵 -->
+      <ellipse cx="-8" cy="8" rx="18" ry="14" fill="#ffffff"/>
+      <ellipse cx="8" cy="8" rx="18" ry="14" fill="#ffffff"/>
+      <ellipse cx="0" cy="0" rx="16" ry="12" fill="#ffffff"/>
+      <rect x="-20" y="8" width="40" height="14" fill="#ffffff"/>
+      
+      <!-- 上传箭头 -->
+      <path d="M 0 -8 L -8 2 L -4 2 L -4 16 L 4 16 L 4 2 L 8 2 Z" fill="#fa709a" opacity="0.8"/>
+    </g>
+  </g>
+  
+  <!-- 顶部高光 -->
+  <ellipse cx="150" cy="60" rx="120" ry="40" fill="#ffffff" opacity="0.15"/>
+</svg>

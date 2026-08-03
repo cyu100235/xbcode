@@ -1,0 +1,15 @@
+/.vscode
+/.idea
+/.DS_Store
+/.phpunit.result.cache
+/.well-known
+/public/attachment/*
+/.idea
+*.log
+/.env
+/.env.example
+/tests/tmp
+/tests/.phpunit.result.cache
+/php-cli.ini
+/deploy.php
+/.qoder/repowiki/*

@@ -1,0 +1,53 @@
+<svg width="300" height="300" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="developerBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#a8edea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#fed6e3;stop-opacity:1" />
+    </linearGradient>
+    <filter id="blur">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2" />
+    </filter>
+  </defs>
+  
+  <!-- 背景渐变 -->
+  <rect width="300" height="300" fill="url(#developerBg)"/>
+  
+  <!-- 装饰圆形 - 玻璃拟态效果 -->
+  <circle cx="75" cy="80" r="65" fill="#ffffff" opacity="0.1" filter="url(#blur)"/>
+  <circle cx="240" cy="215" r="85" fill="#ffffff" opacity="0.08" filter="url(#blur)"/>
+  
+  <!-- 中心图标容器 -->
+  <g transform="translate(150, 150)">
+    <!-- 图标背景圆 - 玻璃效果 -->
+    <circle cx="0" cy="0" r="70" fill="#ffffff" opacity="0.25"/>
+    <circle cx="0" cy="0" r="70" fill="url(#developerBg)" opacity="0.3"/>
+    
+    <!-- 开发者图标 - 终端窗口 -->
+    <g transform="scale(1.0)">
+      <!-- 窗口 -->
+      <rect x="-32" y="-28" width="64" height="56" fill="#ffffff" rx="4"/>
+      
+      <!-- 窗口标题栏 -->
+      <rect x="-32" y="-28" width="64" height="10" fill="#a8edea" opacity="0.5" rx="4"/>
+      <rect x="-32" y="-23" width="64" height="5" fill="#a8edea" opacity="0.5"/>
+      
+      <!-- 窗口按钮 -->
+      <circle cx="-24" cy="-23" r="2" fill="#ffffff"/>
+      <circle cx="-17" cy="-23" r="2" fill="#ffffff"/>
+      <circle cx="-10" cy="-23" r="2" fill="#ffffff"/>
+      
+      <!-- 命令提示符 -->
+      <path d="M -22 -8 L -14 -2 L -22 4 L -20 6 L -10 -2 L -20 -10 Z" fill="#a8edea" opacity="0.8"/>
+      
+      <!-- 光标 -->
+      <rect x="-6" y="-4" width="12" height="3" fill="#a8edea" opacity="0.8" rx="1.5"/>
+      
+      <!-- 代码行 -->
+      <rect x="-22" y="10" width="20" height="2.5" fill="#a8edea" opacity="0.4" rx="1.25"/>
+      <rect x="-22" y="16" width="28" height="2.5" fill="#a8edea" opacity="0.4" rx="1.25"/>
+    </g>
+  </g>
+  
+  <!-- 顶部高光 -->
+  <ellipse cx="150" cy="60" rx="120" ry="40" fill="#ffffff" opacity="0.15"/>
+</svg>

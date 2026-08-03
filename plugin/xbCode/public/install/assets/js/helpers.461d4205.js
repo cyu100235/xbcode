@@ -1,0 +1,1 @@
+import{i as r,r as t}from"./index.a0474e72.js";const u=(e,o,s)=>r.request({url:e,params:o,method:"GET",...s}),i=(e,o,s)=>r.request({url:e,data:o,method:"POST",...s}),a=(e,o,s="")=>{if(s){window.open(e,s);return}t.push({path:e,query:{...o}})};export{i as a,a as o,u};

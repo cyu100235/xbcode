@@ -1,0 +1,53 @@
+<?php
+/**
+ * 积木云渲染器
+ * @package  XbCode.0
+ * @author   楚羽幽 <958416459@qq.com>
+ * @license  Apache License 2.0
+ * @link     http://www.xbcode.net
+ * @document http://doc.xbcode.net
+ */
+namespace plugin\xbCode\bootstrap;
+
+use Workerman\Worker;
+use Webman\Bootstrap;
+
+/**
+ * 框架基础配置
+ * @copyright 贵州积木云网络科技有限公司
+ * @author 楚羽幽 958416459@qq.com
+ */
+class XbCodeBootstrap implements Bootstrap
+{
+    /**
+     * 入口
+     * @param mixed $worker
+     * @return void
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public static function start(?Worker $worker)
+    {
+        // 设置nginx配置
+        static::setNginxConf();
+    }
+
+    /**
+     * 设置NGINX文件
+     * @return void
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    private static function setNginxConf()
+    {
+        $pluginNginx = base_path() . '/plugin/xbCode/nginx.conf';
+        if (!file_exists($pluginNginx)) {
+            return;
+        }
+        $rootNginx = base_path() . '/nginx.conf';
+        if (file_exists($rootNginx)) {
+            return;
+        }
+        copy($pluginNginx, $rootNginx);
+    }
+}

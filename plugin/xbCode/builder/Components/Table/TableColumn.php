@@ -1,0 +1,138 @@
+<?php
+/**
+ * 积木云渲染器
+ *
+ * @package  XbCode
+ * @author   楚羽幽 <958416459@qq.com>
+ * @license  Apache License 2.0
+ * @link     http://www.xbcode.net
+ * @document http://doc.xbcode.net
+ */
+namespace plugin\xbCode\builder\Components\Table;
+
+use plugin\xbCode\builder\Components\BaseSchema;
+
+/**
+ * 表格列组件
+ * @copyright 贵州积木云网络科技有限公司
+ * @author 楚羽幽 958416459@qq.com
+ * @link https://aisuda.bce.baidu.com/amis/zh-CN/components/table
+ * @method $this type(string $value) 设置列类型，默认：text文本
+ * @method $this label(string $value) 设置列标题
+ * @method $this name(string $value) 设置列名称
+ * @method $this width(int|string $value) 设置列宽
+ * @method $this minWidth(int|string $value) 最小列宽
+ * @method $this remark(string $value) 设置提示信息
+ * @method $this fixed(string $value) 设置列是否固定
+ * @method $this popOver(string|array $value) 设置列的弹出框内容
+ * @method $this copyable(bool|array $value) 设置列是否可复制
+ * @method $this style(array $value) 设置单元格自定义样式
+ * @method $this innerStyle(array $value) 设置单元格内部组件自定义样式
+ * @method $this align(string $value) 设置单元格对齐方式 left | right | center | justify
+ * @method $this headerAlign(string $value) 设置表头单元格对齐方式 left | right | center | justify
+ * @method $this vAlign(string $value) 设置单元格垂直对齐方式 top | middle | bottom
+ * @method $this sortable(bool $value) 是否可排序
+ * @method $this searchable(bool|array $value) 是否可快速搜索，开启autoGenerateFilter后，searchable支持配置Schema
+ * @method $this filterable(bool|array $value) 是否可快速搜索，options属性为静态选项，支持设置source属性从接口获取选项
+ * @method $this quickEdit(bool|array $value) 快速编辑，一般需要配合quickSaveApi接口使用
+ * @method $this quickEditEnabledOn(string $value) 开启快速编辑条件表达式
+ * @method $this textOverflow(string $value) 文本溢出后展示形式，默认：default换行处理，ellipsis溢出隐藏展示， noWrap不换行展示(仅在列为静态文本时生效)
+ */
+class TableColumn extends BaseSchema
+{
+    public string $type = 'text';
+
+    /**
+     * 初始化
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function __construct()
+    {
+        $this->textOverflow('ellipsis');
+    }
+
+    /**
+     * 设置列左对齐
+     * @return static
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function left()
+    {
+        $this->align('left');
+        return $this;
+    }
+
+    /**
+     * 设置列居中对齐
+     * @return static
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function center()
+    {
+        $this->align('center');
+        return $this;
+    }
+
+    /**
+     * 设置列右对齐
+     * @return static
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function right()
+    {
+        $this->align('right');
+        return $this;
+    }
+
+    /**
+     * 设置列居中对齐
+     * @return static
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function justify()
+    {
+        $this->align('justify');
+        return $this;
+    }
+
+    /**
+     * 设置列垂直顶部对齐
+     * @return static
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function vAlignTop()
+    {
+        $this->vAlign('top');
+        return $this;
+    }
+
+    /**
+     * 设置列垂直居中对齐
+     * @return static
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function vAlignMiddle()
+    {
+        $this->vAlign('middle');
+        return $this;
+    }
+
+    /**
+     * 设置列垂直底部对齐
+     * @return static
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function vAlignBottom()
+    {
+        $this->vAlign('bottom');
+        return $this;
+    }
+}

@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/backend/assets/vite.svg" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>加载中...</title>
+    <meta name="keywords" content="贵州积木云网络" />
+    <meta name="description" content="贵州积木云网络" />
+    <style>
+      html,
+      body,
+      #app {
+        height: 100%;
+      }
+      #xbcode-link {
+        display: none;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        font-family:
+          'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial,
+          sans-serif;
+      }
+
+      .preload__wrap {
+        display: flex;
+        flex-direction: column;
+        letter-spacing: 1px;
+        background-color: #2f3447;
+        position: fixed;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 100%;
+        z-index: 9999;
+        transition: all 0.3s ease-in;
+        opacity: 1;
+        pointer-events: none;
+      }
+
+      .preload__wrap.is-hide {
+        opacity: 0;
+      }
+
+      .preload__container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        width: 100%;
+        -moz-user-select: none;
+        user-select: none;
+        -webkit-user-select: none;
+        flex-grow: 1;
+      }
+
+      .preload__name {
+        font-size: 30px;
+        color: #fff;
+        letter-spacing: 5px;
+        font-weight: bold;
+        margin-bottom: 30px;
+      }
+
+      .preload__title {
+        color: #fff;
+        font-size: 14px;
+        margin: 30px 0 20px 0;
+      }
+
+      .preload__sub-title {
+        color: #ababab;
+        font-size: 12px;
+      }
+
+      .preload__footer {
+        text-align: center;
+        padding: 10px 0 20px 0;
+      }
+
+      .preload__footer a {
+        font-size: 12px;
+        color: #ababab;
+        text-decoration: none;
+      }
+      .preload__footer #xbcode-link {
+        display: none;
+      }
+
+      .preload__loading {
+        height: 30px;
+        width: 30px;
+        border-radius: 30px;
+        border: 7px solid currentColor;
+        border-bottom-color: #2f3447 !important;
+        position: relative;
+        animation:
+          r 1s infinite cubic-bezier(0.17, 0.67, 0.83, 0.67),
+          bc 2s infinite ease-in;
+        transform: rotate(0deg);
+      }
+
+      @keyframes r {
+        from {
+          transform: rotate(0deg);
+        }
+
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .preload__loading::after,
+      .preload__loading::before {
+        content: '';
+        display: inline-block;
+        position: absolute;
+        bottom: -2px;
+        height: 7px;
+        width: 7px;
+        border-radius: 10px;
+        background-color: currentColor;
+      }
+
+      .preload__loading::after {
+        left: -1px;
+      }
+
+      .preload__loading::before {
+        right: -1px;
+      }
+
+      @keyframes bc {
+        0% {
+          color: #689cc5;
+        }
+
+        25% {
+          color: #b3b7e2;
+        }
+
+        50% {
+          color: #93dbe9;
+        }
+
+        75% {
+          color: #abbd81;
+        }
+
+        100% {
+          color: #689cc5;
+        }
+      }
+    </style>
+    <script type="module" crossorigin src="/backend/assets/index-60eaa136.js"></script>
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/@vue-4f5555d0.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/vue-4b03699f.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/lodash-es-32f1e46b.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/@vueuse-96f9e306.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/@element-plus-1673a25d.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/@sxzz-4a83b8c6.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/@ctrl-f8748455.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/@wangeditor-bf7ddcc4.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/dayjs-abd605b1.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/async-validator-dee29e8b.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/memoize-one-297ddbcb.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/normalize-wheel-es-ed76fb12.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/@floating-ui-7eddccea.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/element-plus-8a2202ec.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/axios-4a70c6fc.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/vue-router-f903277e.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/vue-demi-ac43b0ec.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/pinia-ed233b5c.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/views/builder/index-95805b5b.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/views/login/component/login-a1e61f16.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/dplayer-608c1b12.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/tslib-54e39b60.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/zrender-744c9c42.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/echarts-02a375f3.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/es-errors-c75f5a96.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/object-inspect-ca31f5e8.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/side-channel-list-0fd6a2df.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/es-object-atoms-11ea1ab9.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/math-intrinsics-9389030e.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/gopd-30775706.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/es-define-property-27915812.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/has-symbols-76fb15e9.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/function-bind-48f717dc.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/call-bind-apply-helpers-3cda379c.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/dunder-proto-1dc9c16d.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/get-proto-e94264fe.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/hasown-31deb62f.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/get-intrinsic-52f17130.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/call-bound-d9fdd32a.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/side-channel-map-b596ee93.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/side-channel-weakmap-964467d0.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/side-channel-414b97c4.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/qs-b0732a54.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/pinia-plugin-persistedstate-ed167f96.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/nprogress-e0028543.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/less-5eba5ccf.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/@vicons-fd8bcc59.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/lucide-vue-next-8e8eea48.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/vditor-a8a1b596.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/views/login/index-8d6d2c25.js">
+    <link rel="stylesheet" href="/backend/assets/static/css/@wangeditor.501cf061.css">
+    <link rel="stylesheet" href="/backend/assets/static/css/element-plus.29540580.css">
+    <link rel="stylesheet" href="/backend/assets/static/css/index.9f39a42d.css">
+    <link rel="stylesheet" href="/backend/assets/static/css/login.60b3e061.css">
+    <link rel="stylesheet" href="/backend/assets/static/css/nprogress.771398e6.css">
+    <link rel="stylesheet" href="/backend/assets/static/css/vditor.410525cb.css">
+    <link rel="stylesheet" href="/backend/assets/static/css/index.a90ad0bd.css">
+  </head>
+
+  <body>
+    <div id="app" class="ma-ui">
+      <div class="preload__wrap" id="Loading">
+        <div class="preload__container">
+          <!-- <p class="preload__name">积木云</p> -->
+          <div class="preload__loading"></div>
+          <p class="preload__title">正在加载资源...</p>
+          <p class="preload__sub-title">初次加载需要较多时间，请耐心等待</p>
+        </div>
+        <div class="preload__footer">
+          <!-- <a href="http://www.xbcode.net">http://www.xbcode.net</a> -->
+        </div>
+      </div>
+    </div>
+    <a href="http://www.xbcode.net" id="xbcode-link">www.xbcode.net</a>
+    
+  </body>
+</html>
