@@ -41,12 +41,11 @@ trait ActionButtonColumn
         $url = $this->getRightActionAPI($url, 'get');
         /** @var TableColumn|DialogAction */
         $component = $this->useCustomColumn(DialogAction::class, $name, $label, $option);
-        $component->align('center');
         $component->vAlign('middle');
         $component->level('link');
         $component->actionType('dialog');
         $component->dialogModel($url, $label, $option);
-        $title = $option['title'] ?? '立即打开';
+        $title = $option['title'] ?? "\${{$name}}";
         $html = <<<HTML
         <span class="text-primary cursor-pointer" style="font-size: 12px;">$title</span>
         HTML;
@@ -153,18 +152,25 @@ trait ActionButtonColumn
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public function addColumnLink(string $name, string $title, string $url, callable|array $option = [])
+    public function addColumnLink(string $name, string $title, string $url = '', callable|array $option = [])
     {
         /** @var TableColumn|LinkAction */
-        $component = $this->useCustomColumn(LinkAction::class, $name, $title, $option);
-        $component->align('center');
+        $component = $this->useCustomColumn(new LinkAction($this->url), $name, $title, $option);
         $component->vAlign('middle');
         $component->level('link');
-        if ($url) {
-            $component->link($url);
-        } else {
-            $component->link('${' . $name . '}');
-        }
+        $title = $option['title'] ?? "\${{$name}}";
+        $html = <<<HTML
+        <span class="text-primary cursor-pointer" style="font-size: 12px;">$title</span>
+        HTML;
+        $component->body([
+            [
+                'type' => 'tpl',
+                'tpl' => $html,
+            ],
+        ]);
+        // 设置链接地址
+        $component->link($url ? $url : '${' . $name . '}');
+        // 返回组件
         return $component;
     }
 
@@ -183,7 +189,6 @@ trait ActionButtonColumn
     {
         /** @var TableColumn|UrlAction */
         $component = $this->useCustomColumn(UrlAction::class, $name, $label, $option);
-        $component->align('center');
         $component->vAlign('middle');
         $component->level('link');
         if ($url) {

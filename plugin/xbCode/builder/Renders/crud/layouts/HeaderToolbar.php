@@ -143,11 +143,7 @@ trait HeaderToolbar
      */
     public function addHeaderLink(string $title, string $url)
     {
-        /**
-         * @var LinkAction
-         * @author 楚羽幽 958416459@qq.com
-         * @copyright 贵州积木云网络科技有限公司
-         */
+        /** @var LinkAction */
         $component = $this->createButtonLink($title, $url);
         $component->setVariable('position', 'top');
         $this->headerToolbar[] = $component;

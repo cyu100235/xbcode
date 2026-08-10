@@ -443,9 +443,7 @@ trait FormLayout
         // 设置表单组件
         $component->body($formRows);
         // 设置表单数据
-        if ($this->data) {
-            $component->data($this->data);
-        }
+        $component->data($this->data ?: null);
         // 返回表单实例
         return $component;
     }

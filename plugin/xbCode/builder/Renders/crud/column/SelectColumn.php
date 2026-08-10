@@ -41,6 +41,8 @@ trait SelectColumn
         $component->quickEdit([
             'type' => 'select',
             'saveImmediately' => true,
+            'mode' => 'inline',
+            'size' => 'md',
             ...$quickEdit,
         ]);
         return $component;
