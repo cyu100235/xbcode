@@ -79,4 +79,16 @@ trait ColumnUtil
     {
         return $this->columns;
     }
+
+    /**
+     * 对表格列进行排序
+     * @param callable $callback 排序回调函数，接收两个 TableColumn 参数，返回整数
+     * @return void
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function sortColumns(callable $callback): void
+    {
+        usort($this->columns, $callback);
+    }
 }

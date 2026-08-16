@@ -21,7 +21,7 @@ namespace plugin\xbCode\builder\Components\Form;
  * @method $this defaultValue(string $value) 默认值
  * @method $this draggable(string $value) 是否可拖拽
  * @method $this addButtonText(string $value) 添加按钮文本
- * @method $this keyItem(string $value) 键输入框配置
+ * @method $this keyItem(array|string $value) 键输入框配置
  * @method $this valueItems(array $value) 值输入框配置
  */
 class InputKVS extends FormBase

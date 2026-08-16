@@ -10,7 +10,6 @@
 namespace plugin\xbCode\app\admin\controller;
 
 use plugin\xbCode\api\ConfigApi;
-use plugin\xbCode\builder\Builder;
 use plugin\xbCode\trait\ConfigTrait;
 use plugin\xbCode\builder\Renders\XbTabForm;
 
@@ -60,21 +59,21 @@ class SettingController extends BaseController
      */
     private function getBuilder()
     {
-        return Builder::tabForm(function (XbTabForm $builder) {
-            $template = $this->getTemplates();
-            foreach ($template as $value) {
-                if (empty($value['name'])) {
-                    continue;
-                }
-                if (empty($value['title'])) {
-                    continue;
-                }
-                if (empty($value['body'])) {
-                    continue;
-                }
-                $builder->addTab($value['name'], $value['title'], $value['body']);
+        $builder = XbTabForm::make();
+        $template = $this->getTemplates();
+        foreach ($template as $value) {
+            if (empty($value['name'])) {
+                continue;
             }
-        });
+            if (empty($value['title'])) {
+                continue;
+            }
+            if (empty($value['body'])) {
+                continue;
+            }
+            $builder->addTab($value['name'], $value['title'], $value['body']);
+        }
+        return $builder;
     }
 
     /**

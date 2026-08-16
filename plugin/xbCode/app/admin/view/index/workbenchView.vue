@@ -356,7 +356,7 @@ export default {
             this.$router.push({
                 path: url,
                 query: {
-                    _redirect: this.$route.fullPath
+                    redirect: this.$route.fullPath
                 },
             })
         },

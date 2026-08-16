@@ -1,7 +1,6 @@
 <?php
 /**
  * 积木云渲染器
- *
  * @package  XbCode
  * @author   楚羽幽 <958416459@qq.com>
  * @license  Apache License 2.0
@@ -36,12 +35,20 @@ trait SidebarLayout
     protected string $url;
 
     /**
-     * 地址栏选中字段
+     * 选中字段
      * @var string
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    protected string $sidebarActive = '_nav';
+    protected string $sidebarField = '_nav';
+
+    /**
+     * 选中数据
+     * @var string
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected string $sidebarActive = '';
 
     /**
      * 侧边栏组件
@@ -53,14 +60,15 @@ trait SidebarLayout
 
     /**
      * 使用侧边栏组件
-     * @param string $url
-     * @param string $active
+     * @param string $field 选中字段
+     * @param string $active 选中数据
      * @return Nav
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public function useSidebar(string $active = '_nav')
+    public function useSidebar(string $field = '_nav', string $active = '')
     {
+        $this->sidebarField = $field;
         $this->sidebarActive = $active;
         return $this->navs;
     }
@@ -106,7 +114,8 @@ trait SidebarLayout
     private function getSidebar()
     {
         $url = $this->url;
-        $field = $this->sidebarActive;
+        $field = $this->sidebarField;
+        $active = $this->sidebarActive;
         if (empty($this->sidebars)) {
             return $this->navs;
         }
@@ -120,7 +129,7 @@ trait SidebarLayout
             parse_str($queryString, $query);
         }
         // 当前选中值
-        $activeValue = $query[$field] ?? '';
+        $activeValue = $query[$field] ?? $active;
         unset($query[$field]);
         // 如果有 _act 参数，则删除
         if($query['_act']){
@@ -132,24 +141,24 @@ trait SidebarLayout
         $query = urldecode($query);
 
         // 处理侧边栏数据
-        $links = array_map(function ($item) use ($path, $field, $activeValue, $query) {
-            // 菜单数据
+        $processItem = function ($item) use ($path, $field, $activeValue, $query, &$processItem) {
+            // 侧边栏项值
             $value = $item['value'] ?? '';
-            // 是否选中
-            $item['active'] = $value === $activeValue ? true : false;
-            // 跳转地址
-            $value = $item['value'] ?? '';
+            // 侧边栏项是否选中（不要使用===，因为value可能是字符串）
+            $item['active'] = $value == $activeValue ? true : false;
+            // 侧边栏项跳转地址
             $to = "{$path}?{$field}={$value}";
-            // 如果有查询参数，则追加到跳转地址
             if ($query) {
                 $to .= "&{$query}";
             }
             $item['to'] = $to;
-            // 菜单图标
             $item['icon'] = $item['icon'] ?? 'fa-regular fa-folder-open';
-            // 返回数据
+            if (!empty($item['children'])) {
+                $item['children'] = array_map($processItem, $item['children']);
+            }
             return $item;
-        }, $this->sidebars);
+        };
+        $links = array_map($processItem, $this->sidebars);
 
         // 追加至导航
         $this->navs->links($links);

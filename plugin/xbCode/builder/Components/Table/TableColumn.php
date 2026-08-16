@@ -21,7 +21,6 @@ use plugin\xbCode\builder\Components\BaseSchema;
  * @method $this label(string $value) 设置列标题
  * @method $this name(string $value) 设置列名称
  * @method $this width(int|string $value) 设置列宽
- * @method $this minWidth(int|string $value) 最小列宽
  * @method $this remark(string $value) 设置提示信息
  * @method $this fixed(string $value) 设置列是否固定
  * @method $this popOver(string|array $value) 设置列的弹出框内容

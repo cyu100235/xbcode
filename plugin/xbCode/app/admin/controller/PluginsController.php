@@ -14,7 +14,6 @@ use plugin\xbCode\api\Url;
 use plugin\xbCode\utils\DirUtil;
 use plugin\xbCode\api\ConfigApi;
 use plugin\xbCode\api\PluginsApi;
-use plugin\xbCode\builder\Builder;
 use plugin\xbCode\api\PluginsImportApi;
 use plugin\xbCode\api\PluginsInstallApi;
 use plugin\xbCode\api\PluginsUninstallApi;
@@ -162,22 +161,21 @@ class PluginsController extends BaseController
         // 获取配置数据
         $formData = ConfigApi::make($path)->get();
         // 创建表单视图
-        $builder = Builder::tabForm(function (XbTabForm $builder) use ($pluginName) {
-            // 获取模板规则
-            $template = PluginsApi::make()->config($pluginName);
-            foreach ($template as $value) {
-                if (empty($value['name'])) {
-                    throw new \Exception('选项卡标识参数错误');
-                }
-                if (empty($value['title'])) {
-                    throw new \Exception('选项卡标题参数错误');
-                }
-                if (empty($value['body'])) {
-                    throw new \Exception('选项卡内容参数错误');
-                }
-                $builder->addTab($value['name'], $value['title'], $value['body']);
+        $builder = XbTabForm::make();
+        // 获取模板规则
+        $template = PluginsApi::make()->config($pluginName);
+        foreach ($template as $value) {
+            if (empty($value['name'])) {
+                throw new \Exception('选项卡标识参数错误');
             }
-        });
+            if (empty($value['title'])) {
+                throw new \Exception('选项卡标题参数错误');
+            }
+            if (empty($value['body'])) {
+                throw new \Exception('选项卡内容参数错误');
+            }
+            $builder->addTab($value['name'], $value['title'], $value['body']);
+        }
         $api = Url::make('config')->query(['name' => $pluginName]);
         $builder->setSaveApi($api);
         $builder->setSaveMethod('POST');

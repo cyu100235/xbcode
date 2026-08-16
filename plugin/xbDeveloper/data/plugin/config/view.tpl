@@ -6,5 +6,5 @@ use support\view\Blade;
 use support\view\ThinkPHP;
 
 return [
-    'handler' => ThinkPHP::class
+    'handler' => Blade::class
 ];

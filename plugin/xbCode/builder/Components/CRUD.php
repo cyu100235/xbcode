@@ -20,7 +20,7 @@ use plugin\xbCode\builder\Components\Table\Table;
  * @method $this mode(string $value) 设置表格模式
  * @method $this border(bool $value) 是否有边框
  * @method $this title(string $value) 设置标题
- * @method $this expandConfig(array $value)  设置展开行配置，参数示例：expand，expandAll，accordion
+ * @method $this expandConfig(array $value)  设置展开行配置，参数示例：expand=all 展开全部，expand=accordion 全部收缩，expand=first展开首行
  * @method $this className(string $value) 设置表格外层 Dom 的类名
  * @method $this api(mixed $value) 设置 CRUD 用来获取列表数据的 api
  * @method $this deferApi(string $value) 当行数据中有 defer 属性时，用此接口进一步加载内容

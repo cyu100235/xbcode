@@ -11,7 +11,6 @@ namespace plugin\xbCode\app\admin\controller;
 
 use support\Request;
 use plugin\xbCode\api\Url;
-use plugin\xbCode\builder\Builder;
 use plugin\xbCode\app\model\Admin;
 use plugin\xbCode\utils\PasswdUtil;
 use plugin\xbCode\app\model\AdminRole;
@@ -29,7 +28,7 @@ class AdminController extends BaseController
 {
     /**
      * 列表
-     * @param \support\Request $request
+     * @param Request $request
      * @return string
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
@@ -45,31 +44,30 @@ class AdminController extends BaseController
                 ->paginate();
             return $this->successData($data);
         }
-        $builder = Builder::crud(function (XbCrud $builder) {
-            $builder->addHeaderDialog('添加用户', Url::make('Admin/add'), [
-                'title' => '添加管理员用户',
-                'size' => 'md',
-            ]);
-            $builder->addColumn('id', '序号')->width(100);
-            $builder->addColumnImage('avatar', '用户头像');
-            $builder->addColumn('username', '登录账号');
-            $builder->addColumn('nickname', '用户昵称');
-            $builder->addColumn('role.title', '所属角色')->minWidth(180);
-            $builder->addColumn('login_ip', '登录IP')->minWidth(150);
+        $builder = XbCrud::make();
+        $builder->addHeaderDialog('添加用户', Url::make('Admin/add'), [
+            'title' => '添加管理员用户',
+            'size' => 'md',
+        ]);
+        $builder->addColumn('id', '序号')->width(100);
+        $builder->addColumnImage('avatar', '用户头像');
+        $builder->addColumn('username', '登录账号');
+        $builder->addColumn('nickname', '用户昵称');
+        $builder->addColumn('role.title', '所属角色')->minWidth(180);
+        $builder->addColumn('login_ip', '登录IP')->minWidth(150);
 
-            $builder->setActionConfig('width', 130);
-            $builder->addRightActionDialog('修改', Url::make('edit'), [
-                'title' => '修改管理员用户',
-                'size' => 'md',
-            ]);
-            $builder->addRightActionConfirm('删除', Url::make('del'));
-        });
+        $builder->setActionConfig('width', 130);
+        $builder->addRightActionDialog('修改', Url::make('edit'), [
+            'title' => '修改管理员用户',
+            'size' => 'md',
+        ]);
+        $builder->addRightActionConfirm('删除', Url::make('del'));
         return $this->successRes($builder);
     }
 
     /**
      * 添加
-     * @param \support\Request $request
+     * @param Request $request
      * @return \support\Response
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
@@ -97,7 +95,7 @@ class AdminController extends BaseController
 
     /**
      * 修改
-     * @param \support\Request $request
+     * @param Request $request
      * @return \support\Response
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
@@ -134,7 +132,7 @@ class AdminController extends BaseController
 
     /**
      * 删除
-     * @param \support\Request $request
+     * @param Request $request
      * @return \support\Response
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
@@ -159,7 +157,7 @@ class AdminController extends BaseController
 
     /**
      * 修改个人资料
-     * @param \support\Request $request
+     * @param Request $request
      * @return \support\Response
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
@@ -198,14 +196,13 @@ class AdminController extends BaseController
         }
         $formData = $model->toArray();
         unset($formData['password']);
-        $builder = Builder::form(function (XbForm $builder) {
-            $builder->useForm()->wrapWithPanel(false);
-            $builder->addRowInput('username', '登录账号')->disabled(true);
-            $builder->addRowInput('originpwd', '原登录密码')->description('请填写原来登录密码')->password();
-            $builder->addRowInput('newpassword', '新登录密码')->description('请填写新的登录密码')->password();
-            $builder->addRowInput('nickname', '用户昵称')->description('用户昵称，2-10位');
-            $builder->addRowUploadImage('upload', '用户头像')->description('建议尺寸:200 * 200 px');
-        });
+        $builder = XbForm::make();
+        $builder->useForm()->wrapWithPanel(false);
+        $builder->addRowInput('username', '登录账号')->disabled(true);
+        $builder->addRowInput('originpwd', '原登录密码')->description('请填写原来登录密码')->password();
+        $builder->addRowInput('newpassword', '新登录密码')->description('请填写新的登录密码')->password();
+        $builder->addRowInput('nickname', '用户昵称')->description('用户昵称，2-10位');
+        $builder->addRowUploadImage('upload', '用户头像')->description('建议尺寸:200 * 200 px');
         $builder->setSaveMethod('PUT');
         $builder->setData($formData);
         return $this->successRes($builder);
@@ -223,23 +220,22 @@ class AdminController extends BaseController
         $roles = AdminRole::where('admin_id', $adminId)
             ->order('sort asc,id asc')
             ->column('title as label,id as value');
-        $builder = Builder::form(function (XbForm $builder) use ($roles) {
-            /** @var Group */
-            $userGroup = Group::make()->className('flex-1');
-            // Flex布局
-            $builder->addRowFlex('login', [
-                $builder->addRowUploadImage('avatar', ''),
-                $userGroup->body([
-                    $builder->addRowInput('username', '登录账号')->columnRatio(12),
-                    $builder->addRowInput('password', '登录密码')->className('mt-1')->password(),
-                ]),
-            ])->justify('flex-start')->alignItems('start');
-            // 用户信息分组
-            $builder->addRowGroup('user', [
-                $builder->addRowSelect('role_id', '所属角色')->options($roles),
-                $builder->addRowInput('nickname', '用户昵称'),
-            ]);
-        });
+        $builder = XbForm::make();
+        /** @var Group */
+        $userGroup = Group::make()->className('flex-1');
+        // Flex布局
+        $builder->addRowFlex('login', [
+            $builder->addRowUploadImage('avatar', ''),
+            $userGroup->body([
+                $builder->addRowInput('username', '登录账号')->columnRatio(12),
+                $builder->addRowInput('password', '登录密码')->className('mt-1')->password(),
+            ]),
+        ])->justify('flex-start')->alignItems('start');
+        // 用户信息分组
+        $builder->addRowGroup('user', [
+            $builder->addRowSelect('role_id', '所属角色')->options($roles),
+            $builder->addRowInput('nickname', '用户昵称'),
+        ]);
         return $builder;
     }
 }

@@ -14,7 +14,6 @@ use plugin\xbCode\api\Url;
 use plugin\xbUpload\api\Files;
 use plugin\xbCode\XbController;
 use plugin\xbUpload\api\UploadApi;
-use plugin\xbCode\builder\Builder;
 use plugin\xbUpload\api\UploadChunk;
 use plugin\xbUpload\app\model\Upload;
 use plugin\xbUpload\enum\UploadExtEnum;
@@ -167,23 +166,22 @@ class UploadController extends XbController
         if (!$model) {
             return $this->fail('该附件不存在');
         }
-        $builder = Builder::form(function (XbForm $builder) use ($model) {
-            $builder->addRowInput('title', '附件名称');
-            $builder->addRowInput('name', '文件名称')->disabled(true);
-            $builder->addRowInput('format', '文件格式')->disabled(true);
-            $builder->addRowInput('size_format', '文件大小')->disabled(true);
-            $builder->addRowInput('adapter', '储存位置')->disabled(true);
+        $builder = XbForm::make();
+        $builder->addRowInput('title', '附件名称');
+        $builder->addRowInput('name', '文件名称')->disabled(true);
+        $builder->addRowInput('format', '文件格式')->disabled(true);
+        $builder->addRowInput('size_format', '文件大小')->disabled(true);
+        $builder->addRowInput('adapter', '储存位置')->disabled(true);
 
-            $extEnum = UploadExtEnum::dict();
-            $imageExt = $extEnum['image'] ?? '';
-            if (str_contains($imageExt, $model->format)) {
-                $builder->addRowImage('url', '图片预览', $model->url)
-                    ->type('static-image')
-                    ->thumbMode('cover')
-                    ->showToolbar(true)
-                    ->enlargeAble(true);
-            }
-        });
+        $extEnum = UploadExtEnum::dict();
+        $imageExt = $extEnum['image'] ?? '';
+        if (str_contains($imageExt, $model->format)) {
+            $builder->addRowImage('url', '图片预览', $model->url)
+                ->type('static-image')
+                ->thumbMode('cover')
+                ->showToolbar(true)
+                ->enlargeAble(true);
+        }
         $builder->useForm()->static(true);
         $builder->setData($model);
         return $this->successRes($builder);
@@ -244,14 +242,13 @@ class UploadController extends XbController
      */
     private function formView()
     {
-        $builder = Builder::form(function (XbForm $builder) {
-            $builder->addRowInput('title', '附件名称');
-            $builder->addRowInput('uri', '文件地址')->disabled(true);
-            $builder->addRowInput('name', '文件名称')->disabled(true);
-            $builder->addRowInput('format', '文件格式')->disabled(true);
-            $builder->addRowInput('size_format', '文件大小')->disabled(true);
-            $builder->addRowInput('adapter', '储存位置')->disabled(true);
-        });
+        $builder = XbForm::make();
+        $builder->addRowInput('title', '附件名称');
+        $builder->addRowInput('uri', '文件地址')->disabled(true);
+        $builder->addRowInput('name', '文件名称')->disabled(true);
+        $builder->addRowInput('format', '文件格式')->disabled(true);
+        $builder->addRowInput('size_format', '文件大小')->disabled(true);
+        $builder->addRowInput('adapter', '储存位置')->disabled(true);
         return $builder;
     }
 }

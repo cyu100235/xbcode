@@ -31,7 +31,7 @@
    - 实时记录文件元信息：原始文件名、保存路径、文件大小、MIME 类型、存储引擎、MD5 校验值等。
 
 5. **技术实现**
-   - 基于 xbCode 动态渲染器（Builder::crud / Builder::form）构建的管理后台。
+   - 基于 xbCode 动态渲染器（XbCrud::make / XbForm::make）构建的管理后台。
    - 深度集成 Webman 文件上传系统与 ThinkPHP ORM (think-orm3)。
    - 使用 `plugin\xbUpload\api\UploadApi` 作为全局上传调用入口。
 

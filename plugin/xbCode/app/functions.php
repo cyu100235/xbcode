@@ -16,13 +16,11 @@ function p(mixed $data, string $remarks = '')
     $output = '--------' . $remarks . '--------' . PHP_EOL;
     $output .= print_r($data, true);
     $output .= PHP_EOL;
-    // 尝试多种输出方式，确保 Windows 多层 proc_open 环境下也能看到调试信息
-    // 1. Workerman safeEcho（写 outputStream 并 fflush）
+    // 优先使用 Workerman safeEcho（Workerman 环境下避免重复输出）
+    // 仅当 safeEcho 不可用时，回退到 STDOUT（Windows 多层 proc_open 兜底）
     if (class_exists(\Workerman\Worker::class) && method_exists(\Workerman\Worker::class, 'safeEcho')) {
         \Workerman\Worker::safeEcho($output);
-    }
-    // 2. 直接写 STDOUT 并强制刷新
-    if (defined('STDOUT') && is_resource(STDOUT)) {
+    } elseif (defined('STDOUT') && is_resource(STDOUT)) {
         fwrite(STDOUT, $output);
         fflush(STDOUT);
     }

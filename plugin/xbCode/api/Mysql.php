@@ -38,6 +38,32 @@ class Mysql
     }
 
     /**
+     * 获取默认配置
+     * @param string $name 驱动标识
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public static function getDefaultConfig(string $name = '')
+    {
+        $config = self::getConfig();
+        if(empty($name)){
+            $name = $config['connections']['default'] ?? 'mysql';
+        }
+        $config = $config['connections'][$name] ?? [];
+        return $config;
+    }
+
+    /**
+     * 获取表前缀
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public static function getPrefix()
+    {
+        return self::getDefaultConfig()['prefix'];
+    }
+
+    /**
      * 动态连接数据库
      * @param array $config
      * @return void
@@ -89,7 +115,7 @@ class Mysql
 
     /**
      * 判断数据表是否存在
-     * @param string $name 完整数据表名（带前缀）
+     * @param string $name 完整数据表名（需要带前缀）
      * @return bool
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
@@ -290,7 +316,7 @@ class Mysql
 
     /**
      * 删除数据表
-     * @param string $name
+     * @param string $name 完整表名（需要带前缀）
      * @throws Exception
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com

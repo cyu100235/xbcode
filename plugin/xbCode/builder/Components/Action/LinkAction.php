@@ -73,14 +73,16 @@ class LinkAction extends Button
     {
         // 当前所在地址
         $url = $this->toUrl ?? $this->url;
+        // 解析地址，并且排除指定参数
         $url = $this->checkUrl($url, [
-            '_redirect',
+            'redirect',
             '_act',
         ]);
         // 即将跳转地址
         $link = $path ? $path : $this->link;
+        // 增加跳转地址
         $link = $this->checkUrl($link, [], [
-            '_redirect' => $url,
+            'redirect' => $url,
         ]);
         // 目标地址添加返回参数
         $toUrl = "{$link}";
@@ -89,8 +91,9 @@ class LinkAction extends Button
     }
     /**
      * 解析地址并且排除指定参数
-     * @param string $url
-     * @param array $query
+     * @param string $url 跳转地址
+     * @param array $query 参数数据
+     * @param array $append 添加的参数数据
      * @return string
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com

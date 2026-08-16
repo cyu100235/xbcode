@@ -14,6 +14,8 @@
         "Brick\\VarExporter\\VarExporter" : "brick/varexporter",
         "taoser\\Validate": "taoser/webman-validate",
         "think\\Template": "topthink/think-template",
+        "Jenssegers\\Blade\\Container": "psr/container:^1.1.1",
+        "Jenssegers\\Blade\\Blade": "jenssegers/blade:^1.5.7",
         "Illuminate\\Events\\Dispatcher": "illuminate/events",
         "Illuminate\\Database\\DatabaseManager" : "webman/database:~2.1",
         "Webman\\Console\\Application": "webman/console",

@@ -68,14 +68,22 @@ class Composer
                 // 执行composer包安装
                 $result = static::installComposerPackage($package);
             } catch (\Throwable $th) {
-                LogApi::output("{$package} 依赖安装失败，{$th->getMessage()}", 'error', ['title' => 'Composer 安装错误']);
+                LogApi::output("{$package} 依赖安装失败，{$th->getMessage()}", 'error', [
+                    'title' => 'Composer 安装错误',
+                    'is_debug' => true
+                ]);
                 continue;
             }
             // 记录安装日志
             if ($result['state']) {
-                LogApi::output("{$package} 依赖安装成功", 'info');
+                LogApi::output("{$package} 依赖安装成功", 'info', [
+                    'is_debug' => true
+                ]);
             } else {
-                LogApi::output("{$package} 依赖安装失败，请查看安装日志", 'error', ['title' => "Composer 安装失败: {$package}"]);
+                LogApi::output("{$package} 依赖安装失败，请查看安装日志", 'error', [
+                    'title' => "Composer 安装失败: {$package}",
+                    'is_debug' => true
+                ]);
             }
         }
     }

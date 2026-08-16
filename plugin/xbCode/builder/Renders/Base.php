@@ -168,7 +168,7 @@ abstract class Base implements JsonSerializable
         $query = $urls['query'] ?? '';
         $query = $query ? "?{$query}" : '';
         $this->url = "{$path}{$query}";
-        $this->redirect = $querys['_redirect'] ?? '';
+        $this->redirect = $querys['redirect'] ?? '';
         return $this;
     }
     

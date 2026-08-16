@@ -15,6 +15,7 @@ use plugin\xbCode\builder\Renders\form\FormBase;
 use plugin\xbCode\builder\Renders\form\FormData;
 use plugin\xbCode\builder\Components\Form\AmisForm;
 use plugin\xbCode\builder\Renders\form\layouts\FormLayout;
+use plugin\xbCode\builder\Renders\form\layouts\SidebarLayout;
 use plugin\xbCode\builder\Renders\form\layouts\ToolbarLayout;
 
 /**
@@ -30,6 +31,8 @@ class XbForm extends Base
     use ToolbarLayout;
     // 表单布局
     use FormLayout;
+    // 侧边栏表单布局
+    use SidebarLayout;
     // 表单基础能力
     use FormBase;
     // 表单数据能力
@@ -216,9 +219,6 @@ class XbForm extends Base
         }
         // 获取渲染表单
         $form = $this->renderForm();
-        if ($this->redirect) {
-            $form->redirect($this->redirect);
-        }
         $page->body([
             $form,
         ]);

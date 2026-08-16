@@ -22,8 +22,7 @@ trait InputTableRow
      * 添加表格
      * @param string $field
      * @param string $title
-     * @param mixed $value
-     * @param callable|array $option
+     * @param callable $callback
      * @return InputTable
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com

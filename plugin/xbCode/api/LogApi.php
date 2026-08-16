@@ -26,12 +26,9 @@ class LogApi
         // 类型转大写
         $type = strtoupper($type);
         // 是否在开发模式
-        $isDebug = DebugApi::status();
+        $isDebug = $option['is_debug'] ?? DebugApi::status();
         // 是否写入日志文件
-        $isWriteLog = true;
-        if (isset($option['is_write_log']) && $option['is_write_log'] === false) {
-            $isWriteLog = false;
-        }
+        $isWriteLog = $option['is_write_log'] ?? true;
         // 日志文件标题
         $title = $option['title'] ?? '温馨提示';
         // 检查日志类型

@@ -36,6 +36,10 @@ class InitJwt
             $output->writeln("JWT密钥文件不存在...");
             return;
         }
+        if (!class_exists(VarExporter::class)) {
+            $output->writeln("请先安装brick/varexporter");
+            return;
+        }
         $jwt = include $jwtPath;
         // 生成JWT密钥
         $jwt['jwt']['access_secret_key'] = self::getJwtKey();

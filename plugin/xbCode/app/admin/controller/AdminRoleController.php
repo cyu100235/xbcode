@@ -13,7 +13,6 @@ use support\Request;
 use plugin\xbCode\api\Url;
 use plugin\xbCode\app\model\Admin;
 use plugin\xbCode\api\MenuChecked;
-use plugin\xbCode\builder\Builder;
 use plugin\xbCode\app\model\AdminRule;
 use plugin\xbCode\app\model\AdminRole;
 use plugin\xbCode\builder\Renders\XbForm;
@@ -30,7 +29,7 @@ class AdminRoleController extends BaseController
 {
     /**
      * 表格
-     * @param \support\Request $request
+     * @param Request $request
      * @return \support\Response
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
@@ -52,41 +51,40 @@ class AdminRoleController extends BaseController
                 });
             return $this->successRes($data);
         }
-        $builder = Builder::crud(function (XbCrud $builder) {
-            $builder->useCRUD()->alwaysShowPagination(true);
-            $builder->setActionConfig('width', '200px');
-            $builder->addHeaderDialog('添加角色', Url::make('AdminRole/add'), [
-                'title' => '添加角色',
-            ])->level('primary');
+        $builder = XbCrud::make();
+        $builder->useCRUD()->alwaysShowPagination(true);
+        $builder->setActionConfig('width', '200px');
+        $builder->addHeaderDialog('添加角色', Url::make('AdminRole/add'), [
+            'title' => '添加角色',
+        ])->level('primary');
 
-            $builder->addColumn('id', '序号')->width(80);
-            $builder->addColumn('title', '角色名称')->minWidth(180);
-            $builder->addColumn('num', '管理员人数', [
-                'minWidth' => 100,
-            ]);
-            $builder->addColumn('sort', '排序', [
-                'minWidth' => 100,
-            ]);
-            $builder->addColumn('create_at', '创建时间', [
-                'width' => 150,
-            ]);
+        $builder->addColumn('id', '序号')->width(80);
+        $builder->addColumn('title', '角色名称')->minWidth(180);
+        $builder->addColumn('num', '管理员人数', [
+            'minWidth' => 100,
+        ]);
+        $builder->addColumn('sort', '排序', [
+            'minWidth' => 100,
+        ]);
+        $builder->addColumn('create_at', '创建时间', [
+            'width' => 150,
+        ]);
 
-            $builder->setActionConfig('width', 150);
-            $builder->addRightActionDialog('权限', Url::make('auth'), [
-                'size' => 'lg',
-                'title' => '给「${title}」分配权限',
-            ])->className('text-success');
-            $builder->addRightActionDialog('修改', Url::make('edit'), [
-                'title' => '修改角色',
-            ]);
-            $builder->addRightActionConfirm('删除', Url::make('del'));
-        });
+        $builder->setActionConfig('width', 150);
+        $builder->addRightActionDialog('权限', Url::make('auth'), [
+            'size' => 'lg',
+            'title' => '给「${title}」分配权限',
+        ])->className('text-success');
+        $builder->addRightActionDialog('修改', Url::make('edit'), [
+            'title' => '修改角色',
+        ]);
+        $builder->addRightActionConfirm('删除', Url::make('del'));
         return $this->successRes($builder);
     }
 
     /**
      * 添加
-     * @param \support\Request $request
+     * @param Request $request
      * @return \support\Response
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
@@ -122,7 +120,7 @@ class AdminRoleController extends BaseController
 
     /**
      * 修改
-     * @param \support\Request $request
+     * @param Request $request
      * @return \support\Response
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
@@ -153,7 +151,7 @@ class AdminRoleController extends BaseController
 
     /**
      * 删除
-     * @param \support\Request $request
+     * @param Request $request
      * @return \support\Response
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
@@ -182,7 +180,7 @@ class AdminRoleController extends BaseController
 
     /**
      * 分配权限
-     * @param \support\Request $request
+     * @param Request $request
      * @return \support\Response
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
@@ -209,35 +207,34 @@ class AdminRoleController extends BaseController
         // 解析已选择菜单规则
         $activeRules = $model['rule'] ? json_decode($model['rule'], true) : [];
         $activeRules = is_array($activeRules) ? implode(',', $activeRules) : $activeRules;
-        $builder = Builder::form(function (XbForm $builder) use ($activeRules) {
-            // 获取权限权限
-            $rules = AdminRule::order('sort asc')->select()->toArray();
-            $rules = MenuChecked::menu2DToTree($rules);
-            $rules = $this->getRules($rules);
-            /** @var Transfer */
-            $transfer = Transfer::make();
-            $builder->addRowGroup('role', [
-                $builder->addRowInput('title', '角色名称', '', [
-                    'static' => true,
-                ])->columnRatio(6),
-                $builder->addRowInput('sort', '角色排序', '100')->columnRatio(6),
-            ]);
-            $builder->addRowGroup('auth', [
-                // 设置穿索器
-                $transfer
-                    ->name('rules')
-                    ->resultListModeFollowSelect((true))
-                    ->selectMode('tree')
-                    ->selectTitle('权限列表')
-                    ->resultTitle('已选权限')
-                    ->columns([
-                        ['name' => 'label', 'label' => '权限名称'],
-                        ['name' => 'value', 'label' => '权限地址'],
-                    ])
-                    ->options($rules)
-                    ->value($activeRules)
-            ]);
-        });
+        $builder = XbForm::make();
+        // 获取权限权限
+        $rules = AdminRule::order('sort asc')->select()->toArray();
+        $rules = MenuChecked::menu2DToTree($rules);
+        $rules = $this->getRules($rules);
+        /** @var Transfer */
+        $transfer = Transfer::make();
+        $builder->addRowGroup('role', [
+            $builder->addRowInput('title', '角色名称', '', [
+                'static' => true,
+            ])->columnRatio(6),
+            $builder->addRowInput('sort', '角色排序', '100')->columnRatio(6),
+        ]);
+        $builder->addRowGroup('auth', [
+            // 设置穿索器
+            $transfer
+                ->name('rules')
+                ->resultListModeFollowSelect((true))
+                ->selectMode('tree')
+                ->selectTitle('权限列表')
+                ->resultTitle('已选权限')
+                ->columns([
+                    ['name' => 'label', 'label' => '权限名称'],
+                    ['name' => 'value', 'label' => '权限地址'],
+                ])
+                ->options($rules)
+                ->value($activeRules)
+        ]);
         $builder->setSaveMethod('PUT');
         return $this->successRes($builder);
     }
@@ -275,10 +272,9 @@ class AdminRoleController extends BaseController
      */
     private function formView()
     {
-        $builder = Builder::form(function (XbForm $form) {
-            $form->addRowInput('title', '角色名称');
-            $form->addRowInput('sort', '角色排序', '100');
-        });
+        $builder = XbForm::make();
+        $builder->addRowInput('title', '角色名称');
+        $builder->addRowInput('sort', '角色排序', '100');
         return $builder;
     }
 }

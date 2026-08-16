@@ -150,6 +150,12 @@ class XbCrud extends Base
         $this->addToolbarColumnsTogglable();
         // 设置表格刷新按钮
         $this->addToolbarReload();
+        // 设置配合隐藏自定义上传输入组合框
+        $this->usePage()->css([
+            '.xb-hide-upload-file-list .cxd-InputGroup .cxd-FileControl .cxd-FileControl-list' => [
+                'display' => 'none'
+            ],
+        ]);
     }
 
     /**

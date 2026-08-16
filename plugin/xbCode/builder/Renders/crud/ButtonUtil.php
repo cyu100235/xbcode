@@ -155,9 +155,11 @@ trait ButtonUtil
      */
     protected function createButtonLink(string $title, string $url)
     {
+        // 当前页面地址
         $component = new LinkAction($this->url);
         $component->level('primary');
         $component->label($title);
+        // 目标地址
         $component->link($url);
         return $component;
     }

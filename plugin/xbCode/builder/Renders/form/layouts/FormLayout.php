@@ -9,6 +9,8 @@
  */
 namespace plugin\xbCode\builder\Renders\form\layouts;
 
+use think\helper\Str;
+use plugin\xbCode\builder\Components\GridSchema;
 use plugin\xbCode\builder\Renders\form\rows\TplRow;
 use plugin\xbCode\builder\Components\Form\AmisForm;
 use plugin\xbCode\builder\Components\Form\FormBase;
@@ -73,10 +75,10 @@ use plugin\xbCode\builder\Renders\form\rows\DateTimeRangeRow;
 use plugin\xbCode\builder\Renders\form\rows\NestedSelecttRow;
 use plugin\xbCode\builder\Renders\form\rows\ChainedSelectRow;
 use plugin\xbCode\builder\Renders\form\rows\InputKeyValueRow;
+use plugin\xbCode\builder\Renders\form\rows\UploadInputFileRow;
 use plugin\xbCode\builder\Renders\form\rows\UploadAttachmentRow;
 use plugin\xbCode\builder\Renders\form\rows\MatrixCheckboxesRow;
 use plugin\xbCode\builder\Renders\form\rows\ButtonGroupSelectRow;
-use think\helper\Str;
 
 /**
  * 表单布局
@@ -149,6 +151,7 @@ trait FormLayout
     use DateTimeRangeRow;
     use NestedSelecttRow;
     use ChainedSelectRow;
+    use UploadInputFileRow;
     use UploadAttachmentRow;
     use MatrixCheckboxesRow;
     use ButtonGroupSelectRow;
@@ -436,10 +439,52 @@ trait FormLayout
             // 设置表单样式
             $component->className('xb-tabs-form');
         }
+        
+        // 是否有侧边栏表单（选项卡模式下不启用侧边栏）
+        if (!empty($this->sidebarForm) && empty($tabs)) {
+            // 排除已添加到主表单中的侧边栏组件，避免重复渲染
+            $formRows = $this->excludeFormRows($this->sidebarForm);
+
+            // 构建侧边栏组件列表（FormBase 对象转数组）
+            $sidebarComponents = [];
+            foreach ($this->sidebarForm as $sidebarItem) {
+                if (is_object($sidebarItem) && method_exists($sidebarItem, 'get')) {
+                    $sidebarComponents[] = $sidebarItem->get();
+                } else {
+                    $sidebarComponents[] = $sidebarItem;
+                }
+            }
+
+            // 根据侧边栏位置决定左右列顺序
+            $isLeft = $this->sidebarPosition === 'left';
+            $grid = GridSchema::make();
+            $grid->columns([
+                [
+                    'body' => $isLeft ? $sidebarComponents : $formRows,
+                    'columnClassName' => 'mb-5',
+                    'md'  => $isLeft ? 2 : 9,
+                ],
+                [
+                    'body' => $isLeft ? $formRows : $sidebarComponents,
+                    'md'  => $isLeft ? 9 : 2,
+                ],
+            ]);
+            $grid->gap('md');
+
+            $formRows = [$grid];
+            $component->className('xb-sidebar-form');
+        }
+
         // 是否有自定义按钮
         if (!empty($this->customSubmit) && !$this->isDialog && empty($tabs)) {
             $formRows = array_merge($formRows, $this->customSubmit);
         }
+
+        // 是否有跳转地址
+        if ($this->redirect) {
+            $component->redirect($this->redirect);
+        }
+
         // 设置表单组件
         $component->body($formRows);
         // 设置表单数据

@@ -1,7 +1,6 @@
 <?php
 /**
  * 积木云渲染器
- *
  * @package  XbCode
  * @author   楚羽幽 <958416459@qq.com>
  * @license  Apache License 2.0
@@ -45,6 +44,7 @@ namespace plugin\xbCode\builder\Components\Form;
  * @method $this documentation(string $value) 设置文档内容
  * @method $this documentLink(string $value) 设置文档链接
  * @method $this initAutoFill(bool $value) 设置初表单反显时是否执行
+ * @method $this autoFill(array $value) 自动填充目标组件
  */
 class InputFile extends FormBase
 {
