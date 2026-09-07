@@ -9,10 +9,11 @@
  * @author 楚羽幽 958416459@qq.com
  */
 
+use plugin\xbCode\api\ServerToken;
+
 return [
     // 服务地址（含协议与端口），由 xb:plugin:create 创建插件时采集写入
     'server_address' => '{PLUGIN_SERVER_ADDRESS}',
-
-    // 互通令牌：动态读取主项目 runtime/xbCode/server_token，避免写死在配置里过期
-    'token' => trim((string) @file_get_contents(dirname(__DIR__, 3) . '/runtime/xbCode/server_token')),
+    // 互通令牌：动态读取主项目 runtime/server_token，避免写死在配置里过期
+    'token' => ServerToken::get(),
 ];

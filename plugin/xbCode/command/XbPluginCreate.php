@@ -182,7 +182,7 @@ class XbPluginCreate extends Command
         }
         if ($serverAddress === null) {
             $default = self::DEFAULT_SERVER_ADDRESS;
-            $serverAddress = $helper->ask($input, $output, new Question("服务地址 (IP/域名/URL) [{$default}]：", $default));
+            $serverAddress = $helper->ask($input, $output, new Question("服务地址，[{$default}]：", $default));
             $quick = false;
         }
         if ($serverPort === null) {
