@@ -32,24 +32,38 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
  *   php webman xb:plugin:create
  *
  *   # 通过参数快速创建
- *   php webman xb:plugin:create --title=示例插件 --name=xbDemo --author=积木云 --desc=示例描述
+ *   php webman xb:plugin:create --title=示例插件 --name=xbDemo --author=积木云 --desc=示例描述 --server-address=127.0.0.1 --server-port=39000
  *
  * 参数说明：
- *   --title  插件标题（2-20 字）
- *   --name   插件标识（字母+数字，字母开头，2-20 字）
- *   --author 开发者名称（2-10 字）
- *   --desc   一句话描述（3-35 字）
+ *   --title          插件标题（2-20 字）
+ *   --name           插件标识（字母+数字，字母开头，2-20 字）
+ *   --author         开发者名称（2-10 字）
+ *   --desc           一句话描述（3-35 字）
+ *   --server-address 服务地址（IP / 域名 / 完整 URL，默认 127.0.0.1）
+ *   --server-port    服务端口（1-65535，缺省时取地址内显式端口，无则 39000）
+ *
+ * 服务地址与服务端口在描述之后采集，合并成完整地址写入插件 config/micro.php。
  *
  * @copyright 贵州积木云网络科技有限公司
  * @author 楚羽幽 958416459@qq.com
  */
-#[AsCommand('xb:plugin:create', '快速创建xbCode插件')]
+#[AsCommand('xb:plugin:create', '快速创建xbCode插件基础开发骨架')]
 class XbPluginCreate extends Command
 {
     /**
      * 模板根目录（相对于插件根）
      */
     protected const SKELETON_DIR = '/plugin/xbCode/data/plugin-skeleton';
+
+    /**
+     * 服务地址默认值（交互式回车即采用）
+     */
+    protected const DEFAULT_SERVER_ADDRESS = '127.0.0.1';
+
+    /**
+     * 服务端口默认值（地址内未显式带端口时使用）
+     */
+    protected const DEFAULT_SERVER_PORT = 39000;
 
     /**
      * 文件名后缀到模板后缀的映射：createFile 时把后缀去掉，再拼接 .tpl 定位模板。
@@ -85,6 +99,7 @@ class XbPluginCreate extends Command
         'config/translation.php',
         'config/view.php',
         'config/menu.php',
+        'config/micro.php',
         'setting/basis.php',
         'plugin.json',
         'install.sql',
@@ -119,11 +134,12 @@ class XbPluginCreate extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription('快速创建xbCode插件基础开发骨架')
             ->addOption('title', null, InputOption::VALUE_OPTIONAL, '插件标题（2-20 字）')
             ->addOption('name', null, InputOption::VALUE_OPTIONAL, '插件标识（字母+数字，字母开头，2-20 字）')
             ->addOption('author', null, InputOption::VALUE_OPTIONAL, '开发者名称（2-10 字）')
-            ->addOption('desc', null, InputOption::VALUE_OPTIONAL, '一句话描述（3-35 字）');
+            ->addOption('desc', null, InputOption::VALUE_OPTIONAL, '一句话描述（3-35 字）')
+            ->addOption('server-address', null, InputOption::VALUE_OPTIONAL, '服务地址（IP/域名/完整URL，默认 127.0.0.1）')
+            ->addOption('server-port', null, InputOption::VALUE_OPTIONAL, '服务端口（1-65535，默认 39000）');
     }
 
     /**
@@ -143,6 +159,8 @@ class XbPluginCreate extends Command
         $name   = $input->getOption('name');
         $author = $input->getOption('author');
         $desc   = $input->getOption('desc');
+        $serverAddress = $input->getOption('server-address');
+        $serverPort    = $input->getOption('server-port');
         $quick  = true;
 
         // 未通过参数传入时交互式询问
@@ -162,10 +180,22 @@ class XbPluginCreate extends Command
             $desc = $helper->ask($input, $output, new Question('一句话描述 (3-35字)：'));
             $quick = false;
         }
+        if ($serverAddress === null) {
+            $default = self::DEFAULT_SERVER_ADDRESS;
+            $serverAddress = $helper->ask($input, $output, new Question("服务地址 (IP/域名/URL) [{$default}]：", $default));
+            $quick = false;
+        }
+        if ($serverPort === null) {
+            // 默认端口优先取地址里显式写的端口，没有则用框架默认端口
+            $default = (string) ($this->parseServerPort((string) $serverAddress) ?? self::DEFAULT_SERVER_PORT);
+            $serverPort = $helper->ask($input, $output, new Question("服务端口 (1-65535) [{$default}]：", $default));
+            $quick = false;
+        }
 
         // 数据验证
         try {
-            $this->validate(compact('title', 'name', 'author', 'desc'));
+            $this->validate(compact('title', 'name', 'author', 'desc', 'serverAddress', 'serverPort'));
+            $serverUrl = $this->buildServerAddress((string) $serverAddress, (string) $serverPort);
         } catch (Exception $e) {
             $output->writeln("<error>{$e->getMessage()}</error>");
             return self::FAILURE;
@@ -179,6 +209,7 @@ class XbPluginCreate extends Command
             $output->writeln("<info>插件标识：{$name}</info>");
             $output->writeln("<info>开发者名称：{$author}</info>");
             $output->writeln("<info>一句话描述：{$desc}</info>");
+            $output->writeln("<info>服务地址：{$serverUrl}</info>");
             $output->writeln('<info>----------插件信息----------</info>');
             $output->writeln('');
             $confirm = new ConfirmationQuestion('直接按【Enter】确认创建，输入 n 后确认取消：', true);
@@ -193,8 +224,8 @@ class XbPluginCreate extends Command
         try {
             // 校验模板完整性
             $this->validateTemplates();
-            // 基于自定义模板生成骨架（目录+文件+变量替换）
-            $this->copySkeleton($name, $title, $author, $desc, $output);
+            // 基于自定义模板生成骨架（目录+文件+变量替换，含 config/micro.php 服务地址）
+            $this->copySkeleton($name, $title, $author, $desc, $serverUrl, $output);
             // 预览图 + 根目录 remarks.txt
             $this->customize($name, $title, $author, $desc, $output);
         } catch (\Throwable $e) {
@@ -232,12 +263,13 @@ class XbPluginCreate extends Command
      * @param string $title  插件标题
      * @param string $author 开发者
      * @param string $desc   描述
+     * @param string $serverUrl 合并后的完整服务地址（写入 config/micro.php）
      * @param OutputInterface $output
      * @return void
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    protected function copySkeleton(string $name, string $title, string $author, string $desc, OutputInterface $output): void
+    protected function copySkeleton(string $name, string $title, string $author, string $desc, string $serverUrl, OutputInterface $output): void
     {
         $pluginPath = base_path() . "/plugin/{$name}";
         $output->writeln('<info>--- 生成自定义骨架 ---</info>');
@@ -251,6 +283,7 @@ class XbPluginCreate extends Command
             '{PLUGIN_NAME}'   => $name,
             '{PLUGIN_DESC}'   => $desc,
             '{PLUGIN_AUTHOR}' => $author,
+            '{PLUGIN_SERVER_ADDRESS}' => $serverUrl,
         ];
         foreach (self::$files as $file) {
             $this->createFile($file, $name, $vars, $output);
@@ -312,7 +345,7 @@ class XbPluginCreate extends Command
 
     /**
      * 数据验证
-     * @param array $data 插件数据（title/name/author/desc）
+     * @param array $data 插件数据（title/name/author/desc/serverAddress/serverPort）
      * @return void
      * @throws Exception
      * @copyright 贵州积木云网络科技有限公司
@@ -357,9 +390,67 @@ class XbPluginCreate extends Command
         if ($authorCount < 2 || $authorCount > 10) {
             throw new Exception('开发者名称长度为2-10个字符');
         }
+        if (trim((string) $data['serverAddress']) === '') {
+            throw new Exception('请填写服务地址');
+        }
+        if (!preg_match('#^(https?://)?[A-Za-z0-9\-.]+(:\d+)?(/\S*)?$#', $data['serverAddress'])) {
+            throw new Exception('服务地址格式错误，示例：127.0.0.1 或 http://xbcode.net:39000');
+        }
+        $serverPort = trim((string) $data['serverPort']);
+        if (!ctype_digit($serverPort) || (int) $serverPort < 1 || (int) $serverPort > 65535) {
+            throw new Exception('服务端口必须是 1-65535 之间的数字');
+        }
         if (is_dir(base_path() . "/plugin/{$data['name']}")) {
             throw new Exception("{$data['name']} 插件已存在");
         }
+    }
+
+    /**
+     * 取服务地址里的 host[:port] 部分（去掉协议前缀与路径）
+     * @param string $address 用户输入的服务地址
+     * @return string
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected function serverHost(string $address): string
+    {
+        $withoutScheme = (string) preg_replace('#^[a-z]+://#i', '', trim($address));
+        return (string) preg_replace('#[/?].*$#', '', $withoutScheme);
+    }
+
+    /**
+     * 解析服务地址里显式填写的端口
+     * @param string $address 用户输入的服务地址（IP/域名/完整URL）
+     * @return int|null 地址未带端口时返回 null
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected function parseServerPort(string $address): ?int
+    {
+        if (!preg_match('#:(\d+)$#', $this->serverHost($address), $matches)) {
+            return null;
+        }
+        return (int) $matches[1];
+    }
+
+    /**
+     * 合并服务地址与服务端口，得到写入 config/micro.php 的完整地址
+     * 规则：保留显式填写的协议（http/https，缺省 http），去掉路径与地址内的端口，
+     *       端口统一以单独采集到的服务端口为准。
+     * @param string $address 服务地址
+     * @param string $port    服务端口
+     * @return string 形如 http://127.0.0.1:39000
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected function buildServerAddress(string $address, string $port): string
+    {
+        $scheme = 'http';
+        if (preg_match('#^(https?)://#i', trim($address), $matches) === 1) {
+            $scheme = strtolower($matches[1]);
+        }
+        $host = (string) preg_replace('#:\d+$#', '', $this->serverHost($address));
+        return "{$scheme}://{$host}:{$port}";
     }
 
     /**
