@@ -50,12 +50,18 @@ class Http extends App
                 return null;
             }
 
+            // 命中 config/route.php 注册的自定义路由时，优先按路由分发（复用上级能力）
+            $status = 200;
+            if (static::findRoute($connection, $path, $key, $request, $status)) {
+                return null;
+            }
+
             // 使用插件内部路由解析控制器与方法，未命中时回落到默认首页 Index::index
             $controllerAndAction = static::parseControllerAction($path) ?: static::parseControllerAction("/$plugin");
             if (!$controllerAndAction) {
                 $request->plugin = $plugin;
                 $request->app = $request->controller = $request->action = '';
-                $callback = static::getFallback($plugin);
+                $callback = static::getFallback($plugin, $status);
                 static::send($connection, $callback($request), $request);
                 return null;
             }
