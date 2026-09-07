@@ -175,19 +175,14 @@ class XbCrud extends Base
 
     /**
      * 创建表格
-     * @param callable $callback 组件参数
      * @return XbCrud
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public static function make(?callable $callback = null)
+    public static function make()
     {
         $url = static::getCurrentPageUrl('', ['_act' => 1]);
-        $instance = static::instance($url);
-        if ($callback) {
-            $callback($instance);
-        }
-        return $instance;
+        return static::instance($url);
     }
 
     /**

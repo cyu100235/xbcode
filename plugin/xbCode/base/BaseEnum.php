@@ -13,6 +13,14 @@ use Exception;
 
 /**
  * 枚举基类
+ * 子类示例：
+ * ```php
+ * class StateEnum extends BaseEnum
+ * {
+ *     const STATE10 = ['label' => '禁用', 'value' => '10', 'style' => '<span class="label label-danger">禁用</span>'];
+ *     const STATE20 = ['label' => '启用', 'value' => '20', 'style' => '<span class="label label-success">启用</span>'];
+ * }
+ * ```
  * @copyright 贵州积木云网络科技有限公司
  * @author 楚羽幽 958416459@qq.com
  */
@@ -27,10 +35,10 @@ class BaseEnum
     public static function switch()
     {
         $data = [
-            'onText' => static::getFieldValue('20', null,'label'),
-            'offText' => static::getFieldValue('10', null,'label'),
-            'trueValue' => static::getFieldValue('20', null,'value'),
-            'falseValue' => static::getFieldValue('10', null,'value'),
+            'onText' => static::getFieldValue('20', null, 'label'),
+            'offText' => static::getFieldValue('10', null, 'label'),
+            'trueValue' => static::getFieldValue('20', null, 'value'),
+            'falseValue' => static::getFieldValue('10', null, 'value'),
         ];
         return $data;
     }
@@ -52,7 +60,7 @@ class BaseEnum
         }
         return $list;
     }
-    
+
     /**
      * 获取枚举字段值
      * @param string $field
@@ -67,7 +75,7 @@ class BaseEnum
         if (empty($list)) {
             throw new Exception('枚举类 ' . static::class . ' 没有定义枚举');
         }
-        foreach($list as $value){
+        foreach ($list as $value) {
             if (empty($value[$field])) {
                 throw new Exception('枚举类 ' . static::class . ' 没有定义样式');
             }
@@ -92,7 +100,7 @@ class BaseEnum
         if (empty($data)) {
             throw new Exception('枚举类 ' . static::class . ' 没有定义枚举');
         }
-        foreach($data as $value){
+        foreach ($data as $value) {
             if (empty($value['icon'])) {
                 throw new Exception('枚举类 ' . static::class . ' 没有状态图标');
             }
@@ -119,7 +127,7 @@ class BaseEnum
         }
         return $data;
     }
-    
+
     /**
      * 获取枚举字段列
      * @param string $name
@@ -134,7 +142,7 @@ class BaseEnum
         $data = array_column($data, $name, $value);
         return $data;
     }
-    
+
     /**
      * 获取枚举字段值
      * @param string $value

@@ -20,30 +20,6 @@ use plugin\xbCode\builder\Renders\XbVue;
 trait ViewsTrait
 {
     /**
-     * 渲染后台视图
-     * @throws Exception
-     * @return \support\Response
-     * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 958416459@qq.com
-     */
-    protected function adminView()
-    {
-        $path = request()->path();
-        if (!str_ends_with($path, '/')) {
-            return redirect("{$path}/");
-        }
-        $viewPath = base_path() . '/plugin/xbCode/public/backend/index.html';
-        if(!file_exists($viewPath)){
-            throw new Exception("后台视图文件不存在：{$viewPath}");
-        }
-        $content = file_get_contents($viewPath);
-        if (empty($content)) {
-            throw new Exception("后台视图文件内容为空：{$viewPath}");
-        }
-        return response($content)->withHeader('Content-Type', 'text/html; charset=utf-8');
-    }
-
-    /**
      * 渲染视图文件
      * @param string $file
      * @throws Exception
@@ -53,18 +29,16 @@ trait ViewsTrait
      */
     protected function viewPage(string $file = '')
     {
-        if(empty($file)){
-            $file = request()->path();
-            $control = str_replace('\\','/', request()->controller);
+        if (empty($file)) {
+            $control = str_replace('\\', '/', request()->controller);
             $control = basename($control);
             $control = str_replace('Controller', '', $control);
-            // 驼峰转下划线
-            $control = toUnderScore($control);
-            // 方法名称
+            if (function_exists('toUnderScore')) {
+                $control = toUnderScore($control);
+            }
             $method = request()->action;
-            // 模块名称
             $module = request()->app;
-            $module = "{$module}/";
+            $module = $module ? "{$module}/" : '';
             $file = "app/{$module}view/{$control}/{$method}";
         }
         $plugin = request()->plugin;
@@ -90,20 +64,19 @@ trait ViewsTrait
      */
     protected function viewAppView(array $vars = [], string $file = '')
     {
-        if(empty($file)){
-            $file = request()->path();
-            $control = str_replace('\\','/', request()->controller);
+        if (empty($file)) {
+            $control = str_replace('\\', '/', request()->controller);
             $control = basename($control);
             $control = str_replace('Controller', '', $control);
-            // 驼峰转下划线
-            $control = toUnderScore($control);
-            // 方法名称
+            if (function_exists('toUnderScore')) {
+                $control = toUnderScore($control);
+            }
             $method = request()->action;
             $file = "{$control}/{$method}";
         }
         return view($file, $vars);
     }
-    
+
     /**
      * 渲染Vue组件
      * @param string $file
@@ -111,6 +84,7 @@ trait ViewsTrait
      * @param array $option
      * @param array $amis
      * @throws Exception
+     * @return XbVue
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
@@ -138,44 +112,5 @@ trait ViewsTrait
         $result = XbVue::view($content, $vars, $amis);
         // 返回实例
         return $result;
-    }
-
-    /**
-     * 渲染Vue视图
-     * @param string $file
-     * @param array $vars
-     * @param array $option
-     * @param array $amis
-     * @return \support\Response
-     * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 958416459@qq.com
-     */
-    protected function display(array $vars = [], string $file = '', array $option = [], array $amis = [])
-    {
-        if(empty($file)) {
-            // 模块名称
-            $module = $option['module'] ?? request()->app;
-            // 控制器方法
-            $controller = request()->controller;
-            $controller = str_replace('\\', '/', $controller);
-            $controller = basename($controller);
-            $controller = str_replace('Controller', '', $controller);
-            // 驼峰转下划线
-            $controller = toUnderScore($controller);
-            // 方法名称
-            $method = request()->action;
-            // 文件地址
-            $file = "app/{$module}/view/{$controller}/{$method}";
-        }
-        $query = request()->get();
-        $vars = [
-            ...$query,
-            ...$vars,
-        ];
-        $display = self::viewVue($file, $vars, $option, [
-            'height' => '100%',
-            ...$amis
-        ]);
-        return $this->successRes($display);
     }
 }

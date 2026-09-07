@@ -1,0 +1,12 @@
+<?php
+/**
+ * 插件进程配置
+ * @package  XbCode
+ * @license  Apache License 2.0
+ * @link     http://www.xbcode.net
+ * @document http://doc.xbcode.net
+ * @copyright 贵州积木云网络科技有限公司
+ * @author 楚羽幽 958416459@qq.com
+ */
+
+return [];

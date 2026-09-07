@@ -1,37 +1,24 @@
 <?php
 global $argv;
 
-$monitor = [
-    app_path(),
-    config_path(),
-    base_path() . '/process',
-    base_path() . '/support',
-    base_path() . '/resource',
-    base_path() . '/.env',
-];
-// 调试模式增加插件目录监听
-if (env('APP_DEBUG', false)) {
-    $monitor[] = base_path() . '/plugin';
-}
-
 return [
-    // File update detection and automatic reload
+    // 文件更新检测与自动重新加载
     'monitor' => [
         'handler' => app\process\Monitor::class,
         'reloadable' => false,
         'constructor' => [
-            // Monitor these directories
-            'monitorDir' => array_merge($monitor, glob(
-                base_path() . '/plugin/*/app'),
-                glob(base_path() . '/plugin/*/config'),
-                glob(base_path() . '/plugin/*/api')
-            ),
-            // Files with these suffixes will be monitored
+            // 监控这些目录
+            'monitorDir' => array_values(array_filter(array_merge([
+                app_path(),
+                config_path(),
+                base_path() . '/process',
+                base_path() . '/support',
+                base_path() . '/resource',
+                base_path() . '/.env',
+            ], (array)glob(base_path() . '/plugin/*', GLOB_ONLYDIR), (array)glob(base_path() . '/plugin/*/*', GLOB_ONLYDIR)))),
+            // 带有这些后缀的文件将会被监控
             'monitorExtensions' => [
-                'php',
-                'html',
-                'htm',
-                'env'
+                'php', 'html', 'htm', 'env'
             ],
             'options' => [
                 'enable_file_monitor' => !in_array('-d', $argv) && DIRECTORY_SEPARATOR === '/',

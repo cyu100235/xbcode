@@ -118,19 +118,14 @@ class XbTabForm extends Base
 
     /**
      * 创建选项卡表单
-     * @param callable $callback
      * @return XbTabForm
      * @author 楚羽幽 958416459@qq.com
      * @copyright 贵州积木云网络科技有限公司
      */
-    public static function make(?callable $callback = null)
+    public static function make()
     {
         $url = static::getCurrentPageUrl();
-        $instance = static::instance($url);
-        if ($callback) {
-            $callback($instance);
-        }
-        return $instance;
+        return static::instance($url);
     }
 
     /**
@@ -273,15 +268,14 @@ class XbTabForm extends Base
     {
         $url = $this->getCheckUrl($name);
         $method = $this->saveMethod;
-        $builder = XbForm::make(function (XbForm $builder) use ($components) {
-            $builder->useForm()->wrapWithPanel(false);
-            foreach ($components as $component) {
-                if (isset($component['isSelect'])) {
-                    unset($component['isSelect']);
-                }
-                $builder->addRowRenderComponent($component);
+        $builder = XbForm::make();
+        $builder->useForm()->wrapWithPanel(false);
+        foreach ($components as $component) {
+            if (isset($component['isSelect'])) {
+                unset($component['isSelect']);
             }
-        });
+            $builder->addRowRenderComponent($component);
+        }
         $builder->setSaveApi($url);
         $builder->setSaveMethod($method);
         $builder->setData($this->data[$name] ?? []);

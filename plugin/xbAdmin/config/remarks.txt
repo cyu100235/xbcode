@@ -1,0 +1,1 @@
+配置目录（app.php 必须含 enable=true）

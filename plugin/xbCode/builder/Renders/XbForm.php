@@ -121,19 +121,14 @@ class XbForm extends Base
 
     /**
      * 创建表单
-     * @param callable $callback 组件参数
      * @return XbForm
      * @author 楚羽幽 958416459@qq.com
      * @copyright 贵州积木云网络科技有限公司
      */
-    public static function make(?callable $callback = null)
+    public static function make()
     {
         $url = static::getCurrentPageUrl();
-        $component = static::instance($url);
-        if ($callback) {
-            $callback($component);
-        }
-        return $component;
+        return static::instance($url);
     }
 
     /**

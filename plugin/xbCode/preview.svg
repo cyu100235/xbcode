@@ -1,53 +1,91 @@
-<svg width="300" height="300" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="xb-preview-title xb-preview-desc">
+  <title id="xb-preview-title">xbCode - 积木云核心框架预览图</title>
+  <desc id="xb-preview-desc">xbCode 插件市场 / 安装向导使用的封面预览图：深色渐变背景 + 插件化 + 多服务 + 路由三件套要点。</desc>
   <defs>
-    <linearGradient id="developerBg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#a8edea;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#fed6e3;stop-opacity:1" />
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0F172A"/>
+      <stop offset="55%" stop-color="#1E293B"/>
+      <stop offset="100%" stop-color="#2563EB"/>
     </linearGradient>
-    <filter id="blur">
-      <feGaussianBlur in="SourceGraphic" stdDeviation="2" />
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#60A5FA"/>
+      <stop offset="100%" stop-color="#22D3EE"/>
+    </linearGradient>
+    <linearGradient id="chip" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1D4ED8" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#0EA5E9" stop-opacity="0.9"/>
+    </linearGradient>
+    <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="18" result="b"/>
     </filter>
+    <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#FFFFFF" stroke-opacity="0.05"/>
+    </pattern>
   </defs>
-  
-  <!-- 背景渐变 -->
-  <rect width="300" height="300" fill="url(#developerBg)"/>
-  
-  <!-- 装饰圆形 - 玻璃拟态效果 -->
-  <circle cx="75" cy="80" r="65" fill="#ffffff" opacity="0.1" filter="url(#blur)"/>
-  <circle cx="240" cy="215" r="85" fill="#ffffff" opacity="0.08" filter="url(#blur)"/>
-  
-  <!-- 中心图标容器 -->
-  <g transform="translate(150, 150)">
-    <!-- 图标背景圆 - 玻璃效果 -->
-    <circle cx="0" cy="0" r="70" fill="#ffffff" opacity="0.25"/>
-    <circle cx="0" cy="0" r="70" fill="url(#developerBg)" opacity="0.3"/>
-    
-    <!-- 开发者图标 - 终端窗口 -->
-    <g transform="scale(1.0)">
-      <!-- 窗口 -->
-      <rect x="-32" y="-28" width="64" height="56" fill="#ffffff" rx="4"/>
-      
-      <!-- 窗口标题栏 -->
-      <rect x="-32" y="-28" width="64" height="10" fill="#a8edea" opacity="0.5" rx="4"/>
-      <rect x="-32" y="-23" width="64" height="5" fill="#a8edea" opacity="0.5"/>
-      
-      <!-- 窗口按钮 -->
-      <circle cx="-24" cy="-23" r="2" fill="#ffffff"/>
-      <circle cx="-17" cy="-23" r="2" fill="#ffffff"/>
-      <circle cx="-10" cy="-23" r="2" fill="#ffffff"/>
-      
-      <!-- 命令提示符 -->
-      <path d="M -22 -8 L -14 -2 L -22 4 L -20 6 L -10 -2 L -20 -10 Z" fill="#a8edea" opacity="0.8"/>
-      
-      <!-- 光标 -->
-      <rect x="-6" y="-4" width="12" height="3" fill="#a8edea" opacity="0.8" rx="1.5"/>
-      
-      <!-- 代码行 -->
-      <rect x="-22" y="10" width="20" height="2.5" fill="#a8edea" opacity="0.4" rx="1.25"/>
-      <rect x="-22" y="16" width="28" height="2.5" fill="#a8edea" opacity="0.4" rx="1.25"/>
+  <rect width="1200" height="675" fill="url(#bg)"/>
+  <rect width="1200" height="675" fill="url(#grid)"/>
+  <g opacity="0.55">
+    <circle cx="980" cy="140" r="120" fill="#60A5FA" filter="url(#softGlow)"/>
+    <circle cx="220" cy="560" r="160" fill="#22D3EE" filter="url(#softGlow)"/>
+  </g>
+  <g transform="translate(72,72)">
+    <g>
+      <rect x="0" y="0" width="54" height="54" rx="14" fill="url(#chip)"/>
+      <path d="M16 32 L26 22 L34 30 L42 20" fill="none" stroke="#FFFFFF" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="42" cy="20" r="3.2" fill="#22D3EE"/>
+    </g>
+    <g transform="translate(74,2)">
+      <text font-family="Segoe UI,PingFang SC,Microsoft YaHei,sans-serif" font-size="18" fill="#93C5FD" letter-spacing="4">JI MU YUN - CORE PLUGIN</text>
+      <text x="0" y="40" font-family="Segoe UI Semibold,PingFang SC,Microsoft YaHei,sans-serif" font-size="44" fill="#FFFFFF">xbCode</text>
+    </g>
+    <g transform="translate(894,8)">
+      <rect x="0" y="0" width="234" height="42" rx="21" fill="#FFFFFF" fill-opacity="0.07" stroke="#FFFFFF" stroke-opacity="0.18"/>
+      <text x="21" y="27" font-family="Segoe UI,PingFang SC,sans-serif" font-size="16" fill="#BAE6FD">v1.0.0</text>
     </g>
   </g>
-  
-  <!-- 顶部高光 -->
-  <ellipse cx="150" cy="60" rx="120" ry="40" fill="#ffffff" opacity="0.15"/>
+  <g transform="translate(72,218)">
+    <text font-family="Segoe UI,PingFang SC,Microsoft YaHei,sans-serif" font-size="56" font-weight="700" fill="#FFFFFF">积木云核心框架</text>
+    <text x="0" y="72" font-family="Segoe UI Semibold,PingFang SC,Microsoft YaHei,sans-serif" font-size="34" font-weight="700" fill="url(#accent)">插件化开发 - 微服务 - 统一后台基础能力</text>
+    <text x="0" y="160" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="22" fill="#CBD5E1">提供路由重写、插件依赖、安装向导、菜单注册、进程配置与多服务管理的一整套运行骨架。</text>
+  </g>
+  <g transform="translate(72,444)">
+    <rect width="336" height="176" rx="22" fill="#0B1220" fill-opacity="0.78" stroke="#334155" stroke-width="1"/>
+    <text transform="translate(24,48)" font-family="Segoe UI Semibold,PingFang SC,sans-serif" font-size="20" fill="#F1F5F9">自定义插件路由</text>
+    <text transform="translate(24,72)" font-family="Segoe UI,PingFang SC,sans-serif" font-size="14" fill="#94A3B8">禁用 /app 前缀 - 支持 /插件/控制器/动作</text>
+    <rect x="24" y="96" width="288" height="64" rx="12" fill="#020617" fill-opacity="0.7"/>
+    <text transform="translate(40,122)" font-family="JetBrains Mono,Consolas,monospace" font-size="14" fill="#E2E8F0">GET /xbCode/index/index</text>
+    <text transform="translate(40,146)" font-family="JetBrains Mono,Consolas,monospace" font-size="14" fill="#E2E8F0">GET /xbCode  - 默认首页</text>
+    <g transform="translate(364,0)">
+      <rect width="336" height="176" rx="22" fill="#0B1220" fill-opacity="0.78" stroke="#334155" stroke-width="1"/>
+      <text transform="translate(24,48)" font-family="Segoe UI Semibold,PingFang SC,sans-serif" font-size="20" fill="#F1F5F9">插件化开发</text>
+      <text transform="translate(24,72)" font-family="Segoe UI,PingFang SC,sans-serif" font-size="14" fill="#94A3B8">xbCode 为根, 其它插件按需挂载</text>
+      <rect x="24" y="96" width="92" height="64" rx="14" fill="#1D4ED8" fill-opacity="0.32" stroke="#3B82F6"/>
+      <text x="70" y="134" text-anchor="middle" font-family="Segoe UI Semibold,sans-serif" font-size="18" fill="#DBEAFE">xbCode</text>
+      <rect x="138" y="96" width="92" height="28" rx="10" fill="#0EA5E9" fill-opacity="0.28" stroke="#38BDF8"/>
+      <text x="184" y="115" text-anchor="middle" font-family="Segoe UI,PingFang SC,sans-serif" font-size="13" fill="#BAE6FD">xbAdmin</text>
+      <rect x="138" y="132" width="92" height="28" rx="10" fill="#34D399" fill-opacity="0.22" stroke="#34D399"/>
+      <text x="184" y="151" text-anchor="middle" font-family="Segoe UI,PingFang SC,sans-serif" font-size="13" fill="#A7F3D0">xbUser</text>
+      <rect x="252" y="96" width="92" height="28" rx="10" fill="#F59E0B" fill-opacity="0.24" stroke="#F59E0B"/>
+      <text x="298" y="115" text-anchor="middle" font-family="Segoe UI,PingFang SC,sans-serif" font-size="13" fill="#FDE68A">xbCrontab</text>
+      <rect x="252" y="132" width="92" height="28" rx="10" fill="#F472B6" fill-opacity="0.24" stroke="#F472B6"/>
+      <text x="298" y="151" text-anchor="middle" font-family="Segoe UI,PingFang SC,sans-serif" font-size="13" fill="#FBCFE8">xbUpload</text>
+    </g>
+    <g transform="translate(728,0)">
+      <rect width="336" height="176" rx="22" fill="#0B1220" fill-opacity="0.78" stroke="#334155" stroke-width="1"/>
+      <text transform="translate(24,48)" font-family="Segoe UI Semibold,PingFang SC,sans-serif" font-size="20" fill="#F1F5F9">微服务双模式</text>
+      <text transform="translate(24,72)" font-family="Segoe UI,PingFang SC,sans-serif" font-size="14" fill="#94A3B8">Server 管理 - Client 注册菜单与服务</text>
+      <rect x="24" y="96" width="288" height="28" rx="10" fill="#14532D" fill-opacity="0.55" stroke="#22C55E"/>
+      <text transform="translate(44,115)" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="14" fill="#BBF7D0">服务器模式 - 聚合客户端服务 + 菜单</text>
+      <rect x="24" y="132" width="288" height="28" rx="10" fill="#1E3A8A" fill-opacity="0.6" stroke="#3B82F6"/>
+      <text transform="translate(44,151)" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="14" fill="#BFDBFE">客户端模式 - 向 SERVER_ADDRESS 注册自身</text>
+    </g>
+  </g>
+  <text transform="translate(72,636)" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="13" fill="#94A3B8">(c) 贵州积木云网络科技有限公司</text>
+  <g transform="translate(936,634)">
+    <rect width="240" height="28" rx="14" fill="#0B1220" fill-opacity="0.78" stroke="#1E293B"/>
+    <rect x="14" y="8" width="56" height="12" rx="6" fill="#FCD34D" fill-opacity="0.92"/>
+    <text transform="translate(28,18)" font-family="Segoe UI Semibold,sans-serif" font-size="9" fill="#78350F">端口 39000</text>
+    <text transform="translate(90,19)" font-family="PingFang SC,Microsoft YaHei,sans-serif" font-size="13" fill="#E2E8F0">php webman xb:init</text>
+  </g>
 </svg>

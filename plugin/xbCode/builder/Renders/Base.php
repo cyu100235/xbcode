@@ -72,12 +72,11 @@ abstract class Base implements JsonSerializable
 
     /**
      * 创建组件
-     * @param callable $callback 创建组件
      * @return static
      * @author 楚羽幽 958416459@qq.com
      * @copyright 贵州积木云网络科技有限公司
      */
-    abstract public static function make(?callable $callback);
+    abstract public static function make();
 
     /**
      * 获取当前地址

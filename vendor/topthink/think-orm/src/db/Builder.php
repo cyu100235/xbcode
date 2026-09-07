@@ -508,7 +508,7 @@ class Builder extends BaseBuilder
             }
 
             if (is_int($value)) {
-                if (preg_match('/(datetime|timestamp)/is', $type)) {
+                if (preg_match('/(datetime|timestamp|string)/is', $type)) {
                     // 日期及时间戳类型
                     $value = date('Y-m-d H:i:s', $value);
                 } elseif (preg_match('/(date)/is', $type)) {
@@ -592,7 +592,7 @@ class Builder extends BaseBuilder
                     $sort = $val;
                 }
 
-                if (preg_match('/^[\w\.]+$/', $key)) {
+                if (preg_match('/^[\w\-\>\.]+$/', $key)) {
                     $sort    = strtoupper($sort);
                     $sort    = in_array($sort, ['ASC', 'DESC'], true) ? ' ' . $sort : '';
                     $array[] = $this->parseKey($query, $key, true) . $sort;

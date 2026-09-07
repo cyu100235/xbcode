@@ -11,10 +11,9 @@ namespace plugin\xbCode\exception;
 
 use Exception;
 use Throwable;
+use support\view\Blade;
 use Webman\Http\Request;
 use Webman\Http\Response;
-use support\view\ThinkPHP;
-use plugin\xbCode\api\DebugApi;
 use plugin\xbCode\trait\JsonTrait;
 use Webman\Exception\ExceptionHandler;
 use \hg\apidoc\exception\HttpException;
@@ -98,19 +97,15 @@ class Handler extends ExceptionHandler
     private function renderJson(Throwable $e)
     {
         $errCode = $e->getCode() ?: 500;
-        $eventData = [];
         $debugData = [];
-        if (method_exists($e, 'getEventData')) {
-            $eventData = $e->getEventData();
-        }
-        if (DebugApi::status()) {
+        if (config('plugin.xbCode.debug', false)) {
             $debugData = [
                 'file' => $e->getFile(),
                 'line' => $e->getLine(),
                 'trace' => $e->getTraceAsString(),
             ];
         }
-        return $this->json($e->getMessage(), $errCode, $debugData, $eventData);
+        return $this->json($e->getMessage(), $errCode, $debugData);
     }
 
     /**
@@ -122,7 +117,6 @@ class Handler extends ExceptionHandler
      */
     private function renderView(Throwable $exception): Response
     {
-        $templatePath = '/plugin/xbCode/exception/view';
         $debug = (bool) config('app.debug', false);
         $file = '';
         $line = '';
@@ -137,6 +131,36 @@ class Handler extends ExceptionHandler
             'file' => $file,
             'line' => $line,
         ];
-        return new Response(200, [], ThinkPHP::render($templatePath, $vars));
+        try {
+            // 与全站视图引擎保持一致（Blade），避免依赖未安装的 think-template
+            $html = Blade::render('/plugin/xbCode/exception/view/index', $vars);
+        } catch (Throwable $e) {
+            // 视图引擎或模板异常时兜底输出真实错误，避免异常处理器二次抛错掩盖原始异常
+            $html = static::renderFallback($vars);
+        }
+        return new Response(200, ['Content-Type' => 'text/html; charset=utf-8'], $html);
+    }
+
+    /**
+     * 无依赖的异常页兜底渲染
+     * @param array $vars
+     * @return string
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    private static function renderFallback(array $vars): string
+    {
+        $escape = static fn ($v) => htmlspecialchars((string) $v, ENT_QUOTES, 'UTF-8');
+        $message = $escape($vars['message'] ?? '');
+        $detail = '';
+        if (!empty($vars['debug'])) {
+            $file = $escape($vars['file'] ?? '');
+            $line = (int) ($vars['line'] ?? 0);
+            $detail = "<p style=\"color:#e17055;font-family:monospace\">{$file}:{$line}</p>";
+        }
+        return '<!doctype html><html lang="zh"><head><meta charset="utf-8"><title>出错了</title></head>'
+            . '<body style="font-family:-apple-system,Segoe UI,Arial,sans-serif;padding:40px">'
+            . '<h2>出错了!</h2><p>' . $message . '</p>' . $detail
+            . '<p><a href="/">返回首页</a></p></body></html>';
     }
 }

@@ -18,7 +18,8 @@ function p(mixed $data, string $remarks = '')
     $output .= PHP_EOL;
     // 优先使用 Workerman safeEcho（Workerman 环境下避免重复输出）
     // 仅当 safeEcho 不可用时，回退到 STDOUT（Windows 多层 proc_open 兜底）
-    if (class_exists(\Workerman\Worker::class) && method_exists(\Workerman\Worker::class, 'safeEcho')) {
+    // CLI 命令模式下 Worker::$outputStream 为 null，safeEcho 内部 feof(null) 会抛 TypeError
+    if (class_exists(\Workerman\Worker::class) && is_resource(\Workerman\Worker::$outputStream)) {
         \Workerman\Worker::safeEcho($output);
     } elseif (defined('STDOUT') && is_resource(STDOUT)) {
         fwrite(STDOUT, $output);
@@ -30,33 +31,6 @@ function p(mixed $data, string $remarks = '')
     }
 }
 
-/**
- * 验证数据
- * @param string $validate 验证器类
- * @param array $data 验证数据
- * @param string|array  $scene 验证场景或验证字段
- * @throws Exception
- * @return void
- * @copyright 贵州积木云网络科技有限公司
- * @author 楚羽幽 cy958416459@qq.com
- */
-function xbValidate(string $validate, array $data, string|array $scene = '')
-{
-    /** @var \taoser\Validate */
-    $class = new $validate;
-    // 场景验证
-    if ($scene && is_string($scene)) {
-        $class->scene($scene);
-    }
-    // 验证字段
-    if ($scene && is_array($scene)) {
-        $class->only($scene);
-    }
-    $result = $class->check($data);
-    if (!$result) {
-        throw new \Exception((string) $class->getError(), 404);
-    }
-}
 /**
  * 获取文件大小
  * @param int $size
@@ -111,40 +85,6 @@ function list_sort_by(array $list, string $field, string $sortby = 'asc')
     return false;
 }
 
-/**
- * 获取路由地址数据
- * @param string $class 控制器类
- * @param string $action 方法名
- * @return array
- * @copyright 贵州积木云网络科技有限公司
- * @author 楚羽幽 cy958416459@qq.com
- */
-function xbPathInfo(string $class, string $action)
-{
-    // 插件标识
-    $plugin = request()->plugin;
-    // 模块标识
-    $module = request()->app;
-    // 控制器后缀
-    $suffix = config('app.controller_suffix', '');
-    // 控制器名称
-    $controller = class_basename($class);
-    $controller = str_replace($suffix, '', $controller);
-    // 路径地址
-    $path = "{$controller}/{$action}";
-    // 导出数据
-    return [
-        'plugin' => $plugin,
-        'module' => $module,
-        'controller' => $controller,
-        'action' => $action,
-        'fullPath' => $path,
-        'path' => "{$module}/{$controller}/{$action}",
-        'uri' => $path,
-        'class' => $class,
-    ];
-
-}
 if (!function_exists('array_find')) {
     /**
      * 查找数组中符合条件的第一个元素

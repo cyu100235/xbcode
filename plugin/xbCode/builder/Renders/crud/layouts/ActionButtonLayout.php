@@ -258,18 +258,16 @@ trait ActionButtonLayout
      */
     protected function getRightActionAPI(string $url, string $method = 'get', array $querys = [])
     {
+        // 先识别方法前缀（如 POST:/path），parse_url 会把冒号前缀当 scheme 解析，需提前提取
+        if (preg_match('#^[a-z]+(?=:)#i', $url, $m) && !preg_match('#^https?://#i', $url)) {
+            $method = strtoupper($m[0]);
+            $url = substr($url, strlen($m[0]) + 1);
+        }
         $urls = parse_url($url);
         $path = $urls['path'] ?? '';
         $query = $urls['query'] ?? '';
         if (empty($path)) {
             throw new \Exception('请设置正确的右侧操作API地址');
-        }
-        // 检测是否存在方法
-        if (str_contains($path, ':')) {
-            $temp = explode(':', $path);
-            $method = isset($temp[0]) ? basename(strtoupper($temp[0])) : '';
-            // 重置URL
-            $path = str_replace("{$method}:", '', $path);
         }
         parse_str($query, $params);
         // 获取主键

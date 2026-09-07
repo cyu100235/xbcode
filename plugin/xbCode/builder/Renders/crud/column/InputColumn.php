@@ -60,9 +60,6 @@ trait InputColumn
      */
     public function addColumnInputApi(string $name, string $label, string $api, array $quickEdit = [])
     {
-        if (empty($this->useCRUD()->quickSaveItemApi)) {
-            throw new \Exception('请先设置【quickSaveItemApi】接口地址');
-        }
         /** @var TableColumn|InputText */
         $component = $this->addColumn($name, $label);
         $component->quickEdit([
