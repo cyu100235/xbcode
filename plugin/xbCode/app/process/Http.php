@@ -16,6 +16,7 @@ use Webman\Context;
 use Webman\Http\Request;
 use Webman\Http\Response;
 use Webman\Util;
+use Webman\Route;
 use Webman\Route\Route as RouteObject;
 
 /**
@@ -58,13 +59,15 @@ class Http extends App
                 return null;
             }
 
-            // 使用插件内部路由解析控制器与方法，未命中时回落到默认首页 Index::index
+            // 使用插件内部路由解析控制器与方法（根路径 / 直接解析到默认首页 Index::index）
             // 注意：getCallback 内部会拦截未启用（app.enable=false）的插件，直接产出 404
-            $controllerAndAction = static::parseControllerAction($path) ?: static::parseControllerAction("/$plugin");
+            $controllerAndAction = static::parseControllerAction($path);
+
+            // 未命中路由、静态文件与内部解析时，先交给 Route::fallback，未注册则按状态码直出 404/405
             if (!$controllerAndAction) {
                 $request->plugin = $plugin;
                 $request->app = $request->controller = $request->action = '';
-                $callback = static::getFallback($plugin, $status);
+                $callback = Route::getFallback($plugin, $status) ?: static fn () => static::errorResponse($status);
                 static::send($connection, $callback($request), $request);
                 return null;
             }
@@ -111,9 +114,20 @@ class Http extends App
     {
         if (!static::pluginEnabled($plugin)) {
             // 插件未启用：不注册中间件、不实例化控制器，直接 404
-            return static fn () => new Response(404, [], '404 Not Found');
+            return static fn () => static::errorResponse();
         }
         return parent::getCallback($plugin, $app, $call, $args, $withGlobalMiddleware, $route);
+    }
+
+    /**
+     * 直出状态码响应（不经异常渲染，保证 HTTP 状态码真实）
+     * @param int $status
+     * @return Response
+     */
+    protected static function errorResponse(int $status = 404): Response
+    {
+        $message = $status === 405 ? '405 Method Not Allowed' : '404 Not Found';
+        return new Response($status, [], $message);
     }
 
     /**
