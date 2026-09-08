@@ -67,7 +67,8 @@ class Http extends App
             if (!$controllerAndAction) {
                 $request->plugin = $plugin;
                 $request->app = $request->controller = $request->action = '';
-                $callback = Route::getFallback($plugin, $status) ?: static fn () => static::errorResponse($status);
+                // 回调统一按框架约定 $callback($request) 调用，兜底闭包需声明入参保持签名一致
+                $callback = Route::getFallback($plugin, $status) ?: static fn ($request) => static::errorResponse($status);
                 static::send($connection, $callback($request), $request);
                 return null;
             }
@@ -114,7 +115,7 @@ class Http extends App
     {
         if (!static::pluginEnabled($plugin)) {
             // 插件未启用：不注册中间件、不实例化控制器，直接 404
-            return static fn () => static::errorResponse();
+            return static fn ($request) => static::errorResponse();
         }
         return parent::getCallback($plugin, $app, $call, $args, $withGlobalMiddleware, $route);
     }
