@@ -1,9 +1,12 @@
 {
-    "title": "xbAdmin",
-    "desc": "dsadsadas",
+    "title" : "后台权限管理",
     "version" : "1.0.0",
-    "author":"dddd",
-    "home_url" : "",
-    "composer": {},
+    "home_url" : "http://www.xbcode.net",
+    "desc": "基于 RBAC 的后台权限管理系统，提供登录鉴权、管理员、角色与菜单权限管理",
+    "author":"积木云",
+    "composer": {
+        "Tinywan\\Jwt\\JwtToken": "tinywan/jwt",
+        "Webman\\Captcha\\CaptchaBuilder": "webman/captcha"
+    },
     "plugins": {}
 }

@@ -26,8 +26,8 @@ class ComposerStaticInit691f538563ac6695008ddc51b7722c80
         '253c157292f75eb38082b5acb06f3f01' => __DIR__ . '/..' . '/nikic/fast-route/src/functions.php',
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '8825ede83f2f289127722d4e842cf7e8' => __DIR__ . '/..' . '/symfony/polyfill-intl-grapheme/bootstrap.php',
-        'b6b991a57620e2fb6b2f66f03fe9ddc2' => __DIR__ . '/..' . '/symfony/string/Resources/functions.php',
         'd2136ff22b54ac75cd96a40e0022218e' => __DIR__ . '/..' . '/workerman/webman-framework/src/support/helpers.php',
+        'b6b991a57620e2fb6b2f66f03fe9ddc2' => __DIR__ . '/..' . '/symfony/string/Resources/functions.php',
         'ef65a1626449d89d0811cf9befce46f0' => __DIR__ . '/..' . '/illuminate/events/functions.php',
         '15ec93fa4ce4b2d53816a1a5f2c514e2' => __DIR__ . '/..' . '/topthink/think-validate/src/helper.php',
         '7448f3465e10b5f033e4babb31eb0b06' => __DIR__ . '/..' . '/topthink/think-orm/src/helper.php',
@@ -61,7 +61,12 @@ class ComposerStaticInit691f538563ac6695008ddc51b7722c80
             'Webman\\ThinkOrm\\' => 16,
             'Webman\\Redis\\' => 13,
             'Webman\\Console\\' => 15,
+            'Webman\\Captcha\\' => 15,
             'Webman\\' => 7,
+        ),
+        'T' =>
+        array (
+            'Tinywan\\Jwt\\' => 12,
         ),
         'S' =>
         array (
@@ -118,6 +123,7 @@ class ComposerStaticInit691f538563ac6695008ddc51b7722c80
         ),
         'F' =>
         array (
+            'Firebase\\JWT\\' => 13,
             'FastRoute\\' => 10,
         ),
         'E' =>
@@ -199,9 +205,17 @@ class ComposerStaticInit691f538563ac6695008ddc51b7722c80
         array (
             0 => __DIR__ . '/..' . '/webman/console/src',
         ),
+        'Webman\\Captcha\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/webman/captcha/src',
+        ),
         'Webman\\' =>
         array (
             0 => __DIR__ . '/..' . '/workerman/webman-framework/src',
+        ),
+        'Tinywan\\Jwt\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/tinywan/jwt/src',
         ),
         'Symfony\\Polyfill\\Php85\\' =>
         array (
@@ -358,6 +372,10 @@ class ComposerStaticInit691f538563ac6695008ddc51b7722c80
         'Illuminate\\Bus\\' =>
         array (
             0 => __DIR__ . '/..' . '/illuminate/bus',
+        ),
+        'Firebase\\JWT\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/firebase/php-jwt/src',
         ),
         'FastRoute\\' =>
         array (

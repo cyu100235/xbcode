@@ -27,7 +27,6 @@ class XbInit extends Command
     protected function configure(): void
     {
         $this
-            ->setDescription('初始化并配置xbCode框架')
             // 设置数据库配置
             ->addOption('db-host', null, InputOption::VALUE_OPTIONAL, '数据库地址（留空则交互询问）')
             ->addOption('db-port', null, InputOption::VALUE_OPTIONAL, '数据库端口（留空则交互询问）')

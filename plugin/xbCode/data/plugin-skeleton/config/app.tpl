@@ -1,6 +1,5 @@
 <?php
 
-use support\Request;
 use plugin\xbCode\api\Env;
 use plugin\xbCode\api\PluginJson;
 

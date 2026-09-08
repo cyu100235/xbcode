@@ -36,7 +36,43 @@ abstract class BasePlugin
      */
     protected static function doInstall(string $version, array|null &$context = null)
     {
-        // 安装业务逻辑
+        // 安装composer
+        self::installComposer($version, $context);
+        // 安装SQL表结构
+        self::installSql($version, $context);
+        // 安装配置数据
+        self::installConfig($version, $context);
+        // 安装定时任务
+        self::installCrontab($version, $context);
+        // 安装枚举数据
+        self::installEnum($version, $context);
+        // 安装菜单数据
+        self::installMenu($version, $context);
+    }
+    private static function installComposer(string $version, array|null &$context = null)
+    {
+        // 安装composer
+    }
+    
+    private static function installSql(string $version, array|null &$context = null)
+    {
+        // 安装SQL表结构
+    }
+    private static function installConfig(string $version, array|null &$context = null)
+    {
+        // 安装配置数据
+    }
+    private static function installCrontab(string $version, array|null &$context = null)
+    {
+        // 安装定时任务
+    }
+    private static function installEnum(string $version, array|null &$context = null)
+    {
+        // 安装枚举数据
+    }
+    private static function installMenu(string $version, array|null &$context = null)
+    {
+        // 安装菜单数据
     }
 
     /**
@@ -138,7 +174,45 @@ abstract class BasePlugin
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    protected static function doUninstall(string $version, array &$context){}
+    protected static function doUninstall(string $version, array &$context)
+    {
+        // 卸载composer
+        self::uninstallComposer($version, $context);
+        // 卸载SQL表结构
+        self::uninstallSql($version, $context);
+        // 卸载配置数据
+        self::uninstallConfig($version, $context);
+        // 卸载定时任务
+        self::uninstallCrontab($version, $context);
+        // 卸载枚举数据
+        self::uninstallEnum($version, $context);
+        // 卸载菜单数据
+        self::uninstallMenu($version, $context);
+    }
+    private static function uninstallComposer(string $version, array &$context)
+    {
+        // 卸载composer
+    }
+    private static function uninstallSql(string $version, array &$context)
+    {
+        // 卸载SQL表结构
+    }
+    private static function uninstallConfig(string $version, array &$context)
+    {
+        // 卸载配置数据
+    }
+    private static function uninstallCrontab(string $version, array &$context)
+    {
+        // 卸载定时任务
+    }
+    private static function uninstallEnum(string $version, array &$context)
+    {
+        // 卸载枚举数据
+    }
+    private static function uninstallMenu(string $version, array &$context)
+    {
+        // 卸载菜单数据
+    }
 
     /**
      * 卸载之后

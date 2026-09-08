@@ -32,7 +32,9 @@
     "webman/redis": "^2.1",
     "illuminate/events": "^12.69",
     "webman/validation": "^2.2",
-    "webman/blade": "^1.5"
+    "webman/blade": "^1.5",
+    "tinywan/jwt": "^2.0",
+    "webman/captcha": "^1.0"
   },
   "suggest": {
     "ext-event": "For better performance. "

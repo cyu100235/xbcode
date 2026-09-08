@@ -1,21 +1,12 @@
 <?php
 /**
- * xb 批量安装插件命令
- *
- * 扫描 BASE_PATH/plugin 下所有目录，按依赖顺序调用 webman 官方的 app-plugin:install 命令：
- *   - 第一顺位：xbCode（核心插件，所有其它插件依赖它，固定最先安装）
- *   - 其余插件：按目录名字典序排列（如 xbAdmin 会自然排在 xbCode 之后）
- * 仅当目录同时满足「含 api/Install.php + plugin.json」时才作为候选插件，避免把临时目录当插件安装。
- *
- * 用法：
- *   php webman xb:install
- *
- * @package XbCode
- * @license Apache License 2.0
- * @copyright 贵州积木云网络科技有限公司
- * @author 楚羽幽 958416459@qq.com
+ * 积木云渲染器
+ * @package  XbCode
+ * @author   楚羽幽 <958416459@qq.com>
+ * @license  Apache License 2.0
+ * @link     http://www.xbcode.net
+ * @document http://doc.xbcode.net
  */
-
 namespace plugin\xbCode\command;
 
 use RuntimeException;
@@ -38,7 +29,6 @@ class XbInstall extends Command
      */
     protected function configure(): void
     {
-        $this->setDescription('批量安装所有插件');
     }
 
     /**

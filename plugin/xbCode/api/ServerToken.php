@@ -1,25 +1,20 @@
 <?php
 /**
- * 微服务互通令牌读写（对外仅开放 get() / set()）
- * @copyright 贵州积木云网络科技有限公司
- * @author 楚羽幽 958416459@qq.com
+ * 积木云渲染器
+ * @package  XbCode
+ * @author   楚羽幽 <958416459@qq.com>
+ * @license  Apache License 2.0
+ * @link     http://www.xbcode.net
+ * @document http://doc.xbcode.net
  */
-
 namespace plugin\xbCode\api;
 
 use RuntimeException;
 
 /**
- * ServerToken 互通令牌读写器
- *
- * 对外只暴露 get / set 两个方法，固定读写主项目 runtime/server_token（单行令牌文本），用法：
- *
- * ServerToken::get();                // 只读取当前令牌，文件不存在或内容为空时返回空字符串
- * ServerToken::set();                // 生成随机令牌并落盘，返回新令牌
- * ServerToken::set('your-token');    // 写入指定令牌，返回该令牌
- *
- * 说明：get() 不会创建令牌，落盘统一由 set() 负责（留空即生成 64 位十六进制随机串）；
- *      读取结果按文件修改时间与大小缓存，常驻内存进程下不会每次读盘。
+ * 互通令牌读写器
+ * @copyright 贵州积木云网络科技有限公司
+ * @author 楚羽幽 958416459@qq.com
  */
 class ServerToken
 {

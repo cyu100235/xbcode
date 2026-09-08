@@ -12,8 +12,8 @@
 use plugin\xbCode\api\ServerToken;
 
 return [
-    // 服务地址（含协议与端口），由 xb:plugin:create 创建插件时采集写入
+    // 服务地址（含协议与端口）
     'server_address' => '{PLUGIN_SERVER_ADDRESS}',
-    // 互通令牌：只读主项目 runtime/server_token（由 ServerToken::set() 生成），避免写死在配置里过期
+    // 互通令牌：只读主项目
     'token' => ServerToken::get(),
 ];
