@@ -14,7 +14,9 @@ use Throwable;
 use Webman\App;
 use Webman\Context;
 use Webman\Http\Request;
+use Webman\Http\Response;
 use Webman\Util;
+use Webman\Route\Route as RouteObject;
 
 /**
  * HTTP进程处理
@@ -57,6 +59,7 @@ class Http extends App
             }
 
             // 使用插件内部路由解析控制器与方法，未命中时回落到默认首页 Index::index
+            // 注意：getCallback 内部会拦截未启用（app.enable=false）的插件，直接产出 404
             $controllerAndAction = static::parseControllerAction($path) ?: static::parseControllerAction("/$plugin");
             if (!$controllerAndAction) {
                 $request->plugin = $plugin;
@@ -91,6 +94,37 @@ class Http extends App
         // 静态资源根目录指向插件自身 public：BASE_PATH/plugin/{插件}/public
         static::$publicPath = public_path('', static::pluginName());
         parent::onWorkerStart($worker);
+    }
+
+    /**
+     * 构建路由回调（默认路由、自定义路由、静态文件三条分发路径的最终汇聚点）
+     * @param string $plugin
+     * @param string $app
+     * @param mixed $call
+     * @param array $args
+     * @param bool $withGlobalMiddleware
+     * @param RouteObject|null $route
+     * @return callable
+     * @throws Throwable
+     */
+    public static function getCallback(string $plugin, string $app, $call, array $args = [], bool $withGlobalMiddleware = true, ?RouteObject $route = null)
+    {
+        if (!static::pluginEnabled($plugin)) {
+            // 插件未启用：不注册中间件、不实例化控制器，直接 404
+            return static fn () => new Response(404, [], '404 Not Found');
+        }
+        return parent::getCallback($plugin, $app, $call, $args, $withGlobalMiddleware, $route);
+    }
+
+    /**
+     * 判断插件是否已启用（依据 plugin/{插件}/config/app.php 的 enable）
+     * @param string $plugin
+     * @return bool
+     */
+    protected static function pluginEnabled(string $plugin): bool
+    {
+        // 主应用与未声明 enable 的插件不做限制，仅显式关闭（enable=false）的插件被拦截
+        return $plugin === '' || (bool) static::config($plugin, 'app.enable', true);
     }
 
     /**
