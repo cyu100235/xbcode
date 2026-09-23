@@ -330,13 +330,13 @@ class Mysql
     /**
      * 将.sql文件导入到mysql数据库
      * @param string $sqlFilePath SQL文件路径
-     * @param string|array $oldPrefix 您的sql文件表前缀，空则使用__PREFIX__
+     * @param array $oldPrefix 表结构中的旧前缀
      * @param string $prefix 最终创建表前缀，空则使用配置文件的前缀
      * @return void
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public static function importSql(string $sqlFilePath, string|array $oldPrefix = '__PREFIX__', string $prefix = '')
+    public static function importSql(string $sqlFilePath, array $oldPrefix = ['__PREFIX__', 'php_', 'xb_'], string $prefix = '')
     {
         if (!file_exists($sqlFilePath)) {
             throw new Exception('sql文件不存在');

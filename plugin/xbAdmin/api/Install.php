@@ -8,13 +8,13 @@ namespace plugin\xbAdmin\api;
 use Exception;
 use Throwable;
 use support\think\Db;
+use plugin\xbCode\api\Mysql;
 use plugin\xbAdmin\enum\YesEnum;
 use plugin\xbAdmin\enum\StateEnum;
+use plugin\xbCode\base\BasePlugin;
 use plugin\xbAdmin\app\model\Admin;
 use plugin\xbAdmin\app\model\AdminRole;
 use plugin\xbAdmin\app\model\AdminRule;
-use plugin\xbCode\api\Mysql;
-use plugin\xbCode\base\BasePlugin;
 
 /**
  * 插件安装器
@@ -91,6 +91,8 @@ class Install extends BasePlugin
      */
     protected static function doInstall(string $version, array|null &$context = null)
     {
+        // 安装前
+        parent::doInstall($version, $context);
         // 建表
         static::createTables();
         // 同步菜单权限

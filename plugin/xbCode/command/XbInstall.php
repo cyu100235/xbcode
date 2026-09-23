@@ -9,11 +9,12 @@
  */
 namespace plugin\xbCode\command;
 
+use plugin\xbCode\api\XbCode;
 use RuntimeException;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -50,6 +51,11 @@ class XbInstall extends Command
             $output->writeln('<error>插件目录不存在：' . $pluginDir . '</error>');
             return self::FAILURE;
         }
+
+        // 检查框架是否已初始化
+        XbCode::checkEnv();
+        // 检查数据库连接是否正常
+        XbCode::checkDatabase();
 
         $plugins = $this->collectPluginNames($pluginDir);
         if ($plugins === []) {
