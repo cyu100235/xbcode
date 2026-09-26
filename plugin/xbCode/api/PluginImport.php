@@ -77,7 +77,7 @@ class PluginImport
         if (empty($tableNames)) {
             throw new Exception("未从 install.sql 解析到表名，未导入任何表结构");
         }
-        $tplPrefix = 'xb_';
+        $tplPrefix = ['__PREFIX__', 'xb_', 'php_'];
         Mysql::importSql($sqlPath, $tplPrefix);
         return count($tableNames);
     }
@@ -194,6 +194,16 @@ class PluginImport
             if ($path === '') {
                 continue;
             }
+            // method / params 在配置里允许数组（如 ['GET','POST']、['url' => '...']），
+            // 直接写库会让 ORM 解析数组值时报错，需与后台接口保持一致转成字符串
+            $method = $menu['method'] ?? 'GET';
+            if (is_array($method)) {
+                $method = implode(',', $method);
+            }
+            $params = $menu['params'] ?? [];
+            if (is_array($params)) {
+                $params = $params ? json_encode($params, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) : '';
+            }
             $data = [
                 'title'       => (string)($menu['title'] ?? ''),
                 'short_title' => (string)($menu['short_title'] ?? ''),
@@ -205,9 +215,9 @@ class PluginImport
                 'is_default'  => (string)($menu['is_default'] ?? '10'),
                 'is_system'   => (string)($menu['is_system'] ?? '10'),
                 'state'       => (string)($menu['state'] ?? '20'),
-                'method'      => (string)($menu['method'] ?? ''),
+                'method'      => (string)$method,
                 'icon'        => (string)($menu['icon'] ?? ''),
-                'params'      => ($menu['params'] ?? ''),
+                'params'      => (string)$params,
                 'sort'        => (int)($menu['sort'] ?? 100),
                 'update_at'   => $now,
             ];

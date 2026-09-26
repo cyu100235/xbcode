@@ -1,22 +1,30 @@
 <?php
 /**
- * xbAdmin 后台权限管理
- * @package  xbAdmin
+ * 积木云渲染器
+ * @package  XbCode
+ * @author   楚羽幽 <958416459@qq.com>
+ * @license  Apache License 2.0
+ * @link     http://www.xbcode.net
+ * @document http://doc.xbcode.net
  */
 namespace plugin\xbAdmin\app\admin\controller;
 
 use support\Request;
 use support\Response;
 use plugin\xbAdmin\api\Url;
+use plugin\xbAdmin\enum\YesEnum;
+use plugin\xbAdmin\enum\ThemeEnum;
+use plugin\xbAdmin\enum\LayoutEnum;
 use plugin\xbAdmin\api\MenuChecked;
 use plugin\xbAdmin\app\model\Admin;
-use plugin\xbAdmin\enum\YesEnum;
+use plugin\xbAdmin\enum\SideColorEnum;
 use plugin\xbAdmin\app\model\AdminRule;
 use plugin\xbAdmin\app\model\AdminRole;
+use plugin\xbAdmin\enum\PrimaryColorEnum;
 use plugin\xbCode\builder\Renders\XbForm;
 use plugin\xbCode\builder\Renders\XbCrud;
-use plugin\xbCode\builder\Components\Form\Transfer;
 use plugin\xbAdmin\app\validate\AdminRoleValidate;
+use plugin\xbCode\builder\Components\Form\Transfer;
 use plugin\xbAdmin\exception\business\ExceptionBusiness;
 
 /**
@@ -32,45 +40,45 @@ class AdminRoleController extends BaseController
     public function index(Request $request)
     {
         if ($request->get('_act')) {
-            $query = AdminRole::order('sort asc,id asc');
-            $this->dataScope($query);
-            if (($title = trim((string) $request->get('title', ''))) !== '') {
-                $query->where('title', 'like', "%{$title}%");
-            }
-            $paginate = $query->paginate();
-            $paginate->each(function ($item) {
-                $item->num = Admin::where('role_id', (int) $item['id'])->count();
-            });
-            return $this->successData($paginate);
+            $builder = XbCrud::make();
+            $builder->useCRUD()->alwaysShowPagination(true);
+            $builder->addHeaderDialog('添加角色', Url::make('AdminRole/add'), [
+                'title' => '添加角色',
+                'size' => 'md',
+            ])->level('primary');
+            $builder->addFilterInput('title', '角色名称');
+            $builder->addColumn('id', '序号')->width(80);
+            $builder->addColumn('title', '角色名称')->minWidth(180);
+            $builder->addColumn('num', '管理员人数')->width(110);
+            $builder->addColumn('sort', '角色排序')->width(100);
+            $builder->addColumnMap('is_system', '系统角色', YesEnum::dict('label'))->width(110);
+            $builder->addColumnDateTime('create_at', '创建时间')->width(165);
+            $builder->setActionConfig('width', 260);
+            $builder->addRightActionDialog('主题设置', Url::make('theme'), [
+                'title' => '主题设置',
+            ])->success(true);
+            $builder->addRightActionDialog('分配权限', Url::make('auth'), [
+                'title' => '给「${title}」分配权限',
+            ])->disabledTip('系统内置角色，权限固定不可调整')->disabledOn('this.is_system == 20');
+            $builder->addRightActionDialog('修改', Url::make('edit'), [
+                'title' => '修改角色',
+            ])->disabledTip('系统内置角色，禁止修改')
+                ->disabledOn('this.is_system == 20');
+            $builder->addRightActionConfirm('删除', Url::make('del'))
+                ->disabledTip('系统内置角色，禁止删除')
+                ->disabledOn('this.is_system == 20');
+            return $this->successRes($builder);
         }
-        $builder = XbCrud::make();
-        $builder->useCRUD()->alwaysShowPagination(true);
-        $builder->addHeaderDialog('添加角色', Url::make('AdminRole/add'), [
-            'title' => '添加角色',
-            'size' => 'md',
-        ])->level('primary');
-        $builder->addFilterInput('title', '角色名称');
-        $builder->addColumn('id', '序号')->width(80);
-        $builder->addColumn('title', '角色名称')->minWidth(180);
-        $builder->addColumn('num', '管理员人数')->width(110);
-        $builder->addColumn('sort', '角色排序')->width(100);
-        $builder->addColumnMap('is_system', '系统角色', YesEnum::dict('label'))->width(110);
-        $builder->addColumnDateTime('create_at', '创建时间')->width(165);
-        $builder->setActionConfig('width', 180);
-        $builder->addRightActionDialog('分配权限', Url::make('auth'), [
-            'title' => '给「${title}」分配权限',
-            'size' => 'lg',
-        ])->disabledTip('系统内置角色，权限固定不可调整')
-            ->disabledOn('this.is_system == 20');
-        $builder->addRightActionDialog('修改', Url::make('edit'), [
-            'title' => '修改角色',
-            'size' => 'md',
-        ])->disabledTip('系统内置角色，禁止修改')
-            ->disabledOn('this.is_system == 20');
-        $builder->addRightActionConfirm('删除', Url::make('del'))
-            ->disabledTip('系统内置角色，禁止删除')
-            ->disabledOn('this.is_system == 20');
-        return $this->successRes($builder);
+        $query = AdminRole::order('sort asc,id asc');
+        $this->dataScope($query);
+        if (($title = trim((string) $request->get('title', ''))) !== '') {
+            $query->where('title', 'like', "%{$title}%");
+        }
+        $paginate = $query->paginate();
+        $paginate->each(function ($item) {
+            $item->num = Admin::where('role_id', (int) $item['id'])->count();
+        });
+        return $this->successData($paginate);
     }
 
     /**
@@ -82,7 +90,7 @@ class AdminRoleController extends BaseController
     {
         if ($request->method() === 'POST') {
             $post = (array) $request->post();
-            xbAdminValidate(AdminRoleValidate::class, $post, 'add');
+            xbValidate(AdminRoleValidate::class, $post, 'add');
             $post['admin_id'] = $this->adminId();
             $post['is_system'] = YesEnum::NO['value'];
             // 新角色默认带上系统基础权限，避免建完角色就把管理员锁死
@@ -109,7 +117,7 @@ class AdminRoleController extends BaseController
         if ($request->method() === 'PUT') {
             $post = (array) $request->post();
             $this->guardSystem($model, '修改');
-            xbAdminValidate(AdminRoleValidate::class, $post, 'edit');
+            xbValidate(AdminRoleValidate::class, $post, 'edit');
             unset($post['is_system'], $post['admin_id'], $post['rule']);
             if (!$model->save($post)) {
                 throw new ExceptionBusiness('保存失败');
@@ -182,6 +190,53 @@ class AdminRoleController extends BaseController
                 ['name' => 'value', 'label' => '权限地址'],
             ])
             ->options($rules);
+        $builder->setSaveMethod('PUT');
+        return $this->successRes($builder);
+    }
+
+    /**
+     * 部门主题设置
+     *
+     * 字段只对应 config/theme.php 顶层的可配置项，各布局的尺寸由配置文件统一维护；
+     * 保存后由 PublicsController::layouts() 按当前管理员所属部门读取并覆盖默认布局。
+     * @param Request $request
+     * @throws ExceptionBusiness
+     * @return Response
+     */
+    public function theme(Request $request)
+    {
+        $model = $this->findModel((int) $request->get('id'));
+        if ($request->method() === 'PUT') {
+            $theme = AdminRole::normalizeTheme((array) $request->post());
+            if (!$model->save(['theme' => AdminRole::stringifyTheme($theme)])) {
+                throw new ExceptionBusiness('保存失败');
+            }
+            return $this->success('保存成功');
+        }
+        $theme = array_merge(AdminRole::themeDefault(), AdminRole::normalizeTheme($model['theme'] ?? ''));
+        $builder = XbForm::make();
+        $builder->addRowStatic('title', '部门名称', (string) $model['title']);
+        $builder->addRowGrid([
+            $builder->addRowRadio('active', '布局模式', $theme['active'])
+                ->options(LayoutEnum::options())
+                ->inline(true)
+                ->description('部门成员登录后台后使用的布局'),
+            $builder->addRowRadio('mode', '主题模式', $theme['mode'])
+                ->options(ThemeEnum::options())
+                ->inline(true)
+                ->description('部门成员登录后台后使用的主题模式'),
+        ]);
+        $builder->addRowCheckbox('layout', '可选布局模式', $theme['layout'])
+            ->options(LayoutEnum::options())
+            ->inline(true)
+            ->description('勾选的布局会开放给部门成员在「主题设置」中切换，全部不选则关闭前端的主题设置');
+        $builder->addRowSwitch('collapse', '默认折叠菜单', $theme['collapse']);
+        $builder->addRowColor('colors', '主题颜色', $theme['colors'])
+            ->description('留空使用内置主题色')
+            ->presetColors(PrimaryColorEnum::getColumn('value'));
+        $builder->addRowColor('sideColor', '菜单背景颜色', $theme['sideColor'])
+            ->description('留空使用内置配色')
+            ->presetColors(SideColorEnum::getColumn('value'));
         $builder->setSaveMethod('PUT');
         return $this->successRes($builder);
     }

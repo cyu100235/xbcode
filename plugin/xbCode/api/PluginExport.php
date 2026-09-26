@@ -99,7 +99,8 @@ class PluginExport
         if ($count === 0) {
             throw new \Exception("数据库中未找到任何匹配的表");
         }
-        file_put_contents($sqlPath, implode("\n\n", $tableSqls));
+        // tablePreviewSql 返回的每张表 SQL 已以换行结尾，这里再补一个换行即相邻表之间空一行
+        file_put_contents($sqlPath, implode("\n", $tableSqls));
         return $count;
     }
 

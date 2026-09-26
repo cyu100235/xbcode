@@ -1,16 +1,20 @@
 <?php
 /**
- * xbAdmin 后台权限管理
- * @package  xbAdmin
+ * 积木云渲染器
+ * @package  XbCode
+ * @author   楚羽幽 <958416459@qq.com>
+ * @license  Apache License 2.0
+ * @link     http://www.xbcode.net
+ * @document http://doc.xbcode.net
  */
 namespace plugin\xbAdmin\api;
 
-use plugin\xbAdmin\app\model\Admin;
 use plugin\xbAdmin\enum\StateEnum;
+use plugin\xbAdmin\utils\TokenUtil;
+use plugin\xbAdmin\app\model\Admin;
+use plugin\xbAdmin\utils\PasswdUtil;
 use plugin\xbAdmin\exception\business\ExceptionBusiness;
 use plugin\xbAdmin\exception\business\ExceptionUnauthorized;
-use plugin\xbAdmin\utils\PasswdUtil;
-use plugin\xbAdmin\utils\TokenUtil;
 
 /**
  * 管理员账号接口
@@ -33,6 +37,7 @@ class AdminApi
      */
     public static function username(string $username, string $password, ?string $captcha = null): array
     {
+        // 校验登录验证码，未开启验证码时直接通过
         static::checkCaptcha($captcha);
         $username = trim($username);
         if ($username === '') {
@@ -81,14 +86,19 @@ class AdminApi
     {
         return TokenUtil::logout();
     }
-
+    
     /**
      * 是否开启登录验证码
      * @return bool
+     * @copyright 贵州云铺网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
      */
     public static function captchaState(): bool
     {
-        return (string) xbAdminConfig('xbadmin.captcha_state', StateEnum::DISABLED['value']) === StateEnum::ENABLED['value'];
+        // 获取验证码配置项（预留接口）
+        $captcha = '10';
+        // 验证码开启状态
+        return ($captcha === StateEnum::ENABLED['value']);
     }
 
     /**

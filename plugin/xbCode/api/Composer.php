@@ -27,13 +27,19 @@ use RuntimeException;
  *   - 是否已安装以 vendor/composer/installed.json 为准，声明里的类名仅作语义标注，不参与判定；
  *   - 卸载时会扫描其它插件的 plugin.json，仍被引用的包自动跳过，避免卸载插件把公共依赖删掉；
  *   - 命令执行失败（进程无法启动或返回码非 0）统一抛 RuntimeException，由调用方决定是否中断流程；
- *   - composer 可执行文件优先取项目根目录的 composer.phar，找不到则使用 PATH 中的 composer 命令。
+ *   - composer 可执行文件优先取项目根目录的 composer.phar，找不到则使用 PATH 中的 composer 命令；
+ *   - 执行过程实时回显 composer 输出，完整日志写入 runtime/composer.log，超时（默认 600 秒）自动终止。
  *
  * @copyright 贵州积木云网络科技有限公司
  * @author 楚羽幽 958416459@qq.com
  */
 class Composer
 {
+    /**
+     * composer 命令执行超时时间（秒），超时后终止进程并抛异常
+     */
+    protected const TIMEOUT = 600;
+
     /**
      * 安装依赖（仅安装尚未安装的包）
      * @param array $composer 插件 composer 声明（类名 => 包名:版本约束）
@@ -46,9 +52,13 @@ class Composer
     {
         $missing = [];
         foreach (self::packages($composer) as $package) {
-            if (!self::isInstalled($package['name'])) {
-                $missing[] = $package['declare'];
+            // 已安装的依赖直接跳过，仅提示
+            if (self::isInstalled($package['name'])) {
+                echo $package['name'] . ' 包已安装' . PHP_EOL;
+                flush();
+                continue;
             }
+            $missing[] = $package['declare'];
         }
         if (empty($missing)) {
             return [];
@@ -214,32 +224,86 @@ class Composer
 
     /**
      * 执行 composer 命令（在项目根目录下运行）
+     *
+     * 子进程输出重定向到 runtime/composer.log 并边执行边回显，既保证长任务有进度反馈，
+     * 也避免管道缓冲区写满导致的死锁；超过 TIMEOUT 秒自动终止进程。
      * @param array<int,string> $args 命令参数
      * @return void
-     * @throws RuntimeException 进程无法启动或返回码非 0
+     * @throws RuntimeException 进程无法启动、执行超时或返回码非 0
      */
     protected static function run(array $args): void
     {
         $args[] = '--no-interaction';
         $command = self::binary() . ' ' . implode(' ', array_map('escapeshellarg', $args));
+        // 输出落盘再增量读取，兼容 Windows 与 Linux
+        $logFile = runtime_path() . DIRECTORY_SEPARATOR . 'composer.log';
+        file_put_contents($logFile, '');
+        $devNull = DIRECTORY_SEPARATOR === '\\' ? 'nul' : '/dev/null';
         $descriptors = [
-            0 => ['pipe', 'r'],
-            1 => ['pipe', 'w'],
-            2 => ['pipe', 'w'],
+            0 => ['file', $devNull, 'r'],
+            1 => ['file', $logFile, 'a'],
+            2 => ['file', $logFile, 'a'],
         ];
         $process = proc_open($command, $descriptors, $pipes, base_path());
         if (!is_resource($process)) {
             throw new RuntimeException('无法启动 composer 进程，请确认服务器已安装 composer');
         }
-        fclose($pipes[0]);
-        $stdout = stream_get_contents($pipes[1]);
-        fclose($pipes[1]);
-        $stderr = stream_get_contents($pipes[2]);
-        fclose($pipes[2]);
-        $exitCode = (int) proc_close($process);
-        if ($exitCode !== 0) {
-            $message = trim($stderr . "\n" . $stdout);
-            throw new RuntimeException("composer 执行失败（exit={$exitCode}）：{$message}");
+        $offset = 0;
+        $output = self::tail($logFile, $offset);
+        $expire = time() + self::TIMEOUT;
+        $exitCode = null;
+        while (true) {
+            $status = proc_get_status($process);
+            if (!$status['running']) {
+                $exitCode = (int) $status['exitcode'];
+                break;
+            }
+            if (time() >= $expire) {
+                proc_terminate($process);
+                break;
+            }
+            // 轮询等待，期间持续回显 composer 进度
+            usleep(200000);
+            $output .= self::tail($logFile, $offset);
         }
+        $output .= self::tail($logFile, $offset);
+        proc_close($process);
+        if ($exitCode === null) {
+            throw new RuntimeException(sprintf(
+                'composer 执行超时（超过 %d 秒已终止）：%s（完整日志：runtime/composer.log）',
+                self::TIMEOUT,
+                trim(substr($output, -2000))
+            ));
+        }
+        if ($exitCode !== 0) {
+            throw new RuntimeException(sprintf(
+                'composer 执行失败（exit=%d）：%s（完整日志：runtime/composer.log）',
+                $exitCode,
+                trim(substr($output, -2000))
+            ));
+        }
+    }
+
+    /**
+     * 读取日志文件的新增内容并实时回显
+     * @param string $file   日志文件
+     * @param int    $offset 已读取的字节数，读取后自动累加
+     * @return string 本次新增的内容
+     */
+    protected static function tail(string $file, int &$offset): string
+    {
+        $handle = @fopen($file, 'r');
+        if (!$handle) {
+            return '';
+        }
+        fseek($handle, $offset);
+        $chunk = (string) stream_get_contents($handle);
+        fclose($handle);
+        $offset += strlen($chunk);
+        if ($chunk !== '') {
+            echo $chunk;
+            flush();
+        }
+        return $chunk;
     }
 }

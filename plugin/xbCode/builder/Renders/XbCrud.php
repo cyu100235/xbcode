@@ -181,7 +181,7 @@ class XbCrud extends Base
      */
     public static function make()
     {
-        $url = static::getCurrentPageUrl('', ['_act' => 1]);
+        $url = static::getCurrentPageUrl();
         return static::instance($url);
     }
 

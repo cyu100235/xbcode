@@ -45,10 +45,9 @@ if (!function_exists('xbAdminPathInfo')) {
     }
 }
 
-if (!function_exists('xbAdminValidate')) {
+if (!function_exists('xbValidate')) {
     /**
      * 执行数据验证
-     *
      * 验证器继承 Webman\Validation\Validator，失败时抛出框架异常，
      * 这里统一转换带前端通知事件的业务异常，保证错误信息一定能弹出。
      * @param string $class 验证器类名
@@ -57,7 +56,7 @@ if (!function_exists('xbAdminValidate')) {
      * @return array
      * @throws ExceptionValidate
      */
-    function xbAdminValidate(string $class, array $data, string $scene = ''): array
+    function xbValidate(string $class, array $data, string $scene = ''): array
     {
         try {
             /** @var \Webman\Validation\Validator $validator */
@@ -76,18 +75,5 @@ if (!function_exists('xbAdminValidate')) {
             }
             throw $e;
         }
-    }
-}
-
-if (!function_exists('xbAdminConfig')) {
-    /**
-     * 读取插件配置，兼容插件未启用配置文件的场景
-     * @param string $name
-     * @param mixed $default
-     * @return mixed
-     */
-    function xbAdminConfig(string $name, mixed $default = null): mixed
-    {
-        return config("plugin.xbAdmin.{$name}", $default);
     }
 }

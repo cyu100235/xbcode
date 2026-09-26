@@ -227,7 +227,9 @@ class MenuChecked
             if ($path !== '' && !str_contains($path, 'workbench') && str_contains($path, '/')) {
                 $data['path'] = "{$data['plugin']}/{$path}";
             }
-            $params = (object) $params;
+            // 前端用「params ?? path」推导取数地址，并把 params 当字符串解析，
+            // 空参数必须下发 null 才能回退到 path（空字符串不触发回退，对象/数组会解析异常）
+            $params = null;
         }
         $method = $data['method'] ?? '';
         if (is_array($method)) {

@@ -8,9 +8,9 @@ namespace plugin\xbAdmin\app\admin\controller;
 use support\Request;
 use support\Response;
 use plugin\xbAdmin\api\Url;
-use plugin\xbAdmin\app\model\Admin;
-use plugin\xbAdmin\enum\StateEnum;
 use plugin\xbAdmin\enum\YesEnum;
+use plugin\xbAdmin\enum\StateEnum;
+use plugin\xbAdmin\app\model\Admin;
 use plugin\xbAdmin\utils\PasswdUtil;
 use plugin\xbAdmin\app\model\AdminRole;
 use plugin\xbCode\builder\Renders\XbForm;
@@ -42,57 +42,52 @@ class AdminController extends BaseController
     public function index(Request $request)
     {
         if ($request->get('_act')) {
-            $query = Admin::with(['role'])->order('id desc');
-            $this->dataScope($query);
-            if (($username = trim((string) $request->get('username', ''))) !== '') {
-                $query->where('username', 'like', "%{$username}%");
-            }
-            if (($nickname = trim((string) $request->get('nickname', ''))) !== '') {
-                $query->where('nickname', 'like', "%{$nickname}%");
-            }
-            if (in_array((string) $request->get('state', ''), array_column(StateEnum::toArray(), 'value'), true)) {
-                $query->where('state', (string) $request->get('state'));
-            }
-            return $this->successData($query->paginate());
+            $builder = XbCrud::make();
+            $builder->useCRUD()->quickSaveItemApi(Url::make('rowEdit')->get());
+            $builder->addHeaderDialog('添加用户', Url::make('add'))
+                ->primary()->title('添加管理员用户');
+            $builder->addFilterInput('username', '登录账号');
+            $builder->addFilterInput('nickname', '用户昵称');
+            $builder->addFilterSelect('state', '账号状态')->options(StateEnum::options())->clearable(true);
+            $builder->addColumn('id', '序号')->width(80)->align('center');
+            $builder->addColumn('username', '登录账号');
+            $builder->addColumn('nickname', '用户昵称')->width(140);
+            $builder->addColumn('role.title', '所属角色')->width(160);
+            $builder->addColumnSwitchApi(
+                'state',
+                '账号状态',
+                Url::make('rowEdit')->get(),
+                [
+                    'onText' => StateEnum::ENABLED['label'],
+                    'offText' => StateEnum::DISABLED['label'],
+                    'trueValue' => StateEnum::ENABLED['value'],
+                    'falseValue' => StateEnum::DISABLED['value'],
+                ]
+            );
+            $builder->addColumnMap('is_system', '系统账号', YesEnum::dict())->width(110);
+            $builder->addColumn('login_ip', '登录IP');
+            $builder->addColumnDateTime('login_time', '最后登录')->width(165);
+            $builder->addColumnDateTime('create_at', '创建时间')->width(165);
+            $builder->setActionConfig('width', 150);
+            $builder->addRightActionDialog('修改', Url::make('edit'))
+            ->disabledOn('this.is_system == 20 && this.id != ' . $this->adminId())->title('修改管理员用户')->disabledTip('系统内置管理员，禁止修改');
+            $builder->addRightActionConfirm('删除', Url::make('del'))
+                ->disabledOn('this.is_system == 20')
+                ->disabledTip('系统内置管理员，禁止删除');
+            return $this->successRes($builder);
         }
-        $builder = XbCrud::make();
-        $builder->useCRUD()->quickSaveItemApi(Url::make('rowEdit')->get());
-        $builder->addHeaderDialog('添加用户', Url::make('Admin/add'), [
-            'title' => '添加管理员用户',
-            'size' => 'md',
-        ])->level('primary');
-        $builder->addFilterInput('username', '登录账号');
-        $builder->addFilterInput('nickname', '用户昵称');
-        $builder->addFilterSelect('state', '账号状态')->options(StateEnum::options())->clearable(true);
-        $builder->addColumn('id', '序号')->width(80);
-        $builder->addColumn('username', '登录账号')->minWidth(140);
-        $builder->addColumn('nickname', '用户昵称')->minWidth(140);
-        $builder->addColumn('role.title', '所属角色')->minWidth(160);
-        $builder->addColumnSwitchApi(
-            'state',
-            '账号状态',
-            Url::make('rowEdit')->get(),
-            [
-                'onText' => StateEnum::ENABLED['label'],
-                'offText' => StateEnum::DISABLED['label'],
-                'trueValue' => StateEnum::ENABLED['value'],
-                'falseValue' => StateEnum::DISABLED['value'],
-            ]
-        );
-        $builder->addColumnMap('is_system', '系统账号', YesEnum::dict('label'))->width(110);
-        $builder->addColumn('login_ip', '登录IP')->minWidth(140);
-        $builder->addColumnDateTime('login_time', '最后登录')->width(165);
-        $builder->addColumnDateTime('create_at', '创建时间')->width(165);
-        $builder->setActionConfig('width', 130);
-        $builder->addRightActionDialog('修改', Url::make('edit'), [
-            'title' => '修改管理员用户',
-            'size' => 'md',
-        ])->disabledOn('this.is_system == 20 && this.id != ' . $this->adminId())
-            ->disabledTip('系统内置管理员，禁止修改');
-        $builder->addRightActionConfirm('删除', Url::make('del'))
-            ->disabledOn('this.is_system == 20')
-            ->disabledTip('系统内置管理员，禁止删除');
-        return $this->successRes($builder);
+        $query = Admin::with(['role'])->order('id desc');
+        $this->dataScope($query);
+        if (($username = trim((string) $request->get('username', ''))) !== '') {
+            $query->where('username', 'like', "%{$username}%");
+        }
+        if (($nickname = trim((string) $request->get('nickname', ''))) !== '') {
+            $query->where('nickname', 'like', "%{$nickname}%");
+        }
+        if (in_array((string) $request->get('state', ''), array_column(StateEnum::toArray(), 'value'), true)) {
+            $query->where('state', (string) $request->get('state'));
+        }
+        return $this->successData($query->paginate());
     }
 
     /**
@@ -104,7 +99,7 @@ class AdminController extends BaseController
     {
         if ($request->method() === 'POST') {
             $post = (array) $request->post();
-            xbAdminValidate(AdminValidate::class, $post, 'add');
+            xbValidate(AdminValidate::class, $post, 'add');
             $this->checkRoleAccess((int) $post['role_id']);
             $this->checkUsernameUnique((string) $post['username']);
             $post['admin_id'] = $this->adminId();
@@ -137,7 +132,7 @@ class AdminController extends BaseController
             if ((int) $model['id'] === $this->adminId()) {
                 unset($post['role_id']);
             }
-            xbAdminValidate(AdminValidate::class, $post, 'edit');
+            xbValidate(AdminValidate::class, $post, 'edit');
             if (isset($post['role_id'])) {
                 $this->checkRoleAccess((int) $post['role_id']);
             }

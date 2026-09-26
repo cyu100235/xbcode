@@ -15,7 +15,6 @@ trait XbViewsTrait
 {
     /**
      * 渲染后台单页应用入口
-     *
      * 前端产物固定在 plugin/xbAdmin/public/backend，
      * 其 vite base 需配置为 /app/xbAdmin/backend/，
      * 静态资源由 webman 的 /app/{插件}/{路径} 规则映射到插件 public 目录。
@@ -25,6 +24,10 @@ trait XbViewsTrait
      */
     protected function adminView(string $file = 'index.html')
     {
+        $path = request()->path();
+        if (!str_ends_with($path,'/')) {
+            return redirect("{$path}/");
+        }
         $viewPath = base_path() . "/plugin/xbAdmin/public/backend/{$file}";
         if (!is_file($viewPath)) {
             throw new Exception("后台视图文件不存在：/plugin/xbAdmin/public/backend/{$file}", 404);

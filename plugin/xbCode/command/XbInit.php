@@ -93,6 +93,11 @@ class XbInit extends Command
             return self::FAILURE;
         }
 
+        // ========== 预检 ==========
+        if ($this->preCheckRedis($redisHost, $redisPort, $redisPass, $cacheType, $output) !== self::SUCCESS) {
+            return self::FAILURE;
+        }
+
         // ========== 步骤4 复制配置文件 ==========
         $this->writeConfigPhp($basePath, $listenPort, $output);
 
@@ -112,6 +117,7 @@ class XbInit extends Command
             'redis_port' => $redisPort,
             'redis_pass' => $redisPass,
             'redis_prefix' => $redisPrefix,
+            'gateway_url' => 'http://127.0.0.1:' . $listenPort,
         ], $output);
 
         // ========== 完成提示 ==========
@@ -208,6 +214,67 @@ class XbInit extends Command
             return self::FAILURE;
         }
         $output->writeln('<info>[预检] 自动预检已完成，准备开始安装...</info>');
+        $output->writeln('');
+        return self::SUCCESS;
+    }
+
+    /**
+     * 预检 Redis 扩展与连接是否可用
+     *
+     * 缓存类型为 file 时不需要 Redis，直接跳过；
+     * 否则先确认 phpredis 扩展（Redis / RedisCluster 类）存在，
+     * 再按用户填写的地址真实连接并 PING，避免安装完成后登录等流程
+     * 在请求期因为 Redis 不可用抛 RedisException。
+     * @param string $host
+     * @param string $port
+     * @param string $pass
+     * @param string $cacheType
+     * @param OutputInterface $output
+     * @return int
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected function preCheckRedis(string $host, string $port, string $pass, string $cacheType, OutputInterface $output): int
+    {
+        $output->writeln('<comment>[预检] 检测 Redis 环境</comment>');
+        if ('file' === $cacheType) {
+            $output->writeln('  <info>缓存类型为 file，无需 Redis，已跳过检测</info>');
+            $output->writeln('');
+            return self::SUCCESS;
+        }
+
+        $isCluster = 'redis_cluster' === $cacheType;
+        $class = $isCluster ? 'RedisCluster' : 'Redis';
+        if (!class_exists($class)) {
+            $output->writeln("  <error>未检测到 {$class} 类，当前 PHP 未安装 phpredis 扩展</error>");
+            $output->writeln('  <comment>请安装 phpredis 扩展，或将 --cache-type 改为 file 后重试</comment>');
+            return self::FAILURE;
+        }
+
+        try {
+            if ($isCluster) {
+                $redis = new $class(null, [$host . ':' . (int) $port], 2.0);
+            } else {
+                $redis = new $class();
+                if (!$redis->connect($host, (int) $port, 2.0)) {
+                    $output->writeln("  <error>Redis 连接失败：{$host}:{$port}</error>");
+                    return self::FAILURE;
+                }
+            }
+            if ('' !== $pass) {
+                $redis->auth($pass);
+            }
+            $pong = $redis->ping();
+            if ($pong !== true && !(is_string($pong) && false !== stripos($pong, 'PONG'))) {
+                $output->writeln('  <error>Redis PING 异常，返回：' . var_export($pong, true) . '</error>');
+                return self::FAILURE;
+            }
+        } catch (\Throwable $e) {
+            $output->writeln("  <error>Redis 连接失败：{$host}:{$port}，原因：" . $e->getMessage() . '</error>');
+            return self::FAILURE;
+        }
+
+        $output->writeln("  <info>Redis 连接正常：{$host}:{$port}</info>");
         $output->writeln('');
         return self::SUCCESS;
     }
@@ -489,6 +556,10 @@ class XbInit extends Command
         $redisPass = $config['redis_pass'] ?? '';
         $redisPrefix = $config['redis_prefix'] ?? 'xb_cache_';
 
+        $gatewayUrl = $config['gateway_url'] ?? 'http://127.0.0.1:39000';
+        $gatewayUser = $config['gateway_user'] ?? 'admin';
+        $gatewayPass = $config['gateway_pass'] ?? '123456';
+
         $tplFile = $basePath . '/plugin/xbCode/data/env.tpl';
         if (!is_file($tplFile)) {
             throw new RuntimeException(".env模板不存在：{$tplFile}");
@@ -507,6 +578,9 @@ class XbInit extends Command
             '{{redisPort}}' => $redisPort,
             '{{redisPass}}' => $redisPass,
             '{{redisPrefix}}' => $redisPrefix,
+            '{{gatewayUrl}}' => $gatewayUrl,
+            '{{gatewayUser}}' => $gatewayUser,
+            '{{gatewayPass}}' => $gatewayPass,
         ]);
 
         $target = $basePath . '/.env';

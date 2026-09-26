@@ -9,8 +9,8 @@
  */
 namespace plugin\xbCode\command;
 
-use plugin\xbCode\api\XbCode;
 use RuntimeException;
+use plugin\xbCode\api\XbCode;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;

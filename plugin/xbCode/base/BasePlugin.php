@@ -9,9 +9,12 @@
  */
 namespace plugin\xbCode\base;
 
-use plugin\xbCode\api\Composer;
+use plugin\xbCode\api\Dict;
+use plugin\xbCode\api\Menu;
 use plugin\xbCode\api\Mysql;
+use plugin\xbCode\api\Setting;
 use plugin\xbCode\api\XbCode;
+use plugin\xbCode\api\Composer;
 
 /**
  * 插件安装器基类
@@ -46,14 +49,8 @@ abstract class BasePlugin
         Composer::install($context['composer'] ?? []);
         // 安装SQL表结构
         self::installSql($version, $context);
-        // 安装配置数据
-        self::installConfig($version, $context);
-        // 安装定时任务
+        // 安装定时任务（未完成）
         self::installCrontab($version, $context);
-        // 安装枚举数据
-        self::installEnum($version, $context);
-        // 安装菜单数据
-        self::installMenu($version, $context);
     }
 
     /**
@@ -69,7 +66,9 @@ abstract class BasePlugin
         if (!$name) {
             throw new \Exception('安装SQL失败，插件标识错误');
         }
-        $sqlPath = str_replace('\\', '/', base_path("plugin/{$name}/install.sql"));
+        $sqlShortPath = "plugin/{$name}/install.sql";
+        $sqlPath = base_path($sqlShortPath);
+        $sqlPath = str_replace('\\', '/', $sqlPath);
         if (!file_exists($sqlPath)) {
             return;
         }
@@ -82,6 +81,9 @@ abstract class BasePlugin
 
     /**
      * 安装配置数据
+     *
+     * setting 目录下每个文件为一个配置分组（文件名即分组标识），解析出分组模板与字段初始值，
+     * 通过后台接口上报入库。后台可能独立部署，因此不直接写配置表。
      * @param string $version
      * @param array|null $context
      * @return void
@@ -89,6 +91,25 @@ abstract class BasePlugin
     private static function installConfig(string $version, array|null &$context = null)
     {
         // 安装配置数据
+        $name = $context['name'] ?? '';
+        if (!$name) {
+            throw new \Exception('安装配置失败，插件标识错误');
+        }
+        $configShortPath = "plugin/{$name}/setting/*.php";
+        $configPath = base_path($configShortPath);
+        $configPath = str_replace('\\', '/', $configPath);
+        $groups = [];
+        foreach (glob($configPath) ?: [] as $file) {
+            $group = Setting::parse($file);
+            if ($group) {
+                $groups[$group['group']] = $group;
+            }
+        }
+        if (!$groups) {
+            return;
+        }
+        // 后台可能独立部署，配置分组通过 HTTP 接口上报给后台写入
+        Setting::install($groups, $name);
     }
 
     /**
@@ -104,6 +125,9 @@ abstract class BasePlugin
 
     /**
      * 安装枚举数据
+     *
+     * 扫描插件的 enum 目录，反射每个枚举类的常量，整理成字典分组，
+     * 通过后台接口上报入库。后台可能独立部署，因此不直接写字典表。
      * @param string $version
      * @param array|null $context
      * @return void
@@ -111,6 +135,66 @@ abstract class BasePlugin
     private static function installEnum(string $version, array|null &$context = null)
     {
         // 安装枚举数据
+        $name = $context['name'] ?? '';
+        if (!$name) {
+            throw new \Exception('安装枚举失败，插件标识错误');
+        }
+        $enumShortPath = "plugin/{$name}/enum";
+        $enumPath = base_path($enumShortPath);
+        $enumPath = str_replace('\\', '/', $enumPath);
+        if (!is_dir($enumPath)) {
+            return;
+        }
+        $groups = [];
+        foreach (glob($enumPath . '/*.php') ?: [] as $file) {
+            $class = "plugin\\{$name}\\enum\\" . basename($file, '.php');
+            // 只处理继承枚举基类的合法枚举
+            if (!class_exists($class) || !is_subclass_of($class, BaseEnum::class)) {
+                continue;
+            }
+            $items = [];
+            foreach ($class::toArray() as $item) {
+                $items[] = [
+                    'key' => (string) ($item['key'] ?? ''),
+                    'label' => (string) ($item['label'] ?? ''),
+                    'value' => (string) ($item['value'] ?? ''),
+                    'style' => (string) ($item['style'] ?? ''),
+                ];
+            }
+            if (!$items) {
+                continue;
+            }
+            $groups[] = [
+                'name' => basename($file, '.php'),
+                'title' => self::enumTitle($class),
+                'items' => $items,
+            ];
+        }
+        if (!$groups) {
+            return;
+        }
+        // 后台可能独立部署，字典分组通过 HTTP 接口上报给后台写入
+        Dict::install($groups, $name);
+    }
+
+    /**
+     * 读取枚举标题，取类注释的首行描述
+     * @param string $class 枚举类名
+     * @return string
+     */
+    private static function enumTitle(string $class): string
+    {
+        $comment = (new \ReflectionClass($class))->getDocComment();
+        if (is_string($comment) && $comment !== '') {
+            foreach (preg_split('/\r\n|\r|\n/', $comment) ?: [] as $line) {
+                $line = trim(ltrim(trim($line), '/*'));
+                if ($line === '' || str_starts_with($line, '@')) {
+                    continue;
+                }
+                return $line;
+            }
+        }
+        return basename(str_replace('\\', '/', $class));
     }
 
     /**
@@ -122,6 +206,22 @@ abstract class BasePlugin
     private static function installMenu(string $version, array|null &$context = null)
     {
         // 安装菜单数据
+        $name = $context['name'] ?? '';
+        if (!$name) {
+            throw new \Exception('安装菜单失败，插件标识错误');
+        }
+        $menuShortPath = "plugin/{$name}/config/menu.php";
+        $menuPath = base_path($menuShortPath);
+        $menuPath = str_replace('\\', '/', $menuPath);
+        if (!file_exists($menuPath)) {
+            return;
+        }
+        $menus = require $menuPath;
+        if (!is_array($menus) || !$menus) {
+            return;
+        }
+        // 后台可能独立部署，菜单通过 HTTP 接口下发给后台写入
+        Menu::install($menus, $name);
     }
 
     /**
@@ -146,15 +246,21 @@ abstract class BasePlugin
     final public static function install(string $version)
     {
         // 上下文
-        $context = self::getContext();
+        $context = static::getContext();
         // 执行环境检测
-        self::checkEnvironment();
+        static::checkEnvironment();
         // 安装前
-        self::beforeInstall($version, $context);
+        static::beforeInstall($version, $context);
         // 安装中
-        self::doInstall($version, $context);
+        static::doInstall($version, $context);
         // 安装后
-        self::afterInstall($version, $context);
+        static::afterInstall($version, $context);
+        // 同步配置分组
+        self::installConfig($version, $context);
+        // 同步菜单
+        self::installMenu($version, $context);
+        // 同步字典
+        self::installEnum($version, $context);
     }
 
     /**

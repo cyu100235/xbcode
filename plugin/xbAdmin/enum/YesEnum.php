@@ -1,14 +1,20 @@
 <?php
 /**
- * xbAdmin 后台权限管理
- * @package  xbAdmin
+ * 积木云渲染器
+ * @package  XbCode
+ * @author   楚羽幽 <958416459@qq.com>
+ * @license  Apache License 2.0
+ * @link     http://www.xbcode.net
+ * @document http://doc.xbcode.net
  */
 namespace plugin\xbAdmin\enum;
 
 use plugin\xbCode\base\BaseEnum;
 
 /**
- * 是/否枚举，用于 is_system、is_default 等开关字段
+ * 是否启用
+ * @copyright 贵州云铺网络科技有限公司
+ * @author 楚羽幽 958416459@qq.com
  */
 class YesEnum extends BaseEnum
 {

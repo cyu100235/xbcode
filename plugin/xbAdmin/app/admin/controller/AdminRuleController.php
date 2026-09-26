@@ -1,7 +1,11 @@
 <?php
 /**
- * xbAdmin 后台权限管理
- * @package  xbAdmin
+ * 积木云渲染器
+ * @package  XbCode
+ * @author   楚羽幽 <958416459@qq.com>
+ * @license  Apache License 2.0
+ * @link     http://www.xbcode.net
+ * @document http://doc.xbcode.net
  */
 namespace plugin\xbAdmin\app\admin\controller;
 
@@ -34,62 +38,60 @@ class AdminRuleController extends BaseController
     public function index(Request $request)
     {
         if ($request->get('_act')) {
-            $query = AdminRule::order('sort asc,id asc');
-            $title = trim((string) $request->get('title', ''));
-            $path = trim((string) $request->get('path', ''));
-            $type = (string) $request->get('type', '');
-            $searching = $title !== '' || $path !== '';
-            if ($title !== '') {
-                $query->where('title', 'like', "%{$title}%");
-            }
-            if ($path !== '') {
-                $query->where('path', 'like', "%{$path}%");
-            }
-            if (in_array($type, array_column(MenuTypeEnum::toArray(), 'value'), true)) {
-                $query->where('type', $type);
-                $searching = true;
-            }
-            $data = $query->select()->toArray();
-            // 带检索条件时返回平铺结果，避免子节点因父级未命中而丢失
-            if ($searching) {
-                return $this->successData($data);
-            }
-            $data = MenuChecked::menu2DToTree($data);
-            $data = MenuChecked::unsetMenusFields($data, ['_html', '_level']);
-            return $this->successData($this->stripEmptyChildren($data));
+            $builder = XbCrud::make();
+            $builder->useCRUD()->quickSaveItemApi(Url::make('rowEdit'));
+            $builder->useCRUD()->expandConfig([
+                'expand' => 'accordion',
+                'expandAll' => false,
+            ]);
+            $builder->addHeaderDialog('添加菜单', Url::make('AdminRule/add'))
+                ->primary()->title('添加菜单')->size('lg');
+            $builder->addFilterInput('title', '菜单名称');
+            $builder->addFilterInput('path', '路由地址');
+            $builder->addFilterSelect('type', '菜单类型')->options(MenuTypeEnum::options())->clearable(true);
+            $builder->addColumn('title', '菜单名称')->width(160);
+            $builder->addColumn('plugin', '插件标识')->width(120);
+            $builder->addColumn('path', '路由地址')->width(200);
+            $builder->addColumnMap('type', '菜单类型', MenuTypeEnum::dict())->width(100);
+            $builder->addColumn('method', '请求类型')->width(100);
+            $builder->addColumnIcon('icon', '菜单图标')->width(120);
+            $builder->addColumnMap('state', '是否启用', StateEnum::dict())->width(100);
+            $builder->addColumnMap('is_show', '是否显示', ShowEnum::dict())->width(100);
+            $builder->addColumnMap('is_default', '默认菜单', YesEnum::dict())->width(100);
+            $builder->addColumnInput('sort', '菜单排序')->width(100);
+            $builder->setActionConfig('width', 150);
+            $builder->addRightActionDialog('修改', Url::make('edit'), [
+                'title' => '修改菜单',
+            ])->disabledTip('系统菜单，禁止修改')
+                ->disabledOn('this.is_system == 20');
+            $builder->addRightActionConfirm('删除', Url::make('del'))
+                ->disabledTip('系统菜单，禁止删除')
+                ->disabledOn('this.is_system == 20');
+            return $this->successRes($builder);
         }
-        $builder = XbCrud::make();
-        $builder->useCRUD()->expandConfig([
-            'expand' => 'accordion',
-            'expandAll' => false,
-        ]);
-        $builder->addHeaderDialog('添加菜单', Url::make('AdminRule/add'), [
-            'title' => '添加菜单',
-            'size' => 'lg',
-        ])->level('primary');
-        $builder->addFilterInput('title', '菜单名称');
-        $builder->addFilterInput('path', '路由地址');
-        $builder->addFilterSelect('type', '菜单类型')->options(MenuTypeEnum::options())->clearable(true);
-        $builder->addColumn('title', '菜单名称')->minWidth(160);
-        $builder->addColumn('plugin', '插件标识')->width(120);
-        $builder->addColumn('path', '路由地址')->minWidth(200);
-        $builder->addColumnMap('type', '菜单类型', MenuTypeEnum::dict('label'))->width(100);
-        $builder->addColumn('method', '请求类型')->width(100);
-        $builder->addColumnIcon('icon', '菜单图标')->width(120);
-        $builder->addColumnMap('state', '是否启用', StateEnum::dict('label'))->width(100);
-        $builder->addColumnMap('is_show', '是否显示', ShowEnum::dict('label'))->width(100);
-        $builder->addColumnMap('is_default', '默认菜单', YesEnum::dict('label'))->width(100);
-        $builder->addColumnInput('sort', '菜单排序')->width(100);
-        $builder->setActionConfig('width', 150);
-        $builder->addRightActionDialog('修改', Url::make('edit'), [
-            'title' => '修改菜单',
-            'size' => 'lg',
-        ])->disabledTip('系统菜单，禁止修改')
-            ->disabledOn('this.is_system == 20');
-        $builder->addRightActionConfirm('删除', Url::make('del'))
-            ->disabledTip('系统菜单，禁止删除')
-            ->disabledOn('this.is_system == 20');
-        return $this->successRes($builder);
+        $query = AdminRule::order('sort asc,id asc');
+        $title = trim((string) $request->get('title', ''));
+        $path = trim((string) $request->get('path', ''));
+        $type = (string) $request->get('type', '');
+        $searching = $title !== '' || $path !== '';
+        if ($title !== '') {
+            $query->where('title', 'like', "%{$title}%");
+        }
+        if ($path !== '') {
+            $query->where('path', 'like', "%{$path}%");
+        }
+        if (in_array($type, array_column(MenuTypeEnum::toArray(), 'value'), true)) {
+            $query->where('type', $type);
+            $searching = true;
+        }
+        $data = $query->select()->toArray();
+        // 带检索条件时返回平铺结果，避免子节点因父级未命中而丢失
+        if ($searching) {
+            return $this->successData($data);
+        }
+        $data = MenuChecked::menu2DToTree($data);
+        $data = MenuChecked::unsetMenusFields($data, ['_html', '_level']);
+        return $this->successData($this->stripEmptyChildren($data));
     }
 
     /**
@@ -101,15 +103,30 @@ class AdminRuleController extends BaseController
     {
         if ($request->method() === 'POST') {
             $post = (array) $request->post();
-            xbAdminValidate(AdminRuleValidate::class, $post, 'add');
+            xbValidate(AdminRuleValidate::class, $post, 'add');
             $post = $this->prepareData($post);
-            $post['is_system'] = YesEnum::NO['value'];
-            $post['is_default'] = YesEnum::NO['value'];
-            $model = new AdminRule;
+            // 同一插件 + 同一路由视为同一条菜单，已存在则更新（插件安装可反复执行）
+            $model = AdminRule::where([
+                'plugin' => (string) ($post['plugin'] ?? ''),
+                'path' => $post['path'],
+            ])->find();
+            if ($model) {
+                $this->guardPidLoop((int) $model['id'], (int) $post['pid']);
+            } else {
+                $model = new AdminRule;
+            }
+            // 插件 config/menu.php 会声明 is_system / is_default，后台表单不提交时按普通菜单处理
+            foreach (['is_system', 'is_default'] as $field) {
+                $value = (string) ($post[$field] ?? '');
+                $post[$field] = in_array($value, [YesEnum::NO['value'], YesEnum::YES['value']], true)
+                    ? $value
+                    : YesEnum::NO['value'];
+            }
             if (!$model->save($post)) {
                 throw new ExceptionBusiness('添加菜单失败');
             }
-            return $this->success('添加成功');
+            // 返回菜单ID，供插件安装时回填子级 pid
+            return $this->success('添加成功', ['id' => (int) $model['id']]);
         }
         $builder = $this->formView();
         $builder->setSaveMethod('POST');
@@ -127,7 +144,7 @@ class AdminRuleController extends BaseController
         if ($request->method() === 'PUT') {
             $this->guardSystem($model, '修改');
             $post = (array) $request->post();
-            xbAdminValidate(AdminRuleValidate::class, $post, 'edit');
+            xbValidate(AdminRuleValidate::class, $post, 'edit');
             $post = $this->prepareData($post);
             $this->guardPidLoop((int) $model['id'], (int) $post['pid']);
             unset($post['is_system'], $post['is_default']);

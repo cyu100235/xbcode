@@ -45,7 +45,7 @@ plugin/xbAdmin/
 │   ├── controller/             插件默认模块（IndexController::admin 备用入口）
 │   ├── model/                  Admin / AdminRole / AdminRule
 │   ├── validate/               三个模型对应的验证器
-│   └── functions.php           xbAdminPathInfo / xbAdminValidate / xbAdminConfig
+│   └── functions.php           xbAdminPathInfo / xbAdminValidate
 ├── base/ enum/ trait/ utils/   枚举、trait、密码与令牌工具
 ├── exception/                  Handler + business 异常族
 ├── config/                     app / menu / middleware / exception / xbadmin ...

@@ -10,6 +10,7 @@
 namespace plugin\xbCode\base;
 
 use Exception;
+use plugin\xbCode\api\Dict;
 
 /**
  * 枚举基类
@@ -21,6 +22,8 @@ use Exception;
  *     const STATE20 = ['label' => '启用', 'value' => '20', 'style' => '<span class="label label-success">启用</span>'];
  * }
  * ```
+ * 枚举数据优先取自后台字典（管理员可在后台调整标签与样式），
+ * 后台未部署、未收录该枚举或接口异常时，回退到枚举类常量。
  * @copyright 贵州积木云网络科技有限公司
  * @author 楚羽幽 958416459@qq.com
  */
@@ -186,17 +189,54 @@ class BaseEnum
 
     /**
      * 获取枚举数据
-     * @return array
+     *
+     * 优先读取后台字典数据，取不到时回退到枚举类常量。
+     * @return array 以常量名为键的枚举数据
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     private static function getEnumData()
     {
+        // 优先读取后台字典，管理员可在后台调整标签与样式
+        $data = static::dictData();
+        if ($data) {
+            return $data;
+        }
         // 反射当前类
         $reflect = new \ReflectionClass(static::class);
         // 获取常量
         $data = $reflect->getConstants();
         // 返回数据
+        return $data;
+    }
+
+    /**
+     * 通过 gateway 读取后台字典数据
+     *
+     * 枚举类命名空间固定为 plugin\{插件标识}\enum\{枚举类名}，据此定位后台字典；
+     * 命名空间不符、后台未收录该枚举或接口异常时返回空数组，由调用方回退本地常量。
+     * @return array 以常量名为键的字典数据
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    private static function dictData()
+    {
+        if (!preg_match('#^plugin\\\\([\w\-]+)\\\\enum\\\\([\w]+)$#', static::class, $match)) {
+            return [];
+        }
+        try {
+            $values = Dict::values($match[1], $match[2]);
+        } catch (\Throwable $e) {
+            return [];
+        }
+        $data = [];
+        foreach ($values as $value) {
+            // key 即枚举常量名，缺失时该行不可用
+            if (!is_array($value) || empty($value['key'])) {
+                continue;
+            }
+            $data[(string) $value['key']] = $value;
+        }
         return $data;
     }
 }

@@ -1,21 +1,25 @@
 <?php
 /**
- * xbAdmin 后台权限管理
- * @package  xbAdmin
+ * 积木云渲染器
+ * @package  XbCode
+ * @author   楚羽幽 <958416459@qq.com>
+ * @license  Apache License 2.0
+ * @link     http://www.xbcode.net
+ * @document http://doc.xbcode.net
  */
 namespace plugin\xbAdmin\app\admin\middleware;
 
-use ReflectionClass;
 use Throwable;
+use ReflectionClass;
 use support\Request;
-use support\Response;
-use plugin\xbAdmin\api\AdminAuthApi;
-use plugin\xbAdmin\app\model\Admin;
-use plugin\xbAdmin\enum\StateEnum;
+use Webman\Http\Response;
 use plugin\xbAdmin\enum\YesEnum;
+use plugin\xbAdmin\enum\StateEnum;
+use plugin\xbAdmin\app\model\Admin;
+use plugin\xbAdmin\utils\TokenUtil;
+use plugin\xbAdmin\api\AdminAuthApi;
 use plugin\xbAdmin\exception\business\ExceptionForbidden;
 use plugin\xbAdmin\exception\business\ExceptionUnauthorized;
-use plugin\xbAdmin\utils\TokenUtil;
 
 /**
  * 后台登录与权限校验中间件

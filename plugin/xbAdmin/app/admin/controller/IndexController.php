@@ -75,7 +75,8 @@ class IndexController extends BaseController
      */
     public function toolbar(Request $request)
     {
-        $toolbar = (array) xbAdminConfig('xbadmin.toolbar', []);
+        // TODO 工具栏配置暂用静态值，后续接入 config/xbadmin.php 的 toolbar 配置
+        $toolbar = [];
         $list = [];
         foreach ($toolbar as $item) {
             if (!is_array($item)) {

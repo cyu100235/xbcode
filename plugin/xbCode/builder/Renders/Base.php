@@ -100,6 +100,10 @@ abstract class Base implements JsonSerializable
         parse_str($query, $params);
         $params = empty($params) ? [] : $params;
         $params = array_merge($params, $querys);
+        // 剔除 amis 内部的 _act 参数，避免其残留在接口地址上
+        if (isset($params['_act'])) {
+            unset($params['_act']);
+        }
         $query = http_build_query($params);
         $query = $query ? "?{$query}" : '';
         $url = "{$path}{$query}";

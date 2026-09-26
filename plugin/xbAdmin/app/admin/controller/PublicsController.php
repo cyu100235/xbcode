@@ -1,18 +1,21 @@
 <?php
 /**
- * xbAdmin 后台权限管理
- * @package  xbAdmin
+ * 积木云渲染器
+ * @package  XbCode
+ * @author   楚羽幽 <958416459@qq.com>
+ * @license  Apache License 2.0
+ * @link     http://www.xbcode.net
+ * @document http://doc.xbcode.net
  */
 namespace plugin\xbAdmin\app\admin\controller;
 
-use Throwable;
 use support\Request;
 use support\Response;
 use plugin\xbAdmin\api\Menus;
 use plugin\xbAdmin\api\AdminApi;
 use Webman\Captcha\PhraseBuilder;
-use plugin\xbAdmin\app\model\AdminRole;
 use Webman\Captcha\CaptchaBuilder;
+use plugin\xbAdmin\app\model\AdminRole;
 use plugin\xbAdmin\app\validate\AdminValidate;
 use plugin\xbAdmin\exception\business\ExceptionBusiness;
 use plugin\xbAdmin\exception\business\ExceptionUnauthorized;
@@ -58,14 +61,13 @@ class PublicsController extends BaseController
             throw new ExceptionBusiness('登录方式错误，请使用POST提交');
         }
         $post = $request->post();
-        xbAdminValidate(AdminValidate::class, (array) $post, 'login');
-        $captcha = $post['vcode'] ?? $post['captcha'] ?? $post['code'] ?? '';
+        xbValidate(AdminValidate::class, $post, 'login');
         $data = AdminApi::username(
             (string) $post['username'],
             (string) $post['password'],
-            $captcha === null ? null : (string) $captcha
+            (string) ($post['captcha'] ?? ''),
         );
-        return $this->successRes($data, '登录成功');
+        return $this->successRes($data);
     }
 
     /**
@@ -75,11 +77,7 @@ class PublicsController extends BaseController
      */
     public function logout(Request $request)
     {
-        try {
-            AdminApi::logout();
-        } catch (Throwable $e) {
-            // 令牌已过期或已被注销时不影响前端退出流程
-        }
+        AdminApi::logout();
         return $this->success('已退出登录');
     }
 
@@ -143,44 +141,23 @@ class PublicsController extends BaseController
         $data = Menus::get($this->adminId());
         return $this->successRes($data);
     }
-
+    
     /**
      * 获取布局配置
-     *
-     * 前端路由守卫拿到假值会直接中断跳转并提示「获取主题配置失败」，
-     * 因此这里必须保证任何情况下都返回完整的布局对象。
-     * @param Request $request
      * @return Response
+     * @copyright 贵州云铺网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
      */
-    public function layouts(Request $request)
+    public function layouts()
     {
-        $default = [
-            // 布局模式 default默认布局 sideBar侧边双栏 user用户中心
-            'layoutMode' => 'sideBar',
-            // 主题类型 light浅色 dark深色 OS跟随系统
-            'theme' => 'OS',
-            // 主题自定义样式
-            'themeCss' => '',
-            // 是否折叠菜单
-            'isCollapse' => false,
-            // 底部高度
-            'footerHeight' => 40,
-            // 头部高度
-            'headerHeight' => 60,
-            // 图标大小
-            'logoSize' => 40,
-            // 侧边栏未折叠宽度
-            'sideMenuOrdinaryWidth' => 200,
-            // 侧边栏折叠时宽度
-            'sideMenuCollapseWidth' => 64,
-        ];
-        $config = (array) xbAdminConfig('xbadmin.layout', []);
-        $data = array_merge($default, $config);
-        foreach ($default as $key => $value) {
-            if ($data[$key] === '' || $data[$key] === null) {
-                $data[$key] = $value;
-            }
-        }
-        return $this->successRes($data);
+        // 获取默认配置主题
+        $config = (array) config('plugin.xbAdmin.theme', []);
+        // 当前管理员所属部门配置过主题时，按部门主题覆盖默认布局；
+        // 部门只能覆盖 config/theme.php 顶层的可配置项，layouts 各布局尺寸始终以配置文件为准
+        $theme = AdminRole::normalizeTheme(
+            AdminRole::where('id', (int) ($this->currentUser()['role_id'] ?? 0))->value('theme')
+        );
+        // 返回主题布局配置
+        return $this->successRes(array_merge($config, $theme));
     }
 }

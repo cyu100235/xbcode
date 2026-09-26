@@ -6,7 +6,8 @@
     "author":"积木云",
     "composer": {
         "Tinywan\\Jwt\\JwtToken": "tinywan/jwt",
-        "Webman\\Captcha\\CaptchaBuilder": "webman/captcha"
+        "Webman\\Captcha\\CaptchaBuilder": "webman/captcha",
+        "Workerman\\Crontab\\Crontab": "workerman/crontab:^1.0"
     },
     "plugins": {}
 }

@@ -3,8 +3,10 @@
  * xbAdmin 后台权限管理
  * @package  xbAdmin
  *
- * 本文件是后台 SPA 的唯一配置来源，由 plugin/xbAdmin/api/SiteEntry.php 读取后
- * 通过 admin/Index/site 接口下发给前端，不依赖任何数据库配置表。
+ * 站点信息（网站名称、LOGO、备案号、组织信息、版权、登录验证码开关等）已改为读取后台配置项，
+ * 字段定义见 plugin/xbAdmin/setting/system.php 与 setting/webicp.php，
+ * 由 plugin/xbAdmin/api/SiteEntry.php 通过 plugin\xbCode\api\Config 读取后
+ * 经 admin/Index/site 接口下发给前端，本文件不再维护这些键（版本号取自 plugin.json）。
  *
  * 说明：
  *   1. 枚举型取值统一使用字符串，'10' 表示否/关闭，'20' 表示是/开启；
@@ -13,32 +15,8 @@
  *   3. 修改本文件后需要重启服务才会生效（配置在进程启动时加载）。
  */
 
-use plugin\xbCode\api\PluginJson;
-
 return [
-    // ------------------------------ 站点信息 ------------------------------
-    // 系统名称，显示在登录页、顶部导航、工作台
-    'web_name' => '后台权限管理系统',
-    // 站点 LOGO 地址，留空则只显示系统名称
-    'web_logo' => '',
-    // 系统版本号
-    'web_version' => PluginJson::get('version', '1.0.0', dirname(__DIR__) . '/plugin.json'),
-    // 站点访问地址，用于版权信息中的 {WEB_URL} 占位符
-    'web_url' => '',
-    // ICP 备案号，留空不展示
-    'web_icp' => '',
-    // 公安备案号，留空不展示
-    'web_police' => '',
-    // 关于我们的名称与链接，两者需同时填写才会在页面底部展示
-    'about_name' => '',
-    'about_url' => '',
-    // 版权信息，支持占位符：{WEB_NAME} {WEB_URL} {WEB_ICP} {WEB_POLICE}
-    'copyright' => 'Copyright © {WEB_NAME} All Rights Reserved',
-
     // ------------------------------ 登录设置 ------------------------------
-    // 登录验证码开关：10关闭，20开启
-    // 开启后登录页会请求 public_api.captcha 获取图形验证码
-    'captcha_state' => '10',
     'login' => [
         // 登录页标题
         'login_title' => '后台权限管理系统',
@@ -58,28 +36,7 @@ return [
         'other_login' => [],
     ],
 
-    // ------------------------------ 布局设置 ------------------------------
-    // 键名与前端 layouts 接口保持一致（小驼峰），此处缺省的键由接口自动补全
-    'layout' => [
-        // 布局模式：default 默认布局 | sideBar 侧边双栏 | user 用户中心
-        'layoutMode' => 'sideBar',
-        // 主题类型：light 浅色 | dark 深色 | OS 跟随系统
-        'theme' => 'OS',
-        // 主题自定义样式，留空使用内置主题
-        'themeCss' => '',
-        // 侧边菜单是否默认折叠
-        'isCollapse' => false,
-        // 底部高度
-        'footerHeight' => 40,
-        // 顶部高度
-        'headerHeight' => 60,
-        // 图标尺寸
-        'logoSize' => 40,
-        // 侧边栏展开宽度
-        'sideMenuOrdinaryWidth' => 200,
-        // 侧边栏折叠宽度
-        'sideMenuCollapseWidth' => 64,
-    ],
+    // 布局与主题默认值已抽离到同目录的 theme.php（config('plugin.xbAdmin.theme')）
 
     // ------------------------------ 顶部工具栏 ------------------------------
     // 渲染在顶部导航右侧的扩展链接，用户菜单、退出登录等由前端内置提供

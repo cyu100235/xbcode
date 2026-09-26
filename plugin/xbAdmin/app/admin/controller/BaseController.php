@@ -1,7 +1,11 @@
 <?php
 /**
- * xbAdmin 后台权限管理
- * @package  xbAdmin
+ * 积木云渲染器
+ * @package  XbCode
+ * @author   楚羽幽 <958416459@qq.com>
+ * @license  Apache License 2.0
+ * @link     http://www.xbcode.net
+ * @document http://doc.xbcode.net
  */
 namespace plugin\xbAdmin\app\admin\controller;
 
@@ -14,12 +18,8 @@ use plugin\xbAdmin\trait\XbViewsTrait;
 
 /**
  * 后台控制器基类
- *
- * 说明：
- * - 这里重新 use 了 xbAdmin 自己的 XbJsonTrait，特性方法优先级高于父类
- *   plugin\xbCode\app\XbController 继承而来的同名方法，因此响应体一定会带上
- *   前端事件总线需要的 option 字段。
- * - $noLogin、$noAuth 由 AuthMiddleware 通过反射读取，用于免登录、免权限校验。
+ * @copyright 贵州云铺网络科技有限公司
+ * @author 楚羽幽 958416459@qq.com
  */
 class BaseController extends XbController
 {

@@ -38,9 +38,8 @@ class IndexController extends BaseController
 
     /**
      * 后台单页应用入口
-     *
      * 与 admin 模块的 Index::admin 指向同一份产物，
-     * 便于在未启用模块路由时仍可直接访问 /xbAdmin/index/admin。
+     * 便于在未启用模块路由时仍可直接访问 /xbAdmin/index/admin
      * @return Response
      */
     public function admin()

@@ -6,12 +6,18 @@
 namespace plugin\xbAdmin\api;
 
 use JsonSerializable;
+use support\Log;
+use plugin\xbAdmin\app\model\Config;
+use plugin\xbCode\api\PluginJson;
 
 /**
  * 站点配置接口
  *
- * 输出积木云 SPA 启动时必需的 site 数据结构，
- * 全部数据来源于 plugin/xbAdmin/config/xbadmin.php，不依赖其他插件。
+ * 输出积木云 SPA 启动时必需的 site 数据结构。
+ *
+ * 站点信息（网站名称、LOGO、备案号、版权等）不再硬编码在配置文件里，
+ * 字段定义见 plugin/xbAdmin/setting/system.php 与 setting/webicp.php，
+ * 值由 plugin/xbAdmin/app/model/Config 直读后台配置表；版本号取自 plugin.json。
  *
  * 前端强校验的键（缺失会直接白屏）：
  * public_api.login / public_api.user / public_api.menus / public_api.layouts / public_view.workbench
@@ -50,8 +56,52 @@ class SiteEntry implements JsonSerializable
             $plugin = (string) (request()->plugin ?? '');
         }
         $instance->plugin = $plugin !== '' ? $plugin : 'xbAdmin';
-        $instance->config = (array) xbAdminConfig('xbadmin', []);
+        $instance->config = static::siteConfig();
         return $instance;
+    }
+
+    /**
+     * 读取站点信息
+     *
+     * 字段定义见 plugin/xbAdmin/setting/system.php 与 setting/webicp.php，
+     * 值直读后台配置表（后台自身即本插件，无需经 HTTP 回环调用），
+     * 读不到时使用默认值；数据库不可用时整体回落到默认值，
+     * 避免站点配置接口失败导致 SPA 无法启动。
+     * @return array
+     */
+    protected static function siteConfig(): array
+    {
+        $config = [
+            'web_name' => '后台管理系统',
+            'web_logo' => '',
+            'web_version' => (string) PluginJson::get('version', '1.0.0', dirname(__DIR__) . '/plugin.json'),
+            'web_url' => '',
+            'web_icp' => '',
+            'web_police' => '',
+            'web_police_code' => '',
+            'about_name' => '',
+            'about_url' => '',
+            'captcha_state' => '10',
+            'copyright' => 'Copyright © {WEB_NAME} All Rights Reserved',
+        ];
+        // 分组标识 => 字段名，与 setting 目录下的分组文件一一对应
+        $groups = [
+            'system' => ['web_name', 'web_logo', 'web_url', 'captcha_state'],
+            'webicp' => ['web_icp', 'web_police', 'web_police_code', 'about_name', 'about_url', 'copyright'],
+        ];
+        try {
+            foreach ($groups as $group => $fields) {
+                $data = Config::groupData('xbAdmin', $group);
+                foreach ($fields as $field) {
+                    if (array_key_exists($field, $data)) {
+                        $config[$field] = (string) $data[$field];
+                    }
+                }
+            }
+        } catch (\Throwable $e) {
+            Log::warning('读取后台站点配置失败，已使用默认值：' . $e->getMessage());
+        }
+        return $config;
     }
 
     /**
@@ -195,6 +245,8 @@ class SiteEntry implements JsonSerializable
 
     /**
      * 解析版权信息中的占位符
+     *
+     * 占位符与 setting/webicp.php 中版权信息的说明保持一致
      * @param string $copyright
      * @return string
      */
@@ -203,12 +255,23 @@ class SiteEntry implements JsonSerializable
         if ($copyright === '') {
             return '';
         }
-        $variables = ['{WEB_NAME}', '{WEB_URL}', '{WEB_ICP}', '{WEB_POLICE}'];
+        $variables = [
+            '{WEB_NAME}',
+            '{WEB_URL}',
+            '{WEB_ICP}',
+            '{WEB_POLICE}',
+            '{WEB_POLICE_CODE}',
+            '{ABOUT_NAME}',
+            '{ABOUT_URL}',
+        ];
         $values = [
             (string) ($this->config['web_name'] ?? ''),
             (string) ($this->config['web_url'] ?? ''),
             (string) ($this->config['web_icp'] ?? ''),
             (string) ($this->config['web_police'] ?? ''),
+            (string) ($this->config['web_police_code'] ?? ''),
+            (string) ($this->config['about_name'] ?? ''),
+            (string) ($this->config['about_url'] ?? ''),
         ];
         return str_replace($variables, $values, $copyright);
     }
