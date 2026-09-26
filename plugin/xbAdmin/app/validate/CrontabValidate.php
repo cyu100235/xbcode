@@ -1,17 +1,23 @@
 <?php
 /**
- * xbAdmin 后台权限管理
- * @package  xbAdmin
+ * 贵州积木云网络科技有限公司
+ *
+ * @package  XbCode
+ * @author   楚羽幽 <958416459@qq.com>
+ * @license  Apache License 2.0
+ * @link     http://www.xhadmin.cn
+ * @document http://doc.xhadmin.cn
  */
 namespace plugin\xbAdmin\app\validate;
 
+use Closure;
 use Webman\Validation\Validator;
+use plugin\xbAdmin\enum\CronPresetsEnum;
 
 /**
- * 定时任务数据验证器
- *
- * 校验控制器合成后的入库字段：周期选择已在控制器中转换为 rule，故此处校验 rule 而非 period；
- * 执行方式相关的必填项（执行目标、执行参数、任务命令）由控制器按 mode 分支判定，此处只限制长度。
+ * 定时任务验证器
+ * @copyright 贵州积木云网络科技有限公司
+ * @author 楚羽幽 958416459@qq.com
  */
 class CrontabValidate extends Validator
 {
@@ -20,16 +26,12 @@ class CrontabValidate extends Validator
      * @var array
      */
     protected array $rules = [
-        'title' => 'required|max:50',
-        'plugin' => 'max:100',
-        'name' => 'max:50',
-        'mode' => 'required|in:php,command',
-        'type' => 'required|in:10,20,30',
-        'target' => 'max:255',
-        'command' => 'max:255',
-        'rule' => 'required|max:100',
-        'state' => 'required|in:10,20',
-        'remark' => 'max:255',
+        'title' => 'required',
+        'name' => 'required',
+        'plugin' => 'required',
+        'type' => 'required',
+        'cron_expression' => 'required',
+        'command' => 'required',
     ];
 
     /**
@@ -37,21 +39,12 @@ class CrontabValidate extends Validator
      * @var array
      */
     protected array $messages = [
-        'title.required' => '请填写任务名称',
-        'title.max' => '任务名称最多50位',
-        'plugin.max' => '所属插件最多100位',
-        'name.max' => '任务标识最多50位',
-        'mode.required' => '请选择执行方式',
-        'mode.in' => '执行方式错误',
-        'type.required' => '请选择任务类型',
-        'type.in' => '任务类型错误',
-        'target.max' => '执行目标最多255位',
-        'command.max' => '任务命令最多255位',
-        'rule.required' => '请设置调度规则',
-        'rule.max' => '调度规则最多100位',
-        'state.required' => '请选择任务状态',
-        'state.in' => '任务状态错误',
-        'remark.max' => '备注最多255位',
+        'title.required' => '请填写定时任务名称',
+        'name.required' => '请填写定时任务标识',
+        'plugin.required' => '请填写插件名称',
+        'type.required' => '请填写定时任务类型',
+        'cron_expression.required' => '请选择或输入执行周期',
+        'command.required' => '请填写定时任务命令',
     ];
 
     /**
@@ -59,7 +52,51 @@ class CrontabValidate extends Validator
      * @var array
      */
     protected array $scenes = [
-        'add' => ['title', 'plugin', 'name', 'mode', 'type', 'target', 'command', 'rule', 'state', 'remark'],
-        'edit' => ['title', 'plugin', 'name', 'mode', 'type', 'target', 'command', 'rule', 'state', 'remark'],
+        'add' => ['title', 'name', 'plugin', 'type', 'cron_expression', 'command'],
+        'edit' => ['title', 'name', 'plugin', 'type', 'cron_expression', 'command'],
     ];
+
+    /**
+     * 构建验证规则
+     * Laravel 验证器无法调用子类自定义方法，此处以闭包规则完成 Cron 表达式校验
+     * @return array
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function rules(): array
+    {
+        $rules = parent::rules();
+        if (array_key_exists('cron_expression', $rules)) {
+            $rules['cron_expression'] = ['required', $this->cronExpressionRule()];
+        }
+        return $rules;
+    }
+
+    /**
+     * Cron表达式校验闭包
+     * @return Closure
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected function cronExpressionRule(): Closure
+    {
+        return function ($attribute, $value, $fail) {
+            // 如果是预设选项，直接通过
+            $presetValues = array_column(CronPresetsEnum::options(), 'value');
+            if (in_array($value, $presetValues)) {
+                return;
+            }
+            // 验证自定义cron表达式格式
+            // 标准cron表达式格式: 分 时 日 月 周 (5位) 或 秒 分 时 日 月 周 (6位)
+            $pattern = '/^(\*|(\*\/)?[0-9]+([,\/\-][0-9]+)*)\s+(\*|(\*\/)?[0-9]+([,\/\-][0-9]+)*)\s+(\*|(\*\/)?[0-9]+([,\/\-][0-9]+)*)\s+(\*|(\*\/)?[0-9]+([,\/\-][0-9]+)*)\s+(\*|(\*\/)?[0-9]+([,\/\-][0-9]+)*)(\s+(\*|(\*\/)?[0-9]+([,\/\-][0-9]+)*))?$/';
+            if (!preg_match($pattern, trim((string) $value))) {
+                $fail('Cron表达式格式错误，请检查格式是否正确');
+                return;
+            }
+            // 检查是否有 */0 这样的无效表达式
+            if (preg_match('/\*\/0/', (string) $value)) {
+                $fail('Cron表达式格式错误，请检查格式是否正确');
+            }
+        };
+    }
 }

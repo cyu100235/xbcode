@@ -12,25 +12,25 @@ namespace plugin\xbAdmin\enum;
 use plugin\xbCode\base\BaseEnum;
 
 /**
- * 任务类型枚举
+ * 任务状态
  * @copyright 贵州积木云网络科技有限公司
  * @author 楚羽幽 958416459@qq.com
  */
-class TaskTypeEnum extends BaseEnum
+class CrontabStateEnum extends BaseEnum
 {
     const STATE10 = [
-        'label' => '执行Shell命令',
+        'label' => '未运行',
         'value' => '10',
-        'style' => '<span class="label label-warning">执行Shell命令</span>',
+        'style' => '<span class="label label-danger">未运行</span>',
     ];
     const STATE20 = [
-        'label' => '执行访问URL',
+        'label'=> '运行中',
         'value' => '20',
-        'style' => '<span class="label label-info">访问URL</span>',
+        'style' => '<span class="label label-success">运行中</span>',
     ];
     const STATE30 = [
-        'label' => '执行PHP代码',
+        'label'=> '已停止',
         'value' => '30',
-        'style' => '<span class="label label-success">执行PHP代码</span>',
+        'style' => '<span class="label label-danger">已停止</span>',
     ];
 }

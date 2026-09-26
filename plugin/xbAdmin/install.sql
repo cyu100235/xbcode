@@ -117,22 +117,30 @@ CREATE TABLE `xb_dict` (
 DROP TABLE IF EXISTS `xb_crontab`;
 -- 表结构：`xb_crontab`
 CREATE TABLE `xb_crontab` (
-  `id` int unsigned NOT NULL AUTO_INCREMENT COMMENT '序号',
-  `title` varchar(50) NOT NULL DEFAULT '' COMMENT '任务名称',
-  `plugin` varchar(100) NOT NULL DEFAULT '' COMMENT '所属插件标识',
-  `name` varchar(50) NOT NULL DEFAULT '' COMMENT '任务标识',
-  `mode` varchar(10) NOT NULL DEFAULT 'php' COMMENT '执行方式：php PHP可调用，command 命令执行',
-  `type` varchar(10) NOT NULL DEFAULT '10' COMMENT '任务类型，执行方式为command时有效：10 执行Shell命令，20 访问URL，30 执行PHP代码',
-  `target` varchar(255) NOT NULL DEFAULT '' COMMENT '执行目标，执行方式为php时有效，PHP可调用，格式：类名::方法名',
-  `params` text COMMENT '执行参数，执行方式为php时有效，JSON数组文本，按顺序作为方法参数',
-  `command` varchar(255) NOT NULL DEFAULT '' COMMENT '任务命令，执行方式为command时有效：Shell命令、URL或PHP代码',
-  `rule` varchar(100) NOT NULL DEFAULT '' COMMENT '执行周期，固定间隔配置JSON：档位+各时间单位数值，周按7天、月按30天',
-  `state` enum('10','20') NOT NULL DEFAULT '20' COMMENT '任务状态：10禁用，20启用',
-  `remark` varchar(255) NOT NULL DEFAULT '' COMMENT '备注',
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `create_at` datetime NOT NULL,
+  `update_at` datetime NOT NULL,
+  `title` varchar(100) NOT NULL COMMENT '任务名称',
+  `name` varchar(50) NOT NULL COMMENT '任务标识',
+  `plugin` varchar(100) NOT NULL COMMENT '插件标识',
+  `type` enum('10','20','30') NOT NULL DEFAULT '10' COMMENT '任务类型',
+  `state` enum('10','20','30') NOT NULL DEFAULT '10' COMMENT '任务状态',
+  `cron_expression` varchar(100) NOT NULL DEFAULT '' COMMENT 'Cron表达式',
+  `cron_desc` varchar(100) NOT NULL DEFAULT '' COMMENT '周期描述',
+  `command` varchar(255) DEFAULT NULL COMMENT '执行命令',
   `last_time` datetime DEFAULT NULL COMMENT '最后执行时间',
-  `run_count` int NOT NULL DEFAULT '0' COMMENT '累计执行次数',
-  `create_at` datetime DEFAULT NULL COMMENT '创建时间',
-  `update_at` datetime DEFAULT NULL COMMENT '更新时间',
-  PRIMARY KEY (`id`) USING BTREE,
-  KEY `idx_state` (`state`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci ROW_FORMAT=DYNAMIC COMMENT='定时任务';
+  `error` text COMMENT '错误原因',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC COMMENT='定时任务';
+
+-- 删除表语句
+DROP TABLE IF EXISTS `xb_crontab_log`;
+-- 表结构：`xb_crontab_log`
+CREATE TABLE `xb_crontab_log` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `create_at` datetime DEFAULT NULL,
+  `crontab_id` int(11) DEFAULT NULL,
+  `run_second_time` varchar(30) DEFAULT NULL,
+  `remarks` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='定时任务日志';

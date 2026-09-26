@@ -1,208 +1,249 @@
 <?php
 /**
- * xbAdmin 后台权限管理
- * @package  xbAdmin
+ * 积木云渲染器
+ * @package  XbCode
+ * @author   楚羽幽 <958416459@qq.com>
+ * @license  Apache License 2.0
+ * @link     http://www.xbcode.net
+ * @document http://www.xbcode.net/documents
  */
 namespace plugin\xbAdmin\app\process;
 
-use Throwable;
-use RuntimeException;
-use Workerman\Timer;
-use Workerman\Worker;
-use support\Log;
-use plugin\xbAdmin\enum\StateEnum;
-use plugin\xbAdmin\enum\TaskTypeEnum;
-use plugin\xbAdmin\enum\ExecuteModeEnum;
+use Exception;
+use plugin\xbCode\api\Mysql;
+use Workerman\Crontab\Crontab as WorkermanCrontab;
+use plugin\xbAdmin\api\TaskApi;
+use plugin\xbCode\api\XbCode;
+use plugin\xbAdmin\api\PluginsApi;
+use plugin\xbAdmin\api\ChannelClient;
+use plugin\xbAdmin\app\model\CrontabLog;
 use plugin\xbAdmin\app\model\Crontab as CrontabModel;
 
 /**
- * 定时任务调度进程
- *
- * 任务周期是「固定间隔」，用 Workerman 原生定时器实现：进程启动时把数据库中启用的任务
- * 按 rule 换算成间隔秒数注册为持久定时器，之后每隔 SYNC_INTERVAL 秒扫描一次，
- * 按 rule 的哈希比对增删改，实现后台改表即生效。
- * 执行时按 mode 分流：php 走「执行目标 + 执行参数」，command 再按 type 走 Shell 命令、URL 或 PHP 代码。
- * 该进程不监听端口，仅做调度。
- * @copyright 贵州云铺网络科技有限公司
+ * 定时任务进程
+ * @copyright 贵州积木云网络科技有限公司
  * @author 楚羽幽 958416459@qq.com
  */
 class Crontab
 {
     /**
-     * 数据库同步间隔（秒）
+     * 定时任务更新事件名称
+     * @var string
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
      */
-    protected const SYNC_INTERVAL = 30;
+    public static $eventName = 'task_update';
 
     /**
-     * 已注册的任务
-     * @var array<int, array{hash: string, timer: int}>
+     * 任务列表
+     * @var array
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
      */
-    protected array $tasks = [];
+    protected $crontabs = [];
 
     /**
      * 进程启动
-     *
-     * 必须在 onWorkerStart 中注册定时器：Timer::add 依赖已就绪的事件循环。
-     * @param Worker $worker
      * @return void
-     * @copyright 贵州云铺网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public function onWorkerStart(Worker $worker): void
+    public function onWorkerStart()
     {
-        $this->sync();
-        Timer::add(static::SYNC_INTERVAL, function () {
-            $this->sync();
+        // 检测是否已安装
+        if (!XbCode::isInstalled()) {
+            return;
+        }
+        // 检测是否已安装该插件
+        if (!PluginsApi::make()->installed('xbAdmin')) {
+            return;
+        }
+        // 检测数据表是否存在
+        if (!Mysql::hasTable('crontab')) {
+            return;
+        }
+        // 初始化任务
+        $this->initCrontab();
+        // 监听任务变动
+        $this->listenCrontab();
+    }
+
+    /**
+     * 初始化任务
+     * @return void
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    private function initCrontab()
+    {
+        // 获取全部定时任务
+        $crontab = CrontabModel::where('state', '20')->select()->toArray();
+        // 遍历任务
+        foreach ($crontab as $item) {
+            // 任务标识
+            $name = $this->getCrontabName($item);
+            // 添加任务
+            $this->addCrontab($name, $item);
+        }
+    }
+
+    /**
+     * 监听任务变动
+     * @return void
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    private function listenCrontab()
+    {
+        // 订阅Channel事件(定时任务更新、添加、删除)触发
+        ChannelClient::subscribe(static::$eventName, function ($data) {
+            $name = $this->getCrontabName($data['data']);
+            $crontab = $data['data'];
+            $this->updateCrontab($name, $crontab);
         });
     }
 
     /**
-     * 同步数据库中的任务
+     * 添加任务
+     * @param string $name 任务标识
+     * @param array $crontab 任务数据
      * @return void
-     * @copyright 贵州云铺网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    protected function sync(): void
+    private function addCrontab(string $name, array $crontab)
     {
-        try {
-            $rows = CrontabModel::where('state', StateEnum::ENABLED['value'])->select()->toArray();
-        } catch (Throwable $e) {
-            Log::warning('定时任务同步失败：' . $e->getMessage());
+        // 任务状态
+        $state = $crontab['state'] ?? '10';
+        if ($state !== '20') {
             return;
         }
-        $exists = [];
-        foreach ($rows as $row) {
-            $id = (int) ($row['id'] ?? 0);
-            $rule = trim((string) ($row['rule'] ?? ''));
-            if ($id <= 0 || $rule === '') {
-                continue;
-            }
-            $exists[$id] = true;
-            // 周期配置未变化，沿用已注册的定时器
-            $hash = md5($rule);
-            $current = $this->tasks[$id] ?? null;
-            if ($current && $current['hash'] === $hash) {
-                continue;
-            }
-            if ($current) {
-                Timer::del($current['timer']);
-                unset($this->tasks[$id]);
-            }
-            $seconds = CrontabModel::toSeconds(CrontabModel::parseRule($rule));
-            if ($seconds < 1) {
-                Log::warning("定时任务执行周期非法，已跳过：crontab-{$id} {$rule}");
-                continue;
-            }
-            $this->tasks[$id] = [
-                'hash' => $hash,
-                'timer' => Timer::add($seconds, function () use ($id) {
-                    $this->run($id);
-                }),
-            ];
+        // 直接使用 cron_expression
+        $expression = $crontab['cron_expression'] ?? '';
+        if (empty($expression)) {
+            return;
         }
-        // 已删除或已停用的任务，销毁定时器
-        foreach (array_keys($this->tasks) as $id) {
-            if (!isset($exists[$id])) {
-                Timer::del($this->tasks[$id]['timer']);
-                unset($this->tasks[$id]);
-            }
+        $crontabObj = new WorkermanCrontab($expression, function () use ($crontab) {
+            // 执行任务
+            $this->runCrontab($crontab);
+        });
+        // 任务标识 => 定时任务对象id
+        $this->crontabs[$name] = $crontabObj->getId();
+    }
+
+    /**
+     * 更新任务
+     * @param string $name 任务标识
+     * @param array $crontab 任务数据
+     * @return void
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    private function updateCrontab(string $name, array $crontab)
+    {
+        // 如果任务已存在，则删除
+        if (isset($this->crontabs[$name])) {
+            WorkermanCrontab::remove($this->crontabs[$name]);
+            unset($this->crontabs[$name]);
+        }
+        $where = [
+            'plugin' => $crontab['plugin'],
+            'name' => $crontab['name'],
+            'state' => '20',
+        ];
+        $model = CrontabModel::where($where)->find();
+        if ($model) {
+            // 继续添加任务
+            $this->addCrontab($name, $crontab);
         }
     }
 
     /**
-     * 执行任务
-     * @param int $id 任务ID
+     * 运行任务
+     * @param array $crontab 任务数据
      * @return void
-     * @copyright 贵州云铺网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    protected function run(int $id): void
+    private function runCrontab(array $crontab)
     {
-        $model = CrontabModel::where('id', $id)->find();
-        if (!$model || (string) $model['state'] !== StateEnum::ENABLED['value']) {
+        // 获取任务数据
+        $where = [
+            'id' => $crontab['id'],
+            'state' => '20',
+        ];
+        $model = CrontabModel::where($where)->find();
+        if (!$model) {
             return;
         }
+        // 开始时间
+        $startTime = microtime(true);
         try {
-            $this->execute($model);
-        } catch (Throwable $e) {
-            Log::warning("定时任务执行失败：crontab-{$id} " . $e->getMessage());
-            return;
-        }
-        try {
+            // 获取任务执行类实例
+            $taskApi = TaskApi::make();
+            // 获取可执行方法列表
+            $methods = $taskApi->getMethods();
+            // 获取任务类型
+            $type = $crontab['type'];
+            if (!isset($methods[$type])) {
+                throw new Exception("任务类型:{$type}，不存在");
+            }
+            // 调用任务执行方法
+            $method = $methods[$type];
+            $taskApi->$method($crontab['command']);
+            // 获取结束时间
+            $endTime = microtime(true);
+            // 记录任务耗时(秒)
+            $runSecondTime = $endTime - $startTime;
+            // 更新数据
             $model->save([
                 'last_time' => date('Y-m-d H:i:s'),
-                'run_count' => (int) $model['run_count'] + 1,
+                'error' => '',
             ]);
-        } catch (Throwable $e) {
-            Log::warning("定时任务执行结果回写失败：crontab-{$id} " . $e->getMessage());
+            // 记录执行日志
+            $logModel = new CrontabLog;
+            $logModel->save([
+                'crontab_id' => $model['id'],
+                'run_second_time' => $runSecondTime,
+                'remarks' => '任务执行完成',
+            ]);
+        } catch (\Throwable $th) {
+            // 获取结束时间
+            $endTime = microtime(true);
+            // 记录任务耗时(秒)
+            $runSecondTime = $endTime - $startTime;
+            // 更新数据
+            $model->save([
+                'last_time' => date('Y-m-d H:i:s'),
+                'state' => '30',
+                'error' => $th->getMessage(),
+            ]);
+            // 记录执行日志
+            $logModel = new CrontabLog;
+            $logModel->save([
+                'crontab_id' => $model['id'],
+                'run_second_time' => $runSecondTime,
+                'remarks' => $th->getMessage(),
+            ]);
+            // 更新任务
+            $name = $this->getCrontabName($crontab);
+            $this->updateCrontab($name, $crontab);
         }
     }
 
     /**
-     * 按执行方式执行任务
-     *
-     * 配置非法或执行出错时抛异常，由 run() 统一记录日志并跳过结果回写。
-     * @param CrontabModel $model
-     * @throws RuntimeException
-     * @return void
-     * @copyright 贵州云铺网络科技有限公司
+     * 获取定时任务标识
+     * @param array $crontab
+     * @throws \Exception
+     * @return string
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    protected function execute(CrontabModel $model): void
+    protected function getCrontabName(array $crontab)
     {
-        if ((string) $model['mode'] === ExecuteModeEnum::COMMAND['value']) {
-            $this->executeCommand($model);
-            return;
+        if (empty($crontab['plugin']) || empty($crontab['name'])) {
+            throw new Exception('获取定时任务标识失败');
         }
-        $target = trim((string) $model['target']);
-        if (!preg_match('/^[\\\\\w]+::[\\\\\w]+$/', $target)) {
-            throw new RuntimeException("执行目标非法：{$target}");
-        }
-        [$class, $method] = explode('::', $target, 2);
-        if (!class_exists($class) || !method_exists($class, $method)) {
-            throw new RuntimeException("执行目标不存在：{$target}");
-        }
-        // 参数数组按位置顺序传入，避免 PHP8 把字符串键当作命名参数
-        call_user_func_array([$class, $method], CrontabModel::parseParams((string) $model['params']));
-    }
-
-    /**
-     * 按任务类型执行命令
-     * @param CrontabModel $model
-     * @throws RuntimeException
-     * @return void
-     * @copyright 贵州云铺网络科技有限公司
-     * @author 楚羽幽 958416459@qq.com
-     */
-    protected function executeCommand(CrontabModel $model): void
-    {
-        $command = trim((string) $model['command']);
-        if ($command === '') {
-            throw new RuntimeException('任务命令为空');
-        }
-        switch ((string) $model['type']) {
-            case TaskTypeEnum::SHELL['value']:
-                $cwd = getcwd();
-                chdir(base_path());
-                exec($command, $output, $code);
-                if ($cwd !== false) {
-                    chdir($cwd);
-                }
-                if ($code !== 0) {
-                    throw new RuntimeException("执行Shell命令失败({$code})：{$command}");
-                }
-                break;
-            case TaskTypeEnum::URL['value']:
-                // 连接失败时 file_get_contents 会抛 PHP 警告，失败信息由本方法统一记录
-                if (@file_get_contents($command) === false) {
-                    throw new RuntimeException("访问URL失败：{$command}");
-                }
-                break;
-            case TaskTypeEnum::PHP['value']:
-                eval($command);
-                break;
-            default:
-                throw new RuntimeException('任务类型非法：' . (string) $model['type']);
-        }
+        return "{$crontab['plugin']}_{$crontab['name']}";
     }
 }

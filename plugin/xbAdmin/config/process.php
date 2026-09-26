@@ -1,23 +1,22 @@
 <?php
-/**
- * 插件进程配置
- * @package  XbCode
- * @license  Apache License 2.0
- * @link     http://www.xbcode.net
- * @document http://doc.xbcode.net
- * @copyright 贵州积木云网络科技有限公司
- * @author 楚羽幽 958416459@qq.com
- *
- * 后台接口与页面复用 xbCode 插件的 HTTP 进程，通过跨插件路由
- * /xbAdmin/admin/{控制器}/{方法} 访问；此处仅注册定时任务调度进程，
- * 该进程不监听端口，用于驱动 workerman/crontab 执行后台配置的定时任务。
- */
-
+use Channel\Server;
+use Workerman\Protocols\Frame;
+use plugin\xbAdmin\api\ChannelClient;
 use plugin\xbAdmin\app\process\Crontab;
 
+$channelPort = ChannelClient::getPort();
+
 return [
-    'crontab' => [
-        'handler' => Crontab::class,
-        'count'   => 1,
+    // 定时任务服务
+    'crontab'  => [
+        'handler'  => Crontab::class,
     ],
+    // Channel服务
+    'channel' => [
+        'listen' => "frame://127.0.0.1:{$channelPort}",
+        'protocol' => Frame::class,
+        'handler' => Server::class,
+        'reloadable' => false,
+        'count' => 1, // 必须是1
+    ]
 ];

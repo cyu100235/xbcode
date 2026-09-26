@@ -535,7 +535,7 @@ return [
                 'is_system' => '20',
                 'is_default' => '10',
                 'state' => '20',
-                'sort' => 2,
+                'sort' => 3,
                 'children' => [
                     [
                         'title' => '添加定时任务',
@@ -576,6 +576,45 @@ return [
                         'state' => '20',
                         'sort' => 3,
                     ],
+                    [
+                        'title' => '导出定时任务',
+                        'path' => 'admin/Crontab/export',
+                        'method' => 'GET',
+                        'type' => '30',
+                        'icon' => '',
+                        'params' => '',
+                        'is_show' => '10',
+                        'is_system' => '20',
+                        'is_default' => '10',
+                        'state' => '20',
+                        'sort' => 4,
+                    ],
+                    [
+                        'title' => '任务日志',
+                        'path' => 'admin/CrontabLog/index',
+                        'method' => 'GET',
+                        'type' => '30',
+                        'icon' => '',
+                        'params' => '',
+                        'is_show' => '10',
+                        'is_system' => '20',
+                        'is_default' => '10',
+                        'state' => '20',
+                        'sort' => 5,
+                    ],
+                    [
+                        'title' => '清除任务日志',
+                        'path' => 'admin/CrontabLog/clear',
+                        'method' => 'GET',
+                        'type' => '30',
+                        'icon' => '',
+                        'params' => '',
+                        'is_show' => '10',
+                        'is_system' => '20',
+                        'is_default' => '10',
+                        'state' => '20',
+                        'sort' => 6,
+                    ],
                 ],
             ],
             [
@@ -589,7 +628,7 @@ return [
                 'is_system' => '20',
                 'is_default' => '10',
                 'state' => '20',
-                'sort' => 2,
+                'sort' => 4,
                 'children' => [
                     [
                         'title' => '添加字典',
@@ -632,6 +671,7 @@ return [
                     ],
                 ],
             ],
+            
         ],
     ],
 ];
