@@ -132,7 +132,7 @@ trait SidebarLayout
         $activeValue = $query[$field] ?? $active;
         unset($query[$field]);
         // 如果有 _act 参数，则删除
-        if($query['_act']){
+        if (isset($query['_act'])) {
             unset($query['_act']);
         }
 

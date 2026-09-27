@@ -52,7 +52,7 @@ class Config extends Model
      * 读取所有配置选项卡
      *
      * name 以「插件标识_分组标识」拼接，保证多插件分组重名时选项卡键唯一。
-     * @return array [['name' => ..., 'title' => ..., 'body' => 组件], ...]
+     * @return array [['name' => ..., 'title' => ..., 'plugin' => ..., 'group' => ..., 'body' => 组件], ...]
      */
     public static function tabs(): array
     {
@@ -63,6 +63,8 @@ class Config extends Model
             $tabs[] = [
                 'name' => $plugin . '_' . $group,
                 'title' => (string) $entry['title'] !== '' ? (string) $entry['title'] : $group,
+                'plugin' => $plugin,
+                'group' => $group,
                 'body' => static::template($plugin, $group),
             ];
         }
@@ -103,16 +105,49 @@ class Config extends Model
     }
 
     /**
-     * 读取所有分组字段值，用于选项卡表单回填
+     * 读取分组原始键值：不受模板字段约束
+     *
+     * 用于存取模板未声明的键（如储存引擎的 active 与引擎标识），
+     * 这类键由插件自行维护，不参与后台表单渲染。
+     * @param string $plugin 插件标识
+     * @param string $group 分组标识
      * @return array 键为字段名
      */
-    public static function allData(): array
+    public static function groupValues(string $plugin, string $group): array
     {
+        $rows = static::where('plugin', $plugin)->where('group', $group)->column('value', 'name');
         $data = [];
-        foreach (static::entries() as $entry) {
-            $data = array_merge($data, static::groupData((string) $entry['plugin'], (string) $entry['group']));
+        foreach ($rows as $name => $value) {
+            $data[(string) $name] = static::decode($value);
         }
         return $data;
+    }
+
+    /**
+     * 保存分组原始键值：不受模板字段约束
+     *
+     * 已存在则更新，不存在则插入；用于保存模板未声明的键。
+     * @param string $plugin 插件标识
+     * @param string $group 分组标识
+     * @param array $data 待保存数据，键为字段名
+     * @return void
+     */
+    public static function saveValues(string $plugin, string $group, array $data): void
+    {
+        foreach ($data as $name => $value) {
+            $name = (string) $name;
+            if ($name === '') {
+                continue;
+            }
+            $value = static::encode($value);
+            $model = static::where('plugin', $plugin)->where('group', $group)->where('name', $name)->find();
+            if ($model) {
+                $model->save(['value' => $value]);
+                continue;
+            }
+            $model = new static;
+            $model->save(['plugin' => $plugin, 'group' => $group, 'name' => $name, 'value' => $value]);
+        }
     }
 
     /**
@@ -138,20 +173,6 @@ class Config extends Model
             }
             $model = new static;
             $model->save(['plugin' => $plugin, 'group' => $group, 'name' => $name, 'value' => $value]);
-        }
-    }
-
-    /**
-     * 保存所有分组字段值
-     *
-     * 命名避开 think\Model::saveAll()，两者的语义与签名不同。
-     * @param array $data 待保存数据，键为字段名
-     * @return void
-     */
-    public static function saveAllGroups(array $data): void
-    {
-        foreach (static::entries() as $entry) {
-            static::saveGroup((string) $entry['plugin'], (string) $entry['group'], $data);
         }
     }
 

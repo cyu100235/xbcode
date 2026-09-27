@@ -40,6 +40,12 @@ class Install extends BasePlugin
     ];
 
     /**
+     * 默认储存引擎标识
+     * @var string
+     */
+    protected const DEFAULT_ENGINE = 'local';
+
+    /**
      * 写入初始数据
      * @param string $version
      * @param array|null $context
@@ -51,6 +57,8 @@ class Install extends BasePlugin
         $roleId = static::createSuperRole();
         // 创建管理员账号
         static::createSuperAdmin($roleId);
+        // 初始化储存引擎
+        EngineApi::make()->init(self::DEFAULT_ENGINE);
     }
 
     /**

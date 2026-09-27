@@ -127,7 +127,7 @@ class SiteEntry implements JsonSerializable
         $data['login_data'] = $this->loginData((array) ($config['login'] ?? []));
         $data['public_api'] = $this->publicApi((array) ($config['public_api'] ?? []), $captchaState);
         $data['public_view'] = $this->publicView((array) ($config['public_view'] ?? []));
-        $data['upload_api'] = $this->fillApi((array) ($config['upload_api'] ?? []), ['index', 'upload', 'chunk', 'edit', 'move', 'del']);
+        $data['upload_api'] = $this->uploadApi((array) ($config['upload_api'] ?? []));
         $data['upload_cate_api'] = $this->fillApi((array) ($config['upload_cate_api'] ?? []), ['index', 'add', 'edit', 'del']);
         $data['editor_upload_api'] = $this->fillApi((array) ($config['editor_upload_api'] ?? []), ['image', 'video', 'file']);
         $data['components'] = (array) ($config['components'] ?? []);
@@ -225,6 +225,30 @@ class SiteEntry implements JsonSerializable
             // 工作台视图
             'workbench' => (string) ($config['workbench'] ?? $this->url('Index/workbench')),
         ];
+        return array_merge($data, $config);
+    }
+
+    /**
+     * 附件接口地址
+     *
+     * 未配置时指向本插件 UploadController；chunk 为分片上传基础地址，
+     * 前端自行拼接 ?_act=start|chunk|finish。
+     * @param array $config
+     * @return array
+     */
+    protected function uploadApi(array $config): array
+    {
+        $defaults = [
+            'index' => $this->url('Upload/index'),
+            'upload' => $this->url('Upload/upload'),
+            'chunk' => $this->url('Upload/chunk'),
+            'edit' => $this->url('Upload/edit'),
+            'del' => $this->url('Upload/del'),
+        ];
+        $data = [];
+        foreach ($defaults as $field => $url) {
+            $data[$field] = (string) ($config[$field] ?? $url);
+        }
         return array_merge($data, $config);
     }
 

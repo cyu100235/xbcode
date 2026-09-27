@@ -270,6 +270,8 @@ class XbTabForm extends Base
         $method = $this->saveMethod;
         $builder = XbForm::make();
         $builder->useForm()->wrapWithPanel(false);
+        // 选项卡表单数据由外层提供，禁止内层表单自动请求 initApi，避免拉取整页数据
+        $builder->useForm()->initFetch(false);
         foreach ($components as $component) {
             if (isset($component['isSelect'])) {
                 unset($component['isSelect']);

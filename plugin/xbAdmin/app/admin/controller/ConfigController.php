@@ -8,7 +8,7 @@ namespace plugin\xbAdmin\app\admin\controller;
 use support\Request;
 use support\Response;
 use plugin\xbAdmin\app\model\Config;
-use plugin\xbCode\builder\Renders\XbForm;
+use plugin\xbCode\builder\Renders\XbTabForm;
 use plugin\xbAdmin\exception\business\ExceptionBusiness;
 
 /**
@@ -21,23 +21,51 @@ class ConfigController extends BaseController
 {
     /**
      * 系统设置
+     *
+     * 每个分组渲染为独立选项卡，选项卡内的表单单独提交，仅保存该分组数据。
+     * 提交地址携带 _tab 参数标识分组，值为「插件标识_分组标识」。
      * @param Request $request
+     * @throws ExceptionBusiness
      * @return Response
      */
     public function index(Request $request)
     {
         if ($request->method() === 'PUT') {
-            Config::saveAllGroups((array) $request->post());
-            return $this->success('保存成功');
+            return $this->save($request);
         }
-        $builder = XbForm::make();
-        $builder->useForm()->wrapWithPanel(false);
+        $builder = XbTabForm::make();
+        $data = [];
         foreach (Config::tabs() as $tab) {
-            $builder->addRowTab($tab['name'], $tab['title'], $tab['body']);
+            $builder->addTab($tab['name'], $tab['title'], $tab['body']);
+            $data[$tab['name']] = Config::groupData($tab['plugin'], $tab['group']);
         }
-        $builder->setData(Config::allData());
+        $builder->setData($data);
         $builder->setSaveMethod('PUT');
         return $this->successRes($builder);
+    }
+
+    /**
+     * 保存指定选项卡（分组）的配置
+     * @param Request $request
+     * @throws ExceptionBusiness
+     * @return Response
+     */
+    protected function save(Request $request)
+    {
+        $tab = trim((string) $request->get('_tab', ''));
+        if ($tab === '') {
+            throw new ExceptionBusiness('缺少配置分组标识');
+        }
+        $post = (array) $request->post();
+        foreach (Config::entries() as $entry) {
+            $plugin = (string) $entry['plugin'];
+            $group = (string) $entry['group'];
+            if ($plugin . '_' . $group === $tab) {
+                Config::saveGroup($plugin, $group, $post);
+                return $this->success('保存成功');
+            }
+        }
+        throw new ExceptionBusiness('配置分组不存在：' . $tab);
     }
 
     /**
