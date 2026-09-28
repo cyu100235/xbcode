@@ -60,4 +60,65 @@ class UploadExtEnum extends BaseEnum
         'ext' => '',
         'style' => 'light',
     ];
+
+    /**
+     * 获取文件后缀与分类目录的映射表（后缀 => 分类标识）
+     *
+     * 字典只维护 label/style 等展示字段，安装入库时会丢失 ext 字段，
+     * 因此文件归类必须直接读取枚举常量，避免后缀信息被字典覆盖后全部落入 other。
+     * @return array
+     */
+    public static function extensionMap(): array
+    {
+        $map = [];
+        foreach (self::constList() as $item) {
+            foreach (self::extList($item) as $ext) {
+                $map[$ext] = (string) $item['value'];
+            }
+        }
+        return $map;
+    }
+
+    /**
+     * 获取指定分类包含的文件后缀
+     * @param string $value 分类标识
+     * @return array
+     */
+    public static function extensions(string $value): array
+    {
+        foreach (self::constList() as $item) {
+            if ((string) $item['value'] === $value) {
+                return self::extList($item);
+            }
+        }
+        return [];
+    }
+
+    /**
+     * 读取枚举常量定义
+     * @return array
+     */
+    private static function constList(): array
+    {
+        $list = [];
+        foreach ((new \ReflectionClass(self::class))->getConstants() as $key => $item) {
+            if (!is_array($item) || !isset($item['value'])) {
+                continue;
+            }
+            $item['key'] = $key;
+            $list[] = $item;
+        }
+        return $list;
+    }
+
+    /**
+     * 解析常量中的 ext 字段为小写后缀列表
+     * @param array $item 枚举常量
+     * @return array
+     */
+    private static function extList(array $item): array
+    {
+        $exts = array_filter(explode(',', (string) ($item['ext'] ?? '')));
+        return array_values(array_map('strtolower', array_map('trim', $exts)));
+    }
 }

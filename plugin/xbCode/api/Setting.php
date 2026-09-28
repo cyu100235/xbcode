@@ -57,6 +57,8 @@ class Setting
 
     /**
      * 解析单个 setting 模板文件
+     *
+     * 仅解析以 FieldSet 组件为容器的模板，非 FieldSet 模板返回空数组（不导入配置分组）。
      * @param string $file 模板文件绝对路径
      * @return array ['group' => 分组标识, 'title' => 分组标题, 'sort' => 排序, 'body' => 字段组件]
      * @copyright 贵州积木云网络科技有限公司
@@ -74,6 +76,11 @@ class Setting
         if (!is_array($components) || !$components) {
             return [];
         }
+        $components = self::toArray($components);
+        // 只有以 FieldSet 组件承载的模板才是合法的配置分组，其他模板不导入
+        if (!self::isFieldSet($components)) {
+            return [];
+        }
         $group = basename($file, '.php');
         $result = self::normalize($components);
         return [
@@ -82,6 +89,22 @@ class Setting
             'sort' => $result['sort'],
             'body' => $result['body'],
         ];
+    }
+
+    /**
+     * 判断分组模板是否由唯一的 FieldSet 组件承载
+     * @param array $components
+     * @return bool
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected static function isFieldSet(array $components): bool
+    {
+        if (count($components) !== 1) {
+            return false;
+        }
+        $first = reset($components);
+        return is_array($first) && ($first['type'] ?? '') === 'fieldset';
     }
 
     /**

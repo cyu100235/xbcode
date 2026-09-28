@@ -79,7 +79,8 @@ class UploadChunk
     {
         $sessionId = request()->sessionId();
         $name = (string) request()->post('name', '');
-        $uploadId = md5("{$sessionId}_{$name}");
+        // 拼接引擎标识，避免同一文件上传到不同储存方式时分片目录相互覆盖
+        $uploadId = md5("{$this->adapter}_{$sessionId}_{$name}");
         $chunkPath = sys_get_temp_dir() . "/{$uploadId}";
         return [
             'uploadId' => $uploadId,

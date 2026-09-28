@@ -60,14 +60,19 @@ class Config extends Model
      * 读取所有配置选项卡
      *
      * name 以「插件标识_分组标识」拼接，保证多插件分组重名时选项卡键唯一。
+     * 储存引擎所属插件的 upload 分组仅供「储存设置」弹窗使用，在此排除，避免系统设置页出现无效选项卡。
      * @return array [['name' => ..., 'title' => ..., 'plugin' => ..., 'group' => ..., 'body' => 组件], ...]
      */
     public static function tabs(): array
     {
         $tabs = [];
+        $engines = static::enginePlugins();
         foreach (static::entries() as $entry) {
             $plugin = (string) $entry['plugin'];
             $group = (string) $entry['group'];
+            if ($group === 'upload' && isset($engines[$plugin])) {
+                continue;
+            }
             $tabs[] = [
                 'name' => $plugin . '_' . $group,
                 'title' => (string) $entry['title'] !== '' ? (string) $entry['title'] : $group,
@@ -77,6 +82,25 @@ class Config extends Model
             ];
         }
         return $tabs;
+    }
+
+    /**
+     * 读取实现储存引擎的插件标识
+     *
+     * 引擎的配置分组（引擎所属插件的 upload 分组）由 EngineController 的「储存设置」弹窗读写，
+     * 不作为系统设置选项卡展示。
+     * @return array<string,bool> 以插件标识为键
+     */
+    protected static function enginePlugins(): array
+    {
+        $plugins = [];
+        foreach (UploadEngine::column('plugin') as $plugin) {
+            $plugin = (string) $plugin;
+            if ($plugin !== '') {
+                $plugins[$plugin] = true;
+            }
+        }
+        return $plugins;
     }
 
     /**

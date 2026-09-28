@@ -73,7 +73,8 @@ class XbInstall extends Command
         $summary = [];
 
         foreach ($ordered as $name) {
-            $output->writeln("<question>[{($pass + $fail + 1)}/{$total}] 安装插件: {$name}</question>");
+            $index = $pass + $fail + 1;
+            $output->writeln("<question>[{$index}/{$total}] 安装插件: {$name}</question>");
             try {
                 $exitCode = $this->runOfficialInstallCommand($name, $output);
             } catch (\Throwable $e) {

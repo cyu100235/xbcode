@@ -120,6 +120,9 @@ class XbInit extends Command
             'gateway_url' => 'http://127.0.0.1:' . $listenPort,
         ], $output);
 
+        // ========== 步骤7 初始化附件目录（目录不存在则创建，并写入 .gitignore 忽略目录下所有内容） ==========
+        $this->writeAttachmentGitignore($basePath, $output);
+
         // ========== 完成提示 ==========
         $this->printComplete($basePath, $listenPort, $output);
 
@@ -585,6 +588,26 @@ class XbInit extends Command
 
         $target = $basePath . '/.env';
         file_put_contents($target, $content);
+        $output->writeln('  <info>已写入: ' . $target . '</info>');
+    }
+
+    /**
+     * 初始化附件目录：目录不存在则创建，并写入 .gitignore 忽略该目录下所有目录和文件
+     * @param string $basePath 项目根目录
+     * @param OutputInterface $output
+     * @return void
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected function writeAttachmentGitignore(string $basePath, OutputInterface $output): void
+    {
+        $attachmentDir = rtrim($basePath, '/') . '/public/attachment';
+        if (!is_dir($attachmentDir) && !@mkdir($attachmentDir, 0755, true) && !is_dir($attachmentDir)) {
+            throw new RuntimeException("创建附件目录失败：{$attachmentDir}");
+        }
+        $target = $attachmentDir . '/.gitignore';
+        // 忽略该目录下所有内容，但保留 .gitignore 自身
+        file_put_contents($target, "*\n!.gitignore\n");
         $output->writeln('  <info>已写入: ' . $target . '</info>');
     }
 }

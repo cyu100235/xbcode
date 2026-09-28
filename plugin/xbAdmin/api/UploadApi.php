@@ -140,7 +140,10 @@ class UploadApi
         }
         // 7.执行上传
         $this->driver->setFileName($this->fileName);
-        $this->driver->upload($this->saveDir);
+        $result = $this->driver->upload($this->saveDir);
+        if ($result === false) {
+            throw new Exception($this->driver->getError() ?: '文件上传失败');
+        }
         // 8.组装附件信息
         $data = [
             'uid' => $this->uid,
@@ -321,12 +324,8 @@ class UploadApi
      */
     protected function getDictDirName(string $extension): string
     {
-        foreach (UploadExtEnum::toArray() as $value) {
-            $format = array_filter(explode(',', (string) ($value['ext'] ?? '')));
-            if ($extension !== '' && in_array($extension, $format, true)) {
-                return (string) ($value['value'] ?? 'other');
-            }
-        }
-        return 'other';
+        $extension = strtolower(trim($extension));
+        $map = UploadExtEnum::extensionMap();
+        return $map[$extension] ?? 'other';
     }
 }

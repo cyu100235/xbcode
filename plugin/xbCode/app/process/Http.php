@@ -95,8 +95,9 @@ class Http extends App
      */
     public function onWorkerStart($worker)
     {
-        // 静态资源根目录指向插件自身 public：BASE_PATH/plugin/{插件}/public
-        static::$publicPath = public_path('', static::pluginName());
+        // 静态资源根目录指向项目根 public（上传附件等文件落盘于此）
+        // 插件自身静态资源仍通过 /app/{plugin}/... 前缀与 /backend/assets/* 路由访问
+        static::$publicPath = public_path();
         parent::onWorkerStart($worker);
     }
 

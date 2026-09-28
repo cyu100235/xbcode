@@ -192,12 +192,13 @@ class AliyunServer extends Server
     /**
      * 设置上传后的文件名
      * @param string $fileName
-     * @return void
+     * @return static
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    protected function setFileName(string $fileName)
+    public function setFileName(string $fileName)
     {
         $this->fileName = $fileName;
+        return $this;
     }
 }

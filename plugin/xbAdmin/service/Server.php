@@ -145,7 +145,7 @@ abstract class Server
      * @param string $key 上传文件的表单名称
      * @return mixed
      */
-    abstract protected function fetch(string $url, $key);
+    abstract public function fetch(string $url, $key);
 
     /**
      * 执行文件上传
@@ -153,41 +153,41 @@ abstract class Server
      * @param array|null $callback 回调参数
      * @return mixed
      */
-    abstract protected function upload(string $save_dir, ?array $callback);
+    abstract public function upload(string $save_dir, ?array $callback);
 
     /**
      * 检测文件是否存在
      * @param string $filePath 文件路径
      * @return bool
      */
-    abstract protected function exist(string $filePath);
+    abstract public function exist(string $filePath);
 
     /**
      * 获取文件URL
      * @param string $filePath
      * @return string
      */
-    abstract protected function url(string $filePath);
+    abstract public function url(string $filePath);
 
     /**
      * 获取签名URL
      * @param string $filePath
      * @return string
      */
-    abstract protected function getSignUrl(string $filePath);
+    abstract public function getSignUrl(string $filePath);
 
     /**
      * 获取服务域名
      * @return string
      */
-    abstract protected function domain();
+    abstract public function domain();
 
     /**
      * 删除文件
      * @param string $fileName
      * @return mixed
      */
-    abstract protected function delete(string $fileName);
+    abstract public function delete(string $fileName);
 
     /**
      * 返回上传后文件名
@@ -200,7 +200,7 @@ abstract class Server
      * @param string $fileName
      * @return mixed
      */
-    abstract protected function setFileName(string $fileName);
+    abstract public function setFileName(string $fileName);
 
     /**
      * 返回文件信息

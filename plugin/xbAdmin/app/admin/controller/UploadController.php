@@ -35,9 +35,9 @@ class UploadController extends BaseController
     public function index(Request $request)
     {
         $act = $request->get('_act', '');
+        $adapter = (string) $request->get('name', '');
         if (!$act) {
             $type = (string) $request->get('_nav', '');
-            $adapter = (string) $request->get('name', '');
             // 查询条件组装
             $where = [
                 // 查询系统附件
@@ -48,8 +48,7 @@ class UploadController extends BaseController
             }
             // 取出对应后缀格式
             if ($type) {
-                $suffix = UploadExtEnum::getFieldValue($type, '', 'ext');
-                $suffix = array_filter(explode(',', (string) $suffix));
+                $suffix = UploadExtEnum::extensions((string) $type);
                 if ($suffix) {
                     $where[] = ['format', 'in', $suffix];
                 }
@@ -58,8 +57,12 @@ class UploadController extends BaseController
             return $this->successData($data);
         }
         $builder = XbCrud::make();
-        // 设置上传附件按钮
-        $builder->addHeaderDialog('上传附件', Url::make('upload'))
+        // 设置上传附件按钮（携带当前储存引擎，使上传落到对应的储存方式）
+        $uploadUrl = Url::make('upload');
+        if ($adapter !== '') {
+            $uploadUrl->query(['adapter' => $adapter]);
+        }
+        $builder->addHeaderDialog('上传附件', $uploadUrl)
             ->cancelActions()->title('上传附件');
         // 添加表格列
         $builder->addColumn('id', '序号')->width(80);
@@ -160,8 +163,9 @@ class UploadController extends BaseController
         $builder->addRowInput('format', '文件格式')->disabled(true);
         $builder->addRowInput('size_format', '文件大小')->disabled(true);
         $builder->addRowInput('adapter', '储存位置')->disabled(true);
+        $builder->addRowInput('url', '文件地址')->disabled(true)->copyable(['enabled' => true]);
 
-        $imageExt = explode(',', (string) UploadExtEnum::getFieldValue('image', '', 'ext'));
+        $imageExt = UploadExtEnum::extensions('image');
         if (in_array((string) $model->format, $imageExt, true)) {
             $builder->addRowImage('url', '图片预览', $model->url)
                 ->type('static-image')
@@ -208,7 +212,9 @@ class UploadController extends BaseController
         if (empty($act)) {
             return $this->fail('缺少操作参数');
         }
-        $class = UploadChunk::make();
+        // 指定上传落地的储存引擎
+        $adapter = (string) $request->post('adapter', '');
+        $class = UploadChunk::make($adapter);
         if (!method_exists($class, $act)) {
             return $this->fail('操作方法不存在');
         }
