@@ -1,0 +1,11 @@
+{
+    "title": "阿里云存储",
+    "desc": "阿里云OSS存储驱动，支持文件上传至对象存储",
+    "version" : "1.0.0",
+    "author":"积木云",
+    "home_url" : "",
+    "composer": {
+        "OSS\\OssClient": "aliyuncs/oss-sdk-php"
+    },
+    "plugins": {}
+}

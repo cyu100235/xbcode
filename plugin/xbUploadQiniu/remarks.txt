@@ -1,0 +1,15 @@
+Create by 积木云
+
+plugin.json为插件信息文件
+
+插件目录说明
+ - api ------ 核心 API 与基础工具类目录，主要与其他插件对接，非网络请求接口
+ - app ------ 应用主目录，承载控制器、模型、视图、命令等业务分层
+ - app/controller ------ 控制器目录
+ - app/model ------ 模型目录（继承 xbCode Model，支持 SAAS 隔离）
+ - app/middleware ------ 中间件目录
+ - app/view ------ 视图根目录
+ - app/view/index ------ 默认首页视图目录
+ - config ------ 配置目录（app.php 必须含 enable=true）
+ - public ------ 公共静态资源目录
+ - setting ------ 插件配置模板

@@ -1,7 +1,11 @@
 <?php
 /**
- * xbAdmin 后台权限管理
- * @package  xbAdmin
+ * 积木云渲染器
+ * @package  XbCode
+ * @author   楚羽幽 <958416459@qq.com>
+ * @license  Apache License 2.0
+ * @link     http://www.xbcode.net
+ * @document http://doc.xbcode.net
  */
 namespace plugin\xbAdmin\app\admin\controller;
 
@@ -18,9 +22,8 @@ use plugin\xbCode\builder\Renders\XbCrud;
 
 /**
  * 附件管理
- *
- * 附件按储存引擎（adapter）分开存放，列表默认展示全部引擎的附件，
- * 从引擎管理进入时通过 name 参数过滤到指定引擎。
+ * @copyright 贵州云铺网络科技有限公司
+ * @author 楚羽幽 958416459@qq.com
  */
 class UploadController extends BaseController
 {

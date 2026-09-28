@@ -21,6 +21,14 @@ use plugin\xbAdmin\exception\business\ExceptionBusiness;
 class Config extends Model
 {
     /**
+     * 不写入配置表的元字段
+     *
+     * xbValidate 由插件在 setting 中声明校验器类，仅用于后台读取后执行校验，不作为配置值保存。
+     * @var array
+     */
+    protected const META_FIELDS = ['xbValidate'];
+
+    /**
      * 读取配置分组记录，按 sort asc, id asc 排序
      * @return array 每项含 plugin / group / title / body / sort
      */
@@ -73,13 +81,25 @@ class Config extends Model
 
     /**
      * 读取分组字段组件，键为字段名
+     *
+     * 已剔除不参与持久化的元字段（如 xbValidate），仅返回真实的配置字段。
      * @param string $plugin 插件标识
      * @param string $group 分组标识
      * @return array
      */
     public static function fields(string $plugin, string $group): array
     {
-        return Setting::fields(static::template($plugin, $group));
+        return static::persistable(Setting::fields(static::template($plugin, $group)));
+    }
+
+    /**
+     * 剔除仅用于表单校验、不写入配置表的元字段
+     * @param array $fields 键为字段名的组件集合
+     * @return array
+     */
+    protected static function persistable(array $fields): array
+    {
+        return array_diff_key($fields, array_flip(static::META_FIELDS));
     }
 
     /**
@@ -229,7 +249,7 @@ class Config extends Model
     protected static function initFields(string $plugin, string $group, array $body): int
     {
         $count = 0;
-        foreach (Setting::fields($body) as $name => $component) {
+        foreach (static::persistable(Setting::fields($body)) as $name => $component) {
             $exists = static::where('plugin', $plugin)->where('group', $group)->where('name', $name)->find();
             if ($exists) {
                 continue;

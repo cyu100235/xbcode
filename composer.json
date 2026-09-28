@@ -53,7 +53,10 @@
     "guzzlehttp/guzzle": "7.15.3",
     "deployer/deployer": "~7.5",
     "workerman/crontab": "^1.0",
-    "workerman/channel": "^1.2"
+    "workerman/channel": "^1.2",
+    "qiniu/php-sdk": "^7.14",
+    "qcloud/cos-sdk-v5": "^2.6",
+    "aliyuncs/oss-sdk-php": "^2.7"
   },
   "suggest": {
     "ext-event": "For better performance. "

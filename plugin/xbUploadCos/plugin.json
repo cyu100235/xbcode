@@ -1,0 +1,11 @@
+{
+    "title": "腾讯云存储",
+    "desc": "腾讯云COS存储驱动，支持文件上传至对象存储",
+    "version" : "1.0.0",
+    "author":"积木云",
+    "home_url" : "",
+    "composer": {
+        "Qcloud\\Cos\\Client": "qcloud/cos-sdk-v5"
+    },
+    "plugins": {}
+}

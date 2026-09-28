@@ -105,8 +105,8 @@ class EngineController extends BaseController
         if (!$model) {
             return $this->fail('云储存引擎不存在');
         }
-        // 获取配置模板，本插件未声明 upload 分组，模板为空
-        $template = Config::template('xbAdmin', 'upload');
+        // 获取配置模板，引擎配置分组由所属插件声明
+        $template = Config::template((string) $model['plugin'], 'upload');
         if ($request->method() === 'PUT') {
             $post = (array) $request->post();
             $state = (string) $request->post('state', '10');
