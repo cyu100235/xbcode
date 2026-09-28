@@ -128,13 +128,13 @@ class AdminController extends BaseController
             if ((string) $model['is_system'] === YesEnum::YES['value'] && !$this->isSystem()) {
                 throw new ExceptionBusiness('系统内置管理员，禁止修改');
             }
-            // 超级管理员不允许把自己降级，避免后台失去唯一入口
-            if ((int) $model['id'] === $this->adminId()) {
-                unset($post['role_id']);
-            }
             xbValidate(AdminValidate::class, $post, 'edit');
             if (isset($post['role_id'])) {
                 $this->checkRoleAccess((int) $post['role_id']);
+            }
+            // 超级管理员不允许把自己降级，避免后台失去唯一入口
+            if ((int) $model['id'] === $this->adminId()) {
+                unset($post['role_id']);
             }
             $this->checkUsernameUnique((string) $post['username'], (int) $model['id']);
             if (empty($post['password'])) {

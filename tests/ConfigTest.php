@@ -17,6 +17,7 @@ use GuzzleHttp\Psr7\Response;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use plugin\xbCode\api\Config;
+use plugin\xbCode\api\Gateway;
 use Psr\Http\Message\RequestInterface;
 use ReflectionProperty;
 use RuntimeException;
@@ -45,18 +46,18 @@ class ConfigTest extends TestCase
         $stack = HandlerStack::create($this->mock);
         $stack->push(Middleware::history($this->history));
 
-        // 顶掉真实客户端、网关地址与登录令牌，使 get/set 全程不越界
-        $this->setStatic('client', new Client(['handler' => $stack, 'http_errors' => false]));
-        $this->setStatic('gateway', 'http://gateway.test');
-        $this->setStatic('token', 'test-token');
+        // 顶掉真实客户端、网关地址与登录令牌（挂在 Gateway 上），使 get/set 全程不越界
+        $this->setStatic('client', new Client(['handler' => $stack, 'http_errors' => false]), Gateway::class);
+        $this->setStatic('gateway', 'http://gateway.test', Gateway::class);
+        $this->setStatic('token', 'test-token', Gateway::class);
         $this->setStatic('cache', []);
     }
 
     protected function tearDown(): void
     {
-        $this->setStatic('client', null);
-        $this->setStatic('gateway', '');
-        $this->setStatic('token', '');
+        $this->setStatic('client', null, Gateway::class);
+        $this->setStatic('gateway', '', Gateway::class);
+        $this->setStatic('token', '', Gateway::class);
         $this->setStatic('cache', []);
     }
 
@@ -415,18 +416,18 @@ class ConfigTest extends TestCase
     }
 
     /**
-     * 写 Config 的受保护静态属性
+     * 写受保护静态属性，默认写 Config，可指定其它类（如 Gateway）
      */
-    protected function setStatic(string $name, mixed $value): void
+    protected function setStatic(string $name, mixed $value, ?string $class = null): void
     {
-        (new ReflectionProperty(Config::class, $name))->setValue(null, $value);
+        (new ReflectionProperty($class ?? Config::class, $name))->setValue(null, $value);
     }
 
     /**
-     * 读 Config 的受保护静态属性
+     * 读受保护静态属性，默认读 Config，可指定其它类（如 Gateway）
      */
-    protected function getStatic(string $name): mixed
+    protected function getStatic(string $name, ?string $class = null): mixed
     {
-        return (new ReflectionProperty(Config::class, $name))->getValue();
+        return (new ReflectionProperty($class ?? Config::class, $name))->getValue();
     }
 }
