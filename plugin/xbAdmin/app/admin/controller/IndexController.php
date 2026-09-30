@@ -5,6 +5,7 @@
  */
 namespace plugin\xbAdmin\app\admin\controller;
 
+use plugin\xbAdmin\app\BaseController;
 use support\Request;
 use plugin\xbAdmin\api\SiteEntry;
 use plugin\xbAdmin\app\model\AdminRole;
@@ -61,7 +62,7 @@ class IndexController extends BaseController
      */
     public function site()
     {
-        $data = SiteEntry::make($this->module())->get();
+        $data = SiteEntry::make('api')->get();
         return $this->successRes($data);
     }
 

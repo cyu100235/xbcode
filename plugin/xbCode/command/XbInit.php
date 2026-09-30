@@ -41,7 +41,9 @@ class XbInit extends Command
             ->addOption('cache-type', null, InputOption::VALUE_OPTIONAL, '缓存类型：redis / redis_cluster / file（留空则交互询问）')
             ->addOption('redis-prefix', null, InputOption::VALUE_OPTIONAL, 'Redis 前缀（留空则交互询问）')
             // 设置项目监听端口
-            ->addOption('listen-port', null, InputOption::VALUE_OPTIONAL, '项目监听端口（留空则交互询问）');
+            ->addOption('listen-port', null, InputOption::VALUE_OPTIONAL, '项目监听端口（留空则交互询问）')
+            // 设置后台网关地址
+            ->addOption('gateway-url', null, InputOption::VALUE_OPTIONAL, '后台网关地址（留空则交互询问，默认与监听端口同源）');
     }
 
     /**
@@ -86,8 +88,11 @@ class XbInit extends Command
                 'redis_prefix' => $redisPrefix,
             ] = $this->askRedisConfig($helper, $input, $output);
 
-            // ========== 步骤3 服务端口配置 ==========
-            $listenPort = $this->askListenPort($helper, $input, $output);
+            // ========== 步骤3 服务端口与网关配置 ==========
+            [
+                'listen_port' => $listenPort,
+                'gateway_url' => $gatewayUrl,
+            ] = $this->askListenPort($helper, $input, $output);
         } catch (RuntimeException $e) {
             // 所有 CLI 参数校验失败 -> 抛出 RuntimeException，已打印错误，返回非 0
             return self::FAILURE;
@@ -117,11 +122,14 @@ class XbInit extends Command
             'redis_port' => $redisPort,
             'redis_pass' => $redisPass,
             'redis_prefix' => $redisPrefix,
-            'gateway_url' => 'http://127.0.0.1:' . $listenPort,
+            'gateway_url' => $gatewayUrl,
         ], $output);
 
         // ========== 步骤7 初始化附件目录（目录不存在则创建，并写入 .gitignore 忽略目录下所有内容） ==========
         $this->writeAttachmentGitignore($basePath, $output);
+
+        // ========== 步骤8 复制根目录 .gitignore ==========
+        $this->writeRootGitignore($basePath, $output);
 
         // ========== 完成提示 ==========
         $this->printComplete($basePath, $listenPort, $output);
@@ -354,24 +362,53 @@ class XbInit extends Command
     }
 
     /**
-     * 步骤 3：询问项目运行端口
+     * 步骤 3：询问项目运行端口与后台网关地址
      * @param mixed $helper
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @return string
+     * @return array{listen_port:string, gateway_url:string}
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    protected function askListenPort($helper, InputInterface $input, OutputInterface $output): string
+    protected function askListenPort($helper, InputInterface $input, OutputInterface $output): array
     {
-        $output->writeln('<comment>[3/3] 服务端口配置</comment>');
+        $output->writeln('<comment>[3/3] 服务端口与网关配置</comment>');
         $listenPort = $this->optionOrDefault($input, 'listen-port', null, true, true) ?? (string) $helper->ask($input, $output, new Question('请输入项目运行端口 [39000]: ', '39000'));
         if (!$this->validatePort($listenPort, $msg)) {
             $output->writeln("<error>参数 --listen-port 非法：{$msg}</error>");
             throw new RuntimeException('参数校验失败');
         }
+        // 网关地址默认与监听端口同源（后台与本应用部署在同一进程时可直接复用）
+        $defaultGatewayUrl = 'http://127.0.0.1:' . $listenPort;
+        $gatewayUrl = $this->optionOrDefault($input, 'gateway-url', null, false, true)
+            ?? (string) $helper->ask($input, $output, new Question('请输入后台网关地址 [' . $defaultGatewayUrl . ']: ', $defaultGatewayUrl));
+        $gatewayUrl = $this->normalizeGatewayUrl((string) $gatewayUrl, $defaultGatewayUrl);
         $output->writeln('');
-        return (string) $listenPort;
+        return [
+            'listen_port' => (string) $listenPort,
+            'gateway_url' => $gatewayUrl,
+        ];
+    }
+
+    /**
+     * 规范化后台网关地址：去空格、补协议头、去尾部斜杠，空值回退默认地址
+     * @param string $url
+     * @param string $default 空值时的兜底地址
+     * @return string
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected function normalizeGatewayUrl(string $url, string $default): string
+    {
+        $url = trim($url);
+        if ($url === '') {
+            return $default;
+        }
+        // 未写协议头时补 http://，避免 Gateway 解析不出 host 而误判为非同源
+        if (!preg_match('#^https?://#i', $url)) {
+            $url = 'http://' . $url;
+        }
+        return rtrim($url, '/');
     }
 
     /**
@@ -560,8 +597,8 @@ class XbInit extends Command
         $redisPrefix = $config['redis_prefix'] ?? 'xb_cache_';
 
         $gatewayUrl = $config['gateway_url'] ?? 'http://127.0.0.1:39000';
-        $gatewayUser = $config['gateway_user'] ?? 'admin';
-        $gatewayPass = $config['gateway_pass'] ?? '123456';
+        // 网关访问令牌：初始化时自动生成 32 位随机串（16 字节 → 32 位十六进制）
+        $gatewayToken = bin2hex(random_bytes(16));
 
         $tplFile = $basePath . '/plugin/xbCode/data/env.tpl';
         if (!is_file($tplFile)) {
@@ -582,8 +619,7 @@ class XbInit extends Command
             '{{redisPass}}' => $redisPass,
             '{{redisPrefix}}' => $redisPrefix,
             '{{gatewayUrl}}' => $gatewayUrl,
-            '{{gatewayUser}}' => $gatewayUser,
-            '{{gatewayPass}}' => $gatewayPass,
+            '{{gatewayToken}}' => $gatewayToken,
         ]);
 
         $target = $basePath . '/.env';
@@ -609,5 +645,26 @@ class XbInit extends Command
         // 忽略该目录下所有内容，但保留 .gitignore 自身
         file_put_contents($target, "*\n!.gitignore\n");
         $output->writeln('  <info>已写入: ' . $target . '</info>');
+    }
+
+    /**
+     * 复制根目录 .gitignore：以 plugin/xbCode/data/gitignore.tpl 为权威模板，直接复制覆盖
+     * @param string $basePath 项目根目录
+     * @param OutputInterface $output
+     * @return void
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected function writeRootGitignore(string $basePath, OutputInterface $output): void
+    {
+        $tplFile = $basePath . '/plugin/xbCode/data/gitignore.tpl';
+        if (!is_file($tplFile)) {
+            throw new RuntimeException("gitignore模板不存在：{$tplFile}");
+        }
+        $target = $basePath . '/.gitignore';
+        if (@copy($tplFile, $target) === false) {
+            throw new RuntimeException("复制根目录 .gitignore 失败：{$tplFile} -> {$target}");
+        }
+        $output->writeln('  <info>已覆盖: ' . $target . '</info>');
     }
 }

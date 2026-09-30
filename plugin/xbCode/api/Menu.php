@@ -69,7 +69,7 @@ class Menu
             $children = $menu['children'] ?? [];
             unset($menu['children']);
             $data = self::prepare($menu, $plugin, $pid);
-            $result = Gateway::request('POST', '/xbAdmin/admin/AdminRule/add', ['json' => $data]);
+            $result = Gateway::post('/xbAdmin/admin/AdminRule/add', $data);
             $id = (int) ($result['id'] ?? 0);
             if (is_array($children) && $children) {
                 if ($id <= 0) {

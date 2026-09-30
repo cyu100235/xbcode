@@ -23,5 +23,4 @@ REDIS_PREFIX = {{redisPrefix}}
 
 # 后台网关地址（插件安装时通过该地址调用后台接口写入菜单）
 GATEWAY_URL = {{gatewayUrl}}
-GATEWAY_USER = {{gatewayUser}}
-GATEWAY_PASS = {{gatewayPass}}
+GATEWAY_TOKEN = {{gatewayToken}}

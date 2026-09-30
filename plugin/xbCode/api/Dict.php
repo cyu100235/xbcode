@@ -60,8 +60,9 @@ class Dict
             // 后台与本应用同源：直读本地库，避免请求内同步自调用（Windows 单进程下必然死锁）
             $values = self::localValues($plugin, $name);
         } else {
-            $data = Gateway::request('GET', '/xbAdmin/admin/Dict/detail', [
-                'query' => ['plugin' => $plugin, 'name' => $name],
+            $data = Gateway::get('/xbAdmin/admin/Dict/detail', [
+                'plugin' => $plugin,
+                'name' => $name
             ]);
             $values = (array) ($data['values'] ?? []);
         }
@@ -114,8 +115,9 @@ class Dict
         if (!$groups) {
             return;
         }
-        Gateway::request('POST', '/xbAdmin/admin/Dict/report', [
-            'json' => ['plugin' => $plugin, 'groups' => $groups],
+        Gateway::post('/xbAdmin/admin/Dict/report', [
+            'plugin' => $plugin,
+            'groups' => $groups
         ]);
     }
 }

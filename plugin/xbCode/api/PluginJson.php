@@ -22,7 +22,6 @@ use RuntimeException;
  */
 class PluginJson
 {
-
     /**
      * plugin.json 文件路径
      * @var string

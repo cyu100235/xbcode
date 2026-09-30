@@ -16,7 +16,7 @@ use Webman\Http\UploadFile;
  * 附件上传 HTTP 客户端
  *
  * 附件由后台统一存储，插件不直接依赖后台的附件类，而是通过网关上传（统一走 Gateway 出口）：
- *   - 上传接口：POST {GATEWAY_URL}/xbAdmin/admin/Upload/upload（multipart/form-data）
+ *   - 上传接口：POST {GATEWAY_URL}/xbAdmin/api/Upload/upload（multipart/form-data）
  *
  * 网关指向本机且端口与本应用一致时（后台与插件同进程部署，见 Gateway::selfHosted()），
  * 直调后台附件接口，避免请求内同步自调用造成的死锁（Windows 单进程下必然发生）。
@@ -33,7 +33,7 @@ use Webman\Http\UploadFile;
 class Upload
 {
     /** @var string 后台上传接口路径 */
-    protected const UPLOAD_PATH = '/xbAdmin/admin/Upload/upload';
+    protected const UPLOAD_PATH = '/xbAdmin/api/Upload/upload';
 
     /**
      * 上传当前请求中的文件

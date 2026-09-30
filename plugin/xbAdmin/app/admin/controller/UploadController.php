@@ -12,10 +12,8 @@ namespace plugin\xbAdmin\app\admin\controller;
 use support\Request;
 use support\Response;
 use plugin\xbAdmin\api\Url;
-use plugin\xbAdmin\api\Files;
-use plugin\xbAdmin\api\UploadApi;
-use plugin\xbAdmin\api\UploadChunk;
-use plugin\xbAdmin\app\model\Upload;
+use plugin\xbCode\api\Gateway;
+use plugin\xbAdmin\app\BaseController;
 use plugin\xbAdmin\enum\UploadExtEnum;
 use plugin\xbCode\builder\Renders\XbForm;
 use plugin\xbCode\builder\Renders\XbCrud;
@@ -37,28 +35,12 @@ class UploadController extends BaseController
         $act = $request->get('_act', '');
         $adapter = (string) $request->get('name', '');
         if (!$act) {
-            $type = (string) $request->get('_nav', '');
-            // 查询条件组装
-            $where = [
-                // 查询系统附件
-                ['uid', '=', 0],
-            ];
-            if ($adapter !== '') {
-                $where[] = ['adapter', '=', $adapter];
-            }
-            // 取出对应后缀格式
-            if ($type) {
-                $suffix = UploadExtEnum::extensions((string) $type);
-                if ($suffix) {
-                    $where[] = ['format', 'in', $suffix];
-                }
-            }
-            $data = Upload::where($where)->order('update_at desc')->paginate();
-            return $this->successData($data);
+            $result = Gateway::get('xbAdmin/api/Upload/index', request()->get());
+            return $this->response($result);
         }
         $builder = XbCrud::make();
-        // 设置上传附件按钮（携带当前储存引擎，使上传落到对应的储存方式）
-        $uploadUrl = Url::make('upload');
+        // 设置上传附件按钮（弹窗视图由 admin 应用渲染，实际上传请求由 api 应用处理）
+        $uploadUrl = Url::make('Upload/upload');
         if ($adapter !== '') {
             $uploadUrl->query(['adapter' => $adapter]);
         }
@@ -101,16 +83,14 @@ class UploadController extends BaseController
      */
     public function edit(Request $request)
     {
-        $model = $this->findModel((int) $request->get('id', 0));
+        $id = (int) $request->get('id', 0);
+        $model = $this->findModel($id);
         if (!$model) {
             return $this->fail('该附件不存在');
         }
         if ($request->method() === 'PUT') {
-            $post = (array) $request->post();
-            if (!$model->save($post)) {
-                return $this->fail('修改失败');
-            }
-            return $this->success('修改成功');
+            $result = Gateway::put("xbAdmin/api/Upload/edit?id={$id}", (array) $request->post());
+            return $this->response($result);
         }
         $builder = $this->formView();
         $builder->setSaveMethod('PUT');
@@ -125,25 +105,9 @@ class UploadController extends BaseController
      */
     public function del(Request $request)
     {
-        $ids = $request->input('ids', []);
-        // 检测是否批量删除
-        if (empty($ids)) {
-            $id = $request->input('id', 0);
-            if ($id) {
-                $ids = [$id];
-            }
-        }
-        if (empty($ids)) {
-            return $this->fail('请选择删除的附件');
-        }
-        $data = Upload::whereIn('id', $ids)->column('uri');
-        if (empty($data)) {
-            return $this->fail('附件不存在');
-        }
-        // 删除附件
-        Files::make()->delete($data);
-        // 返回数据
-        return $this->success('删除完成');
+        $params = array_merge((array) $request->get(), (array) $request->post());
+        $result = Gateway::delete('xbAdmin/api/Upload/del', $params);
+        return $this->response($result);
     }
 
     /**
@@ -166,8 +130,8 @@ class UploadController extends BaseController
         $builder->addRowInput('url', '文件地址')->disabled(true)->copyable(['enabled' => true]);
 
         $imageExt = UploadExtEnum::extensions('image');
-        if (in_array((string) $model->format, $imageExt, true)) {
-            $builder->addRowImage('url', '图片预览', $model->url)
+        if (in_array((string) ($model['format'] ?? ''), $imageExt, true)) {
+            $builder->addRowImage('url', '图片预览', $model['url'] ?? '')
                 ->type('static-image')
                 ->thumbMode('cover')
                 ->showToolbar(true)
@@ -179,48 +143,13 @@ class UploadController extends BaseController
     }
 
     /**
-     * 上传附件
+     * 上传附件视图
      * @param Request $request
      * @return Response
      */
     public function upload(Request $request)
     {
-        if ($request->method() === 'POST') {
-            $uid = (int) $request->post('uid', 0);
-            $name = (string) $request->post('name', 'file');
-            $adapter = (string) $request->post('adapter', '');
-            // 上传附件
-            $result = UploadApi::make($adapter)
-                ->setUid($uid)
-                ->upload($name);
-            if (!$result) {
-                return $this->fail('上传失败');
-            }
-            return $this->successRes($result);
-        }
         return $this->display();
-    }
-
-    /**
-     * 上传分片
-     * @param Request $request
-     * @return Response
-     */
-    public function chunk(Request $request)
-    {
-        $act = (string) $request->get('_act', '');
-        if (empty($act)) {
-            return $this->fail('缺少操作参数');
-        }
-        // 指定上传落地的储存引擎
-        $adapter = (string) $request->post('adapter', '');
-        $class = UploadChunk::make($adapter);
-        if (!method_exists($class, $act)) {
-            return $this->fail('操作方法不存在');
-        }
-        // 调用分片上传方法
-        $data = call_user_func([$class, $act], $request);
-        return $this->successRes($data);
     }
 
     /**
@@ -242,13 +171,14 @@ class UploadController extends BaseController
     /**
      * 查找附件
      * @param int $id
-     * @return Upload|null
+     * @return array
      */
-    private function findModel(int $id): ?Upload
+    private function findModel(int $id): array
     {
         if ($id <= 0) {
-            return null;
+            return [];
         }
-        return Upload::where('id', $id)->find();
+        $result = Gateway::get("xbAdmin/api/Upload/find?id={$id}");
+        return $result['data'] ?? [];
     }
 }

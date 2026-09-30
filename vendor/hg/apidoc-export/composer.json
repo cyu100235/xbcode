@@ -1,0 +1,47 @@
+{
+  "name": "hg/apidoc-export",
+  "description": "Apidoc文档导出插件",
+  "keywords": [
+    "apidoc",
+    "api文档",
+    "接口文档",
+    "自动生成api",
+    "注释生成",
+    "php接口文档",
+    "api文档",
+    "Markdown",
+    "文档导出插件"
+  ],
+  "require": {
+    "php": "^7.1 || ^8.0",
+    "hg/apidoc": "^5.3 || dev-main"
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "hg-code",
+      "email": "376401263@qq.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "hg\\apidoc\\export\\": "src/"
+    }
+  },
+  "extra": {
+    "think": {
+      "config": {
+        "apidoc-export": "src/config.php"
+      }
+    },
+    "laravel": {
+      "providers": [
+        "hg\\apidoc\\export\\providers\\LaravelService"
+      ]
+    },
+    "hyperf": {
+      "config": "hg\\apidoc\\ConfigProvider"
+    }
+  },
+  "minimum-stability": "dev"
+}

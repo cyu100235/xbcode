@@ -9,20 +9,19 @@
  */
 namespace plugin\xbAdmin\app\admin\controller;
 
+use support\Request;
+use support\Response;
 use plugin\xbAdmin\api\Url;
 use plugin\xbAdmin\enum\MonthEnum;
-use plugin\xbAdmin\api\CrontabApi;
-use plugin\xbAdmin\enum\CrontabStateEnum;
 use plugin\xbAdmin\enum\WeekdayEnum;
-use plugin\xbAdmin\app\model\Crontab;
 use plugin\xbAdmin\enum\TaskTypeEnum;
+use plugin\xbAdmin\api\PluginsApi;
+use plugin\xbCode\api\Gateway;
 use plugin\xbAdmin\enum\CronCycleEnum;
+use plugin\xbAdmin\enum\CrontabStateEnum;
+use plugin\xbAdmin\app\BaseController;
 use plugin\xbCode\builder\Renders\XbCrud;
 use plugin\xbCode\builder\Renders\XbForm;
-use plugin\xbAdmin\api\PluginsApi;
-use plugin\xbAdmin\app\model\CrontabLog;
-use plugin\xbAdmin\api\CronExpressionApi;
-use plugin\xbAdmin\app\admin\controller\BaseController;
 
 /**
  * 定时任务控制器
@@ -33,25 +32,16 @@ class CrontabController extends BaseController
 {
     /**
      * 列表
-     * @return \support\Response
+     * @param Request $request
+     * @return Response
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public function index()
+    public function index(Request $request)
     {
-        if (!request()->get('_act')) {
-            $keyword = request()->get('keyword');
-            $where = [];
-            if ($keyword) {
-                $where[] = ['title', 'like', "%{$keyword}%"];
-            }
-            $data = Crontab::where($where)
-                ->paginate()
-                ->each(function ($item) {
-                    // 查询日志数量
-                    $item->log_num = CrontabLog::where('crontab_id', $item->id)->count();
-                });
-            return $this->successData($data);
+        if (!$request->get('_act')) {
+            $result = Gateway::get('xbAdmin/api/Crontab/index', $request->get());
+            return $this->response($result);
         }
         $builder = XbCrud::make();
         // 头部
@@ -97,17 +87,16 @@ class CrontabController extends BaseController
 
     /**
      * 添加
-     * @return \support\Response
+     * @param Request $request
+     * @return Response
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public function add()
+    public function add(Request $request)
     {
-        if (request()->method() === 'POST') {
-            $post = request()->post();
-            $this->processCronParams($post);
-            CrontabApi::make()->add($post);
-            return $this->success('添加成功');
+        if ($request->method() === 'POST') {
+            $result = Gateway::post('xbAdmin/api/Crontab/add', (array) $request->post());
+            return $this->response($result);
         }
         $builder = $this->formView();
         $builder->setSaveMethod('POST');
@@ -116,117 +105,50 @@ class CrontabController extends BaseController
 
     /**
      * 编辑
-     * @return \support\Response
+     * @param Request $request
+     * @return Response
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public function edit()
+    public function edit(Request $request)
     {
-        if (request()->method() === 'PUT') {
-            $id = (int) request()->get('id');
-            $post = request()->post();
-            $this->processCronParams($post);
-            CrontabApi::make()->edit($id, $post);
-            return $this->success('编辑成功');
+        $id = (int) $request->get('id');
+        if ($request->method() === 'PUT') {
+            $result = Gateway::put("xbAdmin/api/Crontab/edit?id={$id}", (array) $request->post());
+            return $this->response($result);
         }
         $builder = $this->formView();
         $builder->setSaveMethod('PUT');
-        // 获取数据并转换周期参数
-        $id = (int) request()->get('id');
-        $model = Crontab::find($id);
-        if ($model) {
-            $formData = $model->toArray();
-            // 解析cron表达式为周期参数
-            $cronParams = CronExpressionApi::make()->parseCronToParams($formData['cron_expression'] ?? '');
-            $formData['cycle_type'] = $cronParams['cycle_type'];
-            $formData['cycle_time'] = $cronParams['time'];
-            // 根据周期类型设置对应的参数字段
-            switch ($cronParams['cycle_type']) {
-                case 'minute':
-                    $formData['cycle_minute_interval'] = $cronParams['interval'];
-                    break;
-                case 'hour':
-                    $formData['cycle_hour_interval'] = $cronParams['interval'];
-                    break;
-                case 'week':
-                    $formData['cycle_week_weekday'] = $cronParams['weekday'];
-                    break;
-                case 'month':
-                    $formData['cycle_month_day'] = $cronParams['interval'];
-                    break;
-                case 'year':
-                    $formData['cycle_year_month'] = $cronParams['interval'];
-                    $formData['cycle_year_day'] = $cronParams['day'] ?? 1;
-                    break;
-            }
-            $builder->setData($formData);
-        }
+        $builder->setData($this->findModel($id));
         return $this->successRes($builder);
     }
 
     /**
-     * 处理Cron参数
-     * @param array $post
-     * @return void
-     */
-    private function processCronParams(array &$post): void
-    {
-        $cycleType = $post['cycle_type'] ?? 'minute';
-        $time = $post['cycle_time'] ?? '00:00';
-
-        // 根据周期类型获取对应参数
-        $interval = 1;
-        $weekday = 0;
-
-        switch ($cycleType) {
-            case 'minute':
-                $interval = intval($post['cycle_minute_interval'] ?? 1);
-                break;
-            case 'hour':
-                $interval = intval($post['cycle_hour_interval'] ?? 1);
-                break;
-            case 'week':
-                $weekday = intval($post['cycle_week_weekday'] ?? 0);
-                $interval = $weekday;
-                break;
-            case 'month':
-                $interval = intval($post['cycle_month_day'] ?? 1);
-                break;
-            case 'year':
-                $interval = intval($post['cycle_year_month'] ?? 1);
-                $yearDay = intval($post['cycle_year_day'] ?? 1);
-                break;
-        }
-
-        $result = CronExpressionApi::make()->buildCronExpression($cycleType, $interval, $time, $weekday, $yearDay ?? 1);
-        $post['cron_expression'] = $result['expression'];
-        $post['cron_desc'] = $result['desc'];
-    }
-
-    /**
      * 删除
-     * @return \support\Response
+     * @param Request $request
+     * @return Response
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public function del()
+    public function del(Request $request)
     {
-        $id = (int) request()->get('id');
-        CrontabApi::make()->del($id);
-        return $this->success('删除成功');
+        $id = (int) $request->get('id');
+        $result = Gateway::delete("xbAdmin/api/Crontab/del?id={$id}");
+        return $this->response($result);
     }
 
     /**
      * 导出定时任务
-     * @return \support\Response
+     * @param Request $request
+     * @return Response
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public function export()
+    public function export(Request $request)
     {
-        $id = (int) request()->get('id');
-        CrontabApi::make()->exportCrontab([$id]);
-        return $this->success('导出定时任务成功');
+        $id = (int) $request->get('id');
+        $result = Gateway::get("xbAdmin/api/Crontab/export?id={$id}");
+        return $this->response($result);
     }
 
     /**
@@ -329,5 +251,17 @@ class CrontabController extends BaseController
             ->description($commandDesc);
 
         return $builder;
+    }
+
+    /**
+     * 按ID查找定时任务（含周期参数回填）
+     * @param int $id
+     * @return array
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected function findModel(int $id): array
+    {
+        return Gateway::get("xbAdmin/api/Crontab/find?id={$id}")['data'] ?? [];
     }
 }

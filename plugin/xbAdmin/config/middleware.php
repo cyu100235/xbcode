@@ -13,7 +13,7 @@
 
 return [
     // admin 模块（后台权限管理）统一登录与权限校验
-    'admin' => [
-        \plugin\xbAdmin\app\admin\middleware\AuthMiddleware::class,
+    '' => [
+        \plugin\xbAdmin\app\middleware\AuthMiddleware::class,
     ],
 ];

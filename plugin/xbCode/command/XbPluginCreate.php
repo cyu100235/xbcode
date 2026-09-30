@@ -40,7 +40,7 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
  *   --author         开发者名称（2-10 字）
  *   --desc           一句话描述（3-35 字）
  *
- * 说明：插件不实现微服务配置，运行期统一读取根目录 .env（GATEWAY_URL / GATEWAY_USER / GATEWAY_PASS）。
+ * 说明：插件不实现微服务配置，运行期统一读取根目录 .env（GATEWAY_URL / GATEWAY_TOKEN）。
  *
  * @copyright 贵州积木云网络科技有限公司
  * @author 楚羽幽 958416459@qq.com

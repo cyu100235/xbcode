@@ -9,10 +9,12 @@
  */
 namespace plugin\xbAdmin\app\admin\controller;
 
+use support\Request;
+use support\Response;
 use plugin\xbAdmin\api\Url;
+use plugin\xbCode\api\Gateway;
+use plugin\xbAdmin\app\BaseController;
 use plugin\xbCode\builder\Renders\XbCrud;
-use plugin\xbAdmin\app\model\CrontabLog;
-use plugin\xbAdmin\app\admin\controller\BaseController;
 
 /**
  * 定时任务日志控制器
@@ -23,23 +25,19 @@ class CrontabLogController extends BaseController
 {
     /**
      * 列表
-     * @return \support\Response
+     * @param Request $request
+     * @return Response
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public function index()
+    public function index(Request $request)
     {
-        if (!request()->get('_act')) {
-            $crontabId = (int) request()->get('id');
-            $where = [
-                'crontab_id' => $crontabId,
-            ];
-            $model = CrontabLog::where($where)->with(['cron']);
-            $data = $model->order('id desc')->paginate();
-            return $this->successData($data);
+        if (!$request->get('_act')) {
+            $result = Gateway::get('xbAdmin/api/CrontabLog/index', $request->get());
+            return $this->response($result);
         }
         $builder = XbCrud::make();
-        $crontabId = (int) request()->get('id');
+        $crontabId = (int) $request->get('id');
         // 顶部工具栏
         $builder->addHeaderConfirm('清除近7天日志', Url::make('clear')->query([
             'crontab_id' => $crontabId,
@@ -72,24 +70,14 @@ class CrontabLogController extends BaseController
 
     /**
      * 清除日志
-     * @return \support\Response
+     * @param Request $request
+     * @return Response
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public function clear()
+    public function clear(Request $request)
     {
-        try {
-            $crontabId = (int) request()->get('crontab_id');
-            $days = (int) request()->get('days');
-            $model = CrontabLog::where('crontab_id', $crontabId);
-            if ($days) {
-                $model->where('create_at', '>=', date('Y-m-d', time() - $days * 86400));
-            }
-            $count = $model->count();
-            $model->delete();
-            return $this->success('成功清除 ' . $count . ' 条日志');
-        } catch (\Throwable $e) {
-            return $this->fail('清除日志失败：' . $e->getMessage());
-        }
+        $result = Gateway::get('xbAdmin/api/CrontabLog/clear', $request->get());
+        return $this->response($result);
     }
 }

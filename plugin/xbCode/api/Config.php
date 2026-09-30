@@ -83,8 +83,11 @@ class Config
             self::assign($field, $path, $value);
             $value = $field;
         }
-        Gateway::request('POST', '/xbAdmin/admin/Config/update', [
-            'json' => ['plugin' => $plugin, 'group' => $group, 'name' => $name, 'value' => $value],
+        Gateway::post('/xbAdmin/admin/Config/update', [
+            'plugin' => $plugin,
+            'group' => $group,
+            'name' => $name,
+            'value' => $value
         ]);
         unset(self::$cache[$plugin . '.' . $group]);
         return true;
@@ -145,8 +148,9 @@ class Config
     {
         $cacheKey = $plugin . '.' . $group;
         if (!array_key_exists($cacheKey, self::$cache)) {
-            self::$cache[$cacheKey] = Gateway::request('GET', '/xbAdmin/admin/Config/detail', [
-                'query' => ['plugin' => $plugin, 'group' => $group],
+            self::$cache[$cacheKey] = Gateway::get('/xbAdmin/admin/Config/detail', [
+                'plugin' => $plugin,
+                'group' => $group
             ]);
         }
         return self::$cache[$cacheKey];

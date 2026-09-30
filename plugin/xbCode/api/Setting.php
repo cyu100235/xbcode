@@ -50,8 +50,9 @@ class Setting
         if (!$groups) {
             return;
         }
-        Gateway::request('POST', '/xbAdmin/admin/Config/report', [
-            'json' => ['plugin' => $plugin, 'groups' => $groups],
+        Gateway::post('/xbAdmin/admin/Config/report', [
+            'plugin' => $plugin,
+            'groups' => $groups
         ]);
     }
 
