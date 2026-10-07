@@ -36,29 +36,8 @@ class UploadController extends XbController
      */
     public function index(Request $request)
     {
-        $act = $request->get('_act', '');
-        if ($act) {
-            $type = $request->get('_nav', '');
-            $adapter = $request->get('name', '');
-
-            // 查询条件组装
-            $where = [
-                // 查询系统附件
-                ['uid', '=', 0],
-                ['adapter', '=', $adapter],
-            ];
-            // 取出对后缀格式
-            if ($type) {
-                $suffix = UploadExtEnum::getFieldValue($type, '', 'ext');
-                $suffix = explode(',', $suffix);
-                if ($suffix) {
-                    $where[] = ['format', 'in', $suffix];
-                }
-            }
-            $data = Upload::where($where)->order("update_at desc")->paginate();
-            return $this->successData($data);
-        }
-        $builder = XbCrud::make(function (XbCrud $builder) {
+        if (request()->get('_act', '')) {
+            $builder = XbCrud::make();
             // 设置上传附件按钮
             $builder->addHeaderDialog('上传附件', Url::make('upload'))
                 ->cancelActions()->title('上传附件');
@@ -87,12 +66,31 @@ class UploadController extends XbController
                 'title' => '修改附件',
             ])->primary(true);
             $builder->addRightActionConfirm('删除', Url::make('DELETE:del'))->danger(true);
-        });
-        // 设置侧边栏
-        $category = UploadExtEnum::options();
-        $category = array_merge([['value' => '', 'label' => '全部']], $category);
-        $builder->addSidebars($category);
-        return $this->successRes($builder);
+            // 设置侧边栏
+            $category = UploadExtEnum::options();
+            $category = array_merge([['value' => '', 'label' => '全部']], $category);
+            $builder->addSidebars($category);
+            return $this->successRes($builder);
+        }
+        $type = $request->get('_nav', '');
+        $adapter = $request->get('name', '');
+
+        // 查询条件组装
+        $where = [
+            // 查询系统附件
+            ['uid', '=', 0],
+            ['adapter', '=', $adapter],
+        ];
+        // 取出对后缀格式
+        if ($type) {
+            $suffix = UploadExtEnum::getFieldValue($type, '', 'ext');
+            $suffix = explode(',', $suffix);
+            if ($suffix) {
+                $where[] = ['format', 'in', $suffix];
+            }
+        }
+        $data = Upload::where($where)->order("update_at desc")->paginate();
+        return $this->successData($data);
     }
 
     /**
@@ -221,7 +219,7 @@ class UploadController extends XbController
      */
     public function chunk(Request $request)
     {
-        $act = $request->get('_act');
+        $act = request()->get('_act');
         if (empty($act)) {
             return $this->fail('缺少操作参数');
         }

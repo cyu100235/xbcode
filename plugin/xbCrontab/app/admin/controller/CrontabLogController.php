@@ -30,15 +30,7 @@ class CrontabLogController extends XbController
     public function index()
     {
         if (request()->get('_act')) {
-            $crontabId = (int) request()->get('id');
-            $where = [
-                'crontab_id' => $crontabId,
-            ];
-            $model = CrontabLog::where($where)->with(['cron']);
-            $data = $model->order('id desc')->paginate();
-            return $this->successData($data);
-        }
-        $builder = XbCrud::make(function (XbCrud $builder) {
+            $builder = XbCrud::make();
             $crontabId = (int) request()->get('id');
             // 顶部工具栏
             $builder->addHeaderConfirm('清除近7天日志', Url::make('clear')->query([
@@ -58,8 +50,15 @@ class CrontabLogController extends XbController
             $builder->addColumn('run_second_time', '执行耗时(秒)')->width(150);
             $builder->addColumn('remarks', '执行备注');
             $builder->addColumn('create_at', '执行时间')->width(150);
-        });
-        return $this->successRes($builder);
+            return $this->successRes($builder);
+        }
+        $crontabId = (int) request()->get('id');
+        $where = [
+            'crontab_id' => $crontabId,
+        ];
+        $model = CrontabLog::where($where)->with(['cron']);
+        $data = $model->order('id desc')->paginate();
+        return $this->successData($data);
     }
 
     /**

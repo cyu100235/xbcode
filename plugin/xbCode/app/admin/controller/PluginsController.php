@@ -36,15 +36,15 @@ class PluginsController extends BaseController
     {
         $act = request()->get('_act');
         if ($act) {
-            $type = request()->get('type', '');
-            $installed = $type === 'installed' ? '20' : '10';
-            $data = PluginsApi::make()->getList([
-                'field' => 'install',
-                'value' => $installed
-            ]);
-            return $this->successRes($data);
+            return $this->display();
         }
-        return $this->display();
+        $type = request()->get('type', '');
+        $installed = $type === 'installed' ? '20' : '10';
+        $data = PluginsApi::make()->getList([
+            'field' => 'install',
+            'value' => $installed
+        ]);
+        return $this->successRes($data);
     }
 
     /**

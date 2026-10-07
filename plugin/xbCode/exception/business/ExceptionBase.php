@@ -32,7 +32,7 @@ abstract class ExceptionBase extends Exception
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    protected $eventName = '';
+    protected $eventName = 'EVENT:NOTIFY';
 
     /**
      * 事件参数
@@ -46,6 +46,7 @@ abstract class ExceptionBase extends Exception
     {
         parent::__construct($message, $code, $previous);
         $this->init();
+        $this->setOption();
     }
 
     /**
@@ -68,7 +69,7 @@ abstract class ExceptionBase extends Exception
     {
         return $this->option;
     }
-    
+
     /**
      * 设置事件参数
      * @param array $option
@@ -76,9 +77,13 @@ abstract class ExceptionBase extends Exception
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public function setOption($option)
+    public function setOption(array $option = [])
     {
-        $this->option = $option;
+        $this->option = [
+            'type' => $option['type'] ?? 'error',
+            'title' => $option['title'] ?? '温馨提示',
+            'message' => $option['message'] ?? $this->message,
+        ];
     }
 
     /**

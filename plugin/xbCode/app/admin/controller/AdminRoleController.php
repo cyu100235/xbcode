@@ -38,48 +38,48 @@ class AdminRoleController extends BaseController
     {
         $act = $request->get('_act');
         if ($act) {
-            $adminId = $request->uid;
-            $data = AdminRole::where('admin_id', $adminId)
-                ->order('sort asc,id asc')
-                ->paginate()
-                ->each(function ($item) {
-                    $where = [
-                        'role_id' => $item['id'],
-                    ];
-                    $count = Admin::where($where)->count();
-                    $item->num = $count;
-                });
-            return $this->successRes($data);
+            $builder = XbCrud::make();
+            $builder->useCRUD()->alwaysShowPagination(true);
+            $builder->setActionConfig('width', '200px');
+            $builder->addHeaderDialog('添加角色', Url::make('AdminRole/add'), [
+                'title' => '添加角色',
+            ])->level('primary');
+
+            $builder->addColumn('id', '序号')->width(80);
+            $builder->addColumn('title', '角色名称')->minWidth(180);
+            $builder->addColumn('num', '管理员人数', [
+                'minWidth' => 100,
+            ]);
+            $builder->addColumn('sort', '排序', [
+                'minWidth' => 100,
+            ]);
+            $builder->addColumn('create_at', '创建时间', [
+                'width' => 150,
+            ]);
+
+            $builder->setActionConfig('width', 150);
+            $builder->addRightActionDialog('权限', Url::make('auth'), [
+                'size' => 'lg',
+                'title' => '给「${title}」分配权限',
+            ])->className('text-success');
+            $builder->addRightActionDialog('修改', Url::make('edit'), [
+                'title' => '修改角色',
+            ]);
+            $builder->addRightActionConfirm('删除', Url::make('del'));
+            return $this->successRes($builder);
         }
-        $builder = XbCrud::make();
-        $builder->useCRUD()->alwaysShowPagination(true);
-        $builder->setActionConfig('width', '200px');
-        $builder->addHeaderDialog('添加角色', Url::make('AdminRole/add'), [
-            'title' => '添加角色',
-        ])->level('primary');
-
-        $builder->addColumn('id', '序号')->width(80);
-        $builder->addColumn('title', '角色名称')->minWidth(180);
-        $builder->addColumn('num', '管理员人数', [
-            'minWidth' => 100,
-        ]);
-        $builder->addColumn('sort', '排序', [
-            'minWidth' => 100,
-        ]);
-        $builder->addColumn('create_at', '创建时间', [
-            'width' => 150,
-        ]);
-
-        $builder->setActionConfig('width', 150);
-        $builder->addRightActionDialog('权限', Url::make('auth'), [
-            'size' => 'lg',
-            'title' => '给「${title}」分配权限',
-        ])->className('text-success');
-        $builder->addRightActionDialog('修改', Url::make('edit'), [
-            'title' => '修改角色',
-        ]);
-        $builder->addRightActionConfirm('删除', Url::make('del'));
-        return $this->successRes($builder);
+        $adminId = $request->uid;
+        $data = AdminRole::where('admin_id', $adminId)
+            ->order('sort asc,id asc')
+            ->paginate()
+            ->each(function ($item) {
+                $where = [
+                    'role_id' => $item['id'],
+                ];
+                $count = Admin::where($where)->count();
+                $item->num = $count;
+            });
+        return $this->successRes($data);
     }
 
     /**

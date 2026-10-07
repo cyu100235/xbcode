@@ -8,18 +8,12 @@ return [
         ->label('组织名称')
         ->required(true)
         ->description('示例：贵州积木云网络科技有限公司')
-        ->style([
-            'width' => '40%'
-        ])
         ->get(),
     InputText::make()
         ->name('about_url')
         ->label('组织链接')
         ->required(true)
         ->description('示例：http://www.xbcode.net')
-        ->style([
-            'width' => '40%'
-        ])
         ->get(),
     InputText::make()
         ->name('copyright')
@@ -45,35 +39,23 @@ return [
             </div>
             HTML
         )
-        ->style([
-            'width' => '40%'
-        ])
         ->get(),
     InputText::make()
         ->name('web_icp')
         ->label('ICP备案号码')
         ->required(true)
         ->description('示例：贵ICP备12345678号')
-        ->style([
-            'width' => '40%'
-        ])
         ->get(),
     InputText::make()
         ->name('web_police')
         ->label('公安备案号码')
         ->required(true)
         ->description('示例：贵公网安备123456789号')
-        ->style([
-            'width' => '40%'
-        ])
         ->get(),
     InputText::make()
         ->name('web_police_code')
         ->label('公安备案编号')
         ->required(true)
         ->description('示例：52010502005838')
-        ->style([
-            'width' => '40%'
-        ])
         ->get(),
 ];

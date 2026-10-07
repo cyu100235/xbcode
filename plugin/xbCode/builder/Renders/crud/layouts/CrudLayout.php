@@ -13,6 +13,7 @@ use plugin\xbCode\builder\Renders\crud\ColumnUtil;
 use plugin\xbCode\builder\Renders\crud\column\TplColumn;
 use plugin\xbCode\builder\Renders\crud\column\TagColumn;
 use plugin\xbCode\builder\Renders\crud\column\MapColumn;
+use plugin\xbCode\builder\Renders\crud\column\EachColumn;
 use plugin\xbCode\builder\Renders\crud\column\CopyColumn;
 use plugin\xbCode\builder\Renders\crud\column\HtmlColumn;
 use plugin\xbCode\builder\Renders\crud\column\JsonColumn;
@@ -45,6 +46,7 @@ trait CrudLayout
     use TplColumn;
     use TagColumn;
     use MapColumn;
+    use EachColumn;
     use CopyColumn;
     use HtmlColumn;
     use ColumnUtil;

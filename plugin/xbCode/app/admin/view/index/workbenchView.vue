@@ -157,10 +157,13 @@ export default {
             ],
             // 是否切换访问量趋势图 true: 柱状图 false: 折线图
             switchVisits: false,
+            // 是否移动端窄屏（<768px），用于图表适配
+            isNarrowScreen: false,
         }
     },
     mounted() {      
         this.systemData = this.$xbcode.siteApp.siteInfo
+        this.isNarrowScreen = window.innerWidth <= 767
         this.$nextTick(() => {
             setTimeout(() => {
                 // 初始化访问量趋势图（折线图）
@@ -169,8 +172,24 @@ export default {
                 this.registerEcharts()
             }, 500)
         })
+        // 监听窗口尺寸变化，重绘图表（适配移动端/平板端）
+        window.addEventListener('resize', this.handleResize)
+    },
+    beforeUnmount() {
+        window.removeEventListener('resize', this.handleResize)
     },
     methods: {
+        // 窗口尺寸变化时重绘图表
+        handleResize() {
+            if (visitEcharts) visitEcharts.resize()
+            if (saleEcharts) saleEcharts.resize()
+            // 跨越移动端断点时重新应用注册来源图配置
+            const isNarrow = window.innerWidth <= 767
+            if (isNarrow !== this.isNarrowScreen) {
+                this.isNarrowScreen = isNarrow
+                if (saleEcharts) saleEcharts.setOption(this.getRegisterOption(), true)
+            }
+        },
         // 切换访问量趋势图
         hanldSwitchVisits() {
             this.switchVisits = !this.switchVisits
@@ -302,13 +321,15 @@ export default {
             });
             visitEcharts.setOption(option)
         },
-        // 初始化用户注册来源图
-        registerEcharts() {
+        // 获取用户注册来源图配置（移动端窄屏：隐藏图内标题与外置标签，图例移到底部横向排列，缩小饼图）
+        getRegisterOption() {
+            const isNarrow = window.innerWidth <= 767
             var series = [
                 {
                     name: 'Access From',
                     type: 'pie',
-                    radius: '50%',
+                    radius: isNarrow ? ['28%', '40%'] : '50%',
+                    center: isNarrow ? ['50%', '46%'] : ['50%', '50%'],
                     data: [
                         { value: 1048, name: '电脑端' },
                         { value: 735, name: '移动端' },
@@ -316,6 +337,13 @@ export default {
                         { value: 484, name: '微信公众号' },
                         { value: 300, name: 'APP' }
                     ],
+                    // 窄屏隐藏外置标签与引导线，避免文字在扇形上重叠，改由图例+tooltip 展示
+                    label: {
+                        show: !isNarrow
+                    },
+                    labelLine: {
+                        show: !isNarrow
+                    },
                     emphasis: {
                         itemStyle: {
                             shadowBlur: 10,
@@ -328,18 +356,39 @@ export default {
             const option = {
                 title: {
                     text: '用户注册来源',
-                    subtext: '以下数据仅供参考',
-                    left: 'center'
+                    subtext: isNarrow ? '' : '以下数据仅供参考',
+                    show: !isNarrow,
+                    left: 'center',
+                    textStyle: {
+                        fontSize: isNarrow ? 13 : 18
+                    }
                 },
                 tooltip: {
                     trigger: 'item'
                 },
-                legend: {
-                    orient: 'vertical',
-                    left: 'left'
-                },
+                legend: isNarrow
+                    ? {
+                        orient: 'horizontal',
+                        left: 'center',
+                        bottom: 4,
+                        itemWidth: 10,
+                        itemHeight: 10,
+                        itemGap: 6,
+                        textStyle: {
+                            fontSize: 11
+                        }
+                    }
+                    : {
+                        orient: 'vertical',
+                        left: 'left'
+                    },
                 series: series
             };
+            return option
+        },
+        // 初始化用户注册来源图
+        registerEcharts() {
+            const option = this.getRegisterOption()
             var chartDom = document.getElementById('register');
             saleEcharts = this.$xbcode.echarts.init(chartDom, null, {
                 renderer: 'svg'
@@ -592,7 +641,8 @@ export default {
             }
 
             .content {
-                height: 100%;
+                flex: 1;
+                min-height: 0;
                 overflow: hidden;
                 position: relative;
 
@@ -640,12 +690,157 @@ export default {
             }
 
             .content {
-                height: 100%;
+                flex: 1;
+                min-height: 0;
                 padding: 20px;
                 overflow: hidden;
 
                 #register {
                     height: 100%;
+                }
+            }
+        }
+    }
+
+    // 各卡片标题不换行
+    .version-container .content .item .xb-title,
+    .today-container .content .item .xb-title,
+    .core-container .content .item .xb-title,
+    .common-container .content .item .xb-title {
+        white-space: nowrap;
+    }
+
+    // ==================== 响应式适配 ====================
+
+    // 平板横屏 / 小桌面：992px - 1199px
+    @media screen and (max-width: 1199px) {
+        .version-today {
+            .version-container {
+                width: 280px;
+            }
+        }
+
+        .core-common {
+            .core-container,
+            .common-container {
+                .content {
+                    grid-template-columns: repeat(4, 1fr);
+                }
+            }
+        }
+    }
+
+    // 平板竖屏：768px - 991px
+    @media screen and (max-width: 991px) {
+        height: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+
+        .version-today,
+        .core-common,
+        .visit-sale {
+            flex: none;
+        }
+
+        .version-today {
+            flex-direction: column;
+
+            .version-container {
+                width: 100%;
+            }
+
+            .today-container {
+                .content {
+                    grid-template-columns: repeat(2, 1fr);
+                }
+            }
+        }
+
+        .core-common {
+            flex-direction: column;
+
+            .core-container,
+            .common-container {
+                .content {
+                    grid-template-columns: repeat(4, 1fr);
+                }
+            }
+        }
+
+        .visit-sale {
+            flex-direction: column;
+
+            .visit-container,
+            .sale-container {
+                flex: none;
+                height: 320px;
+            }
+        }
+    }
+
+    // 移动端：< 768px
+    @media screen and (max-width: 767px) {
+        height: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+
+        .version-today,
+        .core-common,
+        .visit-sale {
+            flex: none;
+        }
+
+        .version-today {
+            flex-direction: column;
+
+            .version-container {
+                width: 100%;
+            }
+
+            .today-container {
+                .content {
+                    grid-template-columns: repeat(2, 1fr);
+
+                    .item {
+                        padding: 12px 8px;
+                        gap: 6px;
+
+                        .value {
+                            font-size: 18px;
+                        }
+                    }
+                }
+            }
+        }
+
+        .core-common {
+            flex-direction: column;
+
+            .core-container,
+            .common-container {
+                .content {
+                    grid-template-columns: repeat(3, 1fr);
+                    gap: 10px;
+                }
+            }
+        }
+
+        .visit-sale {
+            flex-direction: column;
+
+            .visit-container {
+                flex: none;
+                height: 260px;
+            }
+
+            .sale-container {
+                flex: none;
+                height: 340px;
+
+                .content {
+                    padding: 10px;
                 }
             }
         }

@@ -36,10 +36,7 @@ class IndexController extends XbController
     public function index()
     {
         if (request()->get('_act')) {
-            $data = DevelopmentApi::make()->getList();
-            return $this->successData($data);
-        }
-        $builder = XbCrud::make(function (XbCrud $builder) {
+            $builder = XbCrud::make();
             $builder->setPrimaryKey('name');
 
             $builder->addHeaderDialog('创建插件', Url::make('create'), [
@@ -88,8 +85,10 @@ class IndexController extends XbController
                 'name' => '${name}',
                 'version' => '${version}',
             ]))->title('推送代码至远程仓库')->dark(true)->visibleOn('this.can_push == 20');
-        });
-        return $this->successRes($builder);
+            return $this->successRes($builder);
+        }
+        $data = DevelopmentApi::make()->getList();
+        return $this->successData($data);
     }
 
     /**
@@ -106,10 +105,11 @@ class IndexController extends XbController
             DepositoryApi::make($name)->push($commit);
             return $this->success('插件代码推送成功');
         }
-        $builder = XbForm::make(function (XbForm $builder) use ($name) {
-            $builder->addRowInput('name', '插件标识', $name)->required(true)->disabled(true);
-            $builder->addRowTextarea('commit', '提交信息')->required(true)->minRows(5);
-        });
+        $builder = XbForm::make();
+        $builder->addRowInput('name', '插件标识', $name)
+            ->required(true)->disabled(true);
+        $builder->addRowTextarea('commit', '提交信息')
+            ->required(true)->minRows(5);
         return $this->successRes($builder);
     }
 
@@ -123,7 +123,7 @@ class IndexController extends XbController
     {
         // 上传图标
         if (request()->method() === 'POST') {
-            $name = (string)request()->get('name');
+            $name = (string) request()->get('name');
             $data = request()->post();
             PluginPreviewApi::make()->replace($name, $data['icon'], $data['template']);
             return $this->success('插件图标设置成功');
@@ -140,20 +140,20 @@ class IndexController extends XbController
             PluginPreviewApi::make()->create($plugin, '', '', true);
             return $this->success('图标重建成功，请刷新缓存后查看');
         }
-        $builder = XbForm::make(function (XbForm $builder) {
-            $builder->addRowUploadImage('icon', '插件图标')
-                ->required(true)
-                ->accept('.svg')
-                ->description(<<<HTML
+        $builder = XbForm::make();
+        $builder->addRowUploadImage('icon', '插件图标')
+            ->required(true)
+            ->accept('.svg')
+            ->description(<<<HTML
                 <div>
                     必须是svg格式的图标
                     可去
                     <a href="https://www.iconfont.cn" target="_blank">《阿里巴巴图标库》</a>
                 </div>
             HTML);
-            $builder->addRowUploadImage('template', '模板背景')
-                ->accept('.svg')
-                ->description(<<<HTML
+        $builder->addRowUploadImage('template', '模板背景')
+            ->accept('.svg')
+            ->description(<<<HTML
                 <div>
                     <div>1. 不上传则使用模板库背景</div>
                     <div>2. 必须是svg格式的图标</div>
@@ -161,7 +161,6 @@ class IndexController extends XbController
                     <div>4. 建议尺寸：300x300px</div>
                 </div>
             HTML);
-        });
         return $this->successRes($builder);
     }
 
@@ -180,28 +179,27 @@ class IndexController extends XbController
             // 返回成功
             return $this->success('插件创建成功');
         }
-        $builder = XbForm::make(function (XbForm $builder) {
-            $builder->addRowInput('title', '插件名称')
-                ->required(true)
-                ->showCounter(true)
-                ->maxLength(20)
-                ->description('示例：AI客服');
-            $builder->addRowInput('name', '插件标识')
-                ->required(true)
-                ->showCounter(true)
-                ->maxLength(20)
-                ->description('示例：xbCode');
-            $builder->addRowInput('author', '开发者名称')
-                ->required(true)
-                ->showCounter(true)
-                ->maxLength(10)
-                ->description('示例：积木云');
-            $builder->addRowInput('desc', '插件描述')
-                ->required(true)
-                ->showCounter(true)
-                ->maxLength(35)
-                ->description('一句话描述，3-35字以内');
-        });
+        $builder = XbForm::make();
+        $builder->addRowInput('title', '插件名称')
+            ->required(true)
+            ->showCounter(true)
+            ->maxLength(20)
+            ->description('示例：AI客服');
+        $builder->addRowInput('name', '插件标识')
+            ->required(true)
+            ->showCounter(true)
+            ->maxLength(20)
+            ->description('示例：xbCode');
+        $builder->addRowInput('author', '开发者名称')
+            ->required(true)
+            ->showCounter(true)
+            ->maxLength(10)
+            ->description('示例：积木云');
+        $builder->addRowInput('desc', '插件描述')
+            ->required(true)
+            ->showCounter(true)
+            ->maxLength(35)
+            ->description('一句话描述，3-35字以内');
         $builder->setSaveMethod('POST');
         return $this->successRes($builder);
     }
@@ -268,31 +266,30 @@ class IndexController extends XbController
             // 返回成功响应，并附带跳转地址
             return $this->success('插件版本补丁构建成功');
         }
-        $builder = XbForm::make(function (XbForm $builder) {
-            $name = (string) request()->get('name');
-            $version = (string) request()->get('version');
-            $builder->addRowGroup('basics', [
-                $builder->addRowInput('title', '插件名称')
-                    ->description('示例：AI客服')->disabled(true),
-                $builder->addRowInput('name', '插件标识')
-                    ->description('示例：xbCode')->disabled(true),
-                $builder->addRowInput('version', '版本编号')
-                    ->description('示例：1.0.0')->disabled(true),
-            ]);
-            $development = DevelopmentApi::make();
-            $files = $development->getPackageFilesChange($name);
-            $files = implode("\n", $files);
-            $builder->addRowTextarea('files', '文件变化', $files)
-                ->minRows(8)
-                ->placeholder('当前版本无文件变化')
-                ->description("版本补丁文件变化列表")->disabled(true);
-            $sql = TableStructureApi::make()->getPackageSqlChange($name);
-            $sqlPath = $development->getVersionPatchSql($name, $version);
-            $builder->addRowTextarea('tables', '表结构变化', $sql)
-                ->minRows(8)
-                ->placeholder('当前版本无表结构变化')
-                ->description("表结构版本补丁 SQL：{$sqlPath}")->disabled(true);
-        });
+        $builder = XbForm::make();
+        $name = (string) request()->get('name');
+        $version = (string) request()->get('version');
+        $builder->addRowGroup('basics', [
+            $builder->addRowInput('title', '插件名称')
+                ->description('示例：AI客服')->disabled(true),
+            $builder->addRowInput('name', '插件标识')
+                ->description('示例：xbCode')->disabled(true),
+            $builder->addRowInput('version', '版本编号')
+                ->description('示例：1.0.0')->disabled(true),
+        ]);
+        $development = DevelopmentApi::make();
+        $files = $development->getPackageFilesChange($name);
+        $files = implode("\n", $files);
+        $builder->addRowTextarea('files', '文件变化', $files)
+            ->minRows(8)
+            ->placeholder('当前版本无文件变化')
+            ->description("版本补丁文件变化列表")->disabled(true);
+        $sql = TableStructureApi::make()->getPackageSqlChange($name);
+        $sqlPath = $development->getVersionPatchSql($name, $version);
+        $builder->addRowTextarea('tables', '表结构变化', $sql)
+            ->minRows(8)
+            ->placeholder('当前版本无表结构变化')
+            ->description("表结构版本补丁 SQL：{$sqlPath}")->disabled(true);
         return $this->successRes($builder);
     }
 
@@ -327,36 +324,36 @@ class IndexController extends XbController
             DevelopmentApi::make()->clone($data);
             return $this->success('仓库克隆完成');
         }
-        $builder = XbForm::make(function (XbForm $builder) {
-            $builder->addRowInput('url', '仓库地址')
+        $builder = XbForm::make();
+        $builder->addRowInput('url', '仓库地址')
+            ->required(true)
+            ->description('Git仓库地址，必须是SSH地址');
+        $builder->addRowGrid([
+            $builder->addRowInput('title', '插件名称')
                 ->required(true)
-                ->description('Git仓库地址，必须是SSH地址');
-            $builder->addRowGrid([
-                $builder->addRowInput('title', '插件名称')
-                    ->required(true)
-                    ->showCounter(true)
-                    ->maxLength(20)
-                    ->description('示例：AI客服'),
-                $builder->addRowInput('name', '插件标识')
-                    ->required(true)
-                    ->showCounter(true)
-                    ->maxLength(20)
-                    ->description('示例：xbCode'),
-            ]);
-            $builder->addRowGrid([
-                $builder->addRowInput('author', '开发者名称')
-                    ->description('示例：积木云网络科技')
-                    ->required(true)
-                    ->showCounter(true)
-                    ->maxLength(10),
-                $builder->addRowInput('desc', '插件描述')
-                    ->description('填写一句话描述，35字以内')
-                    ->required(true)
-                    ->showCounter(true)
-                    ->maxLength(35),
-            ]);
-            $idRsaContent = IdRsaApi::make()->getIdRsaContent();
-            $builder->addRowAlert(<<<HTML
+                ->showCounter(true)
+                ->maxLength(20)
+                ->description('示例：AI客服'),
+            $builder->addRowInput('name', '插件标识')
+                ->required(true)
+                ->showCounter(true)
+                ->maxLength(20)
+                ->description('示例：xbCode'),
+        ]);
+        $builder->addRowGrid([
+            $builder->addRowInput('author', '开发者名称')
+                ->description('示例：积木云网络科技')
+                ->required(true)
+                ->showCounter(true)
+                ->maxLength(10),
+            $builder->addRowInput('desc', '插件描述')
+                ->description('填写一句话描述，35字以内')
+                ->required(true)
+                ->showCounter(true)
+                ->maxLength(35),
+        ]);
+        $idRsaContent = IdRsaApi::make()->getIdRsaContent();
+        $builder->addRowAlert(<<<HTML
             <div>
                 <p>克隆仓库时，请确保仓库地址是SSH地址</p>
                 <p>
@@ -367,7 +364,6 @@ class IndexController extends XbController
                 </p>
             </div>
             HTML);
-        });
         $builder->setSaveMethod('POST');
         return $this->successRes($builder);
     }
@@ -392,27 +388,26 @@ class IndexController extends XbController
         $data['plugins'] = empty($data['plugins']) ? '无依赖' : $data['plugins'];
         $data['composer'] = implode("\n", $data['composer'] ?? []);
         $data['composer'] = empty($data['composer']) ? '无依赖' : $data['composer'];
-        $builder = XbForm::make(function (XbForm $builder) use ($data) {
-            $builder->useForm()->static(true);
-            $builder->addRowGroup('title', [
-                $builder->addRowInput('title', '插件名称'),
-                $builder->addRowInput('name', '插件标识'),
-            ]);
-            $builder->addRowGroup('author', [
-                $builder->addRowInput('author', '开发者名称'),
-                $builder->addRowInput('version', '版本号'),
-            ]);
-            $builder->addRowGroup('desc', [
-                $builder->addRowInput('desc', '插件描述'),
-                $builder->addRowImage('preview', '插件图标')->type('static-image'),
-            ]);
-            $builder->addRowGroup('plugins', [
-                $builder->addRowInput('plugins', '插件依赖'),
-            ]);
-            $builder->addRowGroup('composer', [
-                $builder->addRowTextarea('composer', 'Composer依赖'),
-            ]);
-        });
+        $builder = XbForm::make();
+        $builder->useForm()->static(true);
+        $builder->addRowGroup('title', [
+            $builder->addRowInput('title', '插件名称'),
+            $builder->addRowInput('name', '插件标识'),
+        ]);
+        $builder->addRowGroup('author', [
+            $builder->addRowInput('author', '开发者名称'),
+            $builder->addRowInput('version', '版本号'),
+        ]);
+        $builder->addRowGroup('desc', [
+            $builder->addRowInput('desc', '插件描述'),
+            $builder->addRowImage('preview', '插件图标')->type('static-image'),
+        ]);
+        $builder->addRowGroup('plugins', [
+            $builder->addRowInput('plugins', '插件依赖'),
+        ]);
+        $builder->addRowGroup('composer', [
+            $builder->addRowTextarea('composer', 'Composer依赖'),
+        ]);
         $builder->setData($data);
         return $this->successRes($builder);
     }

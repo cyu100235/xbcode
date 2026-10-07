@@ -319,7 +319,6 @@ export default {
         getPlugins() {
             const params = {
                 type: this.tabs.active,
-                _act: 'query'
             }
             this.$xbcode.useGet('app/xbCode/admin/Plugins/index', params).then((res) => {
                 this.datalist = res?.data ?? [];
@@ -728,6 +727,92 @@ export default {
                             .plugin-desc {
                                 font-size: 15px;
                             }
+                        }
+                    }
+                }
+            }
+        }
+
+        // 平板端: 768px - 1199px（头部保持一行，缩小间距，卡片内容补左右内边距）
+        @media screen and (min-width: 768px) and (max-width: 1199px) {
+            .xb-header {
+                .xb-tabs .item {
+                    padding: 16px 10px;
+                }
+
+                .user {
+                    padding-right: 15px;
+                }
+            }
+
+            .xb-plugin-content {
+                .plugin-grid {
+                    .plugin-card {
+                        .plugin-info {
+                            padding: 14px;
+
+                            .plugin-title {
+                                font-size: 16px;
+                            }
+
+                            .plugin-desc {
+                                font-size: 13px;
+                            }
+                        }
+
+                        .plugin-actions {
+                            padding: 14px;
+                        }
+                    }
+                }
+            }
+        }
+
+        // 移动端: < 768px（头部上下堆叠，tab 均分，按钮均分，卡片内容补左右内边距）
+        @media screen and (max-width: 767px) {
+            .xb-header {
+                flex-direction: column;
+                align-items: stretch;
+
+                .xb-tabs {
+                    .item {
+                        flex: 1;
+                        justify-content: center;
+                        padding: 12px 8px;
+                        font-size: 13px;
+                    }
+                }
+
+                .user {
+                    padding: 10px 12px;
+                    border-top: 1px solid #f5f5f5;
+
+                    .el-button {
+                        flex: 1;
+                        margin-left: 0;
+                    }
+                }
+            }
+
+            .xb-plugin-content {
+                .plugin-grid {
+                    .plugin-card {
+                        .plugin-info {
+                            padding: 12px;
+                            gap: 8px;
+
+                            .plugin-title {
+                                font-size: 16px;
+                            }
+
+                            .plugin-desc {
+                                font-size: 13px;
+                            }
+                        }
+
+                        .plugin-actions {
+                            padding: 12px;
+                            gap: 6px;
                         }
                     }
                 }

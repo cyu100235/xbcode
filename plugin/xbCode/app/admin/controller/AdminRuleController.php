@@ -38,18 +38,8 @@ class AdminRuleController extends BaseController
      */
     public function index()
     {
-        $act = (int) request()->get('_act');
-        if ($act) {
-            $where = [];
-            $data = AdminRule::where($where)->order('sort asc,id asc')->select()->toArray();
-            $data = MenuChecked::menu2DToTree($data);
-            $data = MenuChecked::unsetMenusFields($data, [
-                '_html',
-                '_level',
-            ]);
-            return $this->successData($data);
-        }
-        $builder = XbCrud::make(function (XbCrud $builder) {
+        if (request()->get('_act')) {
+            $builder = XbCrud::make();
             $builder->useCRUD()->expandConfig([
                 'expand' => 'accordion',
                 'expandAll' => false,
@@ -82,8 +72,18 @@ class AdminRuleController extends BaseController
             $builder->addColumnMap('state', '是否启用', StateEnum::dict())->width(100);
             $builder->addColumnMap('is_show', '是否显示', ShowEnum::dict())->width(100);
             $builder->addColumnInput('sort', '菜单排序')->width(100);
-        });
-        return $this->successRes($builder);
+            return $this->successRes($builder);
+        }
+        $where = [];
+        $query = AdminRule::where($where);
+        $query->order('sort asc,id asc');
+        $data = $query->select()->toArray();
+        $data = MenuChecked::menu2DToTree($data);
+        $data = MenuChecked::unsetMenusFields($data, [
+            '_html',
+            '_level',
+        ]);
+        return $this->successData($data);
     }
 
     /**
@@ -208,42 +208,50 @@ class AdminRuleController extends BaseController
      */
     private function formView()
     {
-        $builder = XbForm::make(function (XbForm $builder) {
-            $builder->useForm()->columnCount(2);
+        $builder = XbForm::make();
+        $builder->addRowGrid([
             $builder->addRowInput('title', '菜单名称')
                 ->required(true)
-                ->description('右侧菜单名称，尽可能5个字内');
+                ->description('右侧菜单名称，尽可能5个字内'),
             $builder->addRowInput('short_title', '菜单短名称')
-                ->description('左侧菜单名称，尽可能5个字内(选填)');
+                ->description('左侧菜单名称，尽可能5个字内(选填)'),
+        ]);
+        $builder->addRowGrid([
             $builder->addRowInput('plugin', '插件名称', 'xbCode')
                 ->required(true)
-                ->description('插件标识，默认插件标识为：xbCode');
+                ->description('插件标识，默认插件标识为：xbCode'),
             $builder->addRowSelect('pid', '父级菜单')
                 ->type('tree-select')
                 ->required(true)
                 ->description('顶级菜单为一级菜单')
-                ->options(self::getCascaderOptions());
+                ->options(self::getCascaderOptions()),
+        ]);
+        $builder->addRowGrid([
             $builder->addRowInput('path', '菜单地址')
                 ->required(true)
-                ->description('普通菜单示例：admin/Index/index (对应：模块/控制器/方法)<br />');
-            $builder->addRowRadioButton('method', '请求类型', 'GET')
-                ->required(true)
-                ->options(MethodEnum::options())
-                ->description('默认：GET请求类型');
-            $builder->addRowRadioButton('type', '菜单类型', '10')
-                ->required(true)
-                ->options(MenuTypeEnum::options())
-                ->description('请选择菜单类型');
+                ->description('普通菜单示例：admin/Index/index (对应：模块/控制器/方法)<br />'),
+            $builder->addRowIconPicker('icon', '图标选择')
+                ->description('菜单图标，显示在左侧菜单栏'),
+        ]);
+        $builder->addRowGrid([
             $builder->addRowRadioButton('is_show', '是否显示', '10')
                 ->required(true)
                 ->options(ShowEnum::options())
-                ->description('是否显示菜单图标');
-            $builder->addRowIconPicker('icon', '图标选择')
-                ->description('菜单图标，显示在左侧菜单栏');
-            $builder->addRowKeyValue('params', '附带参数')
-                ->keyPlaceholder('键名称')
-                ->valuePlaceholder('值参数');
-        });
+                ->description('是否显示菜单图标'),
+            $builder->addRowRadioButton('type', '菜单类型', '10')
+                ->required(true)
+                ->options(MenuTypeEnum::options())
+                ->description('请选择菜单类型'),
+            $builder->addRowRadioButton('method', '请求类型', 'GET')
+                ->required(true)
+                ->options(MethodEnum::options())
+                ->description('默认：GET请求类型'),
+        ]);
+        // $builder->addRowGrid([
+        // ]);
+        $builder->addRowKeyValue('params', '附带参数')
+            ->keyPlaceholder('键名称')
+            ->valuePlaceholder('值参数');
         return $builder;
     }
 

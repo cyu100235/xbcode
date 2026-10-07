@@ -37,32 +37,32 @@ class AdminController extends BaseController
     {
         $act = $request->get('_act');
         if ($act) {
-            $adminId = $request->uid;
-            $data = Admin::with(['role'])
-                ->where('admin_id', $adminId)
-                ->order('id desc')
-                ->paginate();
-            return $this->successData($data);
-        }
-        $builder = XbCrud::make();
-        $builder->addHeaderDialog('添加用户', Url::make('Admin/add'), [
-            'title' => '添加管理员用户',
-            'size' => 'md',
-        ]);
-        $builder->addColumn('id', '序号')->width(100);
-        $builder->addColumnImage('avatar', '用户头像');
-        $builder->addColumn('username', '登录账号');
-        $builder->addColumn('nickname', '用户昵称');
-        $builder->addColumn('role.title', '所属角色')->minWidth(180);
-        $builder->addColumn('login_ip', '登录IP')->minWidth(150);
+            $builder = XbCrud::make();
+            $builder->addHeaderDialog('添加用户', Url::make('Admin/add'), [
+                'title' => '添加管理员用户',
+                'size' => 'md',
+            ]);
+            $builder->addColumn('id', '序号')->width(100);
+            $builder->addColumnImage('avatar', '用户头像');
+            $builder->addColumn('username', '登录账号');
+            $builder->addColumn('nickname', '用户昵称');
+            $builder->addColumn('role.title', '所属角色')->minWidth(180);
+            $builder->addColumn('login_ip', '登录IP')->minWidth(150);
 
-        $builder->setActionConfig('width', 130);
-        $builder->addRightActionDialog('修改', Url::make('edit'), [
-            'title' => '修改管理员用户',
-            'size' => 'md',
-        ]);
-        $builder->addRightActionConfirm('删除', Url::make('del'));
-        return $this->successRes($builder);
+            $builder->setActionConfig('width', 130);
+            $builder->addRightActionDialog('修改', Url::make('edit'), [
+                'title' => '修改管理员用户',
+                'size' => 'md',
+            ]);
+            $builder->addRightActionConfirm('删除', Url::make('del'));
+            return $this->successRes($builder);
+        }
+        $adminId = $request->uid;
+        $data = Admin::with(['role'])
+            ->where('admin_id', $adminId)
+            ->order('id desc')
+            ->paginate();
+        return $this->successData($data);
     }
 
     /**

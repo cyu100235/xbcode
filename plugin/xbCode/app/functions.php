@@ -1,5 +1,7 @@
 <?php
 
+use plugin\xbCode\exception\business\ExceptionInternalServerError;
+
 /**
  * 打印数据
  * @param mixed $data
@@ -54,7 +56,7 @@ function xbValidate(string $validate, array $data, string|array $scene = '')
     }
     $result = $class->check($data);
     if (!$result) {
-        throw new \Exception((string) $class->getError(), 404);
+        throw new ExceptionInternalServerError($class->getError());
     }
 }
 /**

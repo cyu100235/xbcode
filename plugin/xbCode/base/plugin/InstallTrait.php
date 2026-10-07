@@ -117,7 +117,7 @@ trait InstallTrait
     protected function installConfig()
     {
         // 获取插件所有配置文件
-        $files = glob(base_path("/plugin/xbUser/setting/*/*.php"));
+        $files = glob(base_path("/plugin/{$this->name}/setting/*/*.php"));
         if (empty($files)) {
             return;
         }
