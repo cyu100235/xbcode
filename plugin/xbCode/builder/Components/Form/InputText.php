@@ -15,7 +15,6 @@ namespace plugin\xbCode\builder\Components\Form;
  * @author 楚羽幽 958416459@qq.com
  * @link https://aisuda.bce.baidu.com/amis/zh-CN/components/form/input-text
  * @method $this options(array $value) 选项组
- * @method $this copyable(array $value) 复制选项配置
  * @method $this source(string|array $value) 动态选项组
  * @method $this autoComplete(string|array $value) 自动补全
  * @method $this multiple(bool $value) 是否多选

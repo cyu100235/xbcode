@@ -19,6 +19,7 @@ use plugin\xbUpload\app\model\Upload;
 use plugin\xbUpload\enum\UploadExtEnum;
 use plugin\xbCode\builder\Renders\XbForm;
 use plugin\xbCode\builder\Renders\XbCrud;
+use plugin\xbUpload\app\model\UploadEngine;
 
 /**
  * 附件管理
@@ -36,11 +37,16 @@ class UploadController extends XbController
      */
     public function index(Request $request)
     {
+        $_nav = (string) $request->get('_nav', '');
+        $adapter = (string) $request->get('name', '');
         if (request()->get('_act', '')) {
             $builder = XbCrud::make();
-            // 设置上传附件按钮
-            $builder->addHeaderDialog('上传附件', Url::make('upload'))
-                ->cancelActions()->title('上传附件');
+            // 设置上传附件按钮（携带当前储存适配器，确保上传到对应储存）
+            $builder->addHeaderDialog('上传附件', Url::make('upload')->query([
+                'name' => $adapter,
+            ]))
+                ->cancelActions()
+                ->title('上传附件');
             // 添加表格列
             $builder->addColumn('id', '序号')->width(80);
             $builder->addColumn('title', '附件名称');
@@ -72,8 +78,6 @@ class UploadController extends XbController
             $builder->addSidebars($category);
             return $this->successRes($builder);
         }
-        $type = $request->get('_nav', '');
-        $adapter = $request->get('name', '');
 
         // 查询条件组装
         $where = [
@@ -82,8 +86,8 @@ class UploadController extends XbController
             ['adapter', '=', $adapter],
         ];
         // 取出对后缀格式
-        if ($type) {
-            $suffix = UploadExtEnum::getFieldValue($type, '', 'ext');
+        if ($_nav) {
+            $suffix = UploadExtEnum::getFieldValue($_nav, '', 'ext');
             $suffix = explode(',', $suffix);
             if ($suffix) {
                 $where[] = ['format', 'in', $suffix];
@@ -167,6 +171,7 @@ class UploadController extends XbController
         $builder = XbForm::make();
         $builder->addRowInput('title', '附件名称');
         $builder->addRowInput('name', '文件名称')->disabled(true);
+        $builder->addRowInput('url', '文件URL')->disabled(true);
         $builder->addRowInput('format', '文件格式')->disabled(true);
         $builder->addRowInput('size_format', '文件大小')->disabled(true);
         $builder->addRowInput('adapter', '储存位置')->disabled(true);
@@ -194,10 +199,11 @@ class UploadController extends XbController
      */
     public function upload(Request $request)
     {
-        if (request()->method() == 'POST') {
+        $adapter = (string) $request->get('name', '');
+        if ($request->method() == 'POST') {
             $uid = (int) $request->post('uid', 0);
             $name = (string) $request->post('name', 'file');
-            $adapter = (string) $request->post('adapter');
+            $adapter = (string) $request->post('adapter', $adapter);
             // 上传附件
             $result = UploadApi::make($adapter)
                 ->setUid($uid)
@@ -207,7 +213,15 @@ class UploadController extends XbController
             }
             return $this->successRes($result);
         }
-        return $this->display();
+        // 当前储存名称
+        $adapterTitle = $adapter ? (string) UploadEngine::where('name', $adapter)->value('title') : '';
+        // 弹窗内容由远程 Vue 视图渲染（app/admin/view/upload/upload.vue）
+        return $this->display([
+            'name' => $adapter,
+            'adapterTitle' => $adapterTitle,
+            'uploadUrl' => Url::make('upload')->get(),
+            'chunkUrl' => Url::make('chunk')->get(),
+        ], 'app/admin/view/upload/upload');
     }
 
     /**
@@ -219,14 +233,16 @@ class UploadController extends XbController
      */
     public function chunk(Request $request)
     {
-        $act = request()->get('_act');
+        $act = (string) $request->get('_act', '');
         if (empty($act)) {
             return $this->fail('缺少操作参数');
         }
-        $class = UploadChunk::make();
-        if (!method_exists($class, $act)) {
+        if (!in_array($act, ['start', 'chunk', 'finish'], true)) {
             return $this->fail('操作方法不存在');
         }
+        // 当前储存适配器（优先取POST，其次取query的name）
+        $adapter = (string) $request->post('adapter', $request->get('name', ''));
+        $class = UploadChunk::make($adapter);
         // 调用分片上传方法
         $data = call_user_func([$class, $act], $request);
         return $this->successRes($data);
@@ -243,6 +259,7 @@ class UploadController extends XbController
         $builder = XbForm::make();
         $builder->addRowInput('title', '附件名称');
         $builder->addRowInput('uri', '文件地址')->disabled(true);
+        $builder->addRowInput('url', '文件URL')->disabled(true)->copyable(true);
         $builder->addRowInput('name', '文件名称')->disabled(true);
         $builder->addRowInput('format', '文件格式')->disabled(true);
         $builder->addRowInput('size_format', '文件大小')->disabled(true);

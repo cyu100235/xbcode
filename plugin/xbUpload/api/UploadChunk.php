@@ -57,7 +57,7 @@ class UploadChunk
         $config = EngineApi::make()->getConfig($adapter);
         $this->adapter = $adapter;
         $this->config = $config;
-        $this->driver = new Driver($config);
+        $this->driver = Driver::make($config);
     }
 
     /**
@@ -106,10 +106,27 @@ class UploadChunk
          * 需要返回以下参数
          * uploadId 这次上传的唯一ID。
          * key 有点类似 uploadId，可有可无，用来记录后端文件存储路径
+         * partList 已上传的分片列表，用于断点续传
          */
+        // 扫描已上传的分片，用于断点续传
+        $partList = [];
+        if (is_dir($chunkPath)) {
+            foreach (scandir($chunkPath) as $file) {
+                if (!str_ends_with($file, '.tmp')) {
+                    continue;
+                }
+                $eTag = substr($file, 0, -4);
+                $partNumber = (int) explode('_', $eTag)[0];
+                $partList[] = [
+                    'partNumber' => $partNumber,
+                    'eTag' => $eTag,
+                ];
+            }
+        }
         return [
             'uploadId' => $uploadId,
             'key' => $chunkPath,
+            'partList' => $partList,
         ];
     }
 
@@ -184,7 +201,7 @@ class UploadChunk
             unlink($chunkPath);
         }
         // 执行文件上传
-        $result = UploadApi::make()->uploadFilePath($finalFilePath);
+        $result = UploadApi::make($this->adapter)->uploadFilePath($finalFilePath);
         // 删除临时文件
         if (file_exists($finalFilePath)) {
             unlink($finalFilePath);

@@ -620,13 +620,29 @@ export default {
             }
         }
 
-        // 中等桌面: 1200px - 1399px, 封面高度 12rem
+        // 小屏桌面: 1200px - 1399px, 每行 3 列, 封面高度 10rem
         @media screen and (min-width: 1200px) and (max-width: 1399px) {
             .xb-plugin-content {
                 .plugin-grid {
+                    // 覆盖 el-col-6，PC 小屏下改为每行 3 列，避免卡片过窄
+                    .el-col {
+                        flex: 0 0 33.33333%;
+                        max-width: 33.33333%;
+                    }
+
                     .plugin-card {
                         .plugin-cover {
-                            height: 12rem;
+                            height: 10rem;
+                        }
+
+                        .plugin-info {
+                            .plugin-title {
+                                font-size: 16px;
+                            }
+
+                            .plugin-desc {
+                                font-size: 13px;
+                            }
                         }
                     }
                 }

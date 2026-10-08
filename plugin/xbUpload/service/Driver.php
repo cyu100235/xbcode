@@ -221,6 +221,10 @@ class Driver
         if (empty($config)) {
             throw new Exception('未找到存储引擎配置: ' . $engineName);
         }
+        // 仅存在插件标识，说明该存储引擎尚未填写任何配置
+        if (count($config) <= 1 && isset($config['plugin'])) {
+            throw new Exception("存储引擎「{$engineName}」尚未配置，请先在「储存设置」中完成配置");
+        }
         // 引擎名称首字母转大写
         $engineName = ucfirst($engineName);
         // 获取存储引擎类
