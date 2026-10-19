@@ -28,6 +28,17 @@ trait ColumnUtil
     protected array $columns = [];
 
     /**
+     * 待重定位的插槽列批次
+     *
+     * 插槽定位的目标列可能由注册在后的监听器创建（跨插件前向引用），
+     * 此时先暂存该批次，待所有监听器执行完毕后由 flushSlotColumns() 统一重定位。
+     * @var array<int, array{columns:array, target:string, after:bool}>
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected array $pendingSlotColumns = [];
+
+    /**
      * 使用自定义组件列
      * @param mixed $component
      * @param string $name
@@ -83,6 +94,9 @@ trait ColumnUtil
 
     /**
      * 将插槽回调追加的列移动到目标列前/后
+     *
+     * 目标列若尚未创建（可能由注册在后的监听器创建），则暂存本批次，
+     * 待所有监听器执行完毕后由 flushSlotColumns() 统一重定位。
      * @param int $addedFrom 插槽回调执行前的列数量
      * @param string $target 目标列键名，不存在时追加到末尾
      * @param bool $after 是否插入到目标列之后
@@ -98,15 +112,70 @@ trait ColumnUtil
         // 取出本次回调追加的列
         $added = array_splice($this->columns, $addedFrom);
         // 定位目标列
-        $index = null;
-        foreach ($this->columns as $i => $column) {
-            if (is_object($column) && method_exists($column, 'getVariable') && $column->getVariable('name') === $target) {
-                $index = $i;
-                break;
+        $index = $this->findColumnIndex($target);
+        if ($index === null) {
+            // 目标列暂不存在，先暂存批次等待后续监听器补齐目标列
+            $this->pendingSlotColumns[] = [
+                'columns' => $added,
+                'target'  => $target,
+                'after'   => $after,
+            ];
+            // 暂存期间先按追加顺序放在末尾，避免丢失列
+            $this->columns = array_merge($this->columns, $added);
+            return;
+        }
+        $position = $after ? $index + 1 : $index;
+        array_splice($this->columns, $position, 0, $added);
+    }
+
+    /**
+     * 落定所有暂存的插槽列批次
+     *
+     * 在所有插槽监听器执行完毕后调用：此时其他插件注册的列均已创建，
+     * 暂存批次可正确重定位到目标列前/后；目标列仍不存在则保留在末尾。
+     * @return void
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function flushSlotColumns(): void
+    {
+        if (empty($this->pendingSlotColumns)) {
+            return;
+        }
+        $pending = array_values($this->pendingSlotColumns);
+        $this->pendingSlotColumns = [];
+        // 按对象标识摘除所有暂存列，再按注册顺序依次重定位到目标列前/后
+        $stashed = [];
+        foreach ($pending as $item) {
+            foreach ($item['columns'] as $column) {
+                $stashed[] = $column;
             }
         }
-        $position = $index === null ? count($this->columns) : ($after ? $index + 1 : $index);
-        array_splice($this->columns, $position, 0, $added);
+        $this->columns = array_values(array_filter($this->columns, function ($column) use ($stashed) {
+            return !in_array($column, $stashed, true);
+        }));
+        foreach ($pending as $item) {
+            $index = $this->findColumnIndex($item['target']);
+            $position = $index === null ? count($this->columns) : ($item['after'] ? $index + 1 : $index);
+            array_splice($this->columns, $position, 0, $item['columns']);
+        }
+    }
+
+    /**
+     * 查找列集合中指定键名的列下标
+     * @param string $name 列键名
+     * @return int|null 未找到返回 null
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected function findColumnIndex(string $name): ?int
+    {
+        foreach ($this->columns as $i => $column) {
+            if (is_object($column) && method_exists($column, 'getVariable') && $column->getVariable('name') === $name) {
+                return $i;
+            }
+        }
+        return null;
     }
 
     /**

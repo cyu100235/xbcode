@@ -16,16 +16,14 @@ use plugin\xbCode\command\init\InitCheck;
 use plugin\xbCode\command\init\InitDeploy;
 use plugin\xbCode\command\init\InitReadme;
 use plugin\xbCode\command\init\InitPreview;
-use plugin\xbCode\command\init\InitComposers;
 use Symfony\Component\Console\Command\Command;
 use plugin\xbCode\command\init\InitMiddleware;
-use plugin\xbCode\command\init\InitComposerFile;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * 安装composer依赖
+ * 初始化插件
  * @copyright 贵州积木云网络科技有限公司
  * @author 楚羽幽 958416459@qq.com
  */
@@ -37,7 +35,7 @@ class PluginInit extends Command
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    protected static $defaultName = 'xb-plugin:init';
+    protected static $defaultName = 'xb-plugin-init';
 
     /**
      * 命令描述
@@ -57,10 +55,8 @@ class PluginInit extends Command
     {
         $this->addOption('middleware', null, InputOption::VALUE_NONE, '仅执行安装超全局中间件');
         $this->addOption('jwt', null, InputOption::VALUE_NONE, '仅执行安装JWT密钥');
-        $this->addOption('composer', null, InputOption::VALUE_NONE, '仅执行安装composer文件改造');
         $this->addOption('copy', null, InputOption::VALUE_NONE, '仅执行复制文件操作');
         $this->addOption('del', null, InputOption::VALUE_NONE, '仅执行删除文件操作');
-        $this->addOption('composers', null, InputOption::VALUE_NONE, '仅执行安装所有依赖（composer install）');
         $this->addOption('deploy', null, InputOption::VALUE_NONE, '仅执行复制deploy文件');
         $this->addOption('readme', null, InputOption::VALUE_NONE, '仅执行复制README文件');
         $this->addOption('preview', null, InputOption::VALUE_NONE, '仅执行复制preview目录');
@@ -88,26 +84,18 @@ class PluginInit extends Command
         // 检测是否传入了任意参数选项
         $hasOption = $input->getOption('middleware')
             || $input->getOption('jwt')
-            || $input->getOption('composer')
             || $input->getOption('copy')
             || $input->getOption('del')
-            || $input->getOption('composers')
             || $input->getOption('deploy')
             || $input->getOption('readme')
             || $input->getOption('preview');
         if (!$hasOption) {
             // 无参数时执行所有操作
-            InitComposers::execute($input, $output);
             InitMiddleware::execute($input, $output);
             InitJwt::execute($input, $output);
-            InitComposerFile::execute($input, $output);
             InitCopy::execute($input, $output);
             InitDel::execute($input, $output);
         } else {
-            if ($input->getOption('composers')) {
-                // 安装所有依赖
-                InitComposers::execute($input, $output);
-            }
             if ($input->getOption('middleware')) {
                 // 安装超全局中间件
                 InitMiddleware::execute($input, $output);
@@ -115,10 +103,6 @@ class PluginInit extends Command
             if ($input->getOption('jwt')) {
                 // 安装JWT密钥
                 InitJwt::execute($input, $output);
-            }
-            if ($input->getOption('composer')) {
-                // 安装composer文件改造
-                InitComposerFile::execute($input, $output);
             }
             if ($input->getOption('copy')) {
                 // 执行复制文件

@@ -96,6 +96,7 @@ class Slot
     {
         // 上下文是否支持表格列定位（如 XbCrud）
         $columnAware = method_exists($payload, 'getSlotColumnCount') && method_exists($payload, 'applySlotColumn');
+        $flushAware = $columnAware && method_exists($payload, 'flushSlotColumns');
         foreach (static::enabledListeners($slot) as $listener) {
             try {
                 $addedFrom = $columnAware ? $payload->getSlotColumnCount() : null;
@@ -107,6 +108,18 @@ class Slot
                 }
             } catch (Throwable $e) {
                 Log::error(sprintf('插槽[%s]执行异常：%s', $slot, $e->getMessage()), [
+                    'slot'   => $slot,
+                    'file'   => $e->getFile(),
+                    'line'   => $e->getLine(),
+                ]);
+            }
+        }
+        // 全部监听器执行完毕后，落定目标列由后续监听器创建而暂存的列
+        if ($flushAware) {
+            try {
+                $payload->flushSlotColumns();
+            } catch (Throwable $e) {
+                Log::error(sprintf('插槽[%s]列重定位异常：%s', $slot, $e->getMessage()), [
                     'slot'   => $slot,
                     'file'   => $e->getFile(),
                     'line'   => $e->getLine(),

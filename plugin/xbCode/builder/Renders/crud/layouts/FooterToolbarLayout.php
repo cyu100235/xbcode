@@ -50,7 +50,7 @@ trait FooterToolbarLayout
         'showPerPage' => true,
         'showPageInput' => true,
         'total' => '${total}',
-        'perPageAvailable' => [30, 50, 100, 300],
+        'perPageAvailable' => [30, 50, 100, 300, 500, 1000],
     ];
 
     /**

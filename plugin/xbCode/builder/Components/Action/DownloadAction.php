@@ -1,7 +1,6 @@
 <?php
 /**
  * 积木云渲染器
- *
  * @package  XbCode
  * @author   楚羽幽 <958416459@qq.com>
  * @license  Apache License 2.0
@@ -19,7 +18,7 @@ namespace plugin\xbCode\builder\Components\Action;
  * Access-Control-Expose-Headers:  Content-Disposition
  * @copyright 贵州积木云网络科技有限公司
  * @author 楚羽幽 958416459@qq.com
- * @link https://aisuda.bce.baidu.com/amis/zh-CN/components/action
+ * @link https://aisuda.bce.baidu.com/amis/zh-CN/components/action#%E4%B8%8B%E8%BD%BD%E8%AF%B7%E6%B1%82
  * @method $this api(string|array $value) 接口地址
  * @method $this block(bool $value) 将按钮宽度调整为其父宽度的选项
  */

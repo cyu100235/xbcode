@@ -52,7 +52,9 @@ Slot::listen(string $slot, string $targetColumn, callable|array $handler, bool $
 2. 回调执行后取出**本次新增的列**；
 3. 将其整体移动到 `$targetColumn` 列的**前/后**。
 
-若 `$targetColumn` 对应的列不存在，则新增列追加到**末尾**。
+若 `$targetColumn` 对应的列在**所有监听器执行完毕**后仍不存在，则新增列追加到**末尾**。
+
+> **跨插件前向引用**：目标列可以是由**注册在后的其他插件监听器**创建的列（例如按列顺序，设备数量列要插到等级插件创建的等级列之后）。框架会先暂存这类批次，待全部监听器执行完毕后统一重定位，无需依赖插件的注册顺序。
 
 > `$after` 与 `$targetColumn` 仅对**支持列定位的上下文**（`XbCrud`）生效。行数据插槽的上下文（`ListContext`）不具备该能力，定位会被自动跳过，因此行插槽请将 `$targetColumn` 传 `''`。
 
