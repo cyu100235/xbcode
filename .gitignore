@@ -11,5 +11,4 @@
 /tests/tmp
 /tests/.phpunit.result.cache
 /php-cli.ini
-/deploy.php
 /.qoder/repowiki/*

@@ -119,7 +119,7 @@ set('bin/php', '/www/server/php/82/bin/php');
 set('composer_options', '--verbose --prefer-dist --no-progress --no-interaction --no-dev --optimize-autoloader');
 
 // 远端执行 git 时使用的 Gitee 公钥（注意：这是服务器上的公钥路径）
-set('remote_git_identity_file', '~/.ssh/id_ed25519');
+set('remote_git_identity_file', '~/.ssh/id_rsa');
 set('remote_git_ssh_command', 'ssh -i {{remote_git_identity_file}} -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new');
 
 // 测试环境（请按实际服务器修改）
@@ -130,7 +130,7 @@ host('test')
     ->setRemoteUser('root')
     // TODO 远程端口
     ->setPort(22)
-    // 指定连接服务器使用的私钥，避免无交互部署时走密码认证失败
+    // 指定连接服务器使用的本地私钥，避免无交互部署时走密码认证失败
     ->setIdentityFile('~/.ssh/id_rsa')
     // 开启 Agent 转发，远端拉取私有仓库时复用本机密钥
     ->setForwardAgent(true)
@@ -151,7 +151,7 @@ host('prod')
     ->setRemoteUser('root')
     // TODO 远程端口
     ->setPort(22)
-    // 指定连接服务器使用的私钥，避免无交互部署时走密码认证失败
+    // 指定连接服务器使用的本地私钥，避免无交互部署时走密码认证失败
     ->setIdentityFile('~/.ssh/id_rsa')
     // 开启 Agent 转发，远端拉取私有仓库时复用本机密钥
     ->setForwardAgent(true)
