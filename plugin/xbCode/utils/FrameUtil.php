@@ -52,7 +52,7 @@ class FrameUtil
             if ($socket === false) {
                 return false;
             }
-            $result = socket_bind($socket, '0.0.0.0', $port);
+            $result = @socket_bind($socket, '0.0.0.0', $port);
             socket_close($socket);
         } catch (\Throwable $th) {
             if (str_contains($th->getMessage(), 'Address already in use')) {
@@ -195,17 +195,31 @@ class FrameUtil
      */
     public static function xbServerPort(int $default = 39000)
     {
-        // 检测本地伪静态文件
         $file = base_path() . '/nginx.conf';
+        // 根目录伪静态文件已存在时，其端口即框架权威端口，直接采用
         if (file_exists($file)) {
-            // 获取nginx配置文件端口号
             $port = static::xbGetNginxConf($file);
             if ($port) {
                 return (int) $port;
             }
         }
-        // 返回默认端口号
-        return $default;
+        // 文件不存在时，以插件模板伪静态文件的端口作为基准端口
+        $template = base_path() . '/plugin/xbCode/nginx.conf';
+        $port = (int) (static::xbGetNginxConf($template) ?: $default);
+        // 端口被占用时，每次累加100，直到找到可用端口
+        $attempts = 0;
+        while (
+            function_exists('socket_create')
+            && $attempts < 100
+            && !static::checkedPort($port)
+        ) {
+            $port += 100;
+            $attempts++;
+        }
+        // 回写根目录伪静态文件，使本次启动即生效
+        static::updateServerPort($port);
+        // 返回端口号
+        return $port;
     }
 
     /**
@@ -219,8 +233,13 @@ class FrameUtil
     public static function updateServerPort(int $port)
     {
         $file = base_path() . '/nginx.conf';
+        // 文件不存在时从插件模板创建
         if (!file_exists($file)) {
-            throw new Exception('nginx配置文件不存在');
+            $template = base_path() . '/plugin/xbCode/nginx.conf';
+            if (!file_exists($template)) {
+                throw new Exception('nginx配置文件不存在');
+            }
+            copy($template, $file);
         }
         $content = file_get_contents($file);
         if (empty($content)) {
@@ -229,7 +248,7 @@ class FrameUtil
         // 替换端口号
         $content = preg_replace('/proxy_pass\s+http:\/\/\d+\.\d+\.\d+\.\d+:\d+/', "proxy_pass http://127.0.0.1:{$port}", $content);
         // 写入文件
-        file_put_contents($file, $content);
+        file_put_contents($file, $content, LOCK_EX);
     }
 
     /**

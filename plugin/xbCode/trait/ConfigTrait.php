@@ -10,9 +10,11 @@
 namespace plugin\xbCode\trait;
 
 use Exception;
+use Webman\Event\Event;
 use plugin\xbCode\api\Url;
 use plugin\xbCode\api\ConfigApi;
 use plugin\xbCode\api\ConfigView;
+use plugin\xbCode\api\ConfigChecked;
 use plugin\xbCode\builder\Renders\XbTabForm;
 
 /**
@@ -42,8 +44,17 @@ trait ConfigTrait
         }
         if (request()->method() === 'PUT') {
             $post = request()->post();
+            // 保存前的旧配置（用于监听器比对新旧值）
+            $origin = ConfigApi::make($group)->get('', []);
             // 保存配置
             ConfigApi::make($group)->set($post);
+            // 触发配置保存事件，供插件监听配置变更
+            Event::dispatch('xbCode.Config.save', [
+                'group' => ConfigChecked::getGroupName($group),
+                'path' => $group,
+                'data' => $post,
+                'origin' => $origin,
+            ]);
             // 返回数据
             return $this->success('保存成功');
         }
@@ -87,7 +98,17 @@ trait ConfigTrait
                     $_tab => $post,
                 ];
             }
+            // 保存前的旧配置（用于监听器比对新旧值）
+            $origin = ConfigApi::make($group)->get('', []);
             ConfigApi::make($group)->set($post);
+            // 触发配置保存事件，供插件监听配置变更
+            Event::dispatch('xbCode.Config.save', [
+                'group' => ConfigChecked::getGroupName($group),
+                'path' => $group,
+                'tab' => $_tab ?: '',
+                'data' => $post,
+                'origin' => $origin,
+            ]);
             // 返回数据
             return $this->success('保存成功');
         }

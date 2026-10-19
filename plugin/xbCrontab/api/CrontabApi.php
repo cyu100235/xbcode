@@ -14,6 +14,7 @@ use support\Log;
 use Webman\Event\Event;
 use Brick\VarExporter\VarExporter;
 use plugin\xbCrontab\app\model\Crontab;
+use plugin\xbCrontab\app\model\CrontabLog;
 use plugin\xbCrontab\app\process\XbCrontab;
 use plugin\xbCrontab\api\CronExpressionApi;
 use plugin\xbCrontab\app\validate\CrontabValidate;
@@ -119,6 +120,95 @@ class CrontabApi
         ChannelClient::publish(XbCrontab::$eventName, $data);
         Event::dispatch('xbCrontab.Crontab.del', $data);
         return $data;
+    }
+
+    /**
+     * 立即执行一次定时任务
+     * @param Crontab $model 定时任务模型
+     * @throws Exception
+     * @return float 任务执行耗时(秒)
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function run(Crontab $model)
+    {
+        // 开始时间
+        $startTime = microtime(true);
+        try {
+            // 获取任务执行类实例
+            $taskApi = TaskApi::make();
+            // 获取可执行方法列表
+            $methods = $taskApi->getMethods();
+            /**
+             * 获取任务类型
+             * @var string
+             */
+            $type = $model['type'];
+            if (!isset($methods[$type])) {
+                throw new Exception("任务类型:{$type}，不存在");
+            }
+            // 调用任务执行方法
+            $method = $methods[$type];
+            $result = $taskApi->$method($model['command']);
+            // 记录任务耗时(秒)
+            $runSecondTime = microtime(true) - $startTime;
+            // 更新数据
+            $model->save([
+                'last_time' => date('Y-m-d H:i:s'),
+                'error' => '',
+            ]);
+            // 记录执行日志（含执行目标的返回结果）
+            $this->saveLog((int)$model['id'], $runSecondTime, $this->formatRemark($result));
+            return $runSecondTime;
+        } catch (\Throwable $th) {
+            // 记录任务耗时(秒)
+            $runSecondTime = microtime(true) - $startTime;
+            // 更新数据
+            $model->save([
+                'last_time' => date('Y-m-d H:i:s'),
+                'state' => '30',
+                'error' => $th->getMessage(),
+            ]);
+            // 记录执行日志
+            $this->saveLog((int)$model['id'], $runSecondTime, $th->getMessage());
+            throw new Exception($th->getMessage());
+        }
+    }
+
+    /**
+     * 记录任务执行日志
+     * @param int $crontabId 定时任务ID
+     * @param float $runSecondTime 执行耗时(秒)
+     * @param string $remarks 执行备注
+     * @return void
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    private function saveLog(int $crontabId, float $runSecondTime, string $remarks)
+    {
+        $logModel = new CrontabLog;
+        $logModel->save([
+            'crontab_id' => $crontabId,
+            'run_second_time' => $runSecondTime,
+            'remarks' => $remarks,
+        ]);
+    }
+
+    /**
+     * 格式化执行结果备注
+     * @param mixed $result 任务执行返回结果
+     * @return string
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    private function formatRemark($result): string
+    {
+        $result = is_string($result) ? trim($result) : '';
+        // 无返回结果时使用默认备注
+        if ($result === '') {
+            return '任务执行完成';
+        }
+        return '任务执行完成：' . $result;
     }
 
     /**

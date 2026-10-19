@@ -12,6 +12,8 @@ namespace plugin\xbUpload\api;
 use Exception;
 use support\think\Cache;
 use plugin\xbCode\api\ConfigApi;
+use plugin\xbCode\api\PluginsApi;
+use plugin\xbUpload\service\Driver;
 use plugin\xbUpload\app\model\UploadEngine;
 use plugin\xbUpload\app\validate\EngineValidate;
 
@@ -29,6 +31,22 @@ class EngineApi
      * @author 楚羽幽 958416459@qq.com
      */
     protected $keyName = 'xbCode-Engine';
+
+    /**
+     * 连接检测缓存键名
+     * @var string
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected $connectKeyName = 'xbCode-Engine-Connect';
+
+    /**
+     * 连接检测缓存有效期（秒）
+     * @var int
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected int $connectCacheTtl = 600;
 
     /**
      * 创建实例
@@ -53,11 +71,138 @@ class EngineApi
         $data = $this->getCache();
         // 获取当前选中的适配器名称
         $active = ConfigApi::make('upload')->get('active', '');
+        // 获取连接检测结果缓存
+        $connectCache = $this->getConnectCache();
         foreach ($data as &$item) {
             // 选中启用
             $item['state'] = $active === $item['name'] ? '20' : '10';
+            // 是否已配置
+            $item['config'] = $this->hasConfig($item['name'], (string) ($item['plugin'] ?? '')) ? '20' : '10';
+            // 连接检测结果：20正常，30异常，10未检测
+            $result = $connectCache[$item['name']] ?? null;
+            $item['connect'] = $result === null ? '10' : ($result['ok'] ? '20' : '30');
+            $item['connect_message'] = $result['message'] ?? '';
         }
         return $data;
+    }
+
+    /**
+     * 检测引擎配置是否已填写
+     * @param string $name 引擎标识
+     * @param string $plugin 插件标识，已有时可避免重复查询
+     * @return bool
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function hasConfig(string $name, string $plugin = '')
+    {
+        if (empty($plugin)) {
+            $plugin = (string) UploadEngine::where('name', $name)->value('plugin', '');
+            if (empty($plugin)) {
+                return false;
+            }
+        }
+        // 本地存储无需填写配置参数
+        if ($plugin === 'xbUpload') {
+            return true;
+        }
+        $config = ConfigApi::make('upload')->get($name, []);
+        if (empty($config) || !is_array($config)) {
+            return false;
+        }
+        // 仅存在 plugin 字段说明尚未填写任何配置
+        $fields = array_diff(array_keys($config), ['plugin']);
+        return !empty($fields);
+    }
+
+    /**
+     * 检测引擎配置参数是否可用且已连通
+     * @param string $name 引擎标识
+     * @throws Exception
+     * @return array
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function check(string $name)
+    {
+        $model = UploadEngine::where('name', $name)->find();
+        if (!$model) {
+            throw new Exception('云储存引擎不存在');
+        }
+        // 检测插件是否启用
+        if (!PluginsApi::make()->hasEnabled($model['plugin'])) {
+            throw new Exception('插件未启用，请先启用插件');
+        }
+        // 检测是否已配置
+        if (!$this->hasConfig($name)) {
+            throw new Exception("请先完成「{$model['title']}」储存设置");
+        }
+        $ok = false;
+        $message = '';
+        try {
+            $driver = Driver::make($this->getConfig($name), $name);
+            $ok = (bool) $driver->check();
+            if (!$ok) {
+                $message = $driver->getError() ?: '连接失败，请检查配置参数';
+            }
+        } catch (\Throwable $e) {
+            $ok = false;
+            $message = $e->getMessage();
+        }
+        // 写入连接检测缓存
+        $this->setConnectCache($name, $ok, $message);
+        return [
+            'ok' => $ok,
+            'message' => $message,
+        ];
+    }
+
+    /**
+     * 获取连接检测结果缓存
+     * @return array
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function getConnectCache()
+    {
+        $data = Cache::get($this->connectKeyName);
+        return is_array($data) ? $data : [];
+    }
+
+    /**
+     * 写入连接检测结果缓存
+     * @param string $name 引擎标识
+     * @param bool $ok 是否连通
+     * @param string $message 提示信息
+     * @return void
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function setConnectCache(string $name, bool $ok, string $message = '')
+    {
+        $data = $this->getConnectCache();
+        $data[$name] = [
+            'ok' => $ok,
+            'message' => $message,
+            'time' => date('Y-m-d H:i:s'),
+        ];
+        Cache::set($this->connectKeyName, $data, $this->connectCacheTtl);
+    }
+
+    /**
+     * 清除指定引擎的连接检测缓存
+     * @param string $name 引擎标识
+     * @return void
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function clearConnectCache(string $name)
+    {
+        $data = $this->getConnectCache();
+        if (isset($data[$name])) {
+            unset($data[$name]);
+            Cache::set($this->connectKeyName, $data, $this->connectCacheTtl);
+        }
     }
 
     /**

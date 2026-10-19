@@ -203,6 +203,14 @@ abstract class Server
     abstract protected function domain();
 
     /**
+     * 检测存储引擎配置参数是否可用且已连通
+     * @return bool
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    abstract public function check();
+
+    /**
      * 删除文件
      * @param string $fileName
      * @return mixed

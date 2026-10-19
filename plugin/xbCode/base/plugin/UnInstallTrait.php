@@ -91,7 +91,7 @@ trait UnInstallTrait
     protected function unInstallCrontab()
     {
         // 检测插件是否已安装
-        if (PluginsApi::make()->installed('xbCrontab')) {
+        if (!PluginsApi::make()->installed('xbCrontab')) {
             return;
         }
         // 检测插件是否启用

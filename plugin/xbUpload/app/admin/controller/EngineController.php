@@ -54,10 +54,31 @@ class EngineController extends XbController
             $builder->addColumn('title', '储存方式');
             $builder->addColumnHtml('desc', '储存介绍');
             $builder->addColumnHtml('prompt', '储存提示词');
+            // 是否已配置
+            $builder->addColumnMap('config', '配置状态', [
+                '10' => '<span class="label label-default">未配置</span>',
+                '20' => '<span class="label label-success">已配置</span>',
+            ])->width(100)->align('center');
+            // 连接检测结果
+            $builder->addColumnMap('connect', '连接状态', [
+                '10' => '<span class="label label-default">未检测</span>',
+                '20' => '<span class="label label-success">已连通</span>',
+                '30' => '<span class="label label-danger">不可用</span>',
+            ])->width(100)->align('center');
+            // 连接异常时展示具体原因
+            $builder->addColumnTpl('connect_message', '检测信息', <<<HTML
+            <span style="font-size: 12px; color: #FF4D4F;">\${connect_message}</span>
+            HTML)->width(220);
             $builder->addColumnSwitch('state', '默认使用', UseStateEnum::switch());
 
             // 设置操作按钮
-            $builder->setActionConfig('width', 200);
+            $builder->setActionConfig('width', 260);
+            $builder->addRightActionConfirm('检测连接', Url::make('check')
+                ->query([
+                    'name' => '${name}',
+                ]), [
+                    'content' => '是否确认检测该储存方式的配置与连通性？',
+                ])->success();
             $builder->addRightActionDialog('储存设置', Url::make('config')
                 ->query([
                     'name' => '${name}'
@@ -100,6 +121,22 @@ class EngineController extends XbController
         ]);
         // 返回数据
         return $this->success('保存成功');
+    }
+
+    /**
+     * 检测引擎配置与连通性
+     * @return \support\Response
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function check()
+    {
+        $name = request()->get('name', '');
+        $result = EngineApi::make()->check($name);
+        if (!$result['ok']) {
+            return $this->fail($result['message'] ?: '连接检测失败');
+        }
+        return $this->success('连接检测成功，配置可用');
     }
 
     /**
@@ -146,6 +183,8 @@ class EngineController extends XbController
             ];
             // 保存配置
             ConfigApi::make($path)->set($data);
+            // 清除旧的连接检测结果，重新检测
+            EngineApi::make()->clearConnectCache($name);
             // 返回数据
             return $this->success('保存配置成功');
         }

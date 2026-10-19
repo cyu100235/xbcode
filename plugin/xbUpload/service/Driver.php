@@ -142,6 +142,17 @@ class Driver
     }
 
     /**
+     * 检测存储引擎配置是否可用且已连通
+     * @return bool
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function check()
+    {
+        return $this->engine->check();
+    }
+
+    /**
      * 抓取网络资源
      * @param mixed $url
      * @param mixed $key

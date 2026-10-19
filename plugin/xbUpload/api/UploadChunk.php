@@ -36,6 +36,14 @@ class UploadChunk
     protected array $config = [];
 
     /**
+     * 储存目录
+     * @var string
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected string $dir = '';
+
+    /**
      * 上传驱动
      * @var Driver
      * @copyright 贵州积木云网络科技有限公司
@@ -83,6 +91,19 @@ class UploadChunk
     public function setAdapter(string $adapter)
     {
         $this->adapter = $adapter;
+        return $this;
+    }
+
+    /**
+     * 设置储存目录
+     * @param string $dir 储存目录
+     * @return static
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function setDir(string $dir)
+    {
+        $this->dir = $dir;
         return $this;
     }
 
@@ -201,7 +222,11 @@ class UploadChunk
             unlink($chunkPath);
         }
         // 执行文件上传
-        $result = UploadApi::make($this->adapter)->uploadFilePath($finalFilePath);
+        $class = UploadApi::make($this->adapter);
+        if ($this->dir !== '') {
+            $class->setSaveDir($this->dir);
+        }
+        $result = $class->uploadFilePath($finalFilePath);
         // 删除临时文件
         if (file_exists($finalFilePath)) {
             unlink($finalFilePath);

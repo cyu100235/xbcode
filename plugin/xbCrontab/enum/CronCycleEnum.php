@@ -18,6 +18,12 @@ use plugin\xbCode\base\BaseEnum;
  */
 class CronCycleEnum extends BaseEnum
 {
+    const STATE05 = [
+        'label' => '每秒',
+        'value' => 'second',
+        'unit' => '秒',
+        'placeholder' => '秒数',
+    ];
     const STATE10 = [
         'label' => '每分钟',
         'value' => 'minute',

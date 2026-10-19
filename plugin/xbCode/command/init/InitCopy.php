@@ -43,6 +43,11 @@ class InitCopy
             'remarks' => '复制README文件完成...'
         ],
         [
+            'from' => '/plugin/xbCode/AGENTS.md',
+            'to' => '/AGENTS.md',
+            'remarks' => '复制AGENTS规则文件完成...'
+        ],
+        [
             'from' => '/plugin/xbCode/config/database.php',
             'to' => '/config/database.php',
             'remarks' => '替换Database配置文件完成...'

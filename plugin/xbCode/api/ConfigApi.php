@@ -227,7 +227,10 @@ class ConfigApi
             return $res;
         }
 
-        // 统一替换文件URL
+        // 先解析层级JSON数据，确保嵌套配置项中的附件地址能被正确还原
+        $data = $this->processJsonInData($data);
+
+        // 统一替换文件URL（递归处理嵌套配置）
         $data = ConfigChecked::replaceFileUrl($data);
 
         // 获取当前分组下的所有配置项

@@ -19,7 +19,7 @@ use plugin\xbCode\Model;
 class AdminRole extends Model
 {
     // 设置JSON字段转换
-    protected $json = ['rule'];
+    protected $json = ['rule', 'theme'];
     // 设置JSON数据返回数组
     protected $jsonAssoc = true;
 }

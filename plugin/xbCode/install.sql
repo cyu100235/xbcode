@@ -9,6 +9,7 @@ CREATE TABLE `xb_admin_role` (
   `admin_id` int(11) NOT NULL DEFAULT '0' COMMENT '所属管理员ID，0顶级',
   `title` varchar(50) NOT NULL COMMENT '角色名称',
   `rule` text COMMENT '角色权限',
+  `theme` text COMMENT '角色主题设置',
   `is_system` enum('10','20') NOT NULL DEFAULT '10' COMMENT '是否系统：10否，20是',
   `sort` int(11) NOT NULL DEFAULT '0' COMMENT '角色排序',
   PRIMARY KEY (`id`) USING BTREE
@@ -49,7 +50,7 @@ CREATE TABLE `xb_admin_rule` (
   `path` varchar(100) NOT NULL COMMENT '菜单地址',
   `pid` int(11) NOT NULL COMMENT '父级ID',
   `is_show` enum('10','20') NOT NULL DEFAULT '10' COMMENT '是否显示：10否，20是',
-  `is_default` enum('10','20') NOT NULL DEFAULT '10' COMMENT '是否默认：10否，20是',
+  `is_default` enum('10','20') NOT NULL DEFAULT '10' COMMENT '默认选中：10否，20是',
   `is_system` enum('10','20') NOT NULL DEFAULT '10' COMMENT '是否系统：10否，20是',
   `state` enum('10','20') NOT NULL DEFAULT '10' COMMENT '是否启用：10否，20是',
   `method` varchar(20) NOT NULL DEFAULT '' COMMENT '请求方式',
@@ -72,6 +73,32 @@ CREATE TABLE `xb_config` (
   `value` text COMMENT '配置数据',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC COMMENT='配置参数';
+
+-- 删除表语句
+DROP TABLE IF EXISTS `xb_admin_log`;
+-- 表结构：`xb_admin_log`
+CREATE TABLE `xb_admin_log` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '序号',
+  `create_at` datetime DEFAULT NULL COMMENT '创建时间',
+  `update_at` datetime DEFAULT NULL COMMENT '更新时间',
+  `saas_appid` int(11) DEFAULT '0' COMMENT '站点ID',
+  `admin_id` int(11) NOT NULL DEFAULT '0' COMMENT '操作管理员ID',
+  `username` varchar(50) NOT NULL DEFAULT '' COMMENT '管理员登录账号',
+  `menu_title` varchar(100) NOT NULL DEFAULT '' COMMENT '操作菜单名称',
+  `action` char(2) NOT NULL DEFAULT '10' COMMENT '操作类型：10新增，20修改，30删除',
+  `method` varchar(10) NOT NULL DEFAULT '' COMMENT '请求方式：POST/PUT/DELETE',
+  `path` varchar(255) NOT NULL DEFAULT '' COMMENT '请求地址',
+  `content` text COMMENT '操作内容',
+  `params` text COMMENT '操作参数（已脱敏JSON）',
+  `ip` varchar(50) NOT NULL DEFAULT '' COMMENT '操作IP',
+  `city` varchar(100) NOT NULL DEFAULT '' COMMENT '所在城市',
+  `user_agent` varchar(500) NOT NULL DEFAULT '' COMMENT '浏览器标识',
+  `result` char(2) NOT NULL DEFAULT '20' COMMENT '操作结果：10失败，20成功',
+  `error` varchar(500) NOT NULL DEFAULT '' COMMENT '失败原因',
+  PRIMARY KEY (`id`) USING BTREE,
+  KEY `idx_admin` (`admin_id`) USING BTREE,
+  KEY `idx_create` (`create_at`) USING BTREE
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC COMMENT='管理员操作日志';
 
 -- 删除表语句
 DROP TABLE IF EXISTS `xb_plugins`;

@@ -204,10 +204,14 @@ class UploadController extends XbController
             $uid = (int) $request->post('uid', 0);
             $name = (string) $request->post('name', 'file');
             $adapter = (string) $request->post('adapter', $adapter);
+            // 储存目录（可选，来自上传接口参数）
+            $dir = UploadApi::normalizeDir((string) $request->post('dir', $request->get('dir', '')));
             // 上传附件
-            $result = UploadApi::make($adapter)
-                ->setUid($uid)
-                ->upload($name);
+            $class = UploadApi::make($adapter)->setUid($uid);
+            if ($dir !== '') {
+                $class->setSaveDir($dir);
+            }
+            $result = $class->upload($name);
             if (!$result) {
                 return $this->fail('上传失败');
             }
@@ -242,7 +246,12 @@ class UploadController extends XbController
         }
         // 当前储存适配器（优先取POST，其次取query的name）
         $adapter = (string) $request->post('adapter', $request->get('name', ''));
+        // 储存目录（可选，来自上传接口参数）
+        $dir = UploadApi::normalizeDir((string) $request->post('dir', $request->get('dir', '')));
         $class = UploadChunk::make($adapter);
+        if ($dir !== '') {
+            $class->setDir($dir);
+        }
         // 调用分片上传方法
         $data = call_user_func([$class, $act], $request);
         return $this->successRes($data);

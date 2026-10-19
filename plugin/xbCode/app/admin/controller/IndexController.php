@@ -9,6 +9,7 @@
  */
 namespace plugin\xbCode\app\admin\controller;
 
+use plugin\xbCode\api\Url;
 use plugin\xbCode\api\AppEntry;
 use plugin\xbCode\api\PluginsApi;
 
@@ -48,8 +49,17 @@ class IndexController extends BaseController
     public function site()
     {
         $builder = AppEntry::make(request()->app);
+        // 设置工具栏列表
+        $builder->toolbar($this->getConfig('toolbar', []));
+        // 设置登录页数据
         $builder->loginData([
             'login_title' => '管理员登录',
+        ]);
+        // 设置页面视图接口
+        $builder->publicView([
+            'user' => Url::make('Admin/profile'),
+            'toolbar' => Url::make('Index/toolbar'),
+            'workbench' => Url::make('Admin/workbench'),
         ]);
         // 设置全局组件
         $components = $this->getConfig('components', []);

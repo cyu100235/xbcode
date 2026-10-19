@@ -152,8 +152,23 @@ class XbCrud extends Base
         $this->addToolbarReload();
         // 设置配合隐藏自定义上传输入组合框
         $this->usePage()->css([
+            // 隐藏上传组件的文件列表，仅保留选择按钮
             '.xb-hide-upload-file-list .cxd-InputGroup .cxd-FileControl .cxd-FileControl-list' => [
                 'display' => 'none'
+            ],
+            // 上传按钮沿用输入框边框样式，右侧保留圆角，使其整体融入输入框
+            '.xb-hide-upload-file-list .cxd-InputGroup .cxd-FileControl .cxd-FileControl-selectBtn' => [
+                'border-color' => '#E8E9EB',
+                'border-radius' => '0 4px 4px 0',
+                'margin' => '0'
+            ],
+            // 复制按钮悬停时 amis 会重写整圈边框（含右侧），强制去掉右边框避免多出一条边线
+            '.xb-hide-upload-file-list .cxd-InputGroup .cxd-InputGroup-btn:not(:last-child) .cxd-Button' => [
+                'border-right' => '0 !important'
+            ],
+            // 输入框聚焦时上传按钮未跟随焦点边框色，导致边框线断开，此处补齐为焦点色
+            '.xb-hide-upload-file-list .cxd-InputGroup.is-focused .cxd-FileControl .cxd-FileControl-selectBtn' => [
+                'border-color' => 'var(--InputGroup-addOn-onFocused-borderColor)'
             ],
         ]);
     }

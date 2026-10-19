@@ -140,7 +140,7 @@ include /www/wwwroot/demo.xbcode.net/nginx.conf;
 
 All rights reserved。
 
-xbcode 商标和著作权所有者为贵州云铺网络科技有限公司。
+xbcode 商标和著作权所有者为贵州积木云网络科技有限公司。
 
 感谢每一位贡献代码的朋友。
 

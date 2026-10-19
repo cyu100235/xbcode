@@ -1,7 +1,6 @@
 <?php
 /**
  * 积木云渲染器
- *
  * @package  XbCode
  * @author   楚羽幽 <958416459@qq.com>
  * @license  Apache License 2.0
@@ -11,6 +10,10 @@
 namespace plugin\xbCode\builder\Components\Form;
 
 /**
+ * Transfer组件
+ * @copyright 贵州积木云网络科技有限公司
+ * @author 楚羽幽 958416459@qq.com
+ * @link https://aisuda.bce.baidu.com/amis/zh-CN/components/form/transfer
  * @method $this options(array $value) 设置选项组
  * @method $this source(string $value) 设置动态选项组
  * @method $this delimeter(string $value) 设置拼接符
@@ -44,16 +47,18 @@ class Transfer extends FormOptions
     public string $type = 'transfer';
 
     /**
-     * 默认属性：与 amis Tree 内部默认值对齐，规避 UI Transfer 未透传属性的 BUG
+     * 默认属性
      * - joinValues(false)    = 值为数组，不拼接成逗号串
-     * - extractValue(false)  = 与 Tree 取不到该属性时的默认值一致，绕开前端未透传缺陷
-     * @return void
+     * - extractValue(true)   = 提交选项的 value 值（菜单地址字符串），与 Select 保持一致
+     *   若为 false，amis Transfer 会把整个选项对象 {label,value} 作为值提交，
+     *   导致后端权限规则无法按菜单地址匹配
+     * @return static
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public function defaultAttr()
     {
-        $this->joinValues(false)->extractValue(false);
+        $this->joinValues(false)->extractValue(true);
         return $this;
     }
 

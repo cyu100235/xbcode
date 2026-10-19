@@ -57,6 +57,7 @@ class Button extends BaseSchema
             $this->className('text-primary');
         } else {
             $this->level('primary');
+            $this->className('text-white');
         }
         return $this;
     }
@@ -74,6 +75,7 @@ class Button extends BaseSchema
             $this->className('text-secondary');
         } else {
             $this->level('secondary');
+            $this->className('text-white');
         }
         return $this;
     }
@@ -91,6 +93,7 @@ class Button extends BaseSchema
             $this->className('text-success');
         } else {
             $this->level('success');
+            $this->className('text-white');
         }
         return $this;
     }
@@ -108,6 +111,7 @@ class Button extends BaseSchema
             $this->className('text-warning');
         } else {
             $this->level('warning');
+            $this->className('text-white');
         }
         return $this;
     }
@@ -125,6 +129,7 @@ class Button extends BaseSchema
             $this->className('text-danger');
         } else {
             $this->level('danger');
+            $this->className('text-white');
         }
         return $this;
     }
@@ -159,6 +164,7 @@ class Button extends BaseSchema
             $this->className('text-dark');
         } else {
             $this->level('dark');
+            $this->className('text-white');
         }
         return $this;
     }

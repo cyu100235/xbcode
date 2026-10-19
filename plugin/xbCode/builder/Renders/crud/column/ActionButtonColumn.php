@@ -1,7 +1,6 @@
 <?php
 /**
  * 积木云渲染器
- *
  * @package  XbCode
  * @author   楚羽幽 <958416459@qq.com>
  * @license  Apache License 2.0
@@ -10,6 +9,7 @@
  */
 namespace plugin\xbCode\builder\Renders\crud\column;
 
+use plugin\xbCode\builder\Components\Tpl;
 use plugin\xbCode\builder\Components\Action\UrlAction;
 use plugin\xbCode\builder\Components\Action\LinkAction;
 use plugin\xbCode\builder\Components\Action\AjaxAction;
@@ -17,7 +17,6 @@ use plugin\xbCode\builder\Components\Table\TableColumn;
 use plugin\xbCode\builder\Components\Action\DialogAction;
 use plugin\xbCode\builder\Components\Action\DrawerAction;
 use plugin\xbCode\builder\Components\Action\DownloadAction;
-use plugin\xbCode\builder\Components\Tpl;
 
 /**
  * 行为按钮列
@@ -38,14 +37,15 @@ trait ActionButtonColumn
      */
     public function addColumnDialog(string $name, string $label, string $url, callable|array $option = [])
     {
-        $url = $this->getRightActionAPI($url, 'get');
+        // 弹窗内容为远程 Schema，需携带 _act 参数以返回渲染器 Schema 而非列表数据
+        $url = $this->getRightActionAPI($url, 'get', ['_act' => 'ajax']);
         /** @var TableColumn|DialogAction */
         $component = $this->useCustomColumn(DialogAction::class, $name, $label, $option);
         $component->vAlign('middle');
         $component->level('link');
         $component->actionType('dialog');
         $component->dialogModel($url, $label, $option);
-        $title = $option['title'] ?? "\${{$name}}";
+        $title = $option['btn_label'] ?? "\${{$name}}";
         $html = <<<HTML
         <span class="text-primary cursor-pointer" style="font-size: 12px;">$title</span>
         HTML;
@@ -130,7 +130,7 @@ trait ActionButtonColumn
         $component->confirmTitle($cTitle);
         $component->confirmText($content);
         // 按钮设置
-        $buttonTitle = $option['title'] ?? '立即操作';
+        $buttonTitle = $option['btn_label'] ?? '立即操作';
         // 重设单元格内容
         $html = <<<HTML
         <span class="text-primary cursor-pointer" style="font-size: 12px;">$buttonTitle</span>
@@ -158,7 +158,7 @@ trait ActionButtonColumn
         $component = $this->useCustomColumn(new LinkAction($this->url), $name, $title, $option);
         $component->vAlign('middle');
         $component->level('link');
-        $title = $option['title'] ?? "\${{$name}}";
+        $title = $option['btn_label'] ?? "\${{$name}}";
         $html = <<<HTML
         <span class="text-primary cursor-pointer" style="font-size: 12px;">$title</span>
         HTML;
@@ -196,7 +196,7 @@ trait ActionButtonColumn
         } else {
             $component->url('${' . $name . '}');
         }
-        $title = $option['title'] ?? '点击访问';
+        $title = $option['btn_label'] ?? '点击访问';
         $html = <<<HTML
         <a href="\${$name}" class="text-primary cursor-pointer" style="font-size: 12px;">$title</a>
         HTML;
@@ -231,7 +231,7 @@ trait ActionButtonColumn
         // 从返回数据中获取URL的字段名，默认使用 url
         $apiUrlField = $option['apiUrlField'] ?? 'url';
         // 点击按钮显示的标题
-        $title = $option['title'] ?? '立即打开';
+        $title = $option['btn_label'] ?? '立即打开';
         // 是否新标签页打开
         $blank = $option['blank'] ?? true;
 

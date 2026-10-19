@@ -23,7 +23,7 @@ namespace plugin\xbCode\builder\Components\Form;
  * @method $this valueField(string $value) 选项值字段
  * @method $this joinValues(bool $value) 拼接值
  * @method $this extractValue(bool $value) 提取值
- * @method $this addOn(array $value) 输入框附加组件，比如附带一个提示文字，或者附带一个提交按钮。
+ * @method $this addOn(array|mixed $value) 输入框附加组件，比如附带一个提示文字，或者附带一个提交按钮。
  * @method $this trimContents(bool $value) 是否去除首尾空白文本
  * @method $this clearValueOnEmpty(bool $value) 文本内容为空时去掉这个值
  * @method $this creatable(bool $value) 是否可以创建，默认为可以，除非设置为 false 即只能选择选项中的值

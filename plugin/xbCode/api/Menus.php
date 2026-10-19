@@ -88,6 +88,7 @@ class Menus
         if (empty($menuPaths)) {
             throw new Exception('菜单文件路径不能为空');
         }
+        $pluginsApi = PluginsApi::make();
         $menus = [];
         foreach ($menuPaths as $path) {
             if (!file_exists($path)) {
@@ -97,9 +98,14 @@ class Menus
             if (empty($content)) {
                 continue;
             }
+            // 解析菜单归属插件
+            $plugin = basename(dirname($path, 4));
+            // 仅加载已安装且已启用插件的菜单
+            if (!$pluginsApi->installed($plugin) || !$pluginsApi->hasEnabled($plugin)) {
+                continue;
+            }
             $list = include $path;
             if (!empty($list)) {
-                $plugin = basename(dirname($path, 4));
                 $list = MenuChecked::resetField($list, 'plugin', $plugin);
             }
             $menus = array_merge($menus, $list);
@@ -301,7 +307,7 @@ class Menus
                 $value['is_show'] = '10';
             }
             if (empty($value['state'])) {
-                $value['state'] = '10';
+                $value['state'] = '20';
             }
             if (!in_array($value['is_default'], ['10', '20'])) {
                 throw new Exception('是否默认值错误');

@@ -36,7 +36,9 @@ trait JsonTrait
         if (!empty($data)) {
             $json['data'] = $data;
         }
-        $json['option'] = $option;
+        if (!empty($option)) {
+            $json['option'] = $option;
+        }
         // 返回JSON
         return json($json);
     }
@@ -45,7 +47,7 @@ trait JsonTrait
      * 返回固定JSON
      * @param array $data
      * @param array $option
-     * @throws \Exception
+     * @throws Exception
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
@@ -197,13 +199,17 @@ trait JsonTrait
         } else {
             $result = $model->toArray();
         }
+        // 取分页数据列表：存在 data 键则为分页结构，否则整体即列表
+        $items = $result['data'] ?? $result;
+        // 优先使用分页返回的真实 total，不存在时再按当前列表数量兜底
+        $total = $result['total'] ?? count($items);
         $data = [
-            'items' => isset($result['data']) ? $result['data'] : $result,
+            'items' => $items,
         ];
         if (isset($result['current_page'])) {
             $data['page'] = $result['current_page'];
         }
-        $data['total'] = $result['total'] ?? 0;
+        $data['total'] = $total;
         return static::json('success', 0, $data, $option);
     }
 }

@@ -26,6 +26,6 @@ CREATE TABLE `xb_crontab_log` (
   `create_at` datetime DEFAULT NULL,
   `crontab_id` int(11) DEFAULT NULL,
   `run_second_time` varchar(30) DEFAULT NULL,
-  `remarks` varchar(255) DEFAULT NULL,
+  `remarks` text COMMENT '执行备注',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='定时任务日志';

@@ -10,6 +10,7 @@
  */
 namespace plugin\xbCode\builder\Renders\form\rows;
 
+use plugin\xbCode\builder\Components\Form\InputNumber;
 use plugin\xbCode\builder\Components\Form\InputText;
 
 /**
@@ -25,14 +26,14 @@ trait NumberInputRow
      * @param string $title
      * @param mixed $value
      * @param callable|array $option
-     * @return InputText
+     * @return InputNumber
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public function addRowInputNumber(string $field, string $title, mixed $value = '', callable|array $option= [])
     {
-        /** @var InputText */
-        $component = $this->addRow(InputText::class, $field, $title, $value, $option);
+        /** @var InputNumber */
+        $component = $this->addRow(InputNumber::class, $field, $title, $value, $option);
         $component->type('input-number');
         return $component;
     }

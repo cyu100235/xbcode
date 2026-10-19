@@ -58,10 +58,10 @@ class IndexController extends XbController
                 'name' => '${name}',
                 '_act' => 'template',
             ]), '', '温馨提示', [
-                'title' => '立即重设',
+                'btn_label' => '立即重设',
             ])->confirmText('是否基于固定模板重新生成图标？')->width(100);
             $builder->addColumnDialog('icon', '设置图标', Url::make('icon'), [
-                'title' => '上传图标',
+                'btn_label' => '上传图标',
             ])->width(100);
             $builder->addColumnDateTime('create_at', '创建时间')->width(160)->align('center');
 

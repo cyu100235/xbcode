@@ -9,6 +9,7 @@
  */
 namespace plugin\xbCrontab\app\admin\controller;
 
+use Tinywan\Jwt\JwtToken;
 use plugin\xbCode\api\Url;
 use plugin\xbCode\XbController;
 use plugin\xbCode\api\PluginsApi;
@@ -23,6 +24,7 @@ use plugin\xbCode\builder\Renders\XbCrud;
 use plugin\xbCode\builder\Renders\XbForm;
 use plugin\xbCrontab\app\model\CrontabLog;
 use plugin\xbCrontab\api\CronExpressionApi;
+use plugin\xbCode\exception\business\ExceptionBadRequest;
 
 /**
  * 定时任务控制器
@@ -65,15 +67,20 @@ class IndexController extends XbController
                 ->width(150)
                 ->align('center');
             // 操作
+            $builder->setActionConfig('width', 360);
+            $builder->addRightActionConfirm('立即启动', Url::make('run'), [
+                'content' => '是否立即执行该定时任务？',
+            ])->success(true);
             $builder->addRightActionConfirm('执行导出', Url::make('export'), [
                 'content' => '是否确认导出该定时任务？',
-            ])->className('text-success');
-            $builder->addRightActionDialog('日志管理', Url::make('CrontabLog/index'), [
+            ])->success(true);
+            $builder->addRightActionDialog('日志管理', Url::make('CrontabLog/index')->query([
+                '_act' => 'ajax',
+            ]), [
                 'title' => '定时任务日志',
                 'size' => 'lg',
-                'actions' => [],
-            ])->className('text-warning');
-            $builder->addRightActionDialog('点击设置', Url::make('edit'), [
+            ])->cancelActions()->warning(true);
+            $builder->addRightActionDialog('任务设置', Url::make('edit'), [
                 'title' => '定时任务设置',
             ]);
             $builder->addRightActionConfirm('立即删除', Url::make('del'), [
@@ -108,6 +115,7 @@ class IndexController extends XbController
         if (request()->method() === 'POST') {
             $post = request()->post();
             $this->processCronParams($post);
+            $this->checkTaskTypeAuth($post);
             CrontabApi::make()->add($post);
             return $this->success('添加成功');
         }
@@ -128,6 +136,7 @@ class IndexController extends XbController
             $id = (int) request()->get('id');
             $post = request()->post();
             $this->processCronParams($post);
+            $this->checkTaskTypeAuth($post);
             CrontabApi::make()->edit($id, $post);
             return $this->success('编辑成功');
         }
@@ -144,6 +153,9 @@ class IndexController extends XbController
             $formData['cycle_time'] = $cronParams['time'];
             // 根据周期类型设置对应的参数字段
             switch ($cronParams['cycle_type']) {
+                case 'second':
+                    $formData['cycle_second_interval'] = $cronParams['interval'];
+                    break;
                 case 'minute':
                     $formData['cycle_minute_interval'] = $cronParams['interval'];
                     break;
@@ -181,6 +193,9 @@ class IndexController extends XbController
         $weekday = 0;
 
         switch ($cycleType) {
+            case 'second':
+                $interval = intval($post['cycle_second_interval'] ?? 1);
+                break;
             case 'minute':
                 $interval = intval($post['cycle_minute_interval'] ?? 1);
                 break;
@@ -206,6 +221,29 @@ class IndexController extends XbController
     }
 
     /**
+     * 校验任务类型操作权限
+     * Shell命令、PHP代码属于高危执行能力，仅允许系统管理员创建、编辑或删除
+     * @param array $post 任务数据（含 type 字段）
+     * @throws ExceptionBadRequest
+     * @return void
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    private function checkTaskTypeAuth(array $post): void
+    {
+        // 仅高危任务类型需要校验
+        if (!in_array((string) ($post['type'] ?? ''), ['10', '30'], true)) {
+            return;
+        }
+        // 获取当前登录管理员
+        $user = JwtToken::getExtend();
+        // 仅系统管理员可操作
+        if (($user['is_system'] ?? '') !== '20') {
+            throw new ExceptionBadRequest('仅系统管理员可操作 Shell命令、PHP代码类型任务');
+        }
+    }
+
+    /**
      * 删除
      * @return \support\Response
      * @copyright 贵州积木云网络科技有限公司
@@ -214,8 +252,30 @@ class IndexController extends XbController
     public function del()
     {
         $id = (int) request()->get('id');
+        $model = Crontab::find($id);
+        if (!$model) {
+            throw new ExceptionBadRequest('定时任务不存在');
+        }
+        $this->checkTaskTypeAuth($model->toArray());
         CrontabApi::make()->del($id);
         return $this->success('删除成功');
+    }
+
+    /**
+     * 立即执行一次定时任务
+     * @return \support\Response
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function run()
+    {
+        $id = (int) request()->get('id');
+        $model = Crontab::find($id);
+        if (!$model) {
+            throw new ExceptionBadRequest('定时任务不存在');
+        }
+        CrontabApi::make()->run($model);
+        return $this->success('任务执行成功');
     }
 
     /**
@@ -265,6 +325,11 @@ class IndexController extends XbController
             $builder->addRowSelect('cycle_type', '周期类型')
                 ->options(CronCycleEnum::options())
                 ->value('minute'),
+            // 每秒
+            $builder->addRowInput('cycle_second_interval', '间隔值')
+                ->visibleOn('this.cycle_type == "second"')
+                ->placeholder('输入数字')
+                ->description('间隔秒数(1-59)，如: 5'),
             // 每分钟
             $builder->addRowInput('cycle_minute_interval', '间隔值')
                 ->visibleOn('this.cycle_type == "minute"')

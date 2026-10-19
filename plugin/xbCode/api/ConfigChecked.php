@@ -51,7 +51,9 @@ class ConfigChecked
     public static function replaceFileUrl(array $data)
     {
         foreach ($data as $key => $value) {
-            if ($value && strpos($value, 'attachment/') !== false) {
+            if (is_array($value)) {
+                $data[$key] = self::replaceFileUrl($value);
+            } elseif (is_string($value) && $value && strpos($value, 'attachment/') !== false) {
                 $data[$key] = Files::make()->url($value);
             }
         }

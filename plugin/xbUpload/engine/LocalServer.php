@@ -104,6 +104,27 @@ class LocalServer extends Server
     }
 
     /**
+     * 检测存储引擎配置参数是否可用且已连通
+     * @return bool
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function check()
+    {
+        try {
+            // 检测附件目录是否可写
+            $path = public_path() . '/attachment';
+            if (!is_dir($path)) {
+                mkdir($path, 0777, true);
+            }
+            return is_dir($path) && is_writable($path);
+        } catch (\Throwable $e) {
+            $this->error = $e->getMessage();
+            return false;
+        }
+    }
+
+    /**
      * 抓取网络资源
      * @param mixed $url
      * @param mixed $key

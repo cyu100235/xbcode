@@ -10,7 +10,6 @@
 namespace plugin\xbCode\command;
 
 use plugin\xbCode\command\init\InitDel;
-use plugin\xbCode\command\init\InitGit;
 use plugin\xbCode\command\init\InitJwt;
 use plugin\xbCode\command\init\InitCopy;
 use plugin\xbCode\command\init\InitCheck;
@@ -57,7 +56,6 @@ class PluginInit extends Command
     protected function configure()
     {
         $this->addOption('middleware', null, InputOption::VALUE_NONE, '仅执行安装超全局中间件');
-        $this->addOption('git', null, InputOption::VALUE_NONE, '仅执行安装插件目录下git文件');
         $this->addOption('jwt', null, InputOption::VALUE_NONE, '仅执行安装JWT密钥');
         $this->addOption('composer', null, InputOption::VALUE_NONE, '仅执行安装composer文件改造');
         $this->addOption('copy', null, InputOption::VALUE_NONE, '仅执行复制文件操作');
@@ -89,7 +87,6 @@ class PluginInit extends Command
         }
         // 检测是否传入了任意参数选项
         $hasOption = $input->getOption('middleware')
-            || $input->getOption('git')
             || $input->getOption('jwt')
             || $input->getOption('composer')
             || $input->getOption('copy')
@@ -102,7 +99,6 @@ class PluginInit extends Command
             // 无参数时执行所有操作
             InitComposers::execute($input, $output);
             InitMiddleware::execute($input, $output);
-            InitGit::execute($input, $output);
             InitJwt::execute($input, $output);
             InitComposerFile::execute($input, $output);
             InitCopy::execute($input, $output);
@@ -115,10 +111,6 @@ class PluginInit extends Command
             if ($input->getOption('middleware')) {
                 // 安装超全局中间件
                 InitMiddleware::execute($input, $output);
-            }
-            if ($input->getOption('git')) {
-                // 安装插件目录下git文件
-                InitGit::execute($input, $output);
             }
             if ($input->getOption('jwt')) {
                 // 安装JWT密钥

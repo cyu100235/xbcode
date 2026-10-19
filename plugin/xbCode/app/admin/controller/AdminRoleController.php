@@ -11,6 +11,7 @@ namespace plugin\xbCode\app\admin\controller;
 
 use support\Request;
 use plugin\xbCode\api\Url;
+use plugin\xbCode\api\Layouts;
 use plugin\xbCode\app\model\Admin;
 use plugin\xbCode\api\MenuChecked;
 use plugin\xbCode\app\model\AdminRule;
@@ -57,11 +58,13 @@ class AdminRoleController extends BaseController
                 'width' => 150,
             ]);
 
-            $builder->setActionConfig('width', 150);
-            $builder->addRightActionDialog('权限', Url::make('auth'), [
-                'size' => 'lg',
-                'title' => '给「${title}」分配权限',
-            ])->className('text-success');
+            $builder->setActionConfig('width', 280);
+            $builder->addRightActionDialog('主题设置', Url::make('theme'), [
+                'title' => '「${title}」主题设置',
+            ])->primary(true);
+            $builder->addRightActionDialog('权限设置', Url::make('auth'), [
+                'title' => '「${title}」权限设置',
+            ])->success(true);
             $builder->addRightActionDialog('修改', Url::make('edit'), [
                 'title' => '修改角色',
             ]);
@@ -198,15 +201,19 @@ class AdminRoleController extends BaseController
                 return $this->fail('请选择权限规则');
             }
             $rules = is_array($rules) ? $rules : explode(',', $rules);
-            $rules = json_encode($rules, 256);
+            $rules = json_encode($this->getRulePaths($rules), 256);
             if (!$model->save(['rule' => $rules])) {
                 return $this->fail('权限分配失败');
             }
             return $this->success('权限分配成功');
         }
         // 解析已选择菜单规则
-        $activeRules = $model['rule'] ? json_decode($model['rule'], true) : [];
-        $activeRules = is_array($activeRules) ? implode(',', $activeRules) : $activeRules;
+        $activeRules = $model['rule'];
+        if (is_string($activeRules)) {
+            $activeRules = json_decode($activeRules, true) ?: [];
+        }
+        $activeRules = is_array($activeRules) ? $activeRules : [];
+        $activeRules = $this->getRulePaths($activeRules);
         $builder = XbForm::make();
         // 获取权限权限
         $rules = AdminRule::order('sort asc')->select()->toArray();
@@ -237,6 +244,94 @@ class AdminRoleController extends BaseController
         ]);
         $builder->setSaveMethod('PUT');
         return $this->successRes($builder);
+    }
+
+    /**
+     * 主题设置
+     * @param Request $request
+     * @return \support\Response
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function theme(Request $request)
+    {
+        $id = $request->get('id');
+        $model = AdminRole::where('id', $id)->find();
+        if (!$model) {
+            return $this->fail('该数据不存在');
+        }
+        if ($request->method() === 'PUT') {
+            $post = $request->post();
+            $theme = [
+                'active' => $post['active'] ?? '',
+                'mode' => $post['mode'] ?? '',
+                'colors' => $post['colors'] ?? '',
+                'sideColor' => $post['sideColor'] ?? '',
+                'collapse' => !empty($post['collapse']),
+            ];
+            // theme 为 text 字段，需序列化后写入，否则 ORM 按 string 类型强转数组会报错
+            $theme = json_encode($theme, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            if (!$model->save(['theme' => $theme])) {
+                return $this->fail('主题设置保存失败');
+            }
+            return $this->success('主题设置成功');
+        }
+        // 解析角色主题配置
+        $theme = $model['theme'];
+        if (is_string($theme)) {
+            $theme = json_decode($theme, true) ?: [];
+        }
+        $theme = is_array($theme) ? $theme : [];
+        // 合并默认布局
+        $config = Layouts::config($theme);
+        $builder = XbForm::make();
+        $builder->addRowRadio('active', '布局模式', $config['active'])
+            ->options(Layouts::layoutOptions())
+            ->description('选择后台整体布局模式');
+        $builder->addRowRadio('mode', '主题模式', $config['mode'])
+            ->options(Layouts::modeOptions())
+            ->description('选择后台主题显示模式');
+        $builder->addRowGrid([
+            $builder->addRowColor('colors', '主题颜色', $config['colors'])
+                ->presetColors(Layouts::colorPresets())
+                ->description('留空使用内置主题色'),
+            $builder->addRowColor('sideColor', '左侧菜单颜色', $config['sideColor'])
+                ->presetColors(Layouts::sideColorPresets())
+                ->description('留空使用内置配色'),
+        ]);
+        $builder->addRowSwitch('collapse', '默认折叠菜单', $config['collapse'])
+            ->description('开启后侧边菜单默认折叠');
+        $builder->setSaveMethod('PUT');
+        $builder->setData([
+            'active' => $config['active'],
+            'mode' => $config['mode'],
+            'colors' => $config['colors'],
+            'sideColor' => $config['sideColor'],
+            'collapse' => $config['collapse'],
+        ]);
+        return $this->successRes($builder);
+    }
+
+    /**
+     * 归一化权限规则为菜单地址数组
+     * 兼容前端提交的字符串、逗号串及 {label,value} 对象三种格式
+     * @param array $rules
+     * @return array
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    private function getRulePaths(array $rules): array
+    {
+        $list = [];
+        foreach ($rules as $rule) {
+            if (is_array($rule)) {
+                $rule = $rule['value'] ?? '';
+            }
+            if (is_string($rule) && $rule !== '') {
+                $list[] = $rule;
+            }
+        }
+        return array_values(array_unique($list));
     }
 
     /**

@@ -1,0 +1,17 @@
+{
+  "name": "xbcode",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "windows:start": "php ../../windows.php",
+    "push:all:plugin": "powershell -ExecutionPolicy Bypass -File script/sync-plugin-repos.ps1 -All",
+    "push:plugin": "powershell -ExecutionPolicy Bypass -File script/sync-plugin-repos.ps1",
+    "pull:all:plugin": "powershell -ExecutionPolicy Bypass -File script/pull-plugin-repos.ps1 -All",
+    "pull:plugin": "powershell -ExecutionPolicy Bypass -File script/pull-plugin-repos.ps1",
+    "deploy:test": "php ../../vendor/bin/dep -f ../../deploy.php deploy test",
+    "deploy:prod": "php ../../vendor/bin/dep -f ../../deploy.php deploy prod",
+    "deploy:all": "php ../../vendor/bin/dep -f ../../deploy.php deploy test && php ../../vendor/bin/dep -f ../../deploy.php deploy prod",
+    "restart:test": "php ../../vendor/bin/dep -f ../../deploy.php webman:restart test",
+    "restart:prod": "php ../../vendor/bin/dep -f ../../deploy.php webman:restart prod"
+  }
+}

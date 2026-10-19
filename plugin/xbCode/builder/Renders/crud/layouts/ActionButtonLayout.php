@@ -247,6 +247,123 @@ trait ActionButtonLayout
     }
 
     /**
+     * 添加右侧操作按钮（按原始组件追加）
+     * @param mixed $component 按钮组件
+     * @return mixed
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function addActionButton(mixed $component)
+    {
+        $this->addRightButtons($component);
+        return $component;
+    }
+
+    /**
+     * 排序右侧操作按钮
+     * @param callable $callback 排序回调，参数与 usort 一致
+     * @return $this
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function sortActionButtons(callable $callback)
+    {
+        $buttons = &$this->targetActionButtons();
+        usort($buttons, $callback);
+        return $this;
+    }
+
+    /**
+     * 在指定标题的按钮之前插入操作按钮
+     * @param string $targetLabel 目标按钮标题，不存在时追加到末尾
+     * @param mixed $component 按钮组件
+     * @return mixed
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function insertActionButtonBefore(string $targetLabel, mixed $component)
+    {
+        $index = $this->findActionButtonIndex($targetLabel);
+        if ($index === null) {
+            return $this->addActionButton($component);
+        }
+        return $this->insertActionButtonAt($index, $component);
+    }
+
+    /**
+     * 在指定标题的按钮之后插入操作按钮
+     * @param string $targetLabel 目标按钮标题，不存在时追加到末尾
+     * @param mixed $component 按钮组件
+     * @return mixed
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function insertActionButtonAfter(string $targetLabel, mixed $component)
+    {
+        $index = $this->findActionButtonIndex($targetLabel);
+        if ($index === null) {
+            return $this->addActionButton($component);
+        }
+        return $this->insertActionButtonAt($index + 1, $component);
+    }
+
+    /**
+     * 将已有按钮移动到指定标题的按钮之前
+     * @param string $targetLabel 目标按钮标题
+     * @param string $label 需要移动的按钮标题
+     * @return $this
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function moveActionButtonBefore(string $targetLabel, string $label)
+    {
+        return $this->moveActionButton($targetLabel, $label, false);
+    }
+
+    /**
+     * 将已有按钮移动到指定标题的按钮之后
+     * @param string $targetLabel 目标按钮标题
+     * @param string $label 需要移动的按钮标题
+     * @return $this
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function moveActionButtonAfter(string $targetLabel, string $label)
+    {
+        return $this->moveActionButton($targetLabel, $label, true);
+    }
+
+    /**
+     * 将指定标题的按钮移动到目标按钮前/后
+     * @param string $targetLabel 目标按钮标题
+     * @param string $label 需要移动的按钮标题
+     * @param bool $after 是否移动到目标按钮之后
+     * @return $this
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected function moveActionButton(string $targetLabel, string $label, bool $after)
+    {
+        $buttons = &$this->targetActionButtons();
+        $source = null;
+        foreach ($buttons as $index => $button) {
+            if (is_object($button) && method_exists($button, 'getVariable') && $button->getVariable('label') === $label) {
+                $source = $index;
+                break;
+            }
+        }
+        if ($source === null) {
+            return $this;
+        }
+        $component = $buttons[$source];
+        array_splice($buttons, $source, 1);
+        $index = $this->findActionButtonIndex($targetLabel);
+        $position = $index === null ? count($buttons) : ($after ? $index + 1 : $index);
+        array_splice($buttons, $position, 0, [$component]);
+        return $this;
+    }
+
+    /**
      * 获取右侧操作API地址
      * @param string $url
      * @param string $method
@@ -320,6 +437,54 @@ trait ActionButtonLayout
         } else {
             $this->actionButtons[] = $component;
         }
+    }
+
+    /**
+     * 获取当前生效的按钮列表引用（下拉按钮开启时操作下拉列表）
+     * @return array
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected function &targetActionButtons(): array
+    {
+        if ($this->dropDownButton) {
+            return $this->dropDownButtons;
+        }
+        return $this->actionButtons;
+    }
+
+    /**
+     * 在指定位置插入操作按钮
+     * @param int $index 插入位置
+     * @param mixed $component 按钮组件
+     * @return mixed
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected function insertActionButtonAt(int $index, mixed $component)
+    {
+        $buttons = &$this->targetActionButtons();
+        $index = max(0, min($index, count($buttons)));
+        array_splice($buttons, $index, 0, [$component]);
+        return $component;
+    }
+
+    /**
+     * 按标题查找操作按钮位置
+     * @param string $targetLabel 按钮标题
+     * @return int|null
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected function findActionButtonIndex(string $targetLabel): ?int
+    {
+        $buttons = &$this->targetActionButtons();
+        foreach ($buttons as $index => $button) {
+            if (is_object($button) && method_exists($button, 'getVariable') && $button->getVariable('label') === $targetLabel) {
+                return $index;
+            }
+        }
+        return null;
     }
 
     /**

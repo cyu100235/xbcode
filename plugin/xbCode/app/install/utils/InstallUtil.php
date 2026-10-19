@@ -202,6 +202,21 @@ class InstallUtil
         $envConfig = str_replace($str1, $str2, $envConfig);
         // 写入配置文件
         file_put_contents($envPath, $envConfig);
+        // 分配服务端口：以插件模板伪静态文件的端口为基准累加100
+        $templateNginx = base_path('/plugin/xbCode/nginx.conf');
+        $port = (int) (FrameUtil::xbGetNginxConf($templateNginx) ?: 39000) + 100;
+        // 端口被占用时继续累加100，直到找到可用端口
+        $attempts = 0;
+        while (
+            function_exists('socket_create')
+            && $attempts < 100
+            && !FrameUtil::checkedPort($port)
+        ) {
+            $port += 100;
+            $attempts++;
+        }
+        // 写回根目录伪静态文件
+        FrameUtil::updateServerPort($port);
         // 安装系统插件
         foreach (PluginsApi::$systemPlugins as $name => $title) {
             $plugin = PluginsApi::make()->get($name);

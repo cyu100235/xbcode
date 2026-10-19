@@ -56,8 +56,7 @@ class AdminRuleController extends BaseController
                 ->disabledOn('this.is_system == 20');
             $builder->addRightActionConfirm('删除', Url::make('del'))
                 ->disabledTip('系统菜单，禁止删除')
-                ->disabledOn('this.is_system == 20')
-                ->style(['color' => 'red']);
+                ->disabledOn('this.is_system == 20');
 
             // 设置表格列快速编辑
             $builder->useCRUD()->quickSaveItemApi(Url::make('AdminRule/rowEdit'));

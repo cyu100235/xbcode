@@ -19,6 +19,15 @@ return [
     //         'name' => 'XbAdminToolbar',
     //     ],
     // ],
+    // 工具栏项列表
+    // 'toolbars' => [
+    //     [
+    //         'name' => '首页',
+    //         'icon' => 'Monitor',
+    //         'url' => '/',
+    //         'target' => '_blank',
+    //     ],
+    // ],
     // 工具栏组件名称
     // 'toolbar' => [
     //     [

@@ -9,8 +9,7 @@ return [
         'icon' => 'Setting',
         'params' => '',
         'is_show' => '20',
-        'is_system' => '10',
-        'state' => '20',
+        'is_system' => '20',
         'sort' => 9999,
         'children' => [
             [
@@ -21,8 +20,7 @@ return [
                 'icon' => '',
                 'params' => '',
                 'is_show' => '20',
-                'is_system' => '10',
-                'state' => '20',
+                'is_system' => '20',
                 'sort' => 20,
                 'children' => [
                     [
@@ -33,8 +31,19 @@ return [
                         'icon' => '',
                         'params' => '',
                         'is_show' => '10',
-                        'is_system' => '10',
-                        'state' => '20',
+                        'is_system' => '20',
+                        'sort' => 0,
+                        'children' => []
+                    ],
+                    [
+                        'title' => '检测储存连接',
+                        'plugin' => 'xbUpload',
+                        'path' => 'admin/Engine/check',
+                        'type' => '30',
+                        'icon' => '',
+                        'params' => '',
+                        'is_show' => '10',
+                        'is_system' => '20',
                         'sort' => 0,
                         'children' => []
                     ],
@@ -46,8 +55,7 @@ return [
                         'icon' => '',
                         'params' => '',
                         'is_show' => '10',
-                        'is_system' => '10',
-                        'state' => '20',
+                        'is_system' => '20',
                         'sort' => 0,
                         'children' => [
                             [
@@ -58,8 +66,7 @@ return [
                                 'icon' => '',
                                 'params' => '',
                                 'is_show' => '10',
-                                'is_system' => '10',
-                                'state' => '20',
+                                'is_system' => '20',
                                 'sort' => 0,
                                 'children' => []
                             ],
@@ -71,8 +78,7 @@ return [
                                 'icon' => '',
                                 'params' => '',
                                 'is_show' => '10',
-                                'is_system' => '10',
-                                'state' => '20',
+                                'is_system' => '20',
                                 'sort' => 0,
                                 'children' => []
                             ],
@@ -84,8 +90,7 @@ return [
                                 'icon' => '',
                                 'params' => '',
                                 'is_show' => '10',
-                                'is_system' => '10',
-                                'state' => '20',
+                                'is_system' => '20',
                                 'sort' => 0,
                                 'children' => []
                             ],
@@ -97,8 +102,7 @@ return [
                                 'icon' => '',
                                 'params' => '',
                                 'is_show' => '10',
-                                'is_system' => '10',
-                                'state' => '20',
+                                'is_system' => '20',
                                 'sort' => 0,
                                 'children' => []
                             ]

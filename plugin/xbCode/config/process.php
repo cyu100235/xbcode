@@ -6,10 +6,14 @@ use plugin\xbCode\utils\FrameUtil;
 
 $serverPort = FrameUtil::xbServerPort();
 
+// 监听地址：默认 0.0.0.0 以便局域网 / 真机联调访问，
+// 需要仅本机访问时可在根目录 .env 中设置 SERVER_LISTEN_HOST = 127.0.0.1
+$listenHost = env('SERVER_LISTEN_HOST', '0.0.0.0');
+
 return [
     'server' => [
         'handler' => Http::class,
-        'listen' => "http://127.0.0.1:{$serverPort}",
+        'listen' => "http://{$listenHost}:{$serverPort}",
         'count' => cpu_count(),
         'user' => '',
         'group' => '',

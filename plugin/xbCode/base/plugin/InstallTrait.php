@@ -134,6 +134,10 @@ trait InstallTrait
                 if (!isset($value['value'])) {
                     continue;
                 }
+                // 忽略表单验证器字段，安装时只写入默认值，不触发验证（必填项默认值可能为空）
+                if ($value['name'] === 'xbValidate') {
+                    continue;
+                }
                 $data[$value['name']] = $value['value'];
             }
             return $data;

@@ -10,6 +10,7 @@
 namespace plugin\xbCode;
 
 use plugin\xbCode\trait\JsonTrait;
+use plugin\xbCode\trait\TextTrait;
 use plugin\xbCode\trait\ViewsTrait;
 use plugin\xbCode\trait\ConfigTrait;
 use plugin\xbCode\trait\FieldsTrait;
@@ -22,6 +23,7 @@ use plugin\xbCode\trait\FieldsTrait;
 class XbController
 {
     // 引入工具类
+    use TextTrait;
     use JsonTrait;
     use ViewsTrait;
     use ConfigTrait;

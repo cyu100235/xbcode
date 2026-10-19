@@ -10,17 +10,21 @@
 namespace plugin\xbCrontab\app\process;
 
 use Exception;
+use Workerman\Timer;
 use plugin\xbCode\api\Mysql;
-use Workerman\Crontab\Crontab;
-use plugin\xbCrontab\api\TaskApi;
 use plugin\xbCode\api\PluginsApi;
 use plugin\xbCode\utils\FrameUtil;
+use plugin\xbCrontab\api\CrontabApi;
 use plugin\xbCrontab\api\ChannelClient;
-use plugin\xbCrontab\app\model\CrontabLog;
+use plugin\xbCrontab\api\CronExpressionApi;
 use plugin\xbCrontab\app\model\Crontab as CrontabModel;
 
 /**
  * 定时任务进程
+ *
+ * 采用“每秒比对”的调度方式：进程内维持一个 1 秒的定时器，
+ * 每秒检查一次每个任务的 Cron 表达式是否命中当前时间并触发执行。
+ * 5 位表达式（分 时 日 月 周）为分钟级，6 位表达式（秒 分 时 日 月 周）为秒级。
  * @copyright 贵州积木云网络科技有限公司
  * @author 楚羽幽 958416459@qq.com
  */
@@ -36,11 +40,19 @@ class XbCrontab
 
     /**
      * 任务列表
-     * @var array
+     * @var array<string, array{expression:string, data:array, last_second:int}>
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     protected $crontabs = [];
+
+    /**
+     * 调度定时器ID
+     * @var int|null
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected $tickTimerId = null;
 
     /**
      * 进程启动
@@ -66,6 +78,8 @@ class XbCrontab
         $this->initCrontab();
         // 监听任务变动
         $this->listenCrontab();
+        // 启动调度器
+        $this->startScheduler();
     }
 
     /**
@@ -104,6 +118,50 @@ class XbCrontab
     }
 
     /**
+     * 启动调度器（每秒比对一次，支持秒级与分钟级）
+     * @return void
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    private function startScheduler()
+    {
+        // 避免重复启动
+        if ($this->tickTimerId !== null) {
+            return;
+        }
+        // 每秒执行一次比对
+        $this->tickTimerId = Timer::add(1, function () {
+            $this->tick();
+        });
+    }
+
+    /**
+     * 时钟比对：命中表达式的任务触发执行
+     * @return void
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    private function tick()
+    {
+        $now = time();
+        $cron = CronExpressionApi::make();
+        foreach ($this->crontabs as $name => $task) {
+            // 同一秒内避免重复触发
+            if (($task['last_second'] ?? 0) === $now) {
+                continue;
+            }
+            // 未命中表达式则跳过
+            if (!$cron->matches($task['expression'], $now)) {
+                continue;
+            }
+            // 记录触发秒，保持任务数据同步
+            $this->crontabs[$name]['last_second'] = $now;
+            // 执行任务
+            $this->runCrontab($task['data']);
+        }
+    }
+
+    /**
      * 添加任务
      * @param string $name 任务标识
      * @param array $crontab 任务数据
@@ -118,17 +176,18 @@ class XbCrontab
         if ($state !== '20') {
             return;
         }
-        // 直接使用 cron_expression
-        $expression = $crontab['cron_expression'] ?? '';
-        if (empty($expression)) {
+        // 表达式
+        $expression = trim((string) ($crontab['cron_expression'] ?? ''));
+        // 表达式为空或非法则不注册
+        if ($expression === '' || !CronExpressionApi::make()->supports($expression)) {
             return;
         }
-        $crontabObj = new Crontab($expression, function () use ($crontab) {
-            // 执行任务
-            $this->runCrontab($crontab);
-        });
-        // 任务标识 => 定时任务对象id
-        $this->crontabs[$name] = $crontabObj->getId();
+        // 注册任务（记录表达式、任务数据、上次触发的秒）
+        $this->crontabs[$name] = [
+            'expression' => $expression,
+            'data' => $crontab,
+            'last_second' => 0,
+        ];
     }
 
     /**
@@ -141,11 +200,8 @@ class XbCrontab
      */
     private function updateCrontab(string $name, array $crontab)
     {
-        // 如果任务已存在，则删除
-        if (isset($this->crontabs[$name])) {
-            Crontab::remove($this->crontabs[$name]);
-            unset($this->crontabs[$name]);
-        }
+        // 先移除旧任务
+        unset($this->crontabs[$name]);
         $where = [
             'plugin' => $crontab['plugin'],
             'name' => $crontab['name'],
@@ -176,55 +232,10 @@ class XbCrontab
         if (!$model) {
             return;
         }
-        // 开始时间
-        $startTime = microtime(true);
         try {
-            // 获取任务执行类实例
-            $taskApi = TaskApi::make();
-            // 获取可执行方法列表
-            $methods = $taskApi->getMethods();
-            // 获取任务类型
-            $type = $crontab['type'];
-            if (!isset($methods[$type])) {
-                throw new Exception("任务类型:{$type}，不存在");
-            }
-            // 调用任务执行方法
-            $method = $methods[$type];
-            $taskApi->$method($crontab['command']);
-            // 获取结束时间
-            $endTime = microtime(true);
-            // 记录任务耗时(秒)
-            $runSecondTime = $endTime - $startTime;
-            // 更新数据
-            $model->save([
-                'last_time' => date('Y-m-d H:i:s'),
-                'error' => '',
-            ]);
-            // 记录执行日志
-            $logModel = new CrontabLog;
-            $logModel->save([
-                'crontab_id' => $model['id'],
-                'run_second_time' => $runSecondTime,
-                'remarks' => '任务执行完成',
-            ]);
+            // 执行任务
+            CrontabApi::make()->run($model);
         } catch (\Throwable $th) {
-            // 获取结束时间
-            $endTime = microtime(true);
-            // 记录任务耗时(秒)
-            $runSecondTime = $endTime - $startTime;
-            // 更新数据
-            $model->save([
-                'last_time' => date('Y-m-d H:i:s'),
-                'state' => '30',
-                'error' => $th->getMessage(),
-            ]);
-            // 记录执行日志
-            $logModel = new CrontabLog;
-            $logModel->save([
-                'crontab_id' => $model['id'],
-                'run_second_time' => $runSecondTime,
-                'remarks' => $th->getMessage(),
-            ]);
             // 更新任务
             $name = $this->getCrontabName($crontab);
             $this->updateCrontab($name, $crontab);
@@ -234,7 +245,7 @@ class XbCrontab
     /**
      * 获取定时任务标识
      * @param array $crontab
-     * @throws \Exception
+     * @throws Exception
      * @return string
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com

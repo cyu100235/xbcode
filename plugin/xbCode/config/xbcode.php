@@ -2,6 +2,9 @@
 return [
     // 系统配置选项卡标签，填写插件目录setting/tab/文件名
     'setting' => 'system',
+    // 工具栏列表
+    'toolbars' => [],
+    // 工作台组件列表
     'workbench' => [
         [
             'sort' => -999,

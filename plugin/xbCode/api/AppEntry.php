@@ -36,6 +36,22 @@ class AppEntry implements JsonSerializable
     protected array $system = [];
 
     /**
+     * 工具栏列表
+     * 格式：
+     * [
+     *     [
+     *         'name' => '工具栏名称',
+     *         'icon' => '图标类名',
+     *         'url' => '工具栏点击跳转地址', // 可选，点击跳转地址为空
+     *     ],
+     * ]
+     * @var array
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected array $toolbar = [];
+
+    /**
      * 组织及备案信息
      * @var array
      * @copyright 贵州积木云网络科技有限公司
@@ -135,6 +151,7 @@ class AppEntry implements JsonSerializable
         $instance = new static;
         $instance->module = $module;
         $instance->system();
+        $instance->toolbar();
         $instance->webIcp();
         $instance->otherLogins();
         $instance->loginData();
@@ -159,6 +176,30 @@ class AppEntry implements JsonSerializable
         $systemConfig = ConfigApi::make('system')->get('system', []);
         $config = array_merge($systemConfig, $config);
         $this->system = $config;
+        return $this;
+    }
+
+    /**
+     * 设置工具栏列表
+     * @param array $toolbars 工具栏项列表
+     * @return static
+     * @copyright 贵州云铺网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function toolbar(array $toolbars = [])
+    {
+        if (empty($toolbars)) {
+            $plugin = request()->plugin;
+            $toolbars = config("plugin.$plugin.xbcode.toolbars", []);
+        }
+        $data = [];
+        foreach ($toolbars as $value) {
+            if (!isset($value['url']) && !isset($value['url'])) {
+                continue;
+            }
+            $data[] = $value;
+        }
+        $this->toolbar = $data;
         return $this;
     }
 
@@ -319,22 +360,34 @@ class AppEntry implements JsonSerializable
     /**
      * 公用视图
      * @param array $config
+     * - `login` 自定义登录页面
+     * - `user` 修改用户资料页面
+     * - `toolbar` 工具栏Vue视图
+     * - `workbench` 工作台Vue视图接口
      * @return static
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public function publicView(array $config = [])
     {
+        // 工具栏Vue视图
+        $toolbar = $config['toolbar'] ?? '';
+        // 工作台Vue视图接口
+        $workbench = $config['workbench'] ?? $this->getViewUrl('workbench');
+        // 自定义登录页面
+        $login = $config['login'] ?? '';
+        // 修改用户资料页面
+        $user = $config['user'] ?? '';
+        // 返回公用视图接口
         $this->publicView = [
             // 自定义登录页面
-            'login' => $config['login'] ?? '',
+            'login' => $login,
             // 修改用户资料页面
-            'user' => $config['user'] ?? Url::make('Admin/profile')
-                ->module($this->module),
-            // 工具栏视图
-            'toolbar' => $config['toolbar'] ?? $this->getViewUrl('toolbar'),
-            // 工作视图接口
-            'workbench' => $config['workbench'] ?? $this->getViewUrl('workbench'),
+            'user' => $user,
+            // 工具栏Vue视图
+            'toolbar' => $toolbar,
+            // 工作台Vue视图接口
+            'workbench' => $workbench,
         ];
         return $this;
     }
@@ -530,6 +583,8 @@ class AppEntry implements JsonSerializable
         $data = array_merge($data, $this->webIcp);
         // 版本信息
         $data['web_version'] = PluginsApi::make()->get('xbCode')['version'] ?? '';
+        // 工具栏列表
+        $data['toolbar'] = $this->toolbar;
         // 登录页数据
         $data['login_data'] = $this->loginData;
         // 公用接口

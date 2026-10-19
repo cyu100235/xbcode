@@ -111,6 +111,33 @@ class UploadApi
     }
 
     /**
+     * 归一化储存目录
+     *
+     * 清除首尾斜杠，仅保留字母、数字、下划线、短横线与斜杠，
+     * 过滤 `.`/`..` 等危险片段，避免目录穿越。
+     * @param string $dir 储存目录
+     * @return string
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public static function normalizeDir(string $dir): string
+    {
+        $dir = trim($dir, " \t\n\r\0\x0B/");
+        if ($dir === '') {
+            return '';
+        }
+        $parts = [];
+        foreach (explode('/', $dir) as $part) {
+            $part = preg_replace('/[^A-Za-z0-9_\-]/', '', $part);
+            if ($part === '' || $part === '.' || $part === '..') {
+                continue;
+            }
+            $parts[] = $part;
+        }
+        return implode('/', $parts);
+    }
+
+    /**
      * 上传文件
      * @param string $name 键名称
      * @throws Exception
