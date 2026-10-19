@@ -27,7 +27,7 @@ class InitCheck
      */
     public static function checkDisabledFunction(): void
     {
-        $disabledPath = base_path('plugin/xbCode/app/install/config/fun.php');
+        $disabledPath = base_path('plugin/xbCode/command/install/config/fun.php');
         if (!file_exists($disabledPath)) {
             throw new Exception('禁用函数配置文件不存在');
         }
@@ -56,7 +56,7 @@ class InitCheck
      */
     public static function checkExtension(): void
     {
-        $extraPath = base_path('plugin/xbCode/app/install/config/extra.php');
+        $extraPath = base_path('plugin/xbCode/command/install/config/extra.php');
         if (!file_exists($extraPath)) {
             throw new Exception('扩展配置文件不存在');
         }

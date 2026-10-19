@@ -19,16 +19,16 @@ class ComposerStaticInit58de94efcbc22506ad94e5ac50fa98a3
         'e69f7f6ee287b969198c3c9d6777bd38' => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer/bootstrap.php',
         'd2136ff22b54ac75cd96a40e0022218e' => __DIR__ . '/..' . '/workerman/webman-framework/src/support/helpers.php',
         '9b552a3cc426e3287cc811caefa3cf53' => __DIR__ . '/..' . '/topthink/think-helper/src/helper.php',
+        '06a34129a50df3d9257ee706cf3c875b' => __DIR__ . '/..' . '/illuminate/filesystem/functions.php',
         '8825ede83f2f289127722d4e842cf7e8' => __DIR__ . '/..' . '/symfony/polyfill-intl-grapheme/bootstrap.php',
         'b6b991a57620e2fb6b2f66f03fe9ddc2' => __DIR__ . '/..' . '/symfony/string/Resources/functions.php',
         '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
-        '06a34129a50df3d9257ee706cf3c875b' => __DIR__ . '/..' . '/illuminate/filesystem/functions.php',
         'f598d06aa772fa33d905e87be6398fb1' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/bootstrap.php',
+        'ef65a1626449d89d0811cf9befce46f0' => __DIR__ . '/..' . '/illuminate/events/functions.php',
         '7b11c4dc42b3b3023073cb14e519683c' => __DIR__ . '/..' . '/ralouphie/getallheaders/src/getallheaders.php',
         '7448f3465e10b5f033e4babb31eb0b06' => __DIR__ . '/..' . '/topthink/think-orm/src/helper.php',
         '35fab96057f1bf5e7aba31a8a6d5fdde' => __DIR__ . '/..' . '/topthink/think-orm/stubs/load_stubs.php',
         '37a3dc5111fe8f707ab4c132ef1dbc62' => __DIR__ . '/..' . '/guzzlehttp/guzzle/src/functions_include.php',
-        'ef65a1626449d89d0811cf9befce46f0' => __DIR__ . '/..' . '/illuminate/events/functions.php',
         '2ffd98f0768af7a16d85759bb5922585' => __DIR__ . '/..' . '/taoser/webman-validate/src/helper.php',
     );
 
@@ -134,8 +134,13 @@ class ComposerStaticInit58de94efcbc22506ad94e5ac50fa98a3
         array (
             'Laravel\\SerializableClosure\\' => 28,
         ),
+        'J' =>
+        array (
+            'Jenssegers\\Blade\\' => 17,
+        ),
         'I' =>
         array (
+            'Illuminate\\View\\' => 16,
             'Illuminate\\Support\\' => 19,
             'Illuminate\\Session\\' => 19,
             'Illuminate\\Redis\\' => 17,
@@ -146,6 +151,7 @@ class ComposerStaticInit58de94efcbc22506ad94e5ac50fa98a3
             'Illuminate\\Database\\' => 20,
             'Illuminate\\Contracts\\' => 21,
             'Illuminate\\Container\\' => 21,
+            'Illuminate\\Config\\' => 18,
             'Illuminate\\Bus\\' => 15,
         ),
         'G' =>
@@ -468,6 +474,14 @@ class ComposerStaticInit58de94efcbc22506ad94e5ac50fa98a3
         array (
             0 => __DIR__ . '/..' . '/laravel/serializable-closure/src',
         ),
+        'Jenssegers\\Blade\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/jenssegers/blade/src',
+        ),
+        'Illuminate\\View\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/illuminate/view',
+        ),
         'Illuminate\\Support\\' =>
         array (
             0 => __DIR__ . '/..' . '/illuminate/support',
@@ -510,6 +524,10 @@ class ComposerStaticInit58de94efcbc22506ad94e5ac50fa98a3
         'Illuminate\\Container\\' =>
         array (
             0 => __DIR__ . '/..' . '/illuminate/container',
+        ),
+        'Illuminate\\Config\\' =>
+        array (
+            0 => __DIR__ . '/..' . '/illuminate/config',
         ),
         'Illuminate\\Bus\\' =>
         array (

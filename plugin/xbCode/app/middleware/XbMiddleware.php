@@ -23,17 +23,18 @@ class XbMiddleware implements MiddlewareInterface
 {
     /**
      * 处理请求
-     * @param \Webman\Http\Request $request
+     * @param Request $request
      * @param callable $handler
-     * @return \Webman\Http\Response
+     * @return Response
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public function process(Request $request, callable $handler): Response
     {
-        // 检测是否安装
-        if (!FrameUtil::checked() && !str_contains($request->path(), '/install')) {
-            return redirect('/install/');
+        // 检测是否安装（未安装时提示执行命令行安装命令）
+        if (!FrameUtil::checked()) {
+            // 返回 503，并渲染首页视图的安装提示分支
+            return view('index/index', ['installed' => false], 'index', 'xbCode')->withStatus(503);
         }
         // 继续向洋葱芯穿越，直至执行控制器得到响应
         $response = $handler($request);

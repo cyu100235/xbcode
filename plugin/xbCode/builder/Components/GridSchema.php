@@ -44,7 +44,7 @@ class GridSchema extends BaseSchema
      * 超小屏（移动端）宽度占比，1 - 12，默认 12 栅格
      * @param string|int $value 宽度占比（1 - 12）或 'auto'
      * @return static
-     * @copyright 贵州云铺网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public function xs(string|int $value = 'auto')
@@ -57,7 +57,7 @@ class GridSchema extends BaseSchema
      * 小屏宽度占比，1 - 12，默认 6 栅格
      * @param string|int $value 宽度占比（1 - 12）或 'auto'
      * @return static
-     * @copyright 贵州云铺网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public function sm(string|int $value = 'auto')
@@ -70,7 +70,7 @@ class GridSchema extends BaseSchema
      * 中屏宽度占比，1 - 12，默认 3 栅格
      * @param string|int $value 宽度占比（1 - 12）或 'auto'
      * @return static
-     * @copyright 贵州云铺网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public function md(string|int $value = 'auto')
@@ -83,7 +83,7 @@ class GridSchema extends BaseSchema
      * 大屏宽度占比，1 - 12，默认 2 栅格
      * @param string|int $value 宽度占比（1 - 12）或 'auto'
      * @return static
-     * @copyright 贵州云铺网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public function lg(string|int $value = 'auto')
@@ -96,7 +96,7 @@ class GridSchema extends BaseSchema
      * 当前列内容的垂直对齐
      * @param string|int $value
      * @return static
-     * @copyright 贵州云铺网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public function valign(string|int $value = 'top')
@@ -109,7 +109,7 @@ class GridSchema extends BaseSchema
      * 添加组件列
      * @param array $components 组件合计
      * @return static
-     * @copyright 贵州云铺网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public function addColumns(array $components)

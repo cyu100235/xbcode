@@ -28,7 +28,7 @@ trait EachColumn
      * @param string $template 循环模板
      * @param callable|array $option
      * @return Each|TableColumn
-     * @copyright 贵州云铺网络科技有限公司
+     * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public function addColumnEach(string $name, string $label, ?string $template = null, callable|array $option = [])

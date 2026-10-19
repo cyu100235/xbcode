@@ -42,23 +42,6 @@ Route::any('/app/{plugin}/admin/Tabs/{name}', [
     'tabs',
 ]);
 
-// 安装路由
-$module = "install";
-Route::get("/{$module}", [
-    \plugin\xbCode\app\install\controller\IndexController::class,
-    'index',
-]);
-Route::group("/{$module}", function () {
-    Route::get('/', [
-        \plugin\xbCode\app\install\controller\IndexController::class,
-        'index',
-    ]);
-    Route::get("/assets/{file:.+}", function ($file) {
-        $path = dirname(__DIR__) . "/public/install/assets/{$file}";
-        return response()->file($path);
-    });
-});
-
 // 插件预览图
 Route::get('/app/{name}/preview.svg', function ($name) {
     $path = base_path() . "/plugin/{$name}/preview.svg";

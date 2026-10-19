@@ -10,7 +10,6 @@
 namespace plugin\xbCode\app\index\controller;
 
 use plugin\xbCode\XbController;
-use plugin\xbCode\utils\FrameUtil;
 
 /**
  * 首页控制器
@@ -27,8 +26,6 @@ class IndexController extends XbController
      */
     public function index()
     {
-        // 获取重定向地址
-        $redirectUrl = FrameUtil::getRedirectUrl();
-        return redirect($redirectUrl);
+        return $this->viewAppView();
     }
 }
