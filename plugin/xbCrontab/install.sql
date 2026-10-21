@@ -14,7 +14,7 @@ CREATE TABLE `xb_crontab` (
   `cron_desc` varchar(100) NOT NULL DEFAULT '' COMMENT '周期描述',
   `command` varchar(255) DEFAULT NULL COMMENT '执行命令',
   `last_time` datetime DEFAULT NULL COMMENT '最后执行时间',
-  `error` text COMMENT '错误原因',
+  `error` mediumtext COMMENT '错误原因',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC COMMENT='定时任务';
 
@@ -26,6 +26,6 @@ CREATE TABLE `xb_crontab_log` (
   `create_at` datetime DEFAULT NULL,
   `crontab_id` int(11) DEFAULT NULL,
   `run_second_time` varchar(30) DEFAULT NULL,
-  `remarks` text COMMENT '执行备注',
+  `remarks` mediumtext COMMENT '执行备注',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COMMENT='定时任务日志';

@@ -72,7 +72,7 @@ trait ActionButtonLayout
      */
     public function addRightActionDialog(string $title, string $url, callable|array $option = [])
     {
-        $url = $this->getRightActionAPI($url, 'get');
+        $url = $this->getRightActionAPI($url, 'get', ['_act' => 'ajax']);
         $component = $this->createButtonDialog($title, $url, $option);
         $component->level('link');
         $this->addRightButtons($component);
@@ -173,7 +173,7 @@ trait ActionButtonLayout
         $this->addRightButtons($component);
         return $component;
     }
-    
+
     /**
      * 添加右侧请求后跳转按钮
      * @param string $title 按钮名称
