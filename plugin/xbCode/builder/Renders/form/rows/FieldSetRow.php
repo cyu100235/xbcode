@@ -1,7 +1,6 @@
 <?php
 /**
  * 积木云渲染器
- *
  * @package  XbCode
  * @author   楚羽幽 <958416459@qq.com>
  * @license  Apache License 2.0
@@ -27,34 +26,39 @@ trait FieldSetRow
      */
     public function addRowFieldSet(string $title, array $components)
     {
-        // 排除重复的表单项（基于名称）
-        $this->excludeFormRows($components);
-        
-        // 过滤掉已经存在于 formRows 中的组件对象
-        $filteredComponents = [];
+        // 第一步：找出已在 formRows 中的组件对象（通过对象引用比较）
+        $componentsInFormRows = [];
         foreach ($components as $component) {
             if (is_object($component)) {
-                // 检查该对象是否已经在 formRows 中
-                $exists = false;
                 foreach ($this->formRows as $existingRow) {
                     if ($existingRow === $component) {
-                        $exists = true;
+                        $componentsInFormRows[] = $component;
                         break;
                     }
                 }
-                if (!$exists) {
-                    $filteredComponents[] = $component;
-                }
-            } else {
-                // 数组形式的组件直接保留
-                $filteredComponents[] = $component;
             }
         }
-        
+
+        // 第二步：从 formRows 中移除这些组件（基于对象引用），避免其被渲染到字段集外部
+        if (!empty($componentsInFormRows)) {
+            $this->formRows = array_filter($this->formRows, function ($row) use ($componentsInFormRows) {
+                foreach ($componentsInFormRows as $comp) {
+                    if ($row === $comp) {
+                        return false;
+                    }
+                }
+                return true;
+            });
+            $this->formRows = array_values($this->formRows);
+        }
+
+        // 第三步：排除其他重复的表单项（基于名称，处理数组形式的组件）
+        $this->excludeFormRows($components);
+
         /** @var FieldSet */
         $component = $this->getRowComponent(FieldSet::class, '', '');
         $component->title($title);
-        $component->body($filteredComponents);
+        $component->body($components);
         $this->formRows[] = $component;
         return $component;
     }

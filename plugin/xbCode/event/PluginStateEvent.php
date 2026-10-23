@@ -1,7 +1,6 @@
 <?php
 /**
  * 积木云渲染器
- *
  * @package  XbCode
  * @author   楚羽幽 <958416459@qq.com>
  * @license  Apache License 2.0
@@ -10,7 +9,7 @@
  */
 namespace plugin\xbCode\event;
 
-use plugin\xbCode\api\Menus;
+use plugin\xbCode\api\MenuChecked;
 use plugin\xbCode\app\model\AdminRule;
 
 /**
@@ -30,15 +29,26 @@ class PluginStateEvent
     {
         $name = $data['name'] ?? '';
         $value = $data['value'] ?? '';
-        AdminRule::where('plugin', $name)->save(['state'=> $value]);
         // 获取该插件顶级菜单
-        $menus = config("plugin.{$name}.menu",[]);
+        $menus = config("plugin.{$name}.menu", []);
+        $menus = MenuChecked::menuTreeTo2D($menus);
+        $menus = array_map(function ($item) {
+            return [
+                'plugin' => $item['plugin'] ?? 'xbCode',
+                'path' => $item['path'] ?? '',
+                'pid' => $item['pid'] ?? 0,
+            ];
+        }, $menus);
         foreach ($menus as $val) {
+            $pluginName = $val['plugin'] ?? 'xbCode';
+            if ($val['pid'] !== 0) {
+                $pluginName = $name;
+            }
             $where = [
                 'path' => $val['path'],
-                'plugin' => $val['plugin'] ?? 'xbCode'
+                'plugin' => $pluginName
             ];
-            AdminRule::where($where)->save(['state'=> $value]);
+            AdminRule::where($where)->save(['state' => $value]);
         }
     }
 }

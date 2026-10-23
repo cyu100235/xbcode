@@ -313,7 +313,7 @@ class PluginsApi
     /**
      * 插件安装检测并抛出异常
      * @param mixed $name
-     * @throws \Exception
+     * @throws Exception
      * @return void
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
@@ -329,7 +329,7 @@ class PluginsApi
      * 获取插件信息
      * @param string $name 插件标识
      * @param array $fields 排除字段
-     * @throws \Exception
+     * @throws Exception
      * @return array
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
@@ -602,7 +602,7 @@ class PluginsApi
      * @param string $name 插件标识
      * @param array $data 插件数据
      * @param string $state 状态值，10未启用，20已启用
-     * @throws \Exception
+     * @throws Exception
      * @return bool
      */
     public function install(string $name, array $data, string $state = '10')
@@ -666,7 +666,7 @@ class PluginsApi
     /**
      * 抛出插件依赖异常
      * @param string $name
-     * @throws \Exception
+     * @throws Exception
      * @return void
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com

@@ -25,7 +25,7 @@ class Menus
     /**
      * 获取管理员菜单
      * @param int $adminId 管理员ID
-     * @throws \Exception
+     * @throws Exception
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
@@ -58,7 +58,7 @@ class Menus
     /**
      * 获取菜单文件数据
      * @param string $path
-     * @throws \Exception
+     * @throws Exception
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
@@ -266,7 +266,7 @@ class Menus
                 throw new Exception('缺少地址路径');
             }
             if (empty($value['is_show'])) {
-                throw new Exception('缺少是否显示');
+                throw new Exception('缺少是否显示值');
             }
             if (!in_array($value['is_show'], ['10', '20'])) {
                 throw new Exception('是否显示值错误');
@@ -304,11 +304,9 @@ class Menus
                 $value['is_default'] = '10';
             }
             if (empty($value['is_show'])) {
-                $value['is_show'] = '10';
+                $value['is_show'] = '20';
             }
-            if (empty($value['state'])) {
-                $value['state'] = '20';
-            }
+            $value['state'] = '10';
             if (!in_array($value['is_default'], ['10', '20'])) {
                 throw new Exception('是否默认值错误');
             }
