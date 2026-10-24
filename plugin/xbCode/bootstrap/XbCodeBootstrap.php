@@ -11,6 +11,7 @@ namespace plugin\xbCode\bootstrap;
 
 use Workerman\Worker;
 use Webman\Bootstrap;
+use plugin\xbCode\api\RegionApi;
 
 /**
  * 框架基础配置
@@ -30,6 +31,8 @@ class XbCodeBootstrap implements Bootstrap
     {
         // 设置nginx配置
         static::setNginxConf();
+        // 初始化城市联级选项
+        RegionApi::download();
     }
 
     /**

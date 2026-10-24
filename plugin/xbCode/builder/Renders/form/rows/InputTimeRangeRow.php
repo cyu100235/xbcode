@@ -1,7 +1,6 @@
 <?php
 /**
  * 积木云渲染器
- *
  * @package  XbCode
  * @author   楚羽幽 <958416459@qq.com>
  * @license  Apache License 2.0
@@ -10,29 +9,29 @@
  */
 namespace plugin\xbCode\builder\Renders\form\rows;
 
-use plugin\xbCode\builder\Components\Form\InputTime;
+use plugin\xbCode\builder\Components\Form\InputTimeRange;
 
 /**
- * 时间表单项
+ * 时间范围选择器表单项
  * @copyright 贵州积木云网络科技有限公司
  * @author 楚羽幽 958416459@qq.com
  */
-trait TimeRow
+trait InputTimeRangeRow
 {
     /**
-     * 添加时间组件
+     * 添加时间范围选择器组件
      * @param string $field
      * @param string $title
      * @param mixed $value
-     * @param callable|array $config
-     * @return InputTime
+     * @param callable|array $option
+     * @return InputTimeRange
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public function addRowTime(string $field, string $title, mixed $value = '', callable|array $option = [])
+    public function addRowInputTimeRange(string $field, string $title, mixed $value = '', callable|array $option = [])
     {
-        /** @var InputTime */
-        $component = $this->addRow(InputTime::class, $field, $title, $value, $option);
+        /** @var InputTimeRange */
+        $component = $this->addRow(InputTimeRange::class, $field, $title, $value, $option);
         return $component;
     }
 }
