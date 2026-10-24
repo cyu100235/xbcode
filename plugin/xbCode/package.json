@@ -5,7 +5,9 @@
   "scripts": {
     "windows:start": "php ../../windows.php",
     "push:all:plugin": "powershell -ExecutionPolicy Bypass -File script/sync-plugin-repos.ps1 -All",
+    "push:force:all:plugin": "powershell -ExecutionPolicy Bypass -File script/sync-plugin-repos.ps1 -All -Force",
     "push:plugin": "powershell -ExecutionPolicy Bypass -File script/sync-plugin-repos.ps1",
+    "push:force:plugin": "powershell -ExecutionPolicy Bypass -File script/sync-plugin-repos.ps1 -Force",
     "pull:all:plugin": "powershell -ExecutionPolicy Bypass -File script/pull-plugin-repos.ps1 -All",
     "pull:plugin": "powershell -ExecutionPolicy Bypass -File script/pull-plugin-repos.ps1",
     "deploy:test": "php ../../vendor/bin/dep -f ../../deploy.php deploy test",
