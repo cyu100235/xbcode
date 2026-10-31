@@ -42,7 +42,6 @@ class AdminRuleController extends BaseController
             $builder = XbCrud::make();
             $builder->useCRUD()->expandConfig([
                 'expand' => 'accordion',
-                'expandAll' => false,
             ]);
             $builder->setActionConfig('width', 150);
             $builder->addHeaderDialog('添加菜单', Url::make('add'), [

@@ -2,7 +2,7 @@
 namespace plugin\xbDeveloper\base;
 
 use Exception;
-use plugin\xbCode\utils\trait\JsonTrait;
+use plugin\xbCode\trait\JsonTrait;
 
 /**
  * 插件服务基类提供
@@ -123,7 +123,7 @@ abstract class BasePlugins
     /**
      * 执行安装方法
      * @param string $method
-     * @throws \Exception
+     * @throws Exception
      * @return void
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com

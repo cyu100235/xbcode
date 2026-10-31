@@ -215,9 +215,25 @@ class AppEntry implements JsonSerializable
         if (empty($config)) {
             $config = ConfigApi::make('webicp')->get('', []);
         }
+        $this->webIcp = static::replaceVariables($config, $this->system);
+        return $this;
+    }
+
+    /**
+     * 替换组织及备案信息中的变量占位符
+     * @param array $config 组织及备案信息
+     * @param array $system 系统信息
+     * @return array
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public static function replaceVariables(array $config, array $system = []): array
+    {
         if (isset($config['copyright']) && $config['copyright']) {
             /**
              * 变量占位符替换
+             * {WEB_NAME} 网站名称
+             * {WEB_URL} 网站域名
              * {ABOUT_NAME} 组织名称
              * {ABOUT_URL} 组织链接
              * {WEB_ICP} 备案号码
@@ -234,8 +250,8 @@ class AppEntry implements JsonSerializable
                 '{WEB_POLICE_CODE}',
             ];
             $values = [
-                $this->system['web_name'] ?? '',
-                $this->system['web_url'] ?? '',
+                $system['web_name'] ?? '',
+                $system['web_url'] ?? '',
                 $config['about_name'] ?? '',
                 $config['about_url'] ?? '',
                 $config['web_icp'] ?? '',
@@ -244,8 +260,7 @@ class AppEntry implements JsonSerializable
             ];
             $config['copyright'] = str_replace($variables, $values, $config['copyright']);
         }
-        $this->webIcp = $config;
-        return $this;
+        return $config;
     }
 
     /**

@@ -30,6 +30,16 @@ class IndexController extends BaseController
     ];
 
     /**
+     * 无需权限校验的方法
+     * 均为后台页面外壳与公用视图接口，不涉及具体业务操作
+     * @var array
+     */
+    protected $noAuth = [
+        'toolbar',
+        'workbench',
+    ];
+
+    /**
      * 首页视图
      * @return \support\Response
      * @copyright 贵州积木云网络科技有限公司

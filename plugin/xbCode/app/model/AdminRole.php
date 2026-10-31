@@ -1,7 +1,7 @@
 <?php
 /**
  * 积木云渲染器
- * @package  XbCode.0
+ * @package  XbCode
  * @author   楚羽幽 <958416459@qq.com>
  * @license  Apache License 2.0
  * @link     http://www.xbcode.net
@@ -22,4 +22,33 @@ class AdminRole extends Model
     protected $json = ['rule', 'theme'];
     // 设置JSON数据返回数组
     protected $jsonAssoc = true;
+
+    /**
+     * 获取权限规则
+     * @param mixed $value
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected function getRuleAttr($value)
+    {
+        if ($value && is_string($value)) {
+            $value = json_decode($value, true);
+        }
+        $value = empty($value) ? [] : $value;
+        return $value;
+    }
+
+    /**
+     * 转换权限数据格式
+     * @param mixed $value
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected function setRuleAttr($value)
+    {
+        if ($value && is_array($value)) {
+            $value = json_encode($value, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        }
+        return $value;
+    }
 }

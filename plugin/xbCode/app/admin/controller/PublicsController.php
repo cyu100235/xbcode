@@ -15,10 +15,8 @@ use plugin\xbCode\api\Menus;
 use plugin\xbCode\api\Layouts;
 use plugin\xbCode\api\AdminApi;
 use Webman\Captcha\PhraseBuilder;
-use plugin\xbCode\app\model\Admin;
 use Webman\Captcha\CaptchaBuilder;
 use plugin\xbCode\app\validate\AdminValidate;
-use plugin\xbCode\exception\business\ExceptionUnauthorized;
 use plugin\xbCode\exception\business\ExceptionInternalServerError;
 
 /**
@@ -35,6 +33,16 @@ class PublicsController extends BaseController
     protected $noLogin = [
         'login',
         'captcha',
+    ];
+
+    /**
+     * 无需权限校验的方法
+     * 均为已登录即可访问的后台基础数据接口，不涉及业务操作
+     * @var array
+     */
+    protected $noAuth = [
+        'menus',
+        'layouts',
     ];
 
     /**
@@ -102,31 +110,19 @@ class PublicsController extends BaseController
     public function user()
     {
         $uid = (int) request()->uid;
-        if (empty($uid)) {
-            throw new ExceptionUnauthorized('当前尚未登录，请先登录');
-        }
-        $user = Admin::where('id', $uid)->find();
-        if (empty($user)) {
-            throw new ExceptionUnauthorized('获取用户信息错误');
-        }
-        // 用户数据
-        $data = $user->toArray();
-        if (empty($data['avatar'])) {
-            $data['avatar'] = '';
-        }
+        $data = AdminApi::userinfo($uid);
         return $this->successRes($data);
     }
 
     /**
-     * 获取管理员菜单
+     * 获取所有菜单
      * @return \support\Response
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public function menus()
     {
-        $uid = (int) request()->uid;
-        $data = Menus::get($uid);
+        $data = Menus::get();
         return $this->successRes($data);
     }
 

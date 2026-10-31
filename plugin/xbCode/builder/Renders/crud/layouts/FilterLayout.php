@@ -12,6 +12,7 @@ namespace plugin\xbCode\builder\Renders\crud\layouts;
 
 use plugin\xbCode\builder\Components\Form\Radios;
 use plugin\xbCode\builder\Components\Form\Select;
+use plugin\xbCode\builder\Components\Form\Hidden;
 use plugin\xbCode\builder\Components\Form\InputDate;
 use plugin\xbCode\builder\Components\Form\InputText;
 use plugin\xbCode\builder\Components\Form\Checkboxes;
@@ -31,6 +32,15 @@ trait FilterLayout
      * @author 楚羽幽 958416459@qq.com
      */
     protected string $filterTitlte = '搜索查询';
+
+    /**
+     * 筛选查询表单ID后缀
+     * 供表格列等组件按组件ID定位筛选表单（回填查询条件并提交查询）
+     * @var string
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected string $filterIdSuffix = 'filter';
 
     /**
      * 筛选查询是否包裹在面板
@@ -137,7 +147,6 @@ trait FilterLayout
      * @param string $field
      * @param string $title
      * @param mixed $value
-     * @param callable|array $option
      * @return InputDateRange
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
@@ -197,6 +206,36 @@ trait FilterLayout
         $this->filter[] = $component;
         // 返回组件实例
         return $component;
+    }
+
+    /**
+     * 创建隐藏字段查询
+     *
+     * 用于在弹窗内的列表固定携带上下文参数（如分组ID）：amis 点击「查询 / 重置」时
+     * 以筛选表单的值作为查询参数，URL 上的参数会被覆盖丢失。
+     * @param string $field 字段名
+     * @param mixed $value 固定值
+     * @return Hidden
+     */
+    public function addFilterHidden(string $field, mixed $value = ''): Hidden
+    {
+        $component = new Hidden;
+        $component->name($field);
+        $component->value($value);
+        $this->filter[] = $component;
+        return $component;
+    }
+
+    /**
+     * 获取筛选查询表单ID
+     * 以表格名称加固定后缀，供表格列等组件按组件ID定位筛选表单
+     * @return string
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function getFilterId(): string
+    {
+        return "{$this->crudName}-{$this->filterIdSuffix}";
     }
 
     /**
@@ -266,6 +305,8 @@ trait FilterLayout
         }
         $formFilter = [
             'type' => 'form',
+            // 固定组件ID，供表格列通过 componentId 定位筛选表单
+            'id' => $this->getFilterId(),
             'wrapWithPanel' => $this->wrapWithPanel,
             'body' => array_merge($this->filter, $this->filterButtons),
             'className' => $this->wrapWithPanel ? '' : 'xb-form-filter',

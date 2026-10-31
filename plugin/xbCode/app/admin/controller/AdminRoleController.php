@@ -107,8 +107,12 @@ class AdminRoleController extends BaseController
             $where = [
                 'is_default' => '20',
             ];
-            $rules = AdminRule::where($where)->order('sort asc')->column('path');
-            $post['rule'] = json_encode($rules);
+            $rules = [];
+            $list = AdminRule::where($where)->order('sort asc')->field('plugin,path')->select()->toArray();
+            foreach ($list as $rule) {
+                $rules[] = $this->getRuleValue($rule);
+            }
+            $post['rule'] = json_encode($rules, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
             $model = new AdminRole;
             if (!$model->save($post)) {
@@ -197,11 +201,20 @@ class AdminRoleController extends BaseController
         }
         if ($request->method() === 'PUT') {
             $rules = $request->post('rules');
+            if ($rules && is_array($rules)) {
+                $rules = array_values($rules);
+            }
+            if ($rules && is_string($rules)) {
+                $rules = explode(',', $rules);
+                $rules = array_filter($rules);
+                $rules = array_values($rules);
+            }
+            $rules = $this->getRulePaths((array) $rules);
+            // 默认权限不允许取消，保存时强制补齐
+            $rules = array_values(array_unique(array_merge($rules, $this->getDefaultRulePaths())));
             if (empty($rules)) {
                 return $this->fail('请选择权限规则');
             }
-            $rules = is_array($rules) ? $rules : explode(',', $rules);
-            $rules = json_encode($this->getRulePaths($rules), 256);
             if (!$model->save(['rule' => $rules])) {
                 return $this->fail('权限分配失败');
             }
@@ -209,39 +222,30 @@ class AdminRoleController extends BaseController
         }
         // 解析已选择菜单规则
         $activeRules = $model['rule'];
-        if (is_string($activeRules)) {
-            $activeRules = json_decode($activeRules, true) ?: [];
-        }
-        $activeRules = is_array($activeRules) ? $activeRules : [];
         $activeRules = $this->getRulePaths($activeRules);
         $builder = XbForm::make();
         // 获取权限权限
         $rules = AdminRule::order('sort asc')->select()->toArray();
         $rules = MenuChecked::menu2DToTree($rules);
-        $rules = $this->getRules($rules);
-        /** @var Transfer */
-        $transfer = Transfer::make();
+        // 统计重复的权限规则
+        $duplicatePaths = $this->getDuplicateRulePaths($rules);
+        $rules = $this->getRules($rules, $duplicatePaths);
+        // 将已授权规则转换为树节点值
+        $activeRules = $this->getRuleValues($rules, $activeRules);
+        // 默认权限默认勾选
+        $activeRules = array_values(array_unique(array_merge($activeRules, $this->getDefaultRuleValues($rules))));
         $builder->addRowGroup('role', [
             $builder->addRowInput('title', '角色名称', '', [
                 'static' => true,
             ])->columnRatio(6),
             $builder->addRowInput('sort', '角色排序', '100')->columnRatio(6),
         ]);
-        $builder->addRowGroup('auth', [
-            // 设置穿索器
-            $transfer
-                ->name('rules')
-                ->resultListModeFollowSelect((true))
-                ->selectMode('tree')
-                ->selectTitle('权限列表')
-                ->resultTitle('已选权限')
-                ->columns([
-                    ['name' => 'label', 'label' => '权限名称'],
-                    ['name' => 'value', 'label' => '权限地址'],
-                ])
-                ->options($rules)
-                ->value($activeRules)
-        ]);
+        $builder->addRowInputTree('rules', '权限列表', $activeRules)
+            ->multiple(true)
+            ->cascade(true)
+            ->showOutline(true)
+            ->height('500px')
+            ->options($rules);
         $builder->setSaveMethod('PUT');
         return $this->successRes($builder);
     }
@@ -313,7 +317,7 @@ class AdminRoleController extends BaseController
     }
 
     /**
-     * 归一化权限规则为菜单地址数组
+     * 归一化权限规则为「插件标识/菜单地址」数组
      * 兼容前端提交的字符串、逗号串及 {label,value} 对象三种格式
      * @param array $rules
      * @return array
@@ -328,31 +332,178 @@ class AdminRoleController extends BaseController
                 $rule = $rule['value'] ?? '';
             }
             if (is_string($rule) && $rule !== '') {
-                $list[] = $rule;
+                // 去掉重复规则节点的唯一标识后缀，还原为 插件标识/菜单地址
+                $list[] = preg_replace('/#\d+$/', '', $rule);
             }
         }
         return array_values(array_unique($list));
     }
 
     /**
-     * 获取权限规则
+     * 拼接权限规则的唯一标识
+     * @param array $rule 菜单数据
+     * @return string
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    private function getRuleValue(array $rule): string
+    {
+        $path = $rule['path'] ?? '';
+        if ($path === '') {
+            return '';
+        }
+        $plugin = $rule['plugin'] ?? '';
+        return $plugin !== '' ? "app/{$plugin}/{$path}" : $path;
+    }
+
+    /**
+     * 统计权限树中重复的叶子规则
+     * 不同插件的菜单可能使用相同地址（如 admin/Index/export），
+     * 此时节点值必须唯一，否则勾选状态会回填到错误的节点上
      * @param array $data
      * @return array
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    private function getRules(array $data)
+    private function getDuplicateRulePaths(array $data): array
+    {
+        $counts = [];
+        $walk = function (array $nodes) use (&$walk, &$counts) {
+            foreach ($nodes as $node) {
+                if (!empty($node['children'])) {
+                    $walk($node['children']);
+                    continue;
+                }
+                $value = $this->getRuleValue($node);
+                if ($value !== '') {
+                    $counts[$value] = ($counts[$value] ?? 0) + 1;
+                }
+            }
+        };
+        $walk($data);
+        $paths = [];
+        foreach ($counts as $path => $count) {
+            if ($count > 1) {
+                $paths[] = $path;
+            }
+        }
+        return $paths;
+    }
+
+    /**
+     * 将已授权规则转换为权限树的节点值
+     * 同一规则存在多个节点时，需要将全部节点勾选
+     * @param array $rules 权限树
+     * @param array $paths 已授权规则
+     * @return array
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    private function getRuleValues(array $rules, array $paths): array
+    {
+        $values = [];
+        $walk = function (array $nodes) use (&$walk, &$values, $paths) {
+            foreach ($nodes as $node) {
+                if (!empty($node['children'])) {
+                    $walk($node['children']);
+                    continue;
+                }
+                $value = $node['value'] ?? '';
+                if ($value === '') {
+                    continue;
+                }
+                // 节点值可能是 插件标识/菜单地址，也可能是 插件标识/菜单地址#ID
+                $ruleValue = preg_replace('/#\d+$/', '', $value);
+                $index = strpos($ruleValue, '/');
+                // 兼容历史数据中仅存菜单地址的规则
+                $rulePath = $index === false ? $ruleValue : substr($ruleValue, $index + 1);
+                if (in_array($ruleValue, $paths, true) || in_array($rulePath, $paths, true)) {
+                    $values[] = $value;
+                }
+            }
+        };
+        $walk($rules);
+        return $values;
+    }
+
+    /**
+     * 获取默认权限规则（is_default=20）
+     * @return array
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    private function getDefaultRulePaths(): array
+    {
+        $rules = AdminRule::where('is_default', '20')
+            ->order('sort asc')
+            ->field('plugin,path')
+            ->select()
+            ->toArray();
+        $paths = [];
+        foreach ($rules as $rule) {
+            $value = $this->getRuleValue($rule);
+            if ($value !== '') {
+                $paths[] = $value;
+            }
+        }
+        return $paths;
+    }
+
+    /**
+     * 将默认规则转换为权限树的节点值
+     * @param array $rules 权限树
+     * @return array
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    private function getDefaultRuleValues(array $rules): array
+    {
+        $values = [];
+        $walk = function (array $nodes) use (&$walk, &$values) {
+            foreach ($nodes as $node) {
+                if (!empty($node['children'])) {
+                    $walk($node['children']);
+                    continue;
+                }
+                if (!empty($node['disabled']) && ($node['value'] ?? '') !== '') {
+                    $values[] = $node['value'];
+                }
+            }
+        };
+        $walk($rules);
+        return $values;
+    }
+
+    /**
+     * 获取权限规则
+     * @param array $data
+     * @param array $duplicatePaths 重复的规则标识
+     * @return array
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    private function getRules(array $data, array $duplicatePaths = [])
     {
         $list = [];
         $i = 0;
         foreach ($data as $value) {
+            $list[$i]['label'] = $value['title'];
+            // 判断是否为默认菜单规则
+            $isDefault = ($value['is_default'] ?? '') === '20';
             if (empty($value['children'])) {
-                $list[$i]['label'] = $value['title'];
-                $list[$i]['value'] = $value['path'];
+                // 节点值使用 插件标识/菜单地址，保证不同插件的相同地址不冲突
+                $ruleValue = $this->getRuleValue($value);
+                // 重复规则的节点追加ID后缀，保证节点值唯一
+                $list[$i]['value'] = in_array($ruleValue, $duplicatePaths, true)
+                    ? "{$ruleValue}#{$value['id']}"
+                    : $ruleValue;
             } else {
-                $list[$i]['label'] = $value['title'];
                 // 递归获取子节点
-                $list[$i]['children'] = $this->getRules($value['children']);
+                $list[$i]['children'] = $this->getRules($value['children'], $duplicatePaths);
+            }
+            // 默认菜单规则默认勾选且不允许取消
+            if ($isDefault) {
+                $list[$i]['disabled'] = true;
             }
             $i++;
         }

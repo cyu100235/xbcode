@@ -211,7 +211,7 @@ abstract class PluginsBaseApi
 
     /**
      * 解压插件包
-     * @throws \Exception
+     * @throws Exception
      * @return array
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
@@ -261,7 +261,7 @@ abstract class PluginsBaseApi
 
     /**
      * 执行脚本代码
-     * @throws \Exception
+     * @throws Exception
      * @return void
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com

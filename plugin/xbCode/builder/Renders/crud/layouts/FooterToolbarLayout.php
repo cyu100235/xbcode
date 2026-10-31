@@ -1,7 +1,6 @@
 <?php
 /**
  * 积木云渲染器
- *
  * @package  XbCode
  * @author   楚羽幽 <958416459@qq.com>
  * @license  Apache License 2.0
@@ -62,6 +61,91 @@ trait FooterToolbarLayout
     protected array $bulkActions = [];
 
     /**
+     * 是否正在收集批量下拉菜单按钮
+     * @var bool
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected bool $bulkDropdown = false;
+
+    /**
+     * 批量下拉菜单按钮列表
+     * @var array
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected array $bulkDropdownActions = [];
+
+    /**
+     * 添加底部批量操作下拉按钮
+     * 回调内通过 addBulkAction* 添加的按钮会收进下拉菜单，鼠标移入按钮即展开全部菜单项
+     * @param string $title 按钮文本
+     * @param callable $callback 回调函数，参数为当前构建器
+     * @return \plugin\xbCode\builder\Components\DropdownButton
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function addBulkActionDropdown(string $title, callable $callback)
+    {
+        /** @var \plugin\xbCode\builder\Components\DropdownButton */
+        $component = $this->createButtonDropdown($title);
+        // 鼠标移入即展开菜单
+        $component->trigger('hover');
+        $component->className('xb-bulk-dropdown');
+        // 开启下拉收集，回调内的批量按钮改为收进菜单
+        $this->bulkDropdown = true;
+        $this->bulkDropdownActions = [];
+        $callback($this);
+        $this->bulkDropdown = false;
+        $component->buttons($this->normalizeBulkDropdownButtons($this->bulkDropdownActions));
+        $this->bulkActions[] = $component;
+        return $component;
+    }
+
+    /**
+     * 收集批量操作按钮（下拉收集开启时收进下拉菜单，否则作为独立的底部按钮）
+     * @param mixed $component 按钮组件
+     * @return mixed
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected function addBulkActionButton(mixed $component)
+    {
+        if ($this->bulkDropdown) {
+            $this->bulkDropdownActions[] = $component;
+        } else {
+            $this->bulkActions[] = $component;
+        }
+        return $component;
+    }
+
+    /**
+     * 转换下拉菜单内的批量按钮样式
+     * 下拉菜单项自带整行样式，按钮的级别与配色会让整条菜单变成实心色块，
+     * 因此这里去掉按钮级别和纯配色类名，保持菜单项样式统一
+     * @param array $buttons 按钮组件列表
+     * @return array
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected function normalizeBulkDropdownButtons(array $buttons)
+    {
+        foreach ($buttons as $button) {
+            if (!is_object($button)) {
+                continue;
+            }
+            $className = trim(str_replace('text-white', '', (string) $button->getVariable('className')));
+            if ($className === '') {
+                unset($button->className);
+            } else {
+                $button->className($className);
+            }
+            unset($button->level);
+        }
+        return $buttons;
+    }
+
+    /**
      * 添加批量操作弹窗按钮
      * @param string $title
      * @param string $url
@@ -75,8 +159,7 @@ trait FooterToolbarLayout
     {
         $url = $this->getBulkActionAPI($url, $method);
         $component = $this->createButtonDialog($title, $url, $option);
-        $this->bulkActions[] = $component;
-        return $component;
+        return $this->addBulkActionButton($component);
     }
 
     /**
@@ -92,8 +175,7 @@ trait FooterToolbarLayout
     {
         $url = $this->getBulkActionAPI($url, $method);
         $component = $this->createButtonDownload($title, $url);
-        $this->bulkActions[] = $component;
-        return $component;
+        return $this->addBulkActionButton($component);
     }
 
     /**
@@ -110,8 +192,7 @@ trait FooterToolbarLayout
     {
         $url = $this->getBulkActionAPI($url, $method);
         $component = $this->createButtonDrawer($title, $url, $option);
-        $this->bulkActions[] = $component;
-        return $component;
+        return $this->addBulkActionButton($component);
     }
 
     /**
@@ -132,8 +213,7 @@ trait FooterToolbarLayout
         $component = $this->createButtonConfirm($title, $url, $confirmContent, $confirmTitle);
         $this->crud->selectable(true);
         $this->crud->multiple(true);
-        $this->bulkActions[] = $component;
-        return $component;
+        return $this->addBulkActionButton($component);
     }
 
     /**
@@ -148,8 +228,7 @@ trait FooterToolbarLayout
     {
         $url = $this->getBulkActionAPI($url, '');
         $component = $this->createButtonLink($title, $url);
-        $this->bulkActions[] = $component;
-        return $component;
+        return $this->addBulkActionButton($component);
     }
 
     /**
@@ -165,8 +244,7 @@ trait FooterToolbarLayout
     {
         $url = $this->getBulkActionAPI($url, '');
         $component = $this->createButtonUrl($title, $url, $target);
-        $this->bulkActions[] = $component;
-        return $component;
+        return $this->addBulkActionButton($component);
     }
 
     /**

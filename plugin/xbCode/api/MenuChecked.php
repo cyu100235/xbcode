@@ -42,6 +42,13 @@ class MenuChecked
         $data = self::getMenuKey($data);
         // 重置多层级数组的下标
         $data = self::resetKeys($data);
+        // 移除菜单多余字段
+        $data = self::unsetMenusFields($data, [
+            'update_at',
+            '_html',
+            '_level',
+            'create_at'
+        ]);
         // 返回菜单数据
         return $data;
     }
@@ -200,11 +207,8 @@ class MenuChecked
         if (!is_array($data['params'])) {
             $data['params'] = json_decode($data['params'], true);
         }
-        // 判断是否工作台菜单
-        if ($data['path'] === 'workbench') {
-            $url = $data['params']['url'] ?? '';
-            $data['params'] = "app/{$data['plugin']}/{$url}";
-        } else if (!str_contains($data['path'], 'workbench') && str_contains($data['path'], '/')) {
+        // 处理路径
+        if (str_contains($data['path'], '/')) {
             // 替换路径
             $data['path'] = "app/{$data['plugin']}/{$data['path']}";
         }
@@ -270,7 +274,7 @@ class MenuChecked
      * @param array $menus
      * @param string $field
      * @param string $value
-     * @throws \Exception
+     * @throws Exception
      * @return array
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com

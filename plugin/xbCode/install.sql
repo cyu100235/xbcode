@@ -5,7 +5,7 @@ CREATE TABLE `xb_admin_role` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT COMMENT '序号',
   `create_at` datetime DEFAULT NULL COMMENT '创建时间',
   `update_at` datetime DEFAULT NULL COMMENT '更新时间',
-  `saas_appid` int(11) DEFAULT '0' COMMENT '站点ID',
+  `saas_appid` int(11) DEFAULT NULL COMMENT '站点ID',
   `admin_id` int(11) NOT NULL DEFAULT '0' COMMENT '所属管理员ID，0顶级',
   `title` varchar(50) NOT NULL COMMENT '角色名称',
   `rule` text COMMENT '角色权限',

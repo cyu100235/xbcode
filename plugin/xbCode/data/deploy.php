@@ -69,6 +69,9 @@ require 'recipe/common.php';
 | 14) 显示更详细输出（排障常用）
 |    php vendor/bin/dep deploy <环境> -vvv
 |
+| 15) 手动重建后台菜单（清空后按插件菜单文件重新导入）
+|    php vendor/bin/dep run <环境> 'cd {{current_path}} && php webman xb-menu:recreate'
+|
 */
 
 // TODO 以下为默认配置，请根据实际情况进行修改，设置TODO都需要修改
@@ -251,6 +254,17 @@ task('db:table-sync', function () {
     run('cd {{current_path}} && {{bin/php}} webman xb-table:sync');
 });
 
+// 部署后重建后台菜单（清空菜单表并按插件 config/menu.php 重新导入）
+task('db:menu-recreate', function () {
+    $env = '{{current_path}}/.env';
+    // 与表结构同步一致：首次部署 .env 为空时数据库配置不可用，跳过
+    if (!test("[ -f $env ]") || !test("[ -s $env ]")) {
+        warning("跳过菜单重建，需要执行程序安装后配置数据库连接");
+        return;
+    }
+    run('cd {{current_path}} && {{bin/php}} webman xb-menu:recreate');
+});
+
 // 执行部署后置业务类
 task('deploy:hook', function () {
     run('cd {{current_path}} && {{bin/php}} plugin/xbCode/hooks/deploy-hook.php');
@@ -266,6 +280,8 @@ after('deploy:update_code', 'deploy:submodule');
 after('deploy:success', 'nginx:init');
 // 部署成功后同步表结构
 after('deploy:success', 'db:table-sync');
+// 部署成功后重建后台菜单
+after('deploy:success', 'db:menu-recreate');
 // 部署成功后执行部署后置业务
 after('deploy:success', 'deploy:hook');
 // 部署成功后重启

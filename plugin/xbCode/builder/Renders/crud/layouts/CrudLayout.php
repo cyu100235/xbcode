@@ -31,8 +31,10 @@ use plugin\xbCode\builder\Renders\crud\column\SwitchColumn;
 use plugin\xbCode\builder\Renders\crud\column\AvatarColumn;
 use plugin\xbCode\builder\Renders\crud\column\ImagesColumn;
 use plugin\xbCode\builder\Renders\crud\column\SelectColumn;
+use plugin\xbCode\builder\Renders\crud\column\InlineColumn;
 use plugin\xbCode\builder\Renders\crud\column\DateTimeColumn;
 use plugin\xbCode\builder\Renders\crud\column\ProgressColumn;
+use plugin\xbCode\builder\Renders\crud\column\KeyValueColumn;
 use plugin\xbCode\builder\Renders\crud\column\VueComponentColumn;
 use plugin\xbCode\builder\Renders\crud\column\ActionButtonColumn;
 
@@ -67,8 +69,10 @@ trait CrudLayout
     use AvatarColumn;
     use ImagesColumn;
     use SelectColumn;
+    use InlineColumn;
     use DateTimeColumn;
     use ProgressColumn;
+    use KeyValueColumn;
     use VueComponentColumn;
     use ActionButtonColumn;
     use ActionButtonLayout;

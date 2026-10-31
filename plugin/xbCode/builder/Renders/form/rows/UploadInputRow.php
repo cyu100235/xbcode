@@ -104,6 +104,22 @@ trait UploadInputRow
             ->setVariables($uploadOption)
             ->autoFill([
                 $field => '${url}'
+            ])
+            // 上传失败时直接弹窗提示；表单内的失败汇总由辅助样式隐藏（见 XbCrud）
+            // confirmDialog 的参数须放在 dialog 中，放 args 里会被 amis 的字段白名单过滤掉；
+            // 按钮文案由前端 env.confirm 固定为「确定/取消」，此处不再配置
+            ->onEvent([
+                'fail' => [
+                    'actions' => [
+                        [
+                            'actionType' => 'confirmDialog',
+                            'dialog' => [
+                                'title' => '文件上传失败',
+                                'msg' => '文件上传失败：${error.message || error}',
+                            ],
+                        ],
+                    ],
+                ],
             ]);
         // 输入框组合内部的 input-text 不支持 addOn，复制按钮需作为组合框的兄弟节点
         $body = [$inputComponent->get()];

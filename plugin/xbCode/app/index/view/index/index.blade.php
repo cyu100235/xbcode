@@ -1,10 +1,16 @@
-@php($installed = $installed ?? \plugin\xbCode\utils\FrameUtil::checked())
+@php
+    $installed = $installed ?? \plugin\xbCode\utils\FrameUtil::checked();
+    $webIcp = $webIcp ?? [];
+    $copyright = $webIcp['copyright'] ?? '';
+    $brandName = ($webName ?? '') ?: '积木云';
+    $siteTitle = "{$brandName} xbCode";
+@endphp
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $installed ? '积木云 xbCode' : '系统尚未安装 - 积木云 xbCode' }}</title>
+    <title>{{ $installed ? $siteTitle : "系统尚未安装 - {$siteTitle}" }}</title>
     <style>
         * {
             margin: 0;
@@ -82,6 +88,17 @@
             color: #9ca3af;
         }
 
+        .footer a {
+            color: #6366f1;
+            text-decoration: none;
+            transition: color 0.2s ease, opacity 0.2s ease;
+        }
+
+        .footer a:hover {
+            color: #7570e6ff;
+            opacity: 0.85;
+        }
+
         @media (max-width: 480px) {
             .card {
                 padding: 36px 24px;
@@ -95,7 +112,7 @@
 </head>
 <body>
     <main class="card">
-        <h1 class="brand">积木云 <span>xbCode</span></h1>
+        <h1 class="brand">{{ $brandName }} <span>xbCode</span></h1>
         @if($installed)
             <p class="tagline">插件化开发框架，让积木式开发更简单</p>
             <p class="desc">提供插件化开发基础能力，支持快速搭建后台与业务模块。</p>
@@ -104,6 +121,8 @@
             <pre class="code">php webman xb-install</pre>
         @endif
     </main>
-    <footer class="footer">贵州积木云网络科技有限公司 · www.xbcode.net</footer>
+    @if($copyright)
+        <footer class="footer">{!! $copyright !!}</footer>
+    @endif
 </body>
 </html>

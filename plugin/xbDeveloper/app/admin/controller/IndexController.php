@@ -17,6 +17,7 @@ use plugin\xbCode\builder\Renders\XbForm;
 use plugin\xbCode\builder\Renders\XbCrud;
 use plugin\xbDeveloper\api\DepositoryApi;
 use plugin\xbDeveloper\api\DevelopmentApi;
+use plugin\xbDeveloper\api\PatchPackageApi;
 use plugin\xbDeveloper\api\PluginPreviewApi;
 use plugin\xbDeveloper\api\TableStructureApi;
 
@@ -45,6 +46,9 @@ class IndexController extends XbController
             $builder->addHeaderDialog('从仓库创建', Url::make('clone'), [
                 'title' => '从仓库创建插件',
             ])->level('warning');
+            $builder->addHeaderConfirm('重建所有菜单', Url::make('recreateMenus'),[
+                'content' => '是否确认重建所有插件菜单？',
+            ])->danger();
 
             $builder->addColumnCard('plugin', '插件信息', [
                 'title' => 'title',
@@ -218,6 +222,18 @@ class IndexController extends XbController
     }
 
     /**
+     * 重建所有插件菜单
+     * @return \support\Response
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function recreateMenus()
+    {
+        DevelopmentApi::make()->recreateMenus();
+        return $this->success('所有插件菜单重建完成');
+    }
+
+    /**
      * 执行SQL脚本文件
      * @return \support\Response
      * @author 楚羽幽 958416459@qq.com
@@ -262,7 +278,7 @@ class IndexController extends XbController
             $name = (string) request()->post('name');
             $version = (string) request()->post('version');
             // 构建版本补丁打包
-            DevelopmentApi::make()->buildePatchPackage($name, $version);
+            PatchPackageApi::make()->buildePatchPackage($name, $version);
             // 返回成功响应，并附带跳转地址
             return $this->success('插件版本补丁构建成功');
         }
@@ -277,15 +293,15 @@ class IndexController extends XbController
             $builder->addRowInput('version', '版本编号')
                 ->description('示例：1.0.0')->disabled(true),
         ]);
-        $development = DevelopmentApi::make();
-        $files = $development->getPackageFilesChange($name);
+        $patchPackage = PatchPackageApi::make();
+        $files = $patchPackage->getPackageFilesChange($name);
         $files = implode("\n", $files);
         $builder->addRowTextarea('files', '文件变化', $files)
             ->minRows(8)
             ->placeholder('当前版本无文件变化')
             ->description("版本补丁文件变化列表")->disabled(true);
         $sql = TableStructureApi::make()->getPackageSqlChange($name);
-        $sqlPath = $development->getVersionPatchSql($name, $version);
+        $sqlPath = $patchPackage->getVersionPatchSql($name, $version);
         $builder->addRowTextarea('tables', '表结构变化', $sql)
             ->minRows(8)
             ->placeholder('当前版本无表结构变化')

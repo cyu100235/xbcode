@@ -9,12 +9,13 @@
  */
 namespace plugin\xbCode\base\plugin;
 
-use plugin\xbCode\api\PluginsApi;
 use support\think\Db;
 use plugin\xbCode\api\Menus;
 use plugin\xbCode\api\Mysql;
 use plugin\xbDict\api\DictApi;
 use plugin\xbCode\api\ConfigApi;
+use plugin\xbCode\api\PluginsApi;
+use plugin\xbCode\api\MenuChecked;
 use plugin\xbCrontab\api\CrontabApi;
 
 /**
@@ -63,6 +64,8 @@ trait InstallTrait
         if (empty($data)) {
             return;
         }
+        // 处理菜单数据
+        $data = MenuChecked::resetField($data, 'state', '10');
         // 开始安装菜单
         Menus::install($data, $this->name);
     }

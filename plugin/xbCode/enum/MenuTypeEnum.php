@@ -25,9 +25,9 @@ class MenuTypeEnum extends BaseEnum
         'style' => '<span class="label label-primary">目录</span>',
     ];
     const STATE20 = [
-        'label' => '菜单',
+        'label' => '页面',
         'value' => '20',
-        'style' => '<span class="label label-success">菜单</span>',
+        'style' => '<span class="label label-success">页面</span>',
     ];
     const MENU_TO_30 = [
         'label' => '按钮',

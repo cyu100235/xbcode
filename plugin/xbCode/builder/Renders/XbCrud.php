@@ -146,14 +146,18 @@ class XbCrud extends Base
         $this->useCRUD()->perPageField($this->limitField);
         // 开启列设置开关
         $this->useCRUD()->columnsTogglable(true);
-        // 设置列配置
-        $this->addToolbarColumnsTogglable();
         // 设置表格刷新按钮
         $this->addToolbarReload();
+        // 设置列配置
+        $this->addToolbarColumnsTogglable();
         // 设置配合隐藏自定义上传输入组合框
         $this->usePage()->css([
             // 隐藏上传组件的文件列表，仅保留选择按钮
             '.xb-hide-upload-file-list .cxd-InputGroup .cxd-FileControl .cxd-FileControl-list' => [
+                'display' => 'none'
+            ],
+            // 上传失败统一由弹窗提示，表单内不再显示「已成功上传 X 个文件…重试上传失败文件」汇总
+            '.xb-hide-upload-file-list .cxd-InputGroup .cxd-FileControl .cxd-FileControl-sum' => [
                 'display' => 'none'
             ],
             // 上传按钮沿用输入框边框样式，右侧保留圆角，使其整体融入输入框
@@ -169,6 +173,65 @@ class XbCrud extends Base
             // 输入框聚焦时上传按钮未跟随焦点边框色，导致边框线断开，此处补齐为焦点色
             '.xb-hide-upload-file-list .cxd-InputGroup.is-focused .cxd-FileControl .cxd-FileControl-selectBtn' => [
                 'border-color' => 'var(--InputGroup-addOn-onFocused-borderColor)'
+            ],
+            // 上传进行中（存在进度节点）时冻结上传按钮，并把按钮文字改成「正在上传」
+            // cursor 需 !important：amis 的 .amis-scope .cxd-Button:not(:disabled):not(.is-disabled) 优先级更高
+            '.xb-hide-upload-file-list:has(.cxd-FileControl-progressInfo) .cxd-FileControl-selectBtn' => [
+                'pointer-events' => 'none',
+                'cursor' => 'not-allowed !important',
+                'opacity' => '0.6'
+            ],
+            '.xb-hide-upload-file-list:has(.cxd-FileControl-progressInfo) .cxd-FileControl-selectBtn > span' => [
+                'display' => 'none'
+            ],
+            // 上传按钮左侧显示旋转加载图标（纯 CSS 绘制，无需额外图标资源）
+            '.xb-hide-upload-file-list:has(.cxd-FileControl-progressInfo) .cxd-FileControl-selectBtn::before' => [
+                'content' => '""',
+                'display' => 'inline-block',
+                'width' => '12px',
+                'height' => '12px',
+                'margin-right' => '6px',
+                'vertical-align' => 'middle',
+                'border' => '2px solid var(--colors-brand-5, #2468f2)',
+                'border-top-color' => 'transparent',
+                'border-radius' => '50%',
+                'box-sizing' => 'border-box',
+                // 复用 amis 内置的 @keyframes spin（page.css 不支持声明 @keyframes）
+                'animation' => 'spin 0.8s linear infinite'
+            ],
+            // 隐藏原有「上传/重新上传」文案后改用伪元素显示上传中状态
+            '.xb-hide-upload-file-list:has(.cxd-FileControl-progressInfo) .cxd-FileControl-selectBtn::after' => [
+                'content' => '"正在上传"'
+            ],
+            // 输入框同步显示上传中状态：隐藏原值/占位文案，改由伪元素提示
+            '.xb-hide-upload-file-list:has(.cxd-FileControl-progressInfo) .cxd-TextControl-input' => [
+                'position' => 'relative'
+            ],
+            '.xb-hide-upload-file-list:has(.cxd-FileControl-progressInfo) .cxd-TextControl-input input' => [
+                'color' => 'transparent',
+                'caret-color' => 'transparent',
+                'pointer-events' => 'none'
+            ],
+            '.xb-hide-upload-file-list:has(.cxd-FileControl-progressInfo) .cxd-TextControl-input input::placeholder' => [
+                'color' => 'transparent'
+            ],
+            '.xb-hide-upload-file-list:has(.cxd-FileControl-progressInfo) .cxd-TextControl-input::after' => [
+                'content' => '"正在上传，请稍候…"',
+                'position' => 'absolute',
+                'left' => '12px',
+                'top' => '50%',
+                'transform' => 'translateY(-50%)',
+                'color' => 'var(--colors-neutral-text-6, #999)',
+                'font-size' => '12px',
+                'pointer-events' => 'none'
+            ],
+            // 底部批量操作下拉菜单改为向上弹出
+            // amis 的 dropdown-button 只会向下展开，而底部工具栏紧贴滚动容器底部，
+            // 向下展开的菜单会被 .amis-scope 的 overflow 裁掉，故翻转到按钮上方
+            '.xb-bulk-dropdown .cxd-DropDown-menu-root' => [
+                'top' => 'auto',
+                'bottom' => 'calc(100% + 4px)',
+                'margin' => '0'
             ],
         ]);
     }

@@ -16,6 +16,7 @@
       #app {
         height: 100%;
       }
+
       #xbcode-link {
         display: none;
       }
@@ -23,6 +24,18 @@
       * {
         margin: 0;
         padding: 0;
+      }
+
+      /*
+       * 字体只设置在正文与表单控件上，不要用 * 通配符。
+       * amis 的 input-number 上下箭头依赖 .cxd-Number-handler 上的 iconfont 字体，
+       * 通配符的 font-family 会直接覆盖该字体（优先级高于继承），导致箭头显示为空白方块。
+       */
+      body,
+      button,
+      input,
+      select,
+      textarea {
         font-family:
           'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', Arial,
           sans-serif;
@@ -32,20 +45,37 @@
         display: flex;
         flex-direction: column;
         letter-spacing: 1px;
-        background-color: #2f3447;
+        background:
+          radial-gradient(900px 620px at 18% 8%, rgba(107, 140, 255, 0.22), transparent 62%),
+          radial-gradient(820px 620px at 88% 92%, rgba(126, 224, 255, 0.14), transparent 62%),
+          linear-gradient(160deg, #171b27 0%, #232939 46%, #2f3447 100%);
         position: fixed;
         left: 0;
         top: 0;
         height: 100%;
         width: 100%;
         z-index: 9999;
-        transition: all 0.3s ease-in;
+        transition: all 0.45s ease-in;
         opacity: 1;
         pointer-events: none;
+        overflow: hidden;
       }
 
       .preload__wrap.is-hide {
         opacity: 0;
+      }
+
+      /* 背景网格与光晕 */
+      .preload__bg {
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(255, 255, 255, 0.028) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(255, 255, 255, 0.028) 1px, transparent 1px);
+        background-size: 44px 44px;
+        -webkit-mask-image: radial-gradient(circle at 50% 46%, #000 0%, transparent 72%);
+        mask-image: radial-gradient(circle at 50% 46%, #000 0%, transparent 72%);
+        animation: preload-grid 18s linear infinite;
       }
 
       .preload__container {
@@ -58,6 +88,10 @@
         user-select: none;
         -webkit-user-select: none;
         flex-grow: 1;
+        position: relative;
+        padding: 0 24px;
+        box-sizing: border-box;
+        text-align: center;
       }
 
       .preload__name {
@@ -68,20 +102,114 @@
         margin-bottom: 30px;
       }
 
+      /* Logo 区域 */
+      .preload__logo {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 96px;
+        height: 96px;
+        margin-bottom: 34px;
+      }
+
+      .preload__logo::before {
+        content: '';
+        position: absolute;
+        inset: -12px;
+        border-radius: 50%;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .preload__logo::after {
+        content: '';
+        position: absolute;
+        inset: -12px;
+        border-radius: 50%;
+        background: conic-gradient(
+          from 0deg,
+          rgba(126, 224, 255, 0) 0%,
+          rgba(126, 224, 255, 0.9) 72%,
+          rgba(107, 140, 255, 0.95) 90%,
+          rgba(107, 140, 255, 0) 100%
+        );
+        -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 0);
+        mask: radial-gradient(farthest-side, transparent calc(100% - 2px), #000 0);
+        animation: preload-spin 2.6s linear infinite;
+        filter: drop-shadow(0 0 6px rgba(126, 224, 255, 0.55));
+      }
+
+      .preload__glow {
+        position: absolute;
+        width: 130px;
+        height: 130px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(107, 140, 255, 0.38), transparent 66%);
+        animation: preload-pulse 3.6s ease-in-out infinite;
+      }
+
+      .preload__cube {
+        position: relative;
+        width: 70px;
+        height: 70px;
+        animation: preload-float 3.6s ease-in-out infinite;
+        filter: drop-shadow(0 10px 22px rgba(107, 140, 255, 0.4));
+      }
+
       .preload__title {
         color: #fff;
-        font-size: 14px;
-        margin: 30px 0 20px 0;
+        font-size: 15px;
+        font-weight: 500;
+        letter-spacing: 2px;
+        margin: 0;
+      }
+
+      .preload__dots i {
+        font-style: normal;
+        opacity: 0.25;
+        animation: preload-dot 1.4s ease-in-out infinite;
+      }
+
+      .preload__dots i:nth-child(2) {
+        animation-delay: 0.18s;
+      }
+
+      .preload__dots i:nth-child(3) {
+        animation-delay: 0.36s;
       }
 
       .preload__sub-title {
-        color: #ababab;
+        color: #8b91a4;
         font-size: 12px;
+        letter-spacing: 1px;
+        margin-top: 12px;
+      }
+
+      .preload__bar {
+        position: relative;
+        width: 208px;
+        height: 3px;
+        margin-top: 28px;
+        border-radius: 3px;
+        background-color: rgba(255, 255, 255, 0.08);
+        overflow: hidden;
+      }
+
+      .preload__bar span {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 38%;
+        height: 100%;
+        border-radius: 3px;
+        background: linear-gradient(90deg, transparent, #7ee0ff 35%, #6b8cff 70%, transparent);
+        animation: preload-slide 1.6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
       }
 
       .preload__footer {
+        position: relative;
         text-align: center;
-        padding: 10px 0 20px 0;
+        padding: 10px 0 22px 0;
       }
 
       .preload__footer a {
@@ -89,76 +217,88 @@
         color: #ababab;
         text-decoration: none;
       }
+
       .preload__footer #xbcode-link {
         display: none;
       }
 
-      .preload__loading {
-        height: 30px;
-        width: 30px;
-        border-radius: 30px;
-        border: 7px solid currentColor;
-        border-bottom-color: #2f3447 !important;
-        position: relative;
-        animation:
-          r 1s infinite cubic-bezier(0.17, 0.67, 0.83, 0.67),
-          bc 2s infinite ease-in;
-        transform: rotate(0deg);
-      }
-
-      @keyframes r {
-        from {
-          transform: rotate(0deg);
-        }
-
+      @keyframes preload-spin {
         to {
           transform: rotate(360deg);
         }
       }
 
-      .preload__loading::after,
-      .preload__loading::before {
-        content: '';
-        display: inline-block;
-        position: absolute;
-        bottom: -2px;
-        height: 7px;
-        width: 7px;
-        border-radius: 10px;
-        background-color: currentColor;
-      }
-
-      .preload__loading::after {
-        left: -1px;
-      }
-
-      .preload__loading::before {
-        right: -1px;
-      }
-
-      @keyframes bc {
-        0% {
-          color: #689cc5;
-        }
-
-        25% {
-          color: #b3b7e2;
+      @keyframes preload-float {
+        0%,
+        100% {
+          transform: translateY(0);
         }
 
         50% {
-          color: #93dbe9;
+          transform: translateY(-6px);
+        }
+      }
+
+      @keyframes preload-pulse {
+        0%,
+        100% {
+          opacity: 0.55;
+          transform: scale(0.94);
         }
 
-        75% {
-          color: #abbd81;
+        50% {
+          opacity: 1;
+          transform: scale(1.06);
+        }
+      }
+
+      @keyframes preload-dot {
+        0%,
+        100% {
+          opacity: 0.2;
+        }
+
+        50% {
+          opacity: 1;
+        }
+      }
+
+      @keyframes preload-slide {
+        0% {
+          transform: translateX(-105%);
         }
 
         100% {
-          color: #689cc5;
+          transform: translateX(275%);
+        }
+      }
+
+      @keyframes preload-grid {
+        0% {
+          background-position:
+            0 0,
+            0 0;
+        }
+
+        100% {
+          background-position:
+            44px 44px,
+            44px 44px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .preload__bg,
+        .preload__logo::after,
+        .preload__glow,
+        .preload__cube,
+        .preload__dots i,
+        .preload__bar span {
+          animation: none;
         }
       }
     </style>
-    <script type="module" crossorigin src="/backend/assets/index-9aea49cf.js"></script>
+    <script type="module" crossorigin src="/backend/assets/index-2f799ab9.js"></script>
     <link rel="modulepreload" crossorigin href="/backend/assets/vendor/@vue-4f5555d0.js">
     <link rel="modulepreload" crossorigin href="/backend/assets/vendor/vue-4b03699f.js">
     <link rel="modulepreload" crossorigin href="/backend/assets/vendor/lodash-es-32f1e46b.js">
@@ -177,9 +317,9 @@
     <link rel="modulepreload" crossorigin href="/backend/assets/vendor/vue-router-f903277e.js">
     <link rel="modulepreload" crossorigin href="/backend/assets/vendor/vue-demi-ac43b0ec.js">
     <link rel="modulepreload" crossorigin href="/backend/assets/vendor/pinia-ed233b5c.js">
-    <link rel="modulepreload" crossorigin href="/backend/assets/views/builder/index-0463374a.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/views/builder/index-53140807.js">
     <link rel="modulepreload" crossorigin href="/backend/assets/vendor/less-5eba5ccf.js">
-    <link rel="modulepreload" crossorigin href="/backend/assets/views/login/component/login-7e3f7204.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/views/login/component/login-7e15fc62.js">
     <link rel="modulepreload" crossorigin href="/backend/assets/vendor/dplayer-608c1b12.js">
     <link rel="modulepreload" crossorigin href="/backend/assets/vendor/tslib-54e39b60.js">
     <link rel="modulepreload" crossorigin href="/backend/assets/vendor/zrender-744c9c42.js">
@@ -192,40 +332,72 @@
     <link rel="modulepreload" crossorigin href="/backend/assets/vendor/gopd-30775706.js">
     <link rel="modulepreload" crossorigin href="/backend/assets/vendor/es-define-property-27915812.js">
     <link rel="modulepreload" crossorigin href="/backend/assets/vendor/has-symbols-76fb15e9.js">
-    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/function-bind-61637ca6.js">
-    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/call-bind-apply-helpers-e4a24274.js">
-    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/dunder-proto-a5399c94.js">
-    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/get-proto-9c1ff8ae.js">
-    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/hasown-20c58d17.js">
-    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/get-intrinsic-50cfb5f2.js">
-    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/call-bound-c0bc6215.js">
-    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/side-channel-map-cb9bab8f.js">
-    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/side-channel-weakmap-f2d519b4.js">
-    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/side-channel-08d8b905.js">
-    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/qs-abb0833f.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/function-bind-48f717dc.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/call-bind-apply-helpers-3cda379c.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/dunder-proto-1dc9c16d.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/get-proto-e94264fe.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/hasown-31deb62f.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/get-intrinsic-52f17130.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/call-bound-d9fdd32a.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/side-channel-map-b596ee93.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/side-channel-weakmap-964467d0.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/side-channel-414b97c4.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/vendor/qs-b0732a54.js">
     <link rel="modulepreload" crossorigin href="/backend/assets/vendor/pinia-plugin-persistedstate-ed167f96.js">
     <link rel="modulepreload" crossorigin href="/backend/assets/vendor/nprogress-e0028543.js">
     <link rel="modulepreload" crossorigin href="/backend/assets/vendor/@vicons-fd8bcc59.js">
     <link rel="modulepreload" crossorigin href="/backend/assets/vendor/lucide-vue-next-8e8eea48.js">
     <link rel="modulepreload" crossorigin href="/backend/assets/vendor/vditor-a8a1b596.js">
-    <link rel="modulepreload" crossorigin href="/backend/assets/views/login/index-9ab263e5.js">
+    <link rel="modulepreload" crossorigin href="/backend/assets/views/login/index-9799d397.js">
     <link rel="stylesheet" href="/backend/assets/static/css/@wangeditor.501cf061.css">
     <link rel="stylesheet" href="/backend/assets/static/css/element-plus.29540580.css">
     <link rel="stylesheet" href="/backend/assets/static/css/index.8a6338d4.css">
-    <link rel="stylesheet" href="/backend/assets/static/css/login.afadb3f3.css">
+    <link rel="stylesheet" href="/backend/assets/static/css/login.8e2b9cbf.css">
     <link rel="stylesheet" href="/backend/assets/static/css/nprogress.771398e6.css">
     <link rel="stylesheet" href="/backend/assets/static/css/vditor.410525cb.css">
-    <link rel="stylesheet" href="/backend/assets/static/css/index.1e232c0b.css">
+    <link rel="stylesheet" href="/backend/assets/static/css/index.75d209cd.css">
   </head>
 
   <body>
     <div id="app" class="ma-ui">
       <div class="preload__wrap" id="Loading">
+        <div class="preload__bg"></div>
         <div class="preload__container">
           <!-- <p class="preload__name">积木云</p> -->
-          <div class="preload__loading"></div>
-          <p class="preload__title">正在加载资源...</p>
+          <div class="preload__logo">
+            <div class="preload__glow"></div>
+            <svg class="preload__cube" viewBox="0 0 64 64" fill="none" aria-hidden="true">
+              <defs>
+                <linearGradient id="preload-cube-grad" x1="6" y1="4" x2="58" y2="60">
+                  <stop offset="0%" stop-color="#7ee0ff" />
+                  <stop offset="52%" stop-color="#6b8cff" />
+                  <stop offset="100%" stop-color="#b39cff" />
+                </linearGradient>
+              </defs>
+              <path
+                d="M32 4 60 20v24L32 60 4 44V20z"
+                stroke="url(#preload-cube-grad)"
+                stroke-width="2.5"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M32 36v24M32 36 4 20m28 16 28-16"
+                stroke="url(#preload-cube-grad)"
+                stroke-width="2.5"
+                stroke-linejoin="round"
+                opacity="0.75"
+              />
+              <path d="M32 4 60 20 32 36 4 20z" fill="url(#preload-cube-grad)" fill-opacity="0.14" />
+              <path d="M4 20v24l28 16V36z" fill="url(#preload-cube-grad)" fill-opacity="0.07" />
+              <path d="M60 20v24L32 60V36z" fill="url(#preload-cube-grad)" fill-opacity="0.1" />
+            </svg>
+          </div>
+          <p class="preload__title">
+            正在加载资源
+            <span class="preload__dots"><i>.</i><i>.</i><i>.</i></span>
+          </p>
           <p class="preload__sub-title">初次加载需要较多时间，请耐心等待</p>
+          <div class="preload__bar"><span></span></div>
         </div>
         <div class="preload__footer">
           <!-- <a href="http://www.xbcode.net">http://www.xbcode.net</a> -->

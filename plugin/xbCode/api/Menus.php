@@ -10,9 +10,8 @@
 namespace plugin\xbCode\api;
 
 use Exception;
+use support\think\Db;
 use support\think\Cache;
-use plugin\xbCode\app\model\Admin;
-use plugin\xbCode\app\model\AdminRole;
 use plugin\xbCode\app\model\AdminRule;
 
 /**
@@ -23,27 +22,17 @@ use plugin\xbCode\app\model\AdminRule;
 class Menus
 {
     /**
-     * 获取管理员菜单
-     * @param int $adminId 管理员ID
+     * 获取所有菜单
      * @throws Exception
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public static function get(int $adminId)
+    public static function get()
     {
-        $model = Admin::where('id', $adminId)->find();
-        if (!$model) {
-            throw new Exception('管理员信息错误，请重新登录', 12000);
-        }
+        // 获取全部菜单数据，不按角色过滤
         $where = [
             ['state', '=', '20'],
         ];
-        // 检测非系统管理员
-        if ($model['is_system'] !== '20') {
-            // 获取角色菜单规则
-            $rules = static::getRoleRules($model['role_id'], true);
-            $where[] = ['path', 'in', $rules];
-        }
         // 获取菜单数据
         $data = AdminRule::where($where)
             ->order('sort asc,id asc')
@@ -154,73 +143,6 @@ class Menus
     }
 
     /**
-     * 获取角色权限规则
-     * @param int $roleId 角色ID
-     * @param bool $force 是否强制刷新缓存
-     * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 958416459@qq.com
-     */
-    public static function getRoleRules(int $roleId, bool $force = false)
-    {
-        $key = "admin_rules_{$roleId}";
-        $data = Cache::get($key);
-        if ($data && !$force) {
-            return $data;
-        }
-        $adminRules = AdminRole::where('id', $roleId)->value('rule', []);
-        if (empty($adminRules)) {
-            return [];
-        }
-        $adminRules = json_decode($adminRules, true);
-        $rules = [];
-        foreach ($adminRules as $path) {
-            // 添加自身
-            $rules[] = $path;
-            // 查询自身是否有父级规则
-            $where = [
-                ['path', '=', $path],
-                ['state', '=', '20'],
-            ];
-            $parent = AdminRule::where($where)->value('pid');
-            if ($parent !== 0) {
-                // 获取父级规则
-                $parentPaths = self::getParentRules((int) $parent);
-                if ($parentPaths) {
-                    $rules = array_merge($rules, $parentPaths);
-                }
-            }
-        }
-        // 去除重复
-        $rules = array_unique($rules);
-        // 缓存数据
-        Cache::set($key, $rules, 600);
-        // 返回数据
-        return $rules;
-    }
-
-    /**
-     * 获取父级规则
-     * @param int $pid 父级菜单ID
-     * @param mixed $rules 菜单规则
-     * @return mixed
-     * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 958416459@qq.com
-     */
-    public static function getParentRules(int $pid, array $rules = [])
-    {
-        $model = AdminRule::where('id', $pid)->where('state', '20')->find();
-        if (!$model) {
-            return $rules;
-        }
-        $rules[] = $model['path'];
-        if ($model['pid'] != 0) {
-            return self::getParentRules($model['pid'], $rules);
-        } else {
-            return $rules;
-        }
-    }
-
-    /**
      * 处理顶级菜单归属权
      * @param array $menus
      * @param string $name
@@ -306,7 +228,15 @@ class Menus
             if (empty($value['is_show'])) {
                 $value['is_show'] = '20';
             }
-            $value['state'] = '10';
+            if (empty($value['state'])) {
+                $value['state'] = '10';
+            }
+            if (empty($value['method'])) {
+                $value['method'] = 'GET';
+            }
+            if (is_array($value['method'])) {
+                $value['method'] = current($value['method']);
+            }
             if (!in_array($value['is_default'], ['10', '20'])) {
                 throw new Exception('是否默认值错误');
             }
@@ -411,6 +341,38 @@ class Menus
                 continue;
             }
             $model->delete();
+        }
+    }
+
+    /**
+     * 重建菜单数据
+     * 清空菜单表并重置自增ID，然后重新导入插件目录下的所有菜单
+     * @throws Exception
+     * @return void
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public static function recreate()
+    {
+        // 获取菜单表名（含表前缀）
+        $table = (new AdminRule)->getTable();
+        // 清空菜单表，自增ID从1开始
+        Db::execute("TRUNCATE TABLE `{$table}`");
+        // 清除菜单字典缓存
+        Cache::delete('menu_title_dict');
+        // 获取所有插件菜单文件
+        $files = glob(base_path() . '/plugin/*/config/menu.php') ?: [];
+        foreach ($files as $file) {
+            // 解析菜单归属插件
+            $plugin = basename(dirname($file, 2));
+            $data = include $file;
+            if (empty($data)) {
+                continue;
+            }
+            // 处理菜单数据
+            $data = MenuChecked::resetField($data, 'state', '20');
+            // 导入菜单
+            static::install($data, $plugin);
         }
     }
 }

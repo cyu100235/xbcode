@@ -93,4 +93,19 @@ class InputTree extends FormOptions
         $this->type = 'tree-select';
         return $this;
     }
+
+    /**
+     * 设置最大高度
+     * @param string $value 最大高度
+     * @return static
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function height(string $value)
+    {
+        $styles = $this->getVariable('style');
+        $styles['--Tree-max-height'] = $value;
+        $this->setVariable('style',$styles);
+        return $this;
+    }
 }

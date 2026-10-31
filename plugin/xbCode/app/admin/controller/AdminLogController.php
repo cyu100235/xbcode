@@ -54,9 +54,9 @@ class AdminLogController extends BaseController
             $builder->addFilterDateRange('create_at', '操作时间');
             $builder->addColumn('id', '序号')->width(80)->align('center');
             $builder->addColumn('username', '管理员账号')->width(130);
-            $builder->addColumn('menu_title', '操作菜单')->minWidth(140);
+            $builder->addColumn('menu_title', '操作菜单')->width(140);
             $builder->addColumnMap('action', '操作类型', LogActionEnum::dict())->width(100);
-            $builder->addColumn('content', '操作内容')->minWidth(260);
+            $builder->addColumn('method', '请求方式')->width(100);
             $builder->addColumn('ip', '操作IP')->width(130);
             $builder->addColumn('city', '所在城市')->width(140);
             $builder->addColumnMap('result', '操作结果', LogResultEnum::dict())->width(100);

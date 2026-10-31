@@ -39,6 +39,17 @@ trait ColumnUtil
     protected array $pendingSlotColumns = [];
 
     /**
+     * 各目标列上已插入的插槽列锚点
+     *
+     * 同一目标列被多个监听器定位时，后注册的批次应排在前一批次之后，
+     * 以保持注册顺序；此处记录每个目标列前/后方向最后插入的列对象。
+     * @var array<string, array{after:object|null, before:object|null}>
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected array $slotAnchors = [];
+
+    /**
      * 使用自定义组件列
      * @param mixed $component
      * @param string $name
@@ -124,8 +135,50 @@ trait ColumnUtil
             $this->columns = array_merge($this->columns, $added);
             return;
         }
-        $position = $after ? $index + 1 : $index;
+        $position = $this->resolveSlotPosition($target, $after, $index);
         array_splice($this->columns, $position, 0, $added);
+        $this->rememberSlotAnchor($target, $after, $added);
+    }
+
+    /**
+     * 计算插槽批次应插入的位置
+     *
+     * 同一目标列已有先注册的插槽批次时，接在其末列之后插入，
+     * 从而保持监听器的注册顺序（无论目标列前还是目标列后）。
+     * @param string $target 目标列键名
+     * @param bool $after 是否插入到目标列之后
+     * @param int $index 目标列下标
+     * @return int 插入位置
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected function resolveSlotPosition(string $target, bool $after, int $index): int
+    {
+        $anchor = $this->slotAnchors[$target][$after ? 'after' : 'before'] ?? null;
+        if ($anchor !== null) {
+            $anchorIndex = array_search($anchor, $this->columns, true);
+            if ($anchorIndex !== false) {
+                return $anchorIndex + 1;
+            }
+        }
+        return $after ? $index + 1 : $index;
+    }
+
+    /**
+     * 记录目标列上最后插入的插槽列锚点
+     * @param string $target 目标列键名
+     * @param bool $after 是否插入到目标列之后
+     * @param array $columns 本次插入的列
+     * @return void
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected function rememberSlotAnchor(string $target, bool $after, array $columns): void
+    {
+        if (!$columns) {
+            return;
+        }
+        $this->slotAnchors[$target][$after ? 'after' : 'before'] = end($columns);
     }
 
     /**
@@ -156,8 +209,13 @@ trait ColumnUtil
         }));
         foreach ($pending as $item) {
             $index = $this->findColumnIndex($item['target']);
-            $position = $index === null ? count($this->columns) : ($item['after'] ? $index + 1 : $index);
+            if ($index === null) {
+                $this->columns = array_merge($this->columns, $item['columns']);
+                continue;
+            }
+            $position = $this->resolveSlotPosition($item['target'], $item['after'], $index);
             array_splice($this->columns, $position, 0, $item['columns']);
+            $this->rememberSlotAnchor($item['target'], $item['after'], $item['columns']);
         }
     }
 

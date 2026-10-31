@@ -15,7 +15,7 @@ class MenuResponse
      * 添加资源菜单
      * @param array $parent
      * @param array $data
-     * @throws \Exception
+     * @throws Exception
      * @return void
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com

@@ -19,17 +19,6 @@ class IndexController extends XbController
      */
     public function index(Request $request)
     {
-        return view('index/index', ['name' => '{PLUGIN_NAME}']);
+        return $this->viewAppView();
     }
-    
-    /**
-     * 工作台
-     * @return \support\Response
-     * @copyright 贵州积木云网络科技有限公司
-     * @author 楚羽幽 958416459@qq.com
-     */
-    // public function workbench()
-    // {
-    //     return $this->viewPage('view/workbench');
-    // }
 }

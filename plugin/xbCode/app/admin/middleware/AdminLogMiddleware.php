@@ -36,10 +36,12 @@ class AdminLogMiddleware implements MiddlewareInterface
         if (!$this->isRecordable($request)) {
             return $handler($request);
         }
+        // 业务执行前先采集旧数据快照，供日志做正确的差量对比
+        $oldRows = AdminLogApi::make()->snapshot($request);
         // 执行请求，先得到响应便于记录操作结果
         $response = $handler($request);
         // 记录管理员操作日志（内部已做异常兜底，不影响业务）
-        AdminLogApi::make()->record($request, $response);
+        AdminLogApi::make()->record($request, $response, $oldRows);
         // 返回响应
         return $response;
     }

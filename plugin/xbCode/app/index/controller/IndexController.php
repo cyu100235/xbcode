@@ -10,6 +10,8 @@
 namespace plugin\xbCode\app\index\controller;
 
 use plugin\xbCode\XbController;
+use plugin\xbCode\api\AppEntry;
+use plugin\xbCode\api\ConfigApi;
 
 /**
  * 首页控制器
@@ -26,6 +28,22 @@ class IndexController extends XbController
      */
     public function index()
     {
-        return $this->viewAppView();
+        return $this->viewAppView($this->webIcpVars());
+    }
+
+    /**
+     * 组织及备案信息变量
+     * @return array
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected function webIcpVars(): array
+    {
+        $system = ConfigApi::make('system')->get('system', []);
+        $webIcp = AppEntry::replaceVariables(ConfigApi::make('webicp')->get('', []), $system);
+        return [
+            'webIcp' => $webIcp,
+            'webName' => $system['web_name'] ?? '',
+        ];
     }
 }

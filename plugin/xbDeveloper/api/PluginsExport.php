@@ -145,7 +145,8 @@ class PluginsExport
             'id',
             'pid',
             '_level',
-            '_html'
+            '_html',
+            'plugin',
         ]);
         // 格式化数组菜单字符串
         $content = VarExporter::export($menus);

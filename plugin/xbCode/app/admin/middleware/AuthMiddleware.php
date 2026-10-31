@@ -14,7 +14,7 @@ use Webman\Http\Request;
 use Webman\Http\Response;
 use Tinywan\Jwt\JwtToken;
 use Webman\MiddlewareInterface;
-use plugin\xbCode\api\AdminAuthApi;
+use plugin\xbCode\api\AdminApi;
 use plugin\xbCode\exception\business\ExceptionForbidden;
 use plugin\xbCode\exception\business\ExceptionUnauthorized;
 
@@ -117,8 +117,15 @@ class AuthMiddleware implements MiddlewareInterface
         if (in_array($pathInfo['action'], $noAuth)) {
             return;
         }
-        // 检测是否有操作权限
-        if (!AdminAuthApi::make()->Authentication($roleId, $pathInfo['uri'])) {
+        // 验证管理员是否有操作权限
+        $permit = AdminApi::checkAuth(
+            (int) $roleId,
+            $pathInfo['plugin'],
+            $pathInfo['module'],
+            $pathInfo['controller'],
+            $pathInfo['action']
+        );
+        if (!$permit) {
             throw new ExceptionForbidden('您没有操作权限');
         }
     }

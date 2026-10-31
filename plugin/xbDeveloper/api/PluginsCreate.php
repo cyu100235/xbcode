@@ -370,7 +370,7 @@ class PluginsCreate
      * 创建文件
      * @param string $path
      * @param string $name
-     * @throws \Exception
+     * @throws Exception
      * @return void
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com

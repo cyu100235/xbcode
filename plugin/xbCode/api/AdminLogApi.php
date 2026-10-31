@@ -45,6 +45,14 @@ class AdminLogApi
     private const SENSITIVE_KEYS = ['password', 'passwd', 'pwd', 'secret', 'token', 'authorization', 'appkey', 'app_secret'];
 
     /**
+     * 差量对比时忽略的字段（主键与自动时间戳每次都会变化，不体现业务修改）
+     * @var array
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    private const EDIT_IGNORE_KEYS = ['id', 'create_at', 'update_at'];
+
+    /**
      * 常用字段中文标注
      * @var array
      * @copyright 贵州积木云网络科技有限公司
@@ -97,14 +105,65 @@ class AdminLogApi
     }
 
     /**
+     * 采集修改操作执行前的数据快照
+     * 必须在业务处理前调用，返回 [主键 => 数据行]，仅修改操作（PUT）才采集，异常时返回空数组
+     * @param Request $request
+     * @return array
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function snapshot(Request $request): array
+    {
+        try {
+            if (strtoupper($request->method()) !== 'PUT') {
+                return [];
+            }
+            $ids = $this->parseIds($request->input('ids', ''));
+            if (!$ids) {
+                $ids = $this->parseIds($request->input('id', ''));
+            }
+            if (!$ids) {
+                return [];
+            }
+            $modelClass = $this->resolveModelClass((string) ($request->controller ?? ''));
+            if (!$modelClass || !class_exists($modelClass)) {
+                return [];
+            }
+            $rows = [];
+            foreach ($modelClass::whereIn('id', $ids)->select()->toArray() as $row) {
+                $rows[(int) $row['id']] = $row;
+            }
+            return $rows;
+        } catch (Throwable $th) {
+            return [];
+        }
+    }
+
+    /**
+     * 解析主键列表
+     * @param mixed $ids 单个主键或逗号分隔的多个主键
+     * @return array
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    private function parseIds(mixed $ids): array
+    {
+        if (is_string($ids)) {
+            $ids = explode(',', $ids);
+        }
+        return array_values(array_filter(array_map('intval', (array) $ids)));
+    }
+
+    /**
      * 记录管理员操作日志
      * @param Request $request
      * @param Response $response
+     * @param array $oldRows 操作执行前的数据快照，用于差量对比
      * @return void
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public function record(Request $request, Response $response)
+    public function record(Request $request, Response $response, array $oldRows = [])
     {
         try {
             // 仅记录增删改操作，GET不记录
@@ -126,7 +185,14 @@ class AdminLogApi
                 'action' => $action,
                 'method' => $method,
                 'path' => $this->getPath($request),
-                'content' => $this->buildContent($request, $method, $action, $params),
+                // 仅成功的修改才做真实差量对比，失败时按提交参数罗列
+                'content' => $this->buildContent(
+                    $request,
+                    $method,
+                    $action,
+                    $params,
+                    $result === LogResultEnum::SUCCESS['value'] ? $oldRows : []
+                ),
                 'params' => json_encode($params, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
                 'ip' => (string) $request->getRealIp(),
                 'city' => '',
@@ -246,11 +312,12 @@ class AdminLogApi
      * @param string $method
      * @param string $action
      * @param array $params
+     * @param array $oldRows 操作执行前的数据快照
      * @return string
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    private function buildContent(Request $request, string $method, string $action, array $params): string
+    private function buildContent(Request $request, string $method, string $action, array $params, array $oldRows): string
     {
         $menuTitle = $this->getMenuTitle($request);
         // 管理员登录
@@ -266,7 +333,7 @@ class AdminLogApi
             return mb_substr($content, 0, 500);
         }
         if ($method === 'PUT') {
-            return $this->buildEditContent($request, $menuTitle, $params);
+            return $this->buildEditContent($request, $menuTitle, $params, $oldRows);
         }
         // POST 新增
         $fields = $this->buildFieldList($params);
@@ -276,65 +343,86 @@ class AdminLogApi
 
     /**
      * 构建修改内容（差量对比，小白也能看懂）
+     * 旧值取请求执行前采集的快照，新值取执行后库中的实际数据，
+     * 避免批量接口（如批量解绑）把"执行后的结果"当成旧值导致方向颠倒。
      * @param Request $request
      * @param string $menuTitle
      * @param array $params
+     * @param array $oldRows 操作执行前的数据快照
      * @return string
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    private function buildEditContent(Request $request, string $menuTitle, array $params): string
+    private function buildEditContent(Request $request, string $menuTitle, array $params, array $oldRows): string
     {
-        $id = (int) ($params['id'] ?? $request->get('id', 0));
-        $header = "修改「{$menuTitle}」" . ($id > 0 ? "(ID={$id})" : '');
-        // 加载旧数据做差量对比
-        $oldModel = $this->loadOldModel($request, $id);
-        if (!$oldModel) {
+        $ids = $this->parseIds($params['ids'] ?? ($params['id'] ?? 0));
+        if (!$ids) {
+            $ids = $this->parseIds($request->get('id', 0));
+        }
+        $header = "修改「{$menuTitle}」" . ($ids ? '(ID=' . implode(',', $ids) . ')' : '');
+        // 无快照（非标准接口或读取失败）时，退回按提交参数罗列
+        if (!$oldRows) {
             $fields = $this->buildFieldList($params);
             return mb_substr($header . ($fields !== '' ? "：{$fields}" : ''), 0, 500);
         }
-        $old = $oldModel->toArray();
+        $newRows = $this->loadRowsByIds($request, $ids);
         $changes = [];
-        foreach ($params as $key => $value) {
-            if ($key === 'id') {
+        foreach ($oldRows as $id => $oldRow) {
+            if (!isset($newRows[$id])) {
                 continue;
             }
-            if (!array_key_exists($key, $old)) {
-                continue;
+            $newRow = $newRows[$id];
+            foreach ($oldRow as $key => $oldValue) {
+                if (in_array($key, self::EDIT_IGNORE_KEYS, true) || !array_key_exists($key, $newRow)) {
+                    continue;
+                }
+                $oldText = $this->formatValue($oldValue);
+                $newText = $this->formatValue($newRow[$key]);
+                if ($oldText === $newText) {
+                    continue;
+                }
+                $label = self::FIELD_LABELS[$key] ?? $key;
+                $pair = "{$label}：{$oldText} → {$newText}";
+                $changes[$pair] = ($changes[$pair] ?? 0) + 1;
             }
-            $oldValue = $this->formatValue($old[$key]);
-            $newValue = $this->formatValue($value);
-            if ($oldValue === $newValue) {
-                continue;
-            }
-            $label = self::FIELD_LABELS[$key] ?? $key;
-            $changes[] = "{$label}：{$oldValue} → {$newValue}";
         }
-        $content = $header . ($changes ? '：' . implode('；', $changes) : '：未检测到数据变化');
-        return mb_substr($content, 0, 500);
+        if (!$changes) {
+            return mb_substr($header . '：未检测到数据变化', 0, 500);
+        }
+        $total = count($oldRows);
+        $list = [];
+        foreach ($changes as $pair => $count) {
+            // 批量操作时同一变化合并显示条数
+            $list[] = $total > 1 ? "{$pair}（{$count} 条）" : $pair;
+        }
+        return mb_substr($header . '：' . implode('；', $list), 0, 500);
     }
 
     /**
-     * 根据控制器推断并加载旧数据
+     * 按主键加载执行后的数据行
      * @param Request $request
-     * @param int $id
-     * @return mixed
+     * @param array $ids
+     * @return array [主键 => 数据行]
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    private function loadOldModel(Request $request, int $id)
+    private function loadRowsByIds(Request $request, array $ids): array
     {
-        if ($id <= 0) {
-            return null;
+        if (!$ids) {
+            return [];
         }
-        $modelClass = $this->resolveModelClass($request->controller);
+        $modelClass = $this->resolveModelClass((string) ($request->controller ?? ''));
         if (!$modelClass || !class_exists($modelClass)) {
-            return null;
+            return [];
         }
         try {
-            return $modelClass::find($id);
+            $rows = [];
+            foreach ($modelClass::whereIn('id', $ids)->select()->toArray() as $row) {
+                $rows[(int) $row['id']] = $row;
+            }
+            return $rows;
         } catch (Throwable $th) {
-            return null;
+            return [];
         }
     }
 
