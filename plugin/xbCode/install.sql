@@ -11,6 +11,7 @@ CREATE TABLE `xb_admin_role` (
   `rule` text COMMENT '角色权限',
   `theme` text COMMENT '角色主题设置',
   `is_system` enum('10','20') NOT NULL DEFAULT '10' COMMENT '是否系统：10否，20是',
+  `is_single_login` enum('10','20') NOT NULL DEFAULT '10' COMMENT '单点登录：10否（允许多端），20是（新登录挤下旧会话）',
   `sort` int(11) NOT NULL DEFAULT '0' COMMENT '角色排序',
   PRIMARY KEY (`id`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC COMMENT='角色记录';

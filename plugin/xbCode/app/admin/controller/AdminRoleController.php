@@ -13,13 +13,14 @@ use support\Request;
 use plugin\xbCode\api\Url;
 use plugin\xbCode\api\Layouts;
 use plugin\xbCode\app\model\Admin;
+use plugin\xbCode\enum\SwitchEnum;
 use plugin\xbCode\api\MenuChecked;
 use plugin\xbCode\app\model\AdminRule;
 use plugin\xbCode\app\model\AdminRole;
 use plugin\xbCode\builder\Renders\XbForm;
 use plugin\xbCode\builder\Renders\XbCrud;
+use plugin\xbCode\exception\business\ExceptionBadRequest;
 use plugin\xbCode\app\validate\AdminRoleValidate;
-use plugin\xbCode\builder\Components\Form\Transfer;
 
 /**
  * 角色管理
@@ -41,22 +42,21 @@ class AdminRoleController extends BaseController
         if ($act) {
             $builder = XbCrud::make();
             $builder->useCRUD()->alwaysShowPagination(true);
+            // 表格列快速编辑接口
+            $builder->useCRUD()->quickSaveItemApi(Url::make('rowEdit')->get());
+            $builder->useCRUD()->quickSaveApi(Url::make('rowEdit')->get());
             $builder->setActionConfig('width', '200px');
             $builder->addHeaderDialog('添加角色', Url::make('AdminRole/add'), [
                 'title' => '添加角色',
             ])->level('primary');
 
             $builder->addColumn('id', '序号')->width(80);
-            $builder->addColumn('title', '角色名称')->minWidth(180);
-            $builder->addColumn('num', '管理员人数', [
-                'minWidth' => 100,
-            ]);
-            $builder->addColumn('sort', '排序', [
-                'minWidth' => 100,
-            ]);
-            $builder->addColumn('create_at', '创建时间', [
-                'width' => 150,
-            ]);
+            $builder->addColumn('title', '角色名称');
+            $builder->addColumn('num', '管理员人数');
+            $builder->addColumnSwitch('is_single_login', '单点登录', SwitchEnum::switch())
+                ->description('开启后同账号仅保留最新一次登录，其余会话自动下线');
+            $builder->addColumnInput('sort', '排序');
+            $builder->addColumn('create_at', '创建时间')->width(150);
 
             $builder->setActionConfig('width', 280);
             $builder->addRightActionDialog('主题设置', Url::make('theme'), [
@@ -154,6 +154,42 @@ class AdminRoleController extends BaseController
         $builder->setSaveMethod('PUT');
         $builder->setData($model);
         return $this->successRes($builder);
+    }
+
+    /**
+     * 快速编辑（单点登录开关、排序）
+     * @param Request $request
+     * @throws ExceptionBadRequest
+     * @return \support\Response
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function rowEdit(Request $request)
+    {
+        $id = (int) $request->post('id');
+        $model = AdminRole::where('id', $id)->find();
+        if (!$model) {
+            return $this->fail('该数据不存在');
+        }
+        $post = (array) $request->post();
+        $data = [];
+        if (array_key_exists('is_single_login', $post)) {
+            $value = (string) $post['is_single_login'];
+            if (!in_array($value, SwitchEnum::getColumn('value'), true)) {
+                throw new ExceptionBadRequest('单点登录参数错误');
+            }
+            $data['is_single_login'] = $value;
+        }
+        if (array_key_exists('sort', $post)) {
+            $data['sort'] = (int) $post['sort'];
+        }
+        if (empty($data)) {
+            throw new ExceptionBadRequest('没有需要保存的数据');
+        }
+        if (!$model->save($data)) {
+            return $this->fail('修改失败');
+        }
+        return $this->success('修改成功');
     }
 
     /**
@@ -521,6 +557,12 @@ class AdminRoleController extends BaseController
         $builder = XbForm::make();
         $builder->addRowInput('title', '角色名称');
         $builder->addRowInput('sort', '角色排序', '100');
+        $builder->addRowSwitch('is_single_login', '单点登录', SwitchEnum::STATE10['value'], [
+            'onText' => SwitchEnum::STATE20['label'],
+            'offText' => SwitchEnum::STATE10['label'],
+            'trueValue' => SwitchEnum::STATE20['value'],
+            'falseValue' => SwitchEnum::STATE10['value'],
+        ])->description('开启后同账号仅保留最新一次登录，其余会话自动下线');
         return $builder;
     }
 }

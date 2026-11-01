@@ -19,7 +19,7 @@ return [
                 'params' => '',
                 'is_show' => '20',
                 'is_system' => '20',
-                'sort' => 20,
+                'sort' => 50,
                 'children' => [
                     [
                         'title' => '引擎列表',

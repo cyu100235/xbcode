@@ -10,6 +10,8 @@
 namespace plugin\xbCode\app\model;
 
 use plugin\xbCode\Model;
+use plugin\xbCode\api\AdminApi;
+use plugin\xbCode\api\AdminSession;
 
 /**
  * 管理员角色模型
@@ -50,5 +52,21 @@ class AdminRole extends Model
             $value = json_encode($value, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         }
         return $value;
+    }
+
+    /**
+     * 写入后清理该角色下管理员的信息缓存
+     * 角色名称 / 权限变更后，所属管理员的用户信息缓存需立即失效
+     * 角色写入频率很低，此处不做字段差异判断，避免 json 字段差异比对误判
+     * @param mixed $model
+     * @return void
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected static function onAfterWrite($model)
+    {
+        AdminApi::forgetRoleUserinfo($model->getKey());
+        // 单点登录配置变更后清理缓存，中间件下次访问即重新读取
+        AdminSession::forgetRole((int) $model->getKey());
     }
 }

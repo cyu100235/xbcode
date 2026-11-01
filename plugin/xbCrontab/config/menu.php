@@ -20,7 +20,7 @@ return [
                 'params' => '',
                 'is_show' => '20',
                 'is_system' => '20',
-                'sort' => 5,
+                'sort' => 30,
                 'children' => [
                     [
                         'title' => '定时任务列表',
@@ -36,7 +36,7 @@ return [
                     [
                         'title' => '添加定时任务',
                         'path' => 'admin/Index/add',
-                        'type' => '20',
+                        'type' => '30',
                         'icon' => '',
                         'params' => '',
                         'is_show' => '10',
@@ -47,7 +47,7 @@ return [
                     [
                         'title' => '修改定时任务',
                         'path' => 'admin/Index/edit',
-                        'type' => '20',
+                        'type' => '30',
                         'icon' => '',
                         'params' => '',
                         'is_show' => '10',
@@ -58,7 +58,7 @@ return [
                     [
                         'title' => '删除定时任务',
                         'path' => 'admin/Index/del',
-                        'type' => '20',
+                        'type' => '30',
                         'icon' => '',
                         'params' => '',
                         'is_show' => '10',
@@ -69,7 +69,7 @@ return [
                     [
                         'title' => '立即执行定时任务',
                         'path' => 'admin/Index/run',
-                        'type' => '20',
+                        'type' => '30',
                         'icon' => '',
                         'params' => '',
                         'is_show' => '10',
@@ -80,7 +80,7 @@ return [
                     [
                         'title' => '导出定时任务',
                         'path' => 'admin/Index/export',
-                        'type' => '20',
+                        'type' => '30',
                         'icon' => '',
                         'params' => '',
                         'is_show' => '10',

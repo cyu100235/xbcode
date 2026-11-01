@@ -15,6 +15,7 @@ use Webman\Http\Response;
 use Tinywan\Jwt\JwtToken;
 use Webman\MiddlewareInterface;
 use plugin\xbCode\api\AdminApi;
+use plugin\xbCode\api\AdminSession;
 use plugin\xbCode\exception\business\ExceptionForbidden;
 use plugin\xbCode\exception\business\ExceptionUnauthorized;
 
@@ -82,12 +83,16 @@ class AuthMiddleware implements MiddlewareInterface
         if (empty($request->uid)) {
             throw new ExceptionUnauthorized('管理员标识参数错误');
         }
+        // 校验密码指纹，密码被修改后强制下线
+        $this->validatePassword($request->uid, $user['pwd_sign'] ?? '');
         // 获取管理员角色ID
         $roleId = $user['role_id'] ?? '';
         if (empty($roleId)) {
             throw new ExceptionUnauthorized('管理员角色标识参数错误');
         }
         $request->role_id = $roleId;
+        // 校验登录会话，支持单点登录互踢与「登录令牌」踢出登录
+        $this->validateSession((int) $request->uid, (string) ($user['session'] ?? ''), (int) $roleId);
         // 获取管理员账号
         $username = $user['username'] ?? '';
         // 设置请求管理员账号
@@ -127,6 +132,46 @@ class AuthMiddleware implements MiddlewareInterface
         );
         if (!$permit) {
             throw new ExceptionForbidden('您没有操作权限');
+        }
+    }
+
+    /**
+     * 校验令牌中的密码指纹
+     * 指纹取自缓存（按 CACHE_TYPE 走 file / redis），仅缓存未命中时才回源数据库，
+     * 密码被修改后指纹不一致，强制下线重新登录
+     * @param int|string $uid 管理员ID
+     * @param string $sign 令牌中的密码指纹
+     * @return void
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    private function validatePassword($uid, string $sign)
+    {
+        $passwordSign = AdminApi::getPasswordSign($uid);
+        if ($passwordSign === null) {
+            throw new ExceptionUnauthorized('管理员账号不存在，请重新登录');
+        }
+        if ($passwordSign !== $sign) {
+            throw new ExceptionUnauthorized('登录密码已修改，请重新登录');
+        }
+    }
+
+    /**
+     * 校验登录会话
+     * 会话数据来自缓存（按 CACHE_TYPE 走 file / redis），不查询数据库；
+     * 会话被管理员踢出、或角色开启单点登录后原会话被新登录挤下线时，强制重新登录
+     * @param int $uid 管理员ID
+     * @param string $session 令牌中的会话标识
+     * @param int $roleId 管理员角色ID
+     * @return void
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    private function validateSession(int $uid, string $session, int $roleId)
+    {
+        $message = AdminSession::verify($uid, $session, AdminSession::roleSingleLogin($roleId));
+        if ($message !== '') {
+            throw new ExceptionUnauthorized($message);
         }
     }
 }
