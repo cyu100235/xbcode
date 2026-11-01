@@ -83,10 +83,5 @@
         ]
     },
     "minimum-stability": "dev",
-    "prefer-stable": true,
-    "config": {
-        "audit": {
-            "block-insecure": false
-        }
-    }
+    "prefer-stable": true
 }
