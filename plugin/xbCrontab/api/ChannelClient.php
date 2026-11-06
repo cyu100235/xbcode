@@ -83,10 +83,19 @@ class ChannelClient
             'data' => $eventData, //事件数据
             'userIds' => $userIds //发给用户ID列表
         ];
-        // 连接到Channel服务
-        Client::connect($ip, $port);
-        // 订阅这个事件的客户端会收到事件数据，并触发客户端对应的事件回调
-        Client::publish($eventName, $sendData);
+        try {
+            // 连接到Channel服务
+            Client::connect($ip, $port);
+            // 订阅这个事件的客户端会收到事件数据，并触发客户端对应的事件回调
+            Client::publish($eventName, $sendData);
+        } catch (\Throwable $th) {
+            // 命令行等非 Worker 环境下没有事件循环，通知失败不应阻断任务数据写入
+            \support\Log::warning("定时任务通知失败：{$th->getMessage()}");
+            return [
+                'code' => 400,
+                'message' => $th->getMessage()
+            ];
+        }
         return [
             'code' => 200,
             'message' => '事件发布成功'

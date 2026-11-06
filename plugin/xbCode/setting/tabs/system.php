@@ -5,6 +5,7 @@ use plugin\xbCode\builder\Components\GridSchema;
 use plugin\xbCode\builder\Components\Form\FieldSet;
 use plugin\xbCode\builder\Components\Form\InputText;
 use plugin\xbCode\builder\Components\Form\InputImage;
+use plugin\xbCode\builder\Components\Form\InputNumber;
 use plugin\xbCode\builder\Components\ButtonGroupSelect;
 
 return [
@@ -51,6 +52,21 @@ return [
                         ->label('站点图标')
                         ->description('建议尺寸：300*300像素，支持jpg，jpeg，png格式')
                         ->get(),
+                ])->get(),
+        ])
+        ->get(),
+    FieldSet::make()
+        ->name('login')
+        ->title('登录配置')
+        ->setVariable('sort', 1)
+        ->body([
+            GridSchema::make()
+                // 配置模板顶层项必须包含 name 与 type
+                ->name('login_layout')
+                // PC 端（>=768px）按 12 栅格占 4 列（约 33%），其他设备整宽（xs 12）
+                ->xs(12)
+                ->md(4)
+                ->addColumns([
                     InputImage::make()
                         ->name('login_bg')
                         ->label('登录页背景')
@@ -67,6 +83,13 @@ return [
                         ->value('10')
                         ->description('登录后台是否开启必须验证码')
                         ->options(SwitchEnum::options())
+                        ->get(),
+                    InputText::make()
+                        ->name('login_idle_timeout')
+                        ->label('登录空闲超时')
+                        ->value(60)
+                        ->suffix('分钟')
+                        ->description('登录后超过该时间无任何操作将自动踢出登录，默认 60 分钟（1 小时），填 0 表示不限制')
                         ->get(),
                 ])->get(),
         ])

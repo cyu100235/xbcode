@@ -20,6 +20,7 @@ use plugin\xbCode\app\model\AdminRole;
  *
  * - 会话存在且未过期 → 放行
  * - 会话已被踢出 / 已过期 → 强制重新登录
+ * - 超过空闲超时时间未操作 → 会话自动失效并强制重新登录
  * - 所属角色开启单点登录 → 同账号仅保留最新一次登录，其余会话自动失效
  *
  * @copyright 贵州积木云网络科技有限公司
@@ -37,11 +38,22 @@ class AdminSession
 
     /**
      * 活跃时间刷新间隔（秒），避免逐请求写缓存
+     * 取 60 秒，保证记录的活跃时间与实际操作相差不超过 1 分钟
      * @var int
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
-    public const TOUCH_INTERVAL = 300;
+    public const TOUCH_INTERVAL = 60;
+
+    /**
+     * 登录空闲超时默认值（分钟），0 表示不限制
+     * 默认 60 分钟（1 小时），可在「系统配置 - 登录配置」中修改，
+     * 超过该时间未操作将自动踢出登录
+     * @var int
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public const DEFAULT_IDLE_TIMEOUT = 60;
 
     /**
      * 会话登记表缓存键名
@@ -82,9 +94,22 @@ class AdminSession
         if ($singleLogin && !static::isLatestOf($sessions, $uid, $session)) {
             return '该账号已在其他设备登录，您已被强制下线';
         }
+        // 空闲超时校验：超过设定时间未操作，直接移除会话并强制重新登录
+        $idleTimeout = static::idleTimeout();
+        $idleSeconds = $idleTimeout * 60;
+        if ($idleSeconds > 0 && time() - (int) ($info['last_time'] ?? 0) >= $idleSeconds) {
+            unset($sessions[$session]);
+            static::save($sessions);
+            return "长时间未操作（超过 {$idleTimeout} 分钟），请重新登录";
+        }
         // 刷新最后活跃时间（按间隔节流，避免逐请求写缓存）
+        // 空闲超时较短时同步缩短节流间隔，避免记录的活跃时间滞后导致提前踢出
         $now = time();
-        if ($now - (int) ($info['last_time'] ?? 0) >= static::TOUCH_INTERVAL) {
+        $touchInterval = static::TOUCH_INTERVAL;
+        if ($idleSeconds > 0) {
+            $touchInterval = min($touchInterval, max(1, intdiv($idleSeconds, 10)));
+        }
+        if ($now - (int) ($info['last_time'] ?? 0) >= $touchInterval) {
             $sessions[$session]['last_time'] = $now;
             $sessions[$session]['ip'] = (string) ($info['ip'] ?? '');
             static::save($sessions);
@@ -93,15 +118,40 @@ class AdminSession
     }
 
     /**
+     * 获取登录空闲超时时间（分钟），0 表示不限制
+     * 读取「系统配置 - 登录配置」中的登录空闲超时配置
+     * @return int
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public static function idleTimeout(): int
+    {
+        // 登录配置独立保存在 login 分组，兼容历史数据仍存放在 system 分组
+        $configApi = ConfigApi::make('system');
+        $config = $configApi->get('login', []);
+        if (!is_array($config) || !array_key_exists('login_idle_timeout', $config)) {
+            $config = $configApi->get('system', []);
+        }
+        $value = is_array($config) ? ($config['login_idle_timeout'] ?? static::DEFAULT_IDLE_TIMEOUT) : static::DEFAULT_IDLE_TIMEOUT;
+        return max(0, (int) $value);
+    }
+
+    /**
      * 获取全部有效会话（按登录时间倒序）
+     * 已超过空闲超时的会话不再展示
      * @return array
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
     public static function list(): array
     {
+        $idleSeconds = static::idleTimeout() * 60;
+        $now = time();
         $list = [];
         foreach (static::all() as $session => $info) {
+            if ($idleSeconds > 0 && $now - (int) ($info['last_time'] ?? 0) >= $idleSeconds) {
+                continue;
+            }
             $info['session'] = (string) $session;
             $list[] = $info;
         }
@@ -150,6 +200,34 @@ class AdminSession
             'expire_time' => (int) ($info['expire_time'] ?? $now + static::TTL),
         ];
         static::save($sessions);
+    }
+
+    /**
+     * 清理已空闲超时的会话
+     * 由定时任务定期调用，处理长时间不再访问、中间件已无法触发的会话
+     * @return int 被清理的会话数量
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public static function sweepIdle(): int
+    {
+        $idleSeconds = static::idleTimeout() * 60;
+        if ($idleSeconds <= 0) {
+            return 0;
+        }
+        $now = time();
+        $sessions = static::all();
+        $removed = 0;
+        foreach ($sessions as $key => $item) {
+            if ($now - (int) ($item['last_time'] ?? 0) >= $idleSeconds) {
+                unset($sessions[$key]);
+                $removed++;
+            }
+        }
+        if ($removed > 0) {
+            static::save($sessions);
+        }
+        return $removed;
     }
 
     /**

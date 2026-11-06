@@ -174,6 +174,9 @@ class AppEntry implements JsonSerializable
     public function system(array $config = [])
     {
         $systemConfig = ConfigApi::make('system')->get('system', []);
+        // 登录配置独立成选项卡保存，合并后前端仍按根级字段读取（如 captcha_state）
+        $loginConfig = ConfigApi::make('system')->get('login', []);
+        $systemConfig = array_merge($systemConfig, is_array($loginConfig) ? $loginConfig : []);
         $config = array_merge($systemConfig, $config);
         $this->system = $config;
         return $this;
@@ -320,6 +323,10 @@ class AppEntry implements JsonSerializable
             'bg' => $config['bg'] ?? '',
             // 广告图片
             'ad' => $config['ad'] ?? '',
+            // 登录页背景（登录配置项，前端登录页按该字段读取）
+            'login_bg' => $config['login_bg'] ?? ($this->system['login_bg'] ?? ''),
+            // 登录页广告（登录配置项，前端登录页按该字段读取）
+            'login_ad' => $config['login_ad'] ?? ($this->system['login_ad'] ?? ''),
             // 注册页面链接
             'register' => $config['register'] ?? '',
             // 忘记密码链接

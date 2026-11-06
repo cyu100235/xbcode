@@ -330,6 +330,14 @@ class CrontabApi
             }
             $value['state'] = '20';
             $value['plugin'] = $pluginName;
+            // 已存在同名任务则不重复安装，保留后台手工调整过的配置
+            $exists = Crontab::where([
+                'plugin' => $pluginName,
+                'name' => $value['name'] ?? '',
+            ])->find();
+            if ($exists) {
+                continue;
+            }
             // 确保有描述
             if (empty($value['cron_desc'])) {
                 $value['cron_desc'] = CronExpressionApi::make()->parseCronExpression($value['cron_expression'] ?? '');
@@ -340,6 +348,80 @@ class CrontabApi
                 Log::error("安装定时任务出错：{$th->getMessage()}");
             }
         }
+    }
+
+    /**
+     * 同步插件定时任务配置
+     *
+     * 以插件 config/crontab.php 为准：缺失的任务补齐，已存在的任务仅同步配置项，
+     * 保留后台手工调整的任务状态与历史执行日志（不重建表、不重置自增ID）。
+     * @param string $pluginName 插件标识
+     * @throws \Throwable
+     * @return array{created:int, updated:int, unchanged:int, failed:array}
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function sync(string $pluginName): array
+    {
+        $result = [
+            'created' => 0,
+            'updated' => 0,
+            'unchanged' => 0,
+            'failed' => [],
+        ];
+        $data = $this->getPluginCrontab($pluginName);
+        foreach ($data as $value) {
+            if (!is_array($value) || empty($value['name'])) {
+                continue;
+            }
+            try {
+                $model = Crontab::where([
+                    'plugin' => $pluginName,
+                    'name' => $value['name'],
+                ])->find();
+                // 新任务：启用状态写入
+                if (!$model) {
+                    $value['state'] = '20';
+                    $value['plugin'] = $pluginName;
+                    if (empty($value['cron_desc'])) {
+                        $value['cron_desc'] = CronExpressionApi::make()->parseCronExpression($value['cron_expression'] ?? '');
+                    }
+                    $this->add($value);
+                    $result['created']++;
+                    continue;
+                }
+                // 已有任务：只同步配置项，保留 state 与日志关联
+                $post = [
+                    'title' => $value['title'] ?? '',
+                    'name' => $value['name'],
+                    'plugin' => $pluginName,
+                    'type' => $value['type'] ?? '',
+                    'cron_expression' => $value['cron_expression'] ?? '',
+                    'cron_desc' => $value['cron_desc'] ?? '',
+                    'command' => $value['command'] ?? '',
+                ];
+                if (empty($post['cron_desc'])) {
+                    $post['cron_desc'] = CronExpressionApi::make()->parseCronExpression($post['cron_expression']);
+                }
+                // 配置无差异时跳过，避免无意义的写库与进程通知
+                $changed = false;
+                foreach ($post as $field => $fieldValue) {
+                    if ((string) $model->{$field} !== (string) $fieldValue) {
+                        $changed = true;
+                        break;
+                    }
+                }
+                if (!$changed) {
+                    $result['unchanged']++;
+                    continue;
+                }
+                $this->edit((int) $model->id, $post);
+                $result['updated']++;
+            } catch (\Throwable $th) {
+                $result['failed'][] = "{$value['name']}: {$th->getMessage()}";
+            }
+        }
+        return $result;
     }
 
     /**

@@ -73,7 +73,7 @@ class PublicsController extends BaseController
 
     /**
      * 获取图像验证码
-     * @return bool|string
+     * @return \support\Response
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com
      */
@@ -96,8 +96,13 @@ class PublicsController extends BaseController
         Cache::set($session, $captcha, 300);
         // 获得二维码base64内容
         $imgContent = $builder->get();
-        // 输出图片内容
-        return $imgContent;
+        // 输出图片内容：禁止浏览器缓存，避免复用旧图片导致验证码与缓存不一致
+        return response($imgContent, 200, [
+            'Content-Type' => 'image/jpeg',
+            'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
+            'Pragma' => 'no-cache',
+            'Expires' => '0',
+        ]);
     }
 
     /**

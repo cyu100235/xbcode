@@ -10,6 +10,7 @@
 namespace plugin\xbCode\app\admin\controller;
 
 use plugin\xbCode\api\Url;
+use plugin\xbCode\api\TodoApi;
 use plugin\xbCode\api\AppEntry;
 use plugin\xbCode\api\PluginsApi;
 
@@ -37,6 +38,7 @@ class IndexController extends BaseController
     protected $noAuth = [
         'toolbar',
         'workbench',
+        'todo',
     ];
 
     /**
@@ -95,6 +97,18 @@ class IndexController extends BaseController
         return $this->display([
             'toolbar' => $toolbar,
         ]);
+    }
+
+    /**
+     * 待办事项汇总
+     * 数据由各插件在 config/xbcode.php 的 todo 配置中自行提供
+     * @return \support\Response
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function todo()
+    {
+        return $this->successRes(TodoApi::summary((int) (request()->uid ?? 0)));
     }
 
     /**

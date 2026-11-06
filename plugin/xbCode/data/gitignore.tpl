@@ -12,3 +12,4 @@
 /tests/.phpunit.result.cache
 /php-cli.ini
 /.qoder/repowiki/*
+/build

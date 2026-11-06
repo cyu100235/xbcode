@@ -15,6 +15,7 @@ use plugin\xbCode\api\Mysql;
 use plugin\xbCode\api\Packages;
 use plugin\xbCode\api\ConfigApi;
 use plugin\xbCode\api\PluginsApi;
+use plugin\xbCrontab\api\CrontabApi;
 use plugin\xbCode\utils\FrameUtil;
 use plugin\xbCode\utils\PasswdUtil;
 use Webman\ThinkCache\driver\Redis;
@@ -300,12 +301,17 @@ class InstallRunner
             'web_keywords' => '积木云,xbcode,基于渐进式动态Web开发框架',
             'web_desc' => 'xbcode基于渐进式动态Web开发框架',
             'web_logo' => '',
+        ];
+        // 写入登录配置（独立选项卡）
+        $loginSettings = [
             'login_bg' => '',
             'login_ad' => '',
             'captcha_state' => '10',
+            'login_idle_timeout' => '60',
         ];
         ConfigApi::make('system')->set([
             'system' => $settings,
+            'login' => $loginSettings,
         ]);
         $this->output->writeln('写入站点配置完成...');
         // 写入总后台权限角色
@@ -416,6 +422,13 @@ class InstallRunner
         $this->output->writeln('安装系统插件记录完成...');
         // 刷新插件缓存
         PluginsApi::make()->getCache(true);
+        // 补装系统插件的定时任务（安装阶段 xbCrontab 尚未启用，各插件任务会被跳过）
+        if (class_exists('plugin\xbCrontab\api\CrontabApi') && Mysql::hasTable('crontab')) {
+            foreach (array_keys(PluginsApi::$systemPlugins) as $name) {
+                CrontabApi::make()->install($name);
+            }
+            $this->output->writeln('安装系统插件定时任务完成...');
+        }
         // 刷新配置缓存
         ConfigApi::make('')->getCache(true);
         // 重新平滑启动框架

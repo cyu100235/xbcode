@@ -45,10 +45,30 @@ class SettingController extends BaseController
         }
         // 获取配置数据
         $formData = ConfigApi::make($group)->get('', []);
+        // 登录配置独立成选项卡后，历史数据仍存放在 system 分组，回填到 login 选项卡避免展示与实际取值不一致
+        $formData = $this->fillLegacyLogin($formData);
         $builder = $this->getBuilder();
         $builder->setSaveMethod('PUT');
         $builder->setData($formData);
         return $this->successRes($builder);
+    }
+
+    /**
+     * 回填历史版本存放在 system 分组中的登录配置项
+     * @param array $formData 配置数据
+     * @return array
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    private function fillLegacyLogin(array $formData): array
+    {
+        $legacy = $formData['system'] ?? [];
+        foreach (['login_bg', 'login_ad', 'captcha_state', 'login_idle_timeout'] as $name) {
+            if (!isset($formData['login'][$name]) && isset($legacy[$name])) {
+                $formData['login'][$name] = $legacy[$name];
+            }
+        }
+        return $formData;
     }
 
     /**

@@ -94,7 +94,7 @@ trait InstallTrait
      */
     protected function installCrontab()
     {
-        // 获取字典文件
+        // 获取定时任务文件
         $file = base_path("/plugin/{$this->name}/config/crontab.php");
         if (!file_exists($file)) {
             return;
@@ -103,8 +103,12 @@ trait InstallTrait
         if (!class_exists('plugin\xbCrontab\api\CrontabApi')) {
             return;
         }
-        // 检测插件是否安装
-        if (!PluginsApi::make()->hasEnabled('xbCrontab')) {
+        // 检测定时任务数据表是否存在
+        if (!Mysql::hasTable('crontab')) {
+            return;
+        }
+        // 安装定时任务插件自身时，插件记录与启用状态尚未写入，跳过启用检测
+        if ($this->name !== 'xbCrontab' && !PluginsApi::make()->hasEnabled('xbCrontab')) {
             return;
         }
         // 开始安装定时任务

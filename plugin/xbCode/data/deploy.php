@@ -72,6 +72,9 @@ require 'recipe/common.php';
 | 15) 手动重建后台菜单（清空后按插件菜单文件重新导入）
 |    php vendor/bin/dep run <环境> 'cd {{current_path}} && php webman xb-menu:recreate'
 |
+| 16) 手动同步定时任务（按插件 crontab 配置增量补齐与更新）
+|    php vendor/bin/dep run <环境> 'cd {{current_path}} && php webman xb-crontab:sync'
+|
 */
 
 // TODO 以下为默认配置，请根据实际情况进行修改，设置TODO都需要修改
@@ -184,9 +187,26 @@ task('deploy:release', function () {
         throw new \Deployer\Exception\Exception("Release name \"$releaseName\" already exists.");
     }
 
+    // 新建之前先取最新的旧版本目录，用于 previous_release（copy_dirs 等任务依赖）
+    $previous = trim(run('ls -1dt releases/*/ 2>/dev/null | head -n 1'));
+    $previous = $previous !== '' ? basename(rtrim($previous, '/')) : '';
+
     run("echo $releaseName > .dep/latest_release");
     run("mkdir -p $releasePath");
     run("{{bin/symlink}} $releasePath {{deploy_path}}/release");
+
+    // 写入发布元信息：deploy:cleanup / releases / rollback 均依赖 .dep/releases_log
+    $metainfo = [
+        'created_at' => timestamp(),
+        'release_name' => $releaseName,
+        'user' => get('user'),
+        'target' => get('target'),
+    ];
+    run('echo ' . \Deployer\Support\escape_shell_argument(json_encode($metainfo)) . ' >> .dep/releases_log');
+
+    if ($previous !== '') {
+        set('previous_release', "{{deploy_path}}/releases/$previous");
+    }
 });
 
 // 覆盖默认 deploy:update_code，规避当前环境下内置任务异常退出（exit 139）问题
@@ -265,6 +285,17 @@ task('db:menu-recreate', function () {
     run('cd {{current_path}} && {{bin/php}} webman xb-menu:recreate');
 });
 
+// 部署后同步插件定时任务（按插件 config/crontab.php 增量补齐与更新）
+task('db:crontab-sync', function () {
+    $env = '{{current_path}}/.env';
+    // 与表结构同步一致：首次部署 .env 为空时数据库配置不可用，跳过
+    if (!test("[ -f $env ]") || !test("[ -s $env ]")) {
+        warning("跳过定时任务同步，需要执行程序安装后配置数据库连接");
+        return;
+    }
+    run('cd {{current_path}} && {{bin/php}} webman xb-crontab:sync');
+});
+
 // 执行部署后置业务类
 task('deploy:hook', function () {
     run('cd {{current_path}} && {{bin/php}} plugin/xbCode/hooks/deploy-hook.php');
@@ -282,6 +313,8 @@ after('deploy:success', 'nginx:init');
 after('deploy:success', 'db:table-sync');
 // 部署成功后重建后台菜单
 after('deploy:success', 'db:menu-recreate');
+// 部署成功后同步定时任务
+after('deploy:success', 'db:crontab-sync');
 // 部署成功后执行部署后置业务
 after('deploy:success', 'deploy:hook');
 // 部署成功后重启

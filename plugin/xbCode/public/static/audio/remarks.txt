@@ -1,0 +1,4 @@
+紧急提醒音频占位符
+
+将提醒音频命名为 urgent.mp3 放到本目录即可，后台会按 /app/xbCode/static/audio/urgent.mp3 访问。
+替换音频后无需改代码，刷新后台页面即生效。

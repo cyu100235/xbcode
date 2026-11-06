@@ -55,8 +55,14 @@ class AdminApi
      */
     public static function username(string $username, string $password, ?string $captcha = null)
     {
-        // 是否开启验证码
-        $isCatch = ConfigApi::make('system')->get('captcha_state', '10');
+        // 是否开启验证码（登录配置独立保存在 login 分组，兼容历史数据仍存放在 system 分组）
+        $configApi = ConfigApi::make('system');
+        $loginConfig = $configApi->get('login', []);
+        if (!is_array($loginConfig) || !array_key_exists('captcha_state', $loginConfig)) {
+            $systemConfig = $configApi->get('system', []);
+            $loginConfig = is_array($systemConfig) ? $systemConfig : [];
+        }
+        $isCatch = (string) ($loginConfig['captcha_state'] ?? '10');
         if ($isCatch === '20' && class_exists('Webman\Captcha\CaptchaBuilder')) {
             // 验证码效验
             if (empty($captcha)) {
@@ -65,7 +71,9 @@ class AdminApi
             $captcha = strtolower($captcha);
             $sessionId = request()->session()->getId();
             $sessionCaptcha = Cache::get($sessionId);
-            if ($captcha !== $sessionCaptcha) {
+            // 验证码一次有效：校验前即销毁缓存，避免同一验证码被重复使用
+            Cache::delete($sessionId);
+            if (!$sessionCaptcha || $captcha !== $sessionCaptcha) {
                 throw new Exception('验证码错误');
             }
         }
@@ -83,7 +91,8 @@ class AdminApi
             throw new Exception('该用户已被冻结');
         }
         // 更新登录信息
-        $ip = request()->getLocalIp();
+        // 取客户端真实IP：getLocalIp 返回的是本机监听地址，nginx 反代后固定为 127.0.0.1
+        $ip = request()->getRealIp();
         $model->login_ip = $ip;
         $model->login_time = date('Y-m-d H:i:s');
         $model->save();

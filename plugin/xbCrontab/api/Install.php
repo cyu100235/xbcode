@@ -10,6 +10,7 @@
 namespace plugin\xbCrontab\api;
 
 use plugin\xbCode\base\BasePlugin;
+use plugin\xbCode\api\PluginsApi;
 
 /**
  * 插件安装类
@@ -33,6 +34,14 @@ class Install extends BasePlugin
         // 可以继续编写你自己安装流程...
         // 删除Channel初始配置
         ChannelClient::deleteConfig();
+        // 补装已启用插件的历史定时任务（这些插件安装时 xbCrontab 尚未启用，任务被跳过）
+        foreach (PluginsApi::make()->getEnabledList() as $plugin) {
+            $name = $plugin['name'] ?? '';
+            if ($name === '' || $name === 'xbCrontab') {
+                continue;
+            }
+            CrontabApi::make()->install($name);
+        }
     }
 
     /**
