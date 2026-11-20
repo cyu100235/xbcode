@@ -140,6 +140,17 @@ class AppEntry implements JsonSerializable
     protected array $icons_links = [];
 
     /**
+     * 待办免打扰路由
+     *
+     * 由各插件在自身 config/xbcode.php 的 `todo_quiet` 中声明（路由片段数组），
+     * 前端停留在这些页面期间暂停待办轮询、弹窗与提示音（如全屏展示类页面）。
+     * @var array
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    protected array $todoQuiet = [];
+
+    /**
      * 实例化
      * @param string $module 模块化
      * @return AppEntry
@@ -591,6 +602,21 @@ class AppEntry implements JsonSerializable
     }
 
     /**
+     * 设置待办免打扰路由
+     *
+     * 路由片段由各插件自行声明，命中时前端暂停待办轮询、弹窗与提示音。
+     * @param array $routes 路由片段列表，示例：['xbDemo/admin/Demo/index']
+     * @return static
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public function setTodoQuiet(array $routes)
+    {
+        $this->todoQuiet = array_values(array_filter(array_map('strval', $routes)));
+        return $this;
+    }
+
+    /**
      * 获取站点配置
      * @return array
      * @copyright 贵州积木云网络科技有限公司
@@ -625,6 +651,8 @@ class AppEntry implements JsonSerializable
         $data['global_components'] = $this->global_components;
         // 扩展图标库
         $data['icons_links'] = $this->icons_links;
+        // 待办免打扰路由
+        $data['todo_quiet'] = $this->todoQuiet;
         // 返回数据
         return $data;
     }

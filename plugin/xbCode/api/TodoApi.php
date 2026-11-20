@@ -17,11 +17,11 @@ use support\Log;
  * 待办数据由各插件自行提供：插件在 config/xbcode.php 中声明 `todo`，
  * 取值为条目数组、闭包或「类::方法」可调用数组，返回结构如下：
  * [
- *     'title' => '待审核提现',       // 必填，待办名称
+ *     'title' => '待审核事项',       // 必填，待办名称
  *     'desc'  => '有 3 笔待审核',    // 可选，补充说明
  *     'count' => 3,                  // 必填，待办数量，为 0 时不展示
  *     'icon'  => 'AuditOutlined',    // 可选，图标名称
- *     'path'  => '/app/xbWithdraw/admin/Withdraw/index', // 必填，点击跳转的页面地址
+ *     'path'  => '/app/{插件标识}/admin/控制器/方法', // 必填，点击跳转的页面地址
  *     'query' => ['status' => '10'], // 可选，跳转携带参数
  *     'sort'  => 1,                  // 可选，排序值，越小越靠前
  *     'urgent' => true,              // 可选，紧急事项会弹窗提醒

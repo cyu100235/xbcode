@@ -187,6 +187,22 @@ class FrameUtil
     }
 
     /**
+     * 当前实例的缓存命名空间
+     *
+     * 同一台机器上可能同时运行多个环境（如测试与生产），它们共用同一个 Redis 库；
+     * 各环境根目录 nginx.conf 中的服务端口是该实例独占的 webman 监听端口，
+     * 以它作为命名空间即可把各环境的键隔开，避免互相读写、覆盖或清空。
+     * 返回形如 xb_39200:，由 CacheIsolation 注入到 redis / think-cache / redis-queue / session 的前缀。
+     * @return string
+     * @copyright 贵州积木云网络科技有限公司
+     * @author 楚羽幽 958416459@qq.com
+     */
+    public static function cacheNamespace(): string
+    {
+        return (string) env('REDIS_PREFIX', 'xb_') . static::xbServerPort() . ':';
+    }
+
+    /**
      * 获取服务端口号
      * @param int $default
      * @return int

@@ -18,9 +18,9 @@
     ⚠ plugin/xbCode 目录包含本脚本自身，处理它会导致本地脚本被远程版本覆盖。
 
 .PARAMETER Plugins
-    只处理指定插件（目录名），如 xbDevice xbUser。
+    只处理指定插件（目录名），如 xbDemo xbShop。
     不指定时默认进入交互式选择：列出「含 plugins.json」的插件目录，
-    可按序号（如 1 3）或名称（如 xbDevice）多选，输入 a 处理全部，直接回车取消。
+    可按序号（如 1 3）或名称（如 xbDemo）多选，输入 a 处理全部，直接回车取消。
 
 .PARAMETER All
     不进入交互式选择，直接处理 plugin 下全部含 plugins.json 的目录（脚本化运行时用）。
@@ -47,7 +47,7 @@
     powershell -ExecutionPolicy Bypass -File plugin/xbCode/script/pull-plugin-repos.ps1
 
     # 只拉取两个插件
-    powershell -ExecutionPolicy Bypass -File plugin/xbCode/script/pull-plugin-repos.ps1 -Plugins xbDevice,xbUser
+    powershell -ExecutionPolicy Bypass -File plugin/xbCode/script/pull-plugin-repos.ps1 -Plugins xbDemo,xbShop
 
     # 脚本化运行：拉取全部插件，不进入交互式选择
     powershell -ExecutionPolicy Bypass -File plugin/xbCode/script/pull-plugin-repos.ps1 -All
@@ -102,7 +102,7 @@ function Split-NameList {
         Select-Object -Unique)
 }
 
-# 交互式选择插件：支持按序号（1 3）或名称（xbDevice）多选，a=全部，回车=取消。
+# 交互式选择插件：支持按序号（1 3）或名称（xbDemo）多选，a=全部，回车=取消。
 function Select-PluginsInteractive {
     param([string[]] $Available)
 

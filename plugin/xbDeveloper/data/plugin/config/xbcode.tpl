@@ -35,6 +35,10 @@ return [
     //     \plugin\{PLUGIN_NAME}\api\Todo::class,
     //     'items',
     // ],
+    // 待办免打扰路由：停留这些页面期间暂停待办轮询、弹窗与提示音
+    // 'todo_quiet' => [
+    //     '{PLUGIN_NAME}/admin/Demo/index',
+    // ],
     // 工具栏项列表
     // 'toolbars' => [
     //     [
@@ -54,11 +58,11 @@ return [
     // 全局组件
     // 'components' => [
     //     [
-    //         'name' => 'XbUserToolbar',
+    //         'name' => 'XbDemoToolbar',
     //         'component' => file_get_contents(dirname(__DIR__) . '/view/index/toolbarView.vue')
     //     ],
     //     [
-    //         'name' => 'XbUserWorkbench',
+    //         'name' => 'XbDemoWorkbench',
     //         'component' => file_get_contents(dirname(__DIR__) . '/view/index/workbenchView.vue')
     //     ],
     // ],

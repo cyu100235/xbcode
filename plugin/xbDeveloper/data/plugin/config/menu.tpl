@@ -26,8 +26,8 @@ return [
     //     "children" => [
     //         [
     //             // 以下参数如上，pid自动获取当前父级菜单地址
-    //             "title" => "字典管理",
-    //             "path" => "admin/Dict/index",
+    //             "title" => "示例菜单",
+    //             "path" => "admin/Demo/index",
     //             "method" => "GET",
     //             "type" => "20",
     //             "icon" => "",

@@ -48,6 +48,12 @@ class PluginStateEvent
                 'path' => $val['path'],
                 'plugin' => $pluginName
             ];
+            // 顶级菜单可能被多个插件复用（如「用户管理」「财务管理」由 xbCode 创建，
+            // 其他插件在其下追加子菜单），切换单个插件状态时不应连带隐藏整个顶级菜单，
+            // 仅同步本插件自己的顶级菜单
+            if ($val['pid'] === 0 && $pluginName !== $name) {
+                continue;
+            }
             AdminRule::where($where)->save(['state' => $value]);
         }
     }

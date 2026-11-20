@@ -380,10 +380,10 @@ class IndexController extends XbController
             <div style="display:flex;flex-direction:column;gap:5px;">
                 <b style="color:#000;">根据任务类型编写执行命令</b>
                 <div>
-                    Shell命令示例：php webman plugin:xbOrder:clearExpire
+                    Shell命令示例：php webman 插件命令:动作
                 </div>
                 <div>
-                    <p>URL请求示例：http://localhost/app/xbOrder/clearExpire</p>
+                    <p>URL请求示例：http://localhost/app/插件标识/控制器/方法</p>
                     <p style="color:red;">注意：URL请求示例中的localhost需要替换为实际域名或IP地址</p>
                 </div>
                 <div>

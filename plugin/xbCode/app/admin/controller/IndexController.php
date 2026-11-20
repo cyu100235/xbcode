@@ -79,6 +79,8 @@ class IndexController extends BaseController
         // 设置扩展图标库
         $icons = $this->getConfig('icons', []);
         $builder->setIconsLinks($icons);
+        // 设置待办免打扰路由（由各插件在自身 config/xbcode.php 中声明）
+        $builder->setTodoQuiet($this->getConfig('todo_quiet', []));
         $data = $builder->get();
         return $this->successRes($data);
     }

@@ -17,7 +17,7 @@ use plugin\xbCode\builder\Components\Table\KeyValueLinkColumn;
  * 键值列组件
  *
  * 把单元格内的多个字段组合成若干行「标签：值」，
- * 适用于「昵称/账号」「设备IP/脚本ID」「今日收益/总收益」这类同格多行展示。
+ * 适用于「昵称/账号」「IP/编号」「今日值/累计值」这类同格多行展示。
  * @copyright 贵州积木云网络科技有限公司
  * @author 楚羽幽 958416459@qq.com
  */

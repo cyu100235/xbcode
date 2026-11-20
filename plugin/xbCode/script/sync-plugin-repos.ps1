@@ -13,9 +13,9 @@
     下次仅从该源提交增量拆分（--onto）。
 
 .PARAMETER Plugins
-    要处理的插件标识列表，如 xbDevice xbUser。
+    要处理的插件标识列表，如 xbDemo xbShop。
     不指定时默认进入交互式选择：列出 plugin 下的插件目录，
-    可按序号（如 1 3）或名称（如 xbDevice）多选，输入 a 处理全部，直接回车取消。
+    可按序号（如 1 3）或名称（如 xbDemo）多选，输入 a 处理全部，直接回车取消。
 
 .PARAMETER All
     不进入交互式选择，直接处理 plugin 下全部目录（脚本化运行时用）。
@@ -54,7 +54,7 @@
     powershell -ExecutionPolicy Bypass -File plugin/xbCode/script/sync-plugin-repos.ps1
 
     # 推送单个插件
-    powershell -ExecutionPolicy Bypass -File plugin/xbCode/script/sync-plugin-repos.ps1 -Plugins xbDevice
+    powershell -ExecutionPolicy Bypass -File plugin/xbCode/script/sync-plugin-repos.ps1 -Plugins xbDemo
 
     # 脚本化运行：推送全部插件，不进入交互式选择
     powershell -ExecutionPolicy Bypass -File plugin/xbCode/script/sync-plugin-repos.ps1 -All
@@ -119,7 +119,7 @@ function Split-NameList {
         Select-Object -Unique)
 }
 
-# 交互式选择插件：支持按序号（1 3）或名称（xbDevice）多选，a=全部，回车=取消。
+# 交互式选择插件：支持按序号（1 3）或名称（xbDemo）多选，a=全部，回车=取消。
 function Select-PluginsInteractive {
     param([string[]] $Available)
 

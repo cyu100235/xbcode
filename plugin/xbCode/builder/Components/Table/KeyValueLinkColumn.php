@@ -97,7 +97,7 @@ class KeyValueLinkColumn extends Tpl
      * @param string $filterId 目标筛选表单组件ID
      * @param array $values 回填字段与取值，取值支持 amis 表达式
      * @param string $expression 执行条件表达式，为空表示总是执行；
-     * 如 `'${device_uniq}'` 表示当前行脚本ID非空时才回填并查询
+     * 如 `'${uniq}'` 表示当前行编号非空时才回填并查询
      * @return static
      * @copyright 贵州积木云网络科技有限公司
      * @author 楚羽幽 958416459@qq.com

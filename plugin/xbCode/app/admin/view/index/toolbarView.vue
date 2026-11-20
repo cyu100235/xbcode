@@ -139,6 +139,8 @@ export default {
             localList: [],
             // 是否已勾选「今日不再提醒」
             dontRemindToday: false,
+            // 是否处于免打扰状态（命中插件声明的免打扰路由时暂停轮询、弹窗与提示音）
+            quiet: false,
         }
     },
     computed: {
@@ -154,6 +156,11 @@ export default {
         // 本地待办数量记录的存储键（刷新后仍可继续比对）
         localCountKey() {
             return `xb_todo_local_count_${this.adminName}`
+        },
+        // 免打扰路由片段：由各插件在自身 config/xbcode.php 的 todo_quiet 中声明
+        quietRoutes() {
+            const site = (this.$xbcode && this.$xbcode.siteApp && this.$xbcode.siteApp.siteInfo) || {}
+            return Array.isArray(site.todo_quiet) ? site.todo_quiet.filter((item) => !!item) : []
         },
         // 弹窗内展示的待办列表
         reminderList() {
@@ -194,9 +201,20 @@ export default {
     },
     mounted() {
         this.localCount = this.readLocalCount()
+        // 当前已停留在免打扰页面时（含刷新后仍在）直接进入静默，不请求也不轮询
+        this.applyQuiet(this.isQuietRoute(this.$route && this.$route.fullPath))
+        if (this.quiet) {
+            return
+        }
         // 首次请求决定是否展示铃铛；接口返回无待办页面权限时立即停止轮询
         this.getTodo()
         this.startPoll()
+    },
+    watch: {
+        // 路由切换时同步免打扰状态：进入声明页面暂停，离开后恢复
+        '$route.fullPath'(fullPath) {
+            this.applyQuiet(this.isQuietRoute(fullPath))
+        },
     },
     beforeUnmount() {
         this.stopPoll()
@@ -205,6 +223,39 @@ export default {
         this.audio = null
     },
     methods: {
+        // 是否停留在插件声明的免打扰页面
+        isQuietRoute(fullPath) {
+            const path = String(fullPath || '')
+            if (!path) {
+                return false
+            }
+            return this.quietRoutes.some((route) => path.includes(route))
+        },
+        // 切换免打扰状态：静默期间不轮询、不弹窗、不发声，恢复时重新拉取一次待办
+        applyQuiet(quiet) {
+            if (this.quiet === quiet) {
+                return
+            }
+            this.quiet = quiet
+            if (quiet) {
+                this.stopPoll()
+                this.unbindGesturePlay()
+                this.stopUrgentAudio()
+                this.audioPending = false
+                this.reminderVisible = false
+                this.noticeList = []
+                return
+            }
+            // 尚未确认可见性（例如首次加载即停在免打扰页面）时，先请求一次让 applyEnabled 决定是否轮询
+            if (!this.todoVisible) {
+                this.getTodo()
+                return
+            }
+            this.startPoll()
+            this.ensureAudio()
+            this.bindGesturePlay()
+            this.getTodo()
+        },
         hanldHome() {
             window.open('/');
         },
@@ -213,6 +264,10 @@ export default {
             this.todoVisible = enabled
             if (enabled) {
                 this.startPoll()
+                // 静默期间不加载音频、不绑定手势，恢复时由 applyQuiet 统一拉起
+                if (this.quiet) {
+                    return
+                }
                 // 提前加载提醒音频，弹窗出现时能立刻发声
                 this.ensureAudio()
                 // 绑定用户手势，用于补播被浏览器拦截的提示音
@@ -224,9 +279,9 @@ export default {
             this.stopUrgentAudio()
             this.reminderVisible = false
         },
-        // 开始轮询
+        // 开始轮询（静默期间不轮询，恢复后由 applyQuiet 重新拉起）
         startPoll() {
-            if (this.pollTimer) {
+            if (this.pollTimer || this.quiet) {
                 return
             }
             // 每 10 秒查询服务端待办数量，与本地记录比对
@@ -243,7 +298,8 @@ export default {
         // 获取待办事项
         // notify: 是否比对数量并在服务端变多时弹窗提醒；展开待办面板时只刷新列表并记为已读
         getTodo(notify = true) {
-            if (this.loading) {
+            // 免打扰静默期间不请求待办（含悬停刷新与轮询）
+            if (this.loading || this.quiet) {
                 return
             }
             this.loading = true
@@ -342,6 +398,10 @@ export default {
         },
         // 打开提醒弹窗：统一入口，同一时间只会有一个弹窗
         openReminder(mode) {
+            // 免打扰静默期间不弹窗、不发声
+            if (this.quiet) {
+                return
+            }
             this.reminderMode = mode
             this.dontRemindToday = false
             this.reminderVisible = true
@@ -415,6 +475,10 @@ export default {
         },
         // 播放提醒音频
         playUrgentAudio() {
+            // 免打扰静默期间不发声
+            if (this.quiet) {
+                return
+            }
             const audio = this.ensureAudio()
             if (!audio) {
                 return

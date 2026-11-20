@@ -21,7 +21,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * 命令示例：
  *   php webman xb-table:sync                  全量检测并同步所有插件（含删除多余表）
  *   php webman xb-table:sync --dry-run        仅检测并输出差异SQL，不实际执行
- *   php webman xb-table:sync --plugin=xbUser  仅处理指定插件（不删除多余表）
+ *   php webman xb-table:sync --plugin=xbDemo   仅处理指定插件（不删除多余表）
  *
  * @copyright 贵州积木云网络科技有限公司
  * @author 楚羽幽 958416459@qq.com

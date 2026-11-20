@@ -25,7 +25,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * 命令示例：
  *   php webman xb-crontab:sync                同步所有已启用插件的定时任务
- *   php webman xb-crontab:sync --plugin=xbDevice  仅同步指定插件
+ *   php webman xb-crontab:sync --plugin=xbDemo    仅同步指定插件
  *
  * @copyright 贵州积木云网络科技有限公司
  * @author 楚羽幽 958416459@qq.com

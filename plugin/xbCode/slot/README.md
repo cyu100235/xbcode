@@ -1,9 +1,9 @@
-# 插槽系统（Slot）
+﻿# 插槽系统（Slot）
 
 插槽系统用于在**不修改宿主插件代码**的前提下，让其他插件向宿主页面（如表格列、列表行数据、操作按钮）注入内容，实现插件间的低耦合扩展。
 
 - 核心类：[Slot.php](Slot.php)（插槽注册表）、[ListContext.php](ListContext.php)（行数据上下文）
-- 宿主挂载点示例：[UserController.php](../../xbUser/app/admin/controller/UserController.php)（用户列表）
+- 宿主挂载点示例：[DemoController.php](../../xbDemo/app/admin/controller/DemoController.php)（列表示例）
 
 ## 一、工作原理
 
@@ -13,8 +13,8 @@
 use plugin\xbCode\slot\Slot;
 use plugin\xbCode\slot\ListContext;
 
-public const SLOT_COLUMNS = 'xbUser.User.index.columns'; // 列插槽
-public const SLOT_ROWS    = 'xbUser.User.index.rows';    // 行数据插槽
+public const SLOT_COLUMNS = 'xbDemo.Demo.index.columns'; // 列插槽
+public const SLOT_ROWS    = 'xbDemo.Demo.index.rows';    // 行数据插槽
 
 // 列插槽：派发可变构建器，监听器直接往其追加列
 Slot::dispatch(self::SLOT_COLUMNS, $builder);
@@ -37,7 +37,7 @@ Slot::listen(string $slot, string $targetColumn, callable|array $handler, bool $
 
 | 参数              | 类型                | 说明                                                          |
 | --------------- | ----------------- | ----------------------------------------------------------- |
-| `$slot`         | `string`          | 插槽名称（使用宿主定义的常量，如 `UserController::SLOT_COLUMNS`）            |
+| `$slot`         | `string`          | 插槽名称（使用宿主定义的常量，如 `DemoController::SLOT_COLUMNS`）            |
 | `$targetColumn` | `string`          | 目标表格列的 `name`（列键名）。**列插槽**用于指定插入到哪一列前/后；**行数据插槽**传空字符串 `''` |
 | `$handler`      | `callable\|array` | 处理回调；支持闭包，也支持 `[类名::class, '方法']`（延迟实例化，见 2.3）              |
 | `$after`        | `bool`            | `true`＝插入到目标列**之后**（默认），`false`＝插入到目标列**之前**                |
@@ -56,7 +56,7 @@ Slot::listen(string $slot, string $targetColumn, callable|array $handler, bool $
 
 若 `$targetColumn` 对应的列在**所有监听器执行完毕**后仍不存在，则新增列追加到**末尾**。
 
-> **跨插件前向引用**：目标列可以是由**注册在后的其他插件监听器**创建的列（例如等级插件把自己的等级列插到「扩展信息」列后，设备插件也可以把设备数量列定位到等级列之后）。框架会先暂存这类批次，待全部监听器执行完毕后统一重定位，无需依赖插件的注册顺序。
+> **跨插件前向引用**：目标列可以是由**注册在后的其他插件监听器**创建的列（例如插件 A 把自己的列插到「扩展信息」列后，插件 B 也可以把统计列定位到插件 A 的列之后）。框架会先暂存这类批次，待全部监听器执行完毕后统一重定位，无需依赖插件的注册顺序。
 
 > `$after` 与 `$targetColumn` 仅对**支持列定位的上下文**（`XbCrud`）生效。行数据插槽的上下文（`ListContext`）不具备该能力，定位会被自动跳过，因此行插槽请将 `$targetColumn` 传 `''`。
 
@@ -83,13 +83,13 @@ Slot::listen($slot, $target, [MySlotHandler::class, 'handle']);
 ```php
 use plugin\xbCode\slot\Slot;
 use plugin\xbCode\builder\Renders\XbCrud;
-use plugin\xbUser\app\admin\controller\UserController;
+use plugin\xbDemo\app\admin\controller\DemoController;
 
 Slot::listen(
-    UserController::SLOT_COLUMNS,
+    DemoController::SLOT_COLUMNS,
     'id',                      // 目标列：序号列
     function (XbCrud $builder) {
-        $builder->addColumn('vip_level', '会员等级')->width(120)->align('center');
+        $builder->addColumn('extra_level', '扩展等级')->width(120)->align('center');
     },
     false                      // 插到 id 列前面
 );
@@ -99,10 +99,10 @@ Slot::listen(
 
 ```php
 Slot::listen(
-    UserController::SLOT_COLUMNS,
+    DemoController::SLOT_COLUMNS,
     'create_at',
     function (XbCrud $builder) {
-        $builder->addColumn('last_order_at', '最近下单')->width(160);
+        $builder->addColumn('last_active_at', '最近活跃')->width(160);
     }
     // $after 省略，默认 true（插到 create_at 之后）
 );
@@ -117,21 +117,21 @@ Slot::listen(
 ```php
 use plugin\xbCode\slot\Slot;
 use plugin\xbCode\slot\ListContext;
-use plugin\xbUser\app\admin\controller\UserController;
+use plugin\xbDemo\app\admin\controller\DemoController;
 
 Slot::listen(
-    UserController::SLOT_ROWS,
+    DemoController::SLOT_ROWS,
     '',
     function (ListContext $ctx) {
         // 依据分页里的用户 id 批量查询，避免逐行查库
         $ids = $ctx->column('id');
-        $vipMap = /* 批量查询得到 [uid => 到期时间] */ [];
+        $extraMap = /* 批量查询得到 [uid => 到期时间] */ [];
 
-        $ctx->appendMap('vip_expire', $vipMap, 'id', null);
+        $ctx->appendMap('extra_expire', $extraMap, 'id', null);
 
         // 也可自定义计算逻辑
-        $ctx->append('vip_status', function (array $row) {
-            return ($row['vip_expire'] ?? 0) > time() ? '有效' : '过期';
+        $ctx->append('extra_status', function (array $row) {
+            return ($row['extra_expire'] ?? 0) > time() ? '有效' : '过期';
         });
     }
 );
@@ -157,7 +157,7 @@ $ctx->filter(function (array $row) {
 ### 4.4 读取分页上下文
 
 ```php
-Slot::listen(UserController::SLOT_ROWS, '', function (ListContext $ctx) {
+Slot::listen(DemoController::SLOT_ROWS, '', function (ListContext $ctx) {
     $page  = $ctx->page();          // 当前页码
     $limit = $ctx->limit();         // 每页条数
     $total = $ctx->total();         // 总记录数
@@ -170,7 +170,7 @@ Slot::listen(UserController::SLOT_ROWS, '', function (ListContext $ctx) {
 `XbCrud` 的操作列按钮（`$actionButtons`）支持排序与按标题定位（标题即按钮 `label`，也就是 `addRightActionDialog('修改', ...)` 中的「修改」）。
 
 ```php
-Slot::listen(UserController::SLOT_COLUMNS, 'create_at', function (XbCrud $builder) {
+Slot::listen(DemoController::SLOT_COLUMNS, 'create_at', function (XbCrud $builder) {
     // 先追加一个按钮
     $builder->addRightActionDialog('查看详情', \plugin\xbCode\api\Url::make('detail'));
 
@@ -194,7 +194,42 @@ Slot::listen(UserController::SLOT_COLUMNS, 'create_at', function (XbCrud $builde
 | `moveActionButtonBefore(string $targetLabel, string $label)`      | 把已有按钮移动到目标按钮**之前**         |
 | `moveActionButtonAfter(string $targetLabel, string $label)`       | 把已有按钮移动到目标按钮**之后**         |
 
-## 六、插件注册入口
+## 六、选项卡插槽
+
+宿主配置页对外开放选项卡扩展，其他插件可向其中追加自己的配置选项卡，无需宿主写任何插件专属判断。
+
+宿主定义插槽常量并派发 [TabsContext](TabsContext.php)：
+
+```php
+// plugin/xbDemo/api/DemoConfig.php
+public const SLOT_TABS = 'xbDemo.Tabs.demo.tabs';
+
+// plugin/xbDemo/setting/tabs/demo.php
+return Slot::dispatch(DemoConfig::SLOT_TABS, new TabsContext($tabs))->all();
+```
+
+其他插件在自身 bootstrap 中注册监听器，回调内用 `add()` / `addMany()` 追加选项卡：
+
+```php
+Slot::listen(DemoConfig::SLOT_TABS, '', [static::class, 'handle']);
+
+public static function handle(TabsContext $ctx, string $slot)
+{
+    $ctx->addMany(include dirname(__DIR__) . '/setting/tabs/demo.php');
+}
+```
+
+| 方法 | 说明 |
+| --- | --- |
+| `add(array $tab)` | 追加单个选项卡，需含 `name`/`title`/`body`；与已有选项卡重名时忽略，避免覆盖宿主配置 |
+| `addMany(array $tabs)` | 批量追加（常用于直接 include 一个选项卡文件） |
+| `has(string $name)` | 判断是否已存在同名选项卡 |
+| `all()` | 取出全部选项卡 |
+| `count()` | 选项卡数量 |
+
+> 选项卡的 `name` 即配置保存时的分组键（`_tab`），因此**必须与宿主及其他插件保持唯一**。插件被禁用时监听器自动失效，选项卡随之消失，无需宿主判断插件状态。
+
+## 七、插件注册入口
 
 其他插件通过插件自身的 `bootstrap` 回调在框架启动时注册监听器，无需改动宿主。
 
@@ -204,7 +239,7 @@ Slot::listen(UserController::SLOT_COLUMNS, 'create_at', function (XbCrud $builde
 <?php
 
 return [
-    \plugin\xbVip\bootstrap\VipBootstrap::class,
+    \plugin\xbExtra\bootstrap\ExtraBootstrap::class,
 ];
 ```
 
@@ -212,44 +247,44 @@ return [
 
 ```php
 <?php
-namespace plugin\xbVip\bootstrap;
+namespace plugin\xbExtra\bootstrap;
 
 use Workerman\Worker;
 use Webman\Bootstrap;
 use plugin\xbCode\slot\Slot;
 use plugin\xbCode\slot\ListContext;
 use plugin\xbCode\builder\Renders\XbCrud;
-use plugin\xbUser\app\admin\controller\UserController;
+use plugin\xbDemo\app\admin\controller\DemoController;
 
-class VipBootstrap implements Bootstrap
+class ExtraBootstrap implements Bootstrap
 {
     public static function start(?Worker $worker)
     {
         // 列插槽：插到「序号」列前
-        Slot::listen(UserController::SLOT_COLUMNS, 'id', [static::class, 'addColumns'], false);
+        Slot::listen(DemoController::SLOT_COLUMNS, 'id', [static::class, 'addColumns'], false);
         // 行数据插槽：targetColumn 传空字符串
-        Slot::listen(UserController::SLOT_ROWS, '', [static::class, 'decorateRows']);
+        Slot::listen(DemoController::SLOT_ROWS, '', [static::class, 'decorateRows']);
     }
 
     public function addColumns(XbCrud $builder, string $slot)
     {
-        $builder->addColumn('vip_level', '会员等级')->width(120);
+        $builder->addColumn('extra_level', '扩展等级')->width(120);
     }
 
     public function decorateRows(ListContext $ctx, string $slot)
     {
-        $ctx->append('vip_status', function (array $row) {
-            return ($row['vip_expire'] ?? 0) > time() ? '有效' : '过期';
+        $ctx->append('extra_status', function (array $row) {
+            return ($row['extra_expire'] ?? 0) > time() ? '有效' : '过期';
         });
     }
 }
 ```
 
-> 框架启动时（`vendor/workerman/webman-framework/src/support/bootstrap.php`）会遍历 `config('plugin')`，对插件的 `bootstrap` 配置逐一类名调用 `::start($worker)`，即插槽的注册时机。注册时机与生效时机不同：**所有本地插件的 `bootstrap` 都会在启动时注册监听器**，但监听器只有在**其所属插件已安装且已启用**时才会在 `Slot::dispatch()` 中执行（见第八节）。
+> 框架启动时（`vendor/workerman/webman-framework/src/support/bootstrap.php`）会遍历 `config('plugin')`，对插件的 `bootstrap` 配置逐一类名调用 `::start($worker)`，即插槽的注册时机。注册时机与生效时机不同：**所有本地插件的 `bootstrap` 都会在启动时注册监听器**，但监听器只有在**其所属插件已安装且已启用**时才会在 `Slot::dispatch()` 中执行（见第九节）。
 
-## 七、API 参考
+## 八、API 参考
 
-### 7.1 Slot
+### 8.1 Slot
 
 | 方法                                                                                         | 返回值      | 说明                                                   |
 | ------------------------------------------------------------------------------------------ | -------- | ---------------------------------------------------- |
@@ -259,7 +294,7 @@ class VipBootstrap implements Bootstrap
 | `dispatch(string $slot, object $payload)`                                                  | `object` | 派发插槽，按注册顺序依次执行监听器，返回传入的上下文对象                         |
 | `getListeners(string $slot)`                                                               | `array`  | 获取插槽监听器列表（按注册顺序，元素含 `id`/`handler`/`target`/`after`/`plugin`；**未过滤插件启用状态**） |
 
-### 7.2 ListContext
+### 8.2 ListContext
 
 | 方法                                                                                | 返回值      | 说明                                                                   |
 | --------------------------------------------------------------------------------- | -------- | -------------------------------------------------------------------- |
@@ -277,11 +312,23 @@ class VipBootstrap implements Bootstrap
 | `page()` / `limit()` / `total()`                                                  | `int`    | 分页页码 / 每页条数 / 总记录数                                                   |
 | `param(string $key = '', mixed $default = null)`                                  | `mixed`  | 获取请求参数（`$key` 为空返回全部）                                                |
 
-## 八、注意事项
+### 8.3 TabsContext
+
+| 方法 | 返回值 | 说明 |
+| --- | --- | --- |
+| `__construct(array $tabs = [])` | — | 传入宿主已有选项卡 |
+| `add(array $tab)` | `static` | 追加单个选项卡（需含 `name`/`title`/`body`，重名忽略） |
+| `addMany(array $tabs)` | `static` | 批量追加选项卡 |
+| `has(string $name)` | `bool` | 是否存在同名选项卡 |
+| `all()` | `array` | 取出全部选项卡 |
+| `count()` | `int` | 选项卡数量 |
+
+## 九、注意事项
 
 - **生效条件**：监听器仅在**其所属插件已安装且已启用**时才会生效。框架启动时会加载所有本地插件的 `bootstrap`（无论是否已启用），未安装/已禁用的插件同样会执行 `Slot::listen()` 注册监听器，因此 `Slot::dispatch()` 与 `Slot::has()` 会在执行时按插件状态过滤，跳过未安装或已禁用插件注册的监听器。插件禁用后其插槽即刻失效，无需卸载。
 - **执行顺序**：可用的监听器按 `Slot::listen()` 的**注册顺序**依次执行，不再做额外的排序。
 - **异常隔离**：单个监听器抛出异常时会被捕获并写入错误日志（`插槽[xxx]执行异常`），不影响其他监听器与宿主流程。
-- **定位键**：列定位使用列的 `name`（如 `addColumn('vip_level', ...)` 的 `vip_level`）；按钮定位使用按钮标题（`label`）。
+- **定位键**：列定位使用列的 `name`（如 `addColumn('extra_level', ...)` 的 `extra_level`）；按钮定位使用按钮标题（`label`）。
 - **性能**：行数据插槽运行在列表接口的每次请求中，请使用 `column()` 做批量查询，避免在 `append` 回调中逐行查库。
+
 
