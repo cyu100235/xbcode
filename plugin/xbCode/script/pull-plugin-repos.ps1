@@ -273,8 +273,22 @@ foreach ($name in $candidates) {
         }
 
         # ---------- 删除本地目录，用最新代码填充 ----------
-        Remove-Item -LiteralPath $dir -Recurse -Force
-        New-Item -ItemType Directory -Path $dir -Force | Out-Null
+        # 若脚本由 plugin/<name> 内的 npm 脚本（如 pull:all:plugin）启动，
+        # npm 与 powershell 的工作目录就停在该插件目录上；Windows 下这种目录
+        # 无法删除或改名（父进程仍持有句柄），但目录内的条目可以清除。
+        # 此时退化为「清空目录内容」，效果等价。
+        try {
+            Remove-Item -LiteralPath $dir -Recurse -Force -ErrorAction Stop
+        }
+        catch {
+            Write-Host ("[{0}] 目录被占用（当前工作目录），改为清空内容后填充" -f $name) -ForegroundColor DarkYellow
+            foreach ($child in @(Get-ChildItem -LiteralPath $dir -Force)) {
+                Remove-Item -LiteralPath $child.FullName -Recurse -Force
+            }
+        }
+        if (-not (Test-Path -LiteralPath $dir)) {
+            New-Item -ItemType Directory -Path $dir -Force | Out-Null
+        }
         foreach ($item in $items) {
             Move-Item -LiteralPath $item.FullName -Destination $dir -Force
         }
