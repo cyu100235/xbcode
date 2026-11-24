@@ -1,7 +1,6 @@
 <?php
 /**
  * 积木云渲染器
- *
  * @package  XbCode
  * @author   楚羽幽 <958416459@qq.com>
  * @license  Apache License 2.0
@@ -155,6 +154,27 @@ trait FilterLayout
     {
         // 创建组件
         $component = new InputDateRange;
+        $component->name($field);
+        $component->label($title);
+        $component->value($value);
+        // 将组件添加到筛选查询列表
+        $this->filter[] = $component;
+        // 返回组件实例
+        return $component;
+    }
+
+    /**
+     * 创建日期时间范围查询
+     * @param string $field
+     * @param string $title
+     * @param mixed $value
+     * @return InputDateRange
+     */
+    public function addFilterDateTimeRange(string $field, string $title, mixed $value = ''): InputDateRange
+    {
+        // 创建组件
+        $component = new InputDateRange;
+        $component->datetime();
         $component->name($field);
         $component->label($title);
         $component->value($value);
